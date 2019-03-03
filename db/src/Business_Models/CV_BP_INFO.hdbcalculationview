@@ -2418,6 +2418,9 @@
       <viewAttribute id="DELI_SERV_NUMBER">
         <descriptions defaultDescription="DELI_SERV_NUMBER"/>
       </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
     
       <viewAttribute id="PARTNER">
         <descriptions defaultDescription="PARTNER"/>
@@ -2427,9 +2430,6 @@
       </viewAttribute>
       <viewAttribute id="MC_CITY1">
         <descriptions defaultDescription="MC_CITY1"/>
-      </viewAttribute>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
       </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -2867,7 +2867,7 @@
       <descriptions defaultDescription="NAME_CO"/>
       <keyMapping columnObjectName="J_ADRC_BUT021FS_BUT000_BUT0ID" columnName="NAME_CO"/>
     </attribute>
-    <attribute id="CITY1" order="93" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CITY1" order="93" displayAttribute="false" attributeHierarchyActive="false" semanticType="geoLocation.normalizedName">
       <descriptions defaultDescription="CITY1"/>
       <keyMapping columnObjectName="J_ADRC_BUT021FS_BUT000_BUT0ID" columnName="CITY1"/>
     </attribute>
@@ -3072,21 +3072,23 @@
     <calculatedAttribute id="AGE" order="141" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Age"/>
       <keyCalculation datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;BIRTHDT&quot;!='00000000',0,if(&quot;DEATHDT&quot;!='00000000',(int(component(now(), 1))-int(leftstr(&quot;BIRTHDT&quot;,4))),(int(leftstr(&quot;DEATHDT&quot;, 4))-int(leftstr(&quot;BIRTHDT&quot;,4)))))</formula>
+        <formula>if(&quot;BIRTHDT&quot;='00000000',0,if(&quot;DEATHDT&quot;='00000000',(int(component(now(), 1))-int(leftstr(&quot;BIRTHDT&quot;,4))),(int(leftstr(&quot;DEATHDT&quot;, 4))-int(leftstr(&quot;BIRTHDT&quot;,4)))))</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="DECEASED" order="142" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reported Deceased"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="13">
         <formula>IF(&quot;DEATHDT&quot;!='00000000','X','')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures/>
   <calculatedMeasures>
-    <measure id="Counter" order="1" aggregationType="sum" measureType="simple" aggregatable="true" datatype="INTEGER" expressionLanguage="SQL">
+    <measure id="Counter" order="1" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="SQL">
       <descriptions defaultDescription="Counter"/>
       <formula>1</formula>
+      
+      
       
       
       
@@ -3101,8 +3103,11 @@
       <descriptions defaultDescription="BP Counter"/>
       <exceptionAggregation>
         <attribute attributeName="CLIENT"/>
+        <attribute attributeName="PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
       
       
       
