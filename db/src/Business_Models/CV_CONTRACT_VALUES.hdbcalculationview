@@ -1244,6 +1244,11 @@
         <descriptions defaultDescription="FBNUM"/>
       </viewAttribute>
     
+      <viewAttribute id="AUGRD">
+        <descriptions defaultDescription="AUGRD"/>
+      </viewAttribute>
+    
+    
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
       </viewAttribute>
@@ -1252,12 +1257,7 @@
       </viewAttribute>
       <viewAttribute id="GPART">
         <descriptions defaultDescription="GPART"/>
-      </viewAttribute>
-    
-      <viewAttribute id="AUGRD">
-        <descriptions defaultDescription="AUGRD"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_FINANCIALS">
@@ -1576,10 +1576,23 @@
   
     <attribute id="AUGRD" order="93" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="AUGRD"/>
+  
       <keyMapping columnObjectName="J_CONTRACT_FINANCIALS" columnName="AUGRD"/>
+  
     </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="TRANSACTION_TYPE" order="97" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Transaction Type"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="13">
+        <formula>case(&quot;HVORG&quot;,'4000',
+    case(&quot;TVORG&quot;,'0150','Original Assessment',
+                 '0190','Reassessment'
+        )
+    )</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures>
     <measure id="TOTBPRELVNTVAL" order="65" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="TOTBPRELVNTVAL"/>
