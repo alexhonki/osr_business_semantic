@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_LT_FINANCIALS" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_LT_FINANCIALS"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_FINANCIALS">
+    <resourceUri>OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_FINANCIALS</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FINANCIALS">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="HVORG">
+        <descriptions defaultDescription="Main Transaction for Line Item"/>
+      </viewAttribute>
+      <viewAttribute id="TVORG">
+        <descriptions defaultDescription="Subtransaction for Document Item"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH">
+        <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
+      </viewAttribute>
+      <viewAttribute id="PERSL">
+        <descriptions defaultDescription="Key for Period Assignment"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBT">
+        <descriptions defaultDescription="Clearing amount in clearing currency"/>
+      </viewAttribute>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="Form Bundle Number"/>
+      </viewAttribute>
+      <viewAttribute id="AUGRD">
+        <descriptions defaultDescription="Clearing Reason"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBL">
+        <descriptions defaultDescription="Clearing Document or Printed Document"/>
+      </viewAttribute>
+    
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="HIDDEN"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+      </viewAttribute>
+      <viewAttribute id="AUGDT">
+        <descriptions defaultDescription="Clearing date"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_FINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL_1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:TableFunctionView" id="TF_LT_FINANCIALS" tableFunctionName="OSR_BUSINESS_SEMANTIC.db.TFunctions::TF_LT_FINANCIALS">
+    <viewAttributes/>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_LTFINANCIALS_FINANCIALS" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="HVORG">
+        <descriptions defaultDescription="Main Transaction for Line Item"/>
+      </viewAttribute>
+      <viewAttribute id="TVORG">
+        <descriptions defaultDescription="Subtransaction for Document Item"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBT" aggregationType="sum">
+        <descriptions defaultDescription="Clearing amount in clearing currency"/>
+      </viewAttribute>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="Form Bundle Number"/>
+      </viewAttribute>
+      <viewAttribute id="AUGRD">
+        <descriptions defaultDescription="Clearing Reason"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBL">
+        <descriptions defaultDescription="Clearing Document or Printed Document"/>
+      </viewAttribute>
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="HIDDEN"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+      </viewAttribute>
+      <viewAttribute id="AUGDT">
+        <descriptions defaultDescription="Clearing date"/>
+      </viewAttribute>
+      <viewAttribute id="PERSL">
+        <descriptions defaultDescription="PERSL"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
+      <viewAttribute hidden="true" id="JOIN$FBNUM$FBNUM"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="TF_LT_FINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FBNUM$FBNUM" source="FBNUM"/>
+    </input>
+    <input node="P_FINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FBNUM$FBNUM" source="FBNUM"/>
+    </input>
+    <joinAttribute name="JOIN$MANDT$MANDT"/>
+    <joinAttribute name="JOIN$FBNUM$FBNUM"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_LTFINANCIALS_FINANCIALS">
+  <attributes>
+    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="MANDT"/>
+    </attribute>
+    <attribute id="HVORG" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Main Transaction for Line Item"/>
+      <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="HVORG"/>
+    </attribute>
+    <attribute id="TVORG" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Subtransaction for Document Item"/>
+      <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="TVORG"/>
+    </attribute>
+    <attribute id="FBNUM" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Form Bundle Number"/>
+      <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="FBNUM"/>
+    </attribute>
+    <attribute id="AUGRD" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing Reason"/>
+      <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="AUGRD"/>
+    </attribute>
+    <attribute id="AUGBL" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing Document or Printed Document"/>
+      <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="AUGBL"/>
+    </attribute>
+    <attribute id="OPBEL" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="HIDDEN"/>
+      <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="OPBEL"/>
+    </attribute>
+    <attribute id="DFKK_H_BUDAT" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Posting Date in the Document"/>
+      <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="DFKK_H_BUDAT"/>
+    </attribute>
+    <attribute id="AUGDT" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing date"/>
+      <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="AUGDT"/>
+    </attribute>
+    <attribute id="PERSL" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PERSL"/>
+      <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="PERSL"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="BETRH" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
+      <measureMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="BETRH"/>
+    </measure>
+    <measure id="AUGBT" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Clearing amount in clearing currency"/>
+      <measureMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="AUGBT"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="221" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_FINANCIALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="TF_LT_FINANCIALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_LTFINANCIALS_FINANCIALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="221" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="TF_LT_FINANCIALS" modelObjectNameSpace="J_LTFINANCIALS_FINANCIALS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_FINANCIALS" modelObjectNameSpace="J_LTFINANCIALS_FINANCIALS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
