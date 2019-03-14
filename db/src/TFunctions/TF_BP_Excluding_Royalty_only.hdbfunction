@@ -1,0 +1,24 @@
+FUNCTION "OSR_BUSINESS_SEMANTIC.db.TFunctions::TF_BP_Excluding_Royalty_Only"( )
+       RETURNS table ("PARTNER" NVARCHAR(10)) 
+       LANGUAGE SQLSCRIPT 
+       SQL SECURITY INVOKER AS 
+BEGIN 
+
+RETURN
+                SELECT  "PARTNER" FROM 
+                                        (
+                                            SELECT DISTINCT "PARTNER", 
+                                                    CASE
+                                                        WHEN ("RLTYP" IN ('ZRCLI', 'ZRAHD', 'ZRHD', 'ZRSL')) THEN '1'
+                                                        ELSE '0'
+                                                    END AS "ROYROLE_FLAG", 
+                                                    CASE
+                                                        WHEN ("RLTYP" NOT IN ('ZRCLI', 'ZRAHD', 'ZRHD', 'ZRSL', 'MKK')) THEN '1'
+                                                        ELSE '0'
+                                                    END AS "OTHERROLE_FLAG"
+                                            FROM "OSR_BUSINESS_SEMANTIC.db.synonyms::BUT100"
+                                        )
+                                        GROUP BY "PARTNER"
+                                        HAVING MAX("ROYROLE_FLAG") != 1 OR (MAX("ROYROLE_FLAG") = 1 AND MAX("OTHERROLE_FLAG") = 1);
+
+END;

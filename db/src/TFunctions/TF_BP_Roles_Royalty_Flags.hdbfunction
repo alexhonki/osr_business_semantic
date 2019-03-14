@@ -1,0 +1,28 @@
+FUNCTION "OSR_BUSINESS_SEMANTIC.db.TFunctions::TF_BP_Roles_Royalty_Flags"( )
+       RETURNS table ("PARTNER" NVARCHAR(10),
+       				  "IS_ROYALTY_ROLE" INTEGER,
+       				  "IS_OTHER_ROLE" INTEGER
+       ) 
+       LANGUAGE SQLSCRIPT 
+       SQL SECURITY INVOKER AS 
+BEGIN 
+
+RETURN
+                SELECT DISTINCT "PARTNER", "ROYROLE_FLAG" AS IS_ROYALTY_ROLE, "OTHERROLE_FLAG" AS IS_OTHER_ROLE
+                                FROM    (
+                                            SELECT  DISTINCT "PARTNER", 
+                                                    SUM( CASE
+                                                        WHEN ("RLTYP" IN ('ZRCLI', 'ZRAHD', 'ZRHD', 'ZRSL')) THEN 1
+                                                        ELSE '0' 
+                                                    END )
+                                                    AS "ROYROLE_FLAG", 
+                                                    SUM( CASE
+                                                        WHEN ("RLTYP" NOT IN ('ZRCLI', 'ZRAHD', 'ZRHD', 'ZRSL', 'MKK')) THEN 1
+                                                        ELSE '0'
+                                                    END )
+                                                    AS "OTHERROLE_FLAG"
+                                            FROM   "OSR_BUSINESS_SEMANTIC.db.synonyms::BUT100"
+                                            GROUP BY "PARTNER"
+                                        ) WHERE "ROYROLE_FLAG" >= 1 AND "OTHERROLE_FLAG" >= 1;
+
+END;
