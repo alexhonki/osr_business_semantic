@@ -7,9 +7,12 @@
   <DataSource id="OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_CONTRACT_RESULTS">
     <resourceUri>OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_CONTRACT_RESULTS</resourceUri>
   </DataSource>
+  <DataSource id="OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_CASHFLOW">
+    <resourceUri>OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_CASHFLOW</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CONTRACT_RESULTS">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_CONTRACT_RESULTS">
     <viewAttributes>
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
@@ -802,10 +805,14 @@
       <viewAttribute id="FBNUM">
         <descriptions defaultDescription="FBNUM"/>
       </viewAttribute>
+    
+      <viewAttribute id="CashflowAmount" aggregationType="sum">
+        <descriptions defaultDescription="CashflowAmount"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="P_CONTRACT_RESULTS">
+    <input node="J_CONTRACT_CASHFLOW">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
@@ -917,6 +924,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN" source="MATCH_PERSON_FN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_STD" source="MATCH_PERSON_FN_STD"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON" source="MATCH_PERSON"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CashflowAmount" source="CashflowAmount"/>
     </input>
     <input node="TF_LT_FINANCIALS">
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
@@ -937,6 +946,842 @@
     <viewAttributes/>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CONTRACT_CASHFLOW" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="INTRENO"/>
+      </viewAttribute>
+      <viewAttribute id="BUKRS">
+        <descriptions defaultDescription="BUKRS"/>
+      </viewAttribute>
+      <viewAttribute id="RECNNR">
+        <descriptions defaultDescription="RECNNR"/>
+      </viewAttribute>
+      <viewAttribute id="OBJNR">
+        <descriptions defaultDescription="OBJNR"/>
+      </viewAttribute>
+      <viewAttribute id="IMKEY">
+        <descriptions defaultDescription="IMKEY"/>
+      </viewAttribute>
+      <viewAttribute id="CREATIONTYPE">
+        <descriptions defaultDescription="CREATIONTYPE"/>
+      </viewAttribute>
+      <viewAttribute id="RERF">
+        <descriptions defaultDescription="RERF"/>
+      </viewAttribute>
+      <viewAttribute id="DERF">
+        <descriptions defaultDescription="DERF"/>
+      </viewAttribute>
+      <viewAttribute id="TERF">
+        <descriptions defaultDescription="TERF"/>
+      </viewAttribute>
+      <viewAttribute id="REHER">
+        <descriptions defaultDescription="REHER"/>
+      </viewAttribute>
+      <viewAttribute id="RBEAR">
+        <descriptions defaultDescription="RBEAR"/>
+      </viewAttribute>
+      <viewAttribute id="DBEAR">
+        <descriptions defaultDescription="DBEAR"/>
+      </viewAttribute>
+      <viewAttribute id="TBEAR">
+        <descriptions defaultDescription="TBEAR"/>
+      </viewAttribute>
+      <viewAttribute id="RBHER">
+        <descriptions defaultDescription="RBHER"/>
+      </viewAttribute>
+      <viewAttribute id="RESPONSIBLE">
+        <descriptions defaultDescription="RESPONSIBLE"/>
+      </viewAttribute>
+      <viewAttribute id="USEREXCLUSIVE">
+        <descriptions defaultDescription="USEREXCLUSIVE"/>
+      </viewAttribute>
+      <viewAttribute id="AUTHGRP">
+        <descriptions defaultDescription="AUTHGRP"/>
+      </viewAttribute>
+      <viewAttribute id="RECNTYPE">
+        <descriptions defaultDescription="RECNTYPE"/>
+      </viewAttribute>
+      <viewAttribute id="RECNBEG">
+        <descriptions defaultDescription="RECNBEG"/>
+      </viewAttribute>
+      <viewAttribute id="RECNENDABS">
+        <descriptions defaultDescription="RECNENDABS"/>
+      </viewAttribute>
+      <viewAttribute id="RECNTXT">
+        <descriptions defaultDescription="RECNTXT"/>
+      </viewAttribute>
+      <viewAttribute id="RECNDACTIV">
+        <descriptions defaultDescription="RECNDACTIV"/>
+      </viewAttribute>
+      <viewAttribute id="RECNTLAW">
+        <descriptions defaultDescription="RECNTLAW"/>
+      </viewAttribute>
+      <viewAttribute id="RECNTXTOLD">
+        <descriptions defaultDescription="RECNTXTOLD"/>
+      </viewAttribute>
+      <viewAttribute id="RECNBUKRSCOLLECT">
+        <descriptions defaultDescription="RECNBUKRSCOLLECT"/>
+      </viewAttribute>
+      <viewAttribute id="RECNNRCOLLECT">
+        <descriptions defaultDescription="RECNNRCOLLECT"/>
+      </viewAttribute>
+      <viewAttribute id="RECNCNCURR">
+        <descriptions defaultDescription="RECNCNCURR"/>
+      </viewAttribute>
+      <viewAttribute id="INDUSTRY">
+        <descriptions defaultDescription="INDUSTRY"/>
+      </viewAttribute>
+      <viewAttribute id="SRRELEVANT">
+        <descriptions defaultDescription="SRRELEVANT"/>
+      </viewAttribute>
+      <viewAttribute id="DPTARGETTYPE">
+        <descriptions defaultDescription="DPTARGETTYPE"/>
+      </viewAttribute>
+      <viewAttribute id="RECNDAT">
+        <descriptions defaultDescription="RECNDAT"/>
+      </viewAttribute>
+      <viewAttribute id="RECN2DAT">
+        <descriptions defaultDescription="RECN2DAT"/>
+      </viewAttribute>
+      <viewAttribute id="RECNDPO">
+        <descriptions defaultDescription="RECNDPO"/>
+      </viewAttribute>
+      <viewAttribute id="RECNEND1ST">
+        <descriptions defaultDescription="RECNEND1ST"/>
+      </viewAttribute>
+      <viewAttribute id="RECNNOTPER">
+        <descriptions defaultDescription="RECNNOTPER"/>
+      </viewAttribute>
+      <viewAttribute id="RECNNOTRECEIPT">
+        <descriptions defaultDescription="RECNNOTRECEIPT"/>
+      </viewAttribute>
+      <viewAttribute id="RECNNOTREASON">
+        <descriptions defaultDescription="RECNNOTREASON"/>
+      </viewAttribute>
+      <viewAttribute id="RECNDAKTKU">
+        <descriptions defaultDescription="RECNDAKTKU"/>
+      </viewAttribute>
+      <viewAttribute id="CFARCHIVEDTO">
+        <descriptions defaultDescription="CFARCHIVEDTO"/>
+      </viewAttribute>
+      <viewAttribute id="CFLOCKEDTO">
+        <descriptions defaultDescription="CFLOCKEDTO"/>
+      </viewAttribute>
+      <viewAttribute id="CFPOSTINGFROM">
+        <descriptions defaultDescription="CFPOSTINGFROM"/>
+      </viewAttribute>
+      <viewAttribute id="BENOCN">
+        <descriptions defaultDescription="BENOCN"/>
+      </viewAttribute>
+      <viewAttribute id="TRANSPOSSFROM">
+        <descriptions defaultDescription="TRANSPOSSFROM"/>
+      </viewAttribute>
+      <viewAttribute id="TRANSPOSSTO">
+        <descriptions defaultDescription="TRANSPOSSTO"/>
+      </viewAttribute>
+      <viewAttribute id="HASMULTIASSIGN">
+        <descriptions defaultDescription="HASMULTIASSIGN"/>
+      </viewAttribute>
+      <viewAttribute id="POSSDATEFROM">
+        <descriptions defaultDescription="POSSDATEFROM"/>
+      </viewAttribute>
+      <viewAttribute id="POSSDATETO">
+        <descriptions defaultDescription="POSSDATETO"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_NOIA_DATE">
+        <descriptions defaultDescription="ZZ_NOIA_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_INV_DATE">
+        <descriptions defaultDescription="ZZ_INV_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_STAT_COMMENT">
+        <descriptions defaultDescription="ZZ_STAT_COMMENT"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="ZZ_PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="CNRESCALC">
+        <descriptions defaultDescription="CNRESCALC"/>
+      </viewAttribute>
+      <viewAttribute id="REAS">
+        <descriptions defaultDescription="REAS"/>
+      </viewAttribute>
+      <viewAttribute id="DNIS">
+        <descriptions defaultDescription="DNIS"/>
+      </viewAttribute>
+      <viewAttribute id="XMIG">
+        <descriptions defaultDescription="XMIG"/>
+      </viewAttribute>
+      <viewAttribute id="SECDEPRELEVANT">
+        <descriptions defaultDescription="SECDEPRELEVANT"/>
+      </viewAttribute>
+      <viewAttribute id="NOTADJSDCN">
+        <descriptions defaultDescription="NOTADJSDCN"/>
+      </viewAttribute>
+      <viewAttribute id="LT12">
+        <descriptions defaultDescription="LT12"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="ACTIVE">
+        <descriptions defaultDescription="ACTIVE"/>
+      </viewAttribute>
+      <viewAttribute id="OWNERTYPE">
+        <descriptions defaultDescription="OWNERTYPE"/>
+      </viewAttribute>
+      <viewAttribute id="INDIVORG">
+        <descriptions defaultDescription="INDIVORG"/>
+      </viewAttribute>
+      <viewAttribute id="TAXRATECODE">
+        <descriptions defaultDescription="TAXRATECODE"/>
+      </viewAttribute>
+      <viewAttribute id="TOTBPRELVNTVAL" aggregationType="sum">
+        <descriptions defaultDescription="TOTBPRELVNTVAL"/>
+      </viewAttribute>
+      <viewAttribute id="TOTBPCONCESSVAL" aggregationType="sum">
+        <descriptions defaultDescription="TOTBPCONCESSVAL"/>
+      </viewAttribute>
+      <viewAttribute id="TOTBPTAXABLEVAL" aggregationType="sum">
+        <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
+      </viewAttribute>
+      <viewAttribute id="ADJUSTMENT" aggregationType="sum">
+        <descriptions defaultDescription="ADJUSTMENT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXAMOUNT" aggregationType="sum">
+        <descriptions defaultDescription="TAXAMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXESTIMATE" aggregationType="sum">
+        <descriptions defaultDescription="TAXESTIMATE"/>
+      </viewAttribute>
+      <viewAttribute id="ZEROVALCN">
+        <descriptions defaultDescription="ZEROVALCN"/>
+      </viewAttribute>
+      <viewAttribute id="CNRESSTAT">
+        <descriptions defaultDescription="CNRESSTAT"/>
+      </viewAttribute>
+      <viewAttribute id="PROPERTYCNT" aggregationType="sum">
+        <descriptions defaultDescription="PROPERTYCNT"/>
+      </viewAttribute>
+      <viewAttribute id="PARCELCNT" aggregationType="sum">
+        <descriptions defaultDescription="PARCELCNT"/>
+      </viewAttribute>
+      <viewAttribute id="SDDPLCNT" aggregationType="sum">
+        <descriptions defaultDescription="SDDPLCNT"/>
+      </viewAttribute>
+      <viewAttribute id="CONCPLCNT" aggregationType="sum">
+        <descriptions defaultDescription="CONCPLCNT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRENDDT">
+        <descriptions defaultDescription="TAXYRENDDT"/>
+      </viewAttribute>
+      <viewAttribute id="CHUSER">
+        <descriptions defaultDescription="CHUSER"/>
+      </viewAttribute>
+      <viewAttribute id="CHDATE">
+        <descriptions defaultDescription="CHDATE"/>
+      </viewAttribute>
+      <viewAttribute id="CHTIME">
+        <descriptions defaultDescription="CHTIME"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURCHARGE" aggregationType="sum">
+        <descriptions defaultDescription="ABSURCHARGE"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_ORG1">
+        <descriptions defaultDescription="NAME_ORG1"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_ORG2">
+        <descriptions defaultDescription="NAME_ORG2"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_ORG3">
+        <descriptions defaultDescription="NAME_ORG3"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_LAST">
+        <descriptions defaultDescription="NAME_LAST"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_FIRST">
+        <descriptions defaultDescription="NAME_FIRST"/>
+      </viewAttribute>
+      <viewAttribute id="MC_NAME1">
+        <descriptions defaultDescription="MC_NAME1"/>
+      </viewAttribute>
+      <viewAttribute id="MC_NAME2">
+        <descriptions defaultDescription="MC_NAME2"/>
+      </viewAttribute>
+      <viewAttribute id="STD_FIRM">
+        <descriptions defaultDescription="STD_FIRM"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_FIRM">
+        <descriptions defaultDescription="MATCH_FIRM"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN">
+        <descriptions defaultDescription="STD_PERSON_GN"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN2">
+        <descriptions defaultDescription="STD_PERSON_GN2"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_FN">
+        <descriptions defaultDescription="STD_PERSON_FN"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN_STD">
+        <descriptions defaultDescription="MATCH_PERSON_GN_STD"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN_STD2">
+        <descriptions defaultDescription="MATCH_PERSON_GN_STD2"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN_STD3">
+        <descriptions defaultDescription="MATCH_PERSON_GN_STD3"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN_STD4">
+        <descriptions defaultDescription="MATCH_PERSON_GN_STD4"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN_STD5">
+        <descriptions defaultDescription="MATCH_PERSON_GN_STD5"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN_STD6">
+        <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN2">
+        <descriptions defaultDescription="MATCH_PERSON_GN2"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN2_STD">
+        <descriptions defaultDescription="MATCH_PERSON_GN2_STD"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN2_STD2">
+        <descriptions defaultDescription="MATCH_PERSON_GN2_STD2"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN2_STD3">
+        <descriptions defaultDescription="MATCH_PERSON_GN2_STD3"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN2_STD4">
+        <descriptions defaultDescription="MATCH_PERSON_GN2_STD4"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN2_STD5">
+        <descriptions defaultDescription="MATCH_PERSON_GN2_STD5"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_GN2_STD6">
+        <descriptions defaultDescription="MATCH_PERSON_GN2_STD6"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_FN">
+        <descriptions defaultDescription="MATCH_PERSON_FN"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON_FN_STD">
+        <descriptions defaultDescription="MATCH_PERSON_FN_STD"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PERSON">
+        <descriptions defaultDescription="MATCH_PERSON"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYR">
+        <descriptions defaultDescription="TAXYR"/>
+      </viewAttribute>
+      <viewAttribute id="CashflowAmount" aggregationType="sum">
+        <descriptions defaultDescription="CashflowAmount"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_CONTRACT_RESULTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNNR" source="RECNNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IMKEY" source="IMKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATIONTYPE" source="CREATIONTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RERF" source="RERF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DERF" source="DERF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TERF" source="TERF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REHER" source="REHER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RBEAR" source="RBEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBEAR" source="DBEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TBEAR" source="TBEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RBHER" source="RBHER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE" source="RESPONSIBLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="USEREXCLUSIVE" source="USEREXCLUSIVE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUTHGRP" source="AUTHGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNTYPE" source="RECNTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNBEG" source="RECNBEG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNENDABS" source="RECNENDABS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNTXT" source="RECNTXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNDACTIV" source="RECNDACTIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNTLAW" source="RECNTLAW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNTXTOLD" source="RECNTXTOLD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNBUKRSCOLLECT" source="RECNBUKRSCOLLECT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNNRCOLLECT" source="RECNNRCOLLECT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNCNCURR" source="RECNCNCURR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDUSTRY" source="INDUSTRY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SRRELEVANT" source="SRRELEVANT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DPTARGETTYPE" source="DPTARGETTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNDAT" source="RECNDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECN2DAT" source="RECN2DAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNDPO" source="RECNDPO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNEND1ST" source="RECNEND1ST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNNOTPER" source="RECNNOTPER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNNOTRECEIPT" source="RECNNOTRECEIPT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNNOTREASON" source="RECNNOTREASON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNDAKTKU" source="RECNDAKTKU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CFARCHIVEDTO" source="CFARCHIVEDTO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CFLOCKEDTO" source="CFLOCKEDTO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CFPOSTINGFROM" source="CFPOSTINGFROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BENOCN" source="BENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TRANSPOSSFROM" source="TRANSPOSSFROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TRANSPOSSTO" source="TRANSPOSSTO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HASMULTIASSIGN" source="HASMULTIASSIGN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POSSDATEFROM" source="POSSDATEFROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POSSDATETO" source="POSSDATETO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_INV_DATE" source="ZZ_INV_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_STAT_COMMENT" source="ZZ_STAT_COMMENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CNRESCALC" source="CNRESCALC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REAS" source="REAS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DNIS" source="DNIS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XMIG" source="XMIG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECDEPRELEVANT" source="SECDEPRELEVANT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NOTADJSDCN" source="NOTADJSDCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LT12" source="LT12"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE" source="ACTIVE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDIVORG" source="INDIVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPRELVNTVAL" source="TOTBPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPCONCESSVAL" source="TOTBPCONCESSVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADJUSTMENT" source="ADJUSTMENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZEROVALCN" source="ZEROVALCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CNRESSTAT" source="CNRESSTAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROPERTYCNT" source="PROPERTYCNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARCELCNT" source="PARCELCNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SDDPLCNT" source="SDDPLCNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCPLCNT" source="CONCPLCNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHUSER" source="CHUSER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHDATE" source="CHDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHTIME" source="CHTIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE" source="ABSURCHARGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_ORG1" source="NAME_ORG1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_ORG2" source="NAME_ORG2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_ORG3" source="NAME_ORG3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_LAST" source="NAME_LAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_FIRST" source="NAME_FIRST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MC_NAME1" source="MC_NAME1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MC_NAME2" source="MC_NAME2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_FIRM" source="STD_FIRM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_FIRM" source="MATCH_FIRM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN" source="STD_PERSON_GN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN2" source="STD_PERSON_GN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD" source="MATCH_PERSON_GN_STD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD2" source="MATCH_PERSON_GN_STD2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD3" source="MATCH_PERSON_GN_STD3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD4" source="MATCH_PERSON_GN_STD4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD5" source="MATCH_PERSON_GN_STD5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD6" source="MATCH_PERSON_GN_STD6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2" source="MATCH_PERSON_GN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD" source="MATCH_PERSON_GN2_STD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD2" source="MATCH_PERSON_GN2_STD2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD3" source="MATCH_PERSON_GN2_STD3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD4" source="MATCH_PERSON_GN2_STD4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD5" source="MATCH_PERSON_GN2_STD5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD6" source="MATCH_PERSON_GN2_STD6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN" source="MATCH_PERSON_FN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_STD" source="MATCH_PERSON_FN_STD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON" source="MATCH_PERSON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYR" source="TAXYR"/>
+    </input>
+    <input node="AGG_CASHFLOW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CashflowAmount" source="CashflowAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="DBERVON"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="INTRENO"/>
+    <joinAttribute name="TAXYRSTARTDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_CASHFLOW">
+    <viewAttributes>
+      <viewAttribute id="CONDVALIDFROM">
+        <descriptions defaultDescription="Date from when condition is valid"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="Internal Key of Real Estate Object"/>
+      </viewAttribute>
+      <viewAttribute id="RERF">
+        <descriptions defaultDescription="Entered by"/>
+      </viewAttribute>
+      <viewAttribute id="DERF">
+        <descriptions defaultDescription="First Entered on"/>
+      </viewAttribute>
+      <viewAttribute id="TERF">
+        <descriptions defaultDescription="Time of Initial Entry"/>
+      </viewAttribute>
+      <viewAttribute id="REHER">
+        <descriptions defaultDescription="Source of initial entry"/>
+      </viewAttribute>
+      <viewAttribute id="RBEAR">
+        <descriptions defaultDescription="Employee ID"/>
+      </viewAttribute>
+      <viewAttribute id="DBEAR">
+        <descriptions defaultDescription="Last Edited on"/>
+      </viewAttribute>
+      <viewAttribute id="TBEAR">
+        <descriptions defaultDescription="Last Edited at"/>
+      </viewAttribute>
+      <viewAttribute id="RBHER">
+        <descriptions defaultDescription="Editing Source"/>
+      </viewAttribute>
+      <viewAttribute id="BBWHR">
+        <descriptions defaultDescription="Amount which changes position"/>
+      </viewAttribute>
+      <viewAttribute id="BNWHR">
+        <descriptions defaultDescription="Nominal amount"/>
+      </viewAttribute>
+      <viewAttribute id="DBERVON">
+        <descriptions defaultDescription="Start of Calculation Period"/>
+      </viewAttribute>
+      <viewAttribute id="SEXCLVON">
+        <descriptions defaultDescription="Exclusive Indicator for the Start of a Calculation Period"/>
+      </viewAttribute>
+      <viewAttribute id="DBERBIS">
+        <descriptions defaultDescription="End of Calculation Period"/>
+      </viewAttribute>
+      <viewAttribute id="SINCLBIS">
+        <descriptions defaultDescription="Inclusive Indicator for the End of a Calculation Period"/>
+      </viewAttribute>
+      <viewAttribute id="SULTBIS">
+        <descriptions defaultDescription="Month-End Indicator for the End of a Calculation Period"/>
+      </viewAttribute>
+      <viewAttribute id="DVALUT">
+        <descriptions defaultDescription="Calculation Date"/>
+      </viewAttribute>
+      <viewAttribute id="SINCL">
+        <descriptions defaultDescription="nclusive indicator for beginning and end of a period"/>
+      </viewAttribute>
+      <viewAttribute id="SVINCL">
+        <descriptions defaultDescription="Inclusive indicator for value date"/>
+      </viewAttribute>
+      <viewAttribute id="SVULT">
+        <descriptions defaultDescription="Month-End Indicator for Value Date"/>
+      </viewAttribute>
+      <viewAttribute id="DFAELL">
+        <descriptions defaultDescription="Due date"/>
+      </viewAttribute>
+      <viewAttribute id="SFINCL">
+        <descriptions defaultDescription="Inclusive Indicator for Due Date"/>
+      </viewAttribute>
+      <viewAttribute id="DDISPO">
+        <descriptions defaultDescription="Payment Date"/>
+      </viewAttribute>
+      <viewAttribute id="SINCLVERR">
+        <descriptions defaultDescription="Inclusive Indicator for Clearing Date"/>
+      </viewAttribute>
+      <viewAttribute id="ATAGE">
+        <descriptions defaultDescription="Number of Days"/>
+      </viewAttribute>
+      <viewAttribute id="ABASTAGE">
+        <descriptions defaultDescription="Amount in floating point format for recursive determination"/>
+      </viewAttribute>
+      <viewAttribute id="APERTAGE">
+        <descriptions defaultDescription="No. of days of a (calculation) period in cash flow"/>
+      </viewAttribute>
+      <viewAttribute id="STGMETH">
+        <descriptions defaultDescription="Daily Method"/>
+      </viewAttribute>
+      <viewAttribute id="STGBASIS">
+        <descriptions defaultDescription="Base Days Method"/>
+      </viewAttribute>
+      <viewAttribute id="SZBMETH">
+        <descriptions defaultDescription="Interest Calculation Method"/>
+      </viewAttribute>
+      <viewAttribute id="DBPERIOD">
+        <descriptions defaultDescription="Period start"/>
+      </viewAttribute>
+      <viewAttribute id="SPAEXCL">
+        <descriptions defaultDescription="Exclusive Indicator for Start Date of a Period"/>
+      </viewAttribute>
+      <viewAttribute id="DEPERIOD">
+        <descriptions defaultDescription="Period End"/>
+      </viewAttribute>
+      <viewAttribute id="SPEINCL">
+        <descriptions defaultDescription="Inclusive Indicator for End Date of a Period"/>
+      </viewAttribute>
+      <viewAttribute id="SPEULT">
+        <descriptions defaultDescription="Month-End Indicator for End of a Period"/>
+      </viewAttribute>
+      <viewAttribute id="SWHRKOND">
+        <descriptions defaultDescription="Currency of Condition Item"/>
+      </viewAttribute>
+      <viewAttribute id="BKOND">
+        <descriptions defaultDescription="Condition item currency amount"/>
+      </viewAttribute>
+      <viewAttribute id="SSTAFF">
+        <descriptions defaultDescription="Type of Scaled Calculation"/>
+      </viewAttribute>
+      <viewAttribute id="AMMRHY">
+        <descriptions defaultDescription="Frequency in months"/>
+      </viewAttribute>
+      <viewAttribute id="ATTRHY">
+        <descriptions defaultDescription="Frequency in Days"/>
+      </viewAttribute>
+      <viewAttribute id="SSORTZIT">
+        <descriptions defaultDescription="Sort Flag for Financial Mathematical Calculations"/>
+      </viewAttribute>
+      <viewAttribute id="SZEITANT">
+        <descriptions defaultDescription="Indicator for Pro Rata Temporis Calculations"/>
+      </viewAttribute>
+      <viewAttribute id="SKONDGRP">
+        <descriptions defaultDescription="Condition group in cash flow calculator"/>
+      </viewAttribute>
+      <viewAttribute id="LCNETAMOUNT">
+        <descriptions defaultDescription="Net Amount of Cash Flow Item in Local Currency"/>
+      </viewAttribute>
+      <viewAttribute id="LCGROSSAMOUNT">
+        <descriptions defaultDescription="Gross Amount of Cash Flow Item in Local Currency"/>
+      </viewAttribute>
+      <viewAttribute id="LCTAXAMOUNT">
+        <descriptions defaultDescription="Sales/Purch. Tax Amount of Cash Flow Item in Local Currency"/>
+      </viewAttribute>
+      <viewAttribute id="LOCALCURR">
+        <descriptions defaultDescription="Local Currency of Cash Flow Item"/>
+      </viewAttribute>
+      <viewAttribute id="CCNETAMOUNT">
+        <descriptions defaultDescription="Net Amount of Cash Flow Item in Condition Currency"/>
+      </viewAttribute>
+      <viewAttribute id="CCGROSSAMOUNT">
+        <descriptions defaultDescription="Gross Amount of Cash Flow Item in Condition Currency"/>
+      </viewAttribute>
+      <viewAttribute id="CCTAXAMOUNT">
+        <descriptions defaultDescription="Tax on Sales/Purch. of Cash Flow Item in Condition Currency"/>
+      </viewAttribute>
+      <viewAttribute id="CONDCURR">
+        <descriptions defaultDescription="Condition Currency of Cash Flow Item"/>
+      </viewAttribute>
+      <viewAttribute id="TAXTYPE">
+        <descriptions defaultDescription="Tax Type"/>
+      </viewAttribute>
+      <viewAttribute id="TAXGROUP">
+        <descriptions defaultDescription="Tax Group"/>
+      </viewAttribute>
+      <viewAttribute id="WHEREFROM">
+        <descriptions defaultDescription="Flow Origin"/>
+      </viewAttribute>
+      <viewAttribute id="FLOWTYPE">
+        <descriptions defaultDescription="Flow Type"/>
+      </viewAttribute>
+      <viewAttribute id="ORIGFLOWTYPE">
+        <descriptions defaultDescription="Original Flow Type"/>
+      </viewAttribute>
+      <viewAttribute id="REFFLOWREL">
+        <descriptions defaultDescription="Type of Relationship Between Flow Type and Refer.Flow Type"/>
+      </viewAttribute>
+      <viewAttribute id="CFSTATUS">
+        <descriptions defaultDescription="Indicates Status of Flow"/>
+      </viewAttribute>
+      <viewAttribute id="ORIGDUEDATE">
+        <descriptions defaultDescription="Original Due Date"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="CONDTYPE">
+        <descriptions defaultDescription="Condition Type"/>
+      </viewAttribute>
+      <viewAttribute id="ORIGEXDUEDATE">
+        <descriptions defaultDescription="Original Due Date"/>
+      </viewAttribute>
+      <viewAttribute id="POSTINGDATE">
+        <descriptions defaultDescription="Posting Date"/>
+      </viewAttribute>
+      <viewAttribute id="DOCUMENTDATE">
+        <descriptions defaultDescription="ocument Date"/>
+      </viewAttribute>
+      <viewAttribute id="VALUATIONDATE">
+        <descriptions defaultDescription="Date for Translation of Contract Currency to Local Currency"/>
+      </viewAttribute>
+      <viewAttribute id="REVERSAL_FOR">
+        <descriptions defaultDescription="GUID for &apos;Reversal for&apos; References"/>
+      </viewAttribute>
+      <viewAttribute id="REVERSAL_BY">
+        <descriptions defaultDescription="GUID for &apos;Reversed by&apos; References"/>
+      </viewAttribute>
+      <viewAttribute id="FOLLOWUP_FOR">
+        <descriptions defaultDescription="GUID for &apos;Follow-Up Posting for&apos; References"/>
+      </viewAttribute>
+      <viewAttribute id="BOOK_FLOWTYPE">
+        <descriptions defaultDescription="Flow Type"/>
+      </viewAttribute>
+      <viewAttribute id="TAXDATE">
+        <descriptions defaultDescription="Date of Calculation of Sales/Purchase Tax"/>
+      </viewAttribute>
+      <viewAttribute id="MODDUEDATE">
+        <descriptions defaultDescription="Modified Due Date"/>
+      </viewAttribute>
+      <viewAttribute id="CALCDUEDATE">
+        <descriptions defaultDescription="Calculated Due Date"/>
+      </viewAttribute>
+      <viewAttribute id="CDSPLITNO">
+        <descriptions defaultDescription="Number of Condition Split"/>
+      </viewAttribute>
+      <viewAttribute id="COMPANYCODE">
+        <descriptions defaultDescription="Company Code"/>
+      </viewAttribute>
+      <viewAttribute id="CTLCNETAMOUNT">
+        <descriptions defaultDescription="Net Amount in Local Currency"/>
+      </viewAttribute>
+      <viewAttribute id="CTLCGROSSAMOUNT">
+        <descriptions defaultDescription="Gross Amount in Local Currency"/>
+      </viewAttribute>
+      <viewAttribute id="CTLCTAXAMOUNT">
+        <descriptions defaultDescription="Tax Amount in Local Currency"/>
+      </viewAttribute>
+      <viewAttribute id="CTRATE">
+        <descriptions defaultDescription="Exchange Rate"/>
+      </viewAttribute>
+      <viewAttribute id="CTRATEORIG">
+        <descriptions defaultDescription="Exchange Rate"/>
+      </viewAttribute>
+      <viewAttribute id="CTDATEREQ">
+        <descriptions defaultDescription="Planned Translation Date"/>
+      </viewAttribute>
+      <viewAttribute id="CTDATEACT">
+        <descriptions defaultDescription="Actual Translation Date"/>
+      </viewAttribute>
+      <viewAttribute id="CTDATEACTORIG">
+        <descriptions defaultDescription="Actual Translation Date"/>
+      </viewAttribute>
+      <viewAttribute id="XFLOWTYPE">
+        <descriptions defaultDescription="Cash Flow Type Description"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CashflowAmount" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;FLOWTYPE&quot;='P102', -1 * &quot;BBWHR&quot;, &quot;BBWHR&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_CASHFLOW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONDVALIDFROM" source="CONDVALIDFROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RERF" source="RERF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DERF" source="DERF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TERF" source="TERF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REHER" source="REHER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RBEAR" source="RBEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBEAR" source="DBEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TBEAR" source="TBEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RBHER" source="RBHER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BBWHR" source="BBWHR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BNWHR" source="BNWHR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SEXCLVON" source="SEXCLVON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBERBIS" source="DBERBIS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SINCLBIS" source="SINCLBIS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SULTBIS" source="SULTBIS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DVALUT" source="DVALUT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SINCL" source="SINCL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SVINCL" source="SVINCL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SVULT" source="SVULT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFAELL" source="DFAELL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SFINCL" source="SFINCL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DDISPO" source="DDISPO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SINCLVERR" source="SINCLVERR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATAGE" source="ATAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABASTAGE" source="ABASTAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APERTAGE" source="APERTAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STGMETH" source="STGMETH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STGBASIS" source="STGBASIS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SZBMETH" source="SZBMETH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBPERIOD" source="DBPERIOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPAEXCL" source="SPAEXCL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEPERIOD" source="DEPERIOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPEINCL" source="SPEINCL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPEULT" source="SPEULT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SWHRKOND" source="SWHRKOND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKOND" source="BKOND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SSTAFF" source="SSTAFF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AMMRHY" source="AMMRHY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATTRHY" source="ATTRHY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SSORTZIT" source="SSORTZIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SZEITANT" source="SZEITANT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SKONDGRP" source="SKONDGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LCNETAMOUNT" source="LCNETAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LCGROSSAMOUNT" source="LCGROSSAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LCTAXAMOUNT" source="LCTAXAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCALCURR" source="LOCALCURR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CCNETAMOUNT" source="CCNETAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CCGROSSAMOUNT" source="CCGROSSAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CCTAXAMOUNT" source="CCTAXAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONDCURR" source="CONDCURR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXTYPE" source="TAXTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXGROUP" source="TAXGROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WHEREFROM" source="WHEREFROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FLOWTYPE" source="FLOWTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORIGFLOWTYPE" source="ORIGFLOWTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFFLOWREL" source="REFFLOWREL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CFSTATUS" source="CFSTATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDUEDATE" source="ORIGDUEDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONDTYPE" source="CONDTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORIGEXDUEDATE" source="ORIGEXDUEDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POSTINGDATE" source="POSTINGDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOCUMENTDATE" source="DOCUMENTDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALUATIONDATE" source="VALUATIONDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REVERSAL_FOR" source="REVERSAL_FOR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REVERSAL_BY" source="REVERSAL_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FOLLOWUP_FOR" source="FOLLOWUP_FOR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BOOK_FLOWTYPE" source="BOOK_FLOWTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXDATE" source="TAXDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODDUEDATE" source="MODDUEDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CALCDUEDATE" source="CALCDUEDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CDSPLITNO" source="CDSPLITNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMPANYCODE" source="COMPANYCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CTLCNETAMOUNT" source="CTLCNETAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CTLCGROSSAMOUNT" source="CTLCGROSSAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CTLCTAXAMOUNT" source="CTLCTAXAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CTRATE" source="CTRATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CTRATEORIG" source="CTRATEORIG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CTDATEREQ" source="CTDATEREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CTDATEACT" source="CTDATEACT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CTDATEACTORIG" source="CTDATEACTORIG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XFLOWTYPE" source="XFLOWTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_CASHFLOW">
+    <viewAttributes>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="Internal Key of Real Estate Object"/>
+      </viewAttribute>
+      <viewAttribute id="DBERVON">
+        <descriptions defaultDescription="Start of Calculation Period"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="CashflowAmount" aggregationType="sum">
+        <descriptions defaultDescription="CashflowAmount"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_CASHFLOW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CashflowAmount" source="CashflowAmount"/>
+    </input>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_CONTRACT_FBNUM">
@@ -1396,6 +2241,11 @@
       <descriptions defaultDescription="AUGBT"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="AUGBT"/>
     </measure>
+  
+    <measure id="CashflowAmount" order="114" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CashflowAmount"/>
+      <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="CashflowAmount"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures/>
   <restrictedMeasures/>
@@ -1404,20 +2254,20 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="221" y="112"/>
+      <upperLeftCorner x="337.8268736718046" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
-    <shape expanded="true" modelObjectName="P_CONTRACT_RESULTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="376"/>
+    <shape expanded="true" modelObjectName="P_CV_CONTRACT_RESULTS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="301.9999999999999" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CONTRACT_FBNUM" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="221" y="217"/>
+      <upperLeftCorner x="337.8268736718046" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="P_CONTRACT_RESULTS" modelObjectNameSpace="J_CONTRACT_FBNUM" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_CONTRACT_CASHFLOW" modelObjectNameSpace="J_CONTRACT_FBNUM" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
@@ -1426,7 +2276,28 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="TF_LT_FINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="376"/>
+      <upperLeftCorner x="405.8649461248091" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_CONTRACT_CASHFLOW" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118.6666666666666" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CV_CONTRACT_RESULTS" modelObjectNameSpace="J_CONTRACT_CASHFLOW" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="AGG_CASHFLOW" modelObjectNameSpace="J_CONTRACT_CASHFLOW" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CV_CASHFLOW" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91.99999999999989" y="641.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_CASHFLOW" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91.99999999999991" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
