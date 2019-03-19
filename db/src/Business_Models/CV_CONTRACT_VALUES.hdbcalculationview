@@ -939,14 +939,6 @@
     <joinAttribute name="ZZ_PARTNER"/>
     <joinAttribute name="TAXYR"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:TableFunctionView" id="TF_LT_FINANCIALS" tableFunctionName="OSR_BUSINESS_SEMANTIC.db.TFunctions::TF_LT_FINANCIALS">
-    <descriptions>
-      <comment text=""/>
-    </descriptions>
-    <viewAttributes/>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-  </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_CONTRACT_CASHFLOW" cardinality="C1_N" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="MANDT">
@@ -1192,6 +1184,9 @@
       <viewAttribute id="ABSURCHARGE" aggregationType="sum">
         <descriptions defaultDescription="ABSURCHARGE"/>
       </viewAttribute>
+      <viewAttribute id="TAXYR">
+        <descriptions defaultDescription="TAXYR"/>
+      </viewAttribute>
       <viewAttribute id="NAME_ORG1">
         <descriptions defaultDescription="NAME_ORG1"/>
       </viewAttribute>
@@ -1275,9 +1270,6 @@
       </viewAttribute>
       <viewAttribute id="MATCH_PERSON">
         <descriptions defaultDescription="MATCH_PERSON"/>
-      </viewAttribute>
-      <viewAttribute id="TAXYR">
-        <descriptions defaultDescription="TAXYR"/>
       </viewAttribute>
       <viewAttribute id="CashflowAmount" aggregationType="sum">
         <descriptions defaultDescription="CashflowAmount"/>
@@ -1407,7 +1399,39 @@
     <joinAttribute name="INTRENO"/>
     <joinAttribute name="TAXYRSTARTDT"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_CASHFLOW">
+  <calculationView xsi:type="Calculation:TableFunctionView" id="TF_LT_FINANCIALS" tableFunctionName="OSR_BUSINESS_SEMANTIC.db.TFunctions::TF_LT_FINANCIALS">
+    <descriptions>
+      <comment text=""/>
+    </descriptions>
+    <viewAttributes/>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_CASHFLOW">
+    <viewAttributes>
+      <viewAttribute id="CashflowAmount" aggregationType="sum">
+        <descriptions defaultDescription="CashflowAmount"/>
+      </viewAttribute>
+    
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="Internal Key of Real Estate Object"/>
+      </viewAttribute>
+      <viewAttribute id="DBERVON">
+        <descriptions defaultDescription="Start of Calculation Period"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_CASHFLOW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CashflowAmount" source="CashflowAmount"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_CASHFLOW" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="CONDVALIDFROM">
         <descriptions defaultDescription="Date from when condition is valid"/>
@@ -1667,7 +1691,7 @@
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CashflowAmount" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;FLOWTYPE&quot;='P102', -1 * &quot;BBWHR&quot;, &quot;BBWHR&quot;)</formula>
+        <formula>if(&quot;FLOWTYPE&quot;='P102' or &quot;FLOWTYPE&quot;='P112', -1 * &quot;BBWHR&quot;, &quot;BBWHR&quot;)</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -1758,30 +1782,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="XFLOWTYPE" source="XFLOWTYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
     </input>
-  </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="AGG_CASHFLOW">
-    <viewAttributes>
-      <viewAttribute id="INTRENO">
-        <descriptions defaultDescription="Internal Key of Real Estate Object"/>
-      </viewAttribute>
-      <viewAttribute id="DBERVON">
-        <descriptions defaultDescription="Start of Calculation Period"/>
-      </viewAttribute>
-      <viewAttribute id="MANDT">
-        <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute id="CashflowAmount" aggregationType="sum">
-        <descriptions defaultDescription="CashflowAmount"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="P_CV_CASHFLOW">
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CashflowAmount" source="CashflowAmount"/>
-    </input>
+  
+    <filter>&quot;FLOWTYPE&quot;!='P200' and &quot;FLOWTYPE&quot;!='P201' and &quot;FLOWTYPE&quot;!='P202'</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_CONTRACT_FBNUM">
@@ -2254,17 +2256,17 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="337.8268736718046" y="112"/>
+      <upperLeftCorner x="337" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CV_CONTRACT_RESULTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="301.9999999999999" y="536.9999976158142"/>
+      <upperLeftCorner x="301" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CONTRACT_FBNUM" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="337.8268736718046" y="217"/>
+      <upperLeftCorner x="337" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CONTRACT_CASHFLOW" modelObjectNameSpace="J_CONTRACT_FBNUM" modelObjectType="JoinNodeInput">
@@ -2275,13 +2277,9 @@
       <upperLeftCorner x="401" y="52"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="TF_LT_FINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="405.8649461248091" y="376.9999988079071"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
   
     <shape expanded="true" modelObjectName="J_CONTRACT_CASHFLOW" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118.6666666666666" y="376.9999988079071"/>
+      <upperLeftCorner x="118" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CV_CONTRACT_RESULTS" modelObjectNameSpace="J_CONTRACT_CASHFLOW" modelObjectType="JoinNodeInput">
@@ -2292,14 +2290,18 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="P_CV_CASHFLOW" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91.99999999999989" y="641.9999976158142"/>
+    <shape expanded="true" modelObjectName="TF_LT_FINANCIALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="405" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_CASHFLOW" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91.99999999999991" y="536.9999976158142"/>
+      <upperLeftCorner x="91" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-  </shapes>
+  
+    <shape expanded="true" modelObjectName="P_CV_CASHFLOW" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="641"/>
+      <rectangleSize height="30" width="160"/>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
