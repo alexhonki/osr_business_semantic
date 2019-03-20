@@ -951,7 +951,7 @@
     <joinAttribute name="ZZ_PARTNER"/>
     <joinAttribute name="TAXYR"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_CONTRACT_CASHFLOW" cardinality="C1_N" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_CONTRACT_CASHFLOW" cardinality="C1_1" joinType="inner">
     <viewAttributes>
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
@@ -1290,9 +1290,19 @@
       <viewAttribute id="OWNER_CODE_DESC">
         <descriptions defaultDescription="OWNER_CODE_DESC"/>
       </viewAttribute>
+    
+      <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
+      <viewAttribute hidden="true" id="JOIN$INTRENO$INTRENO"/>
+      <viewAttribute hidden="true" id="JOIN$DBERVON$TAXYRSTARTDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
+    <input node="AGG_CASHFLOW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CashflowAmount" source="CashflowAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENO$INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DBERVON$TAXYRSTARTDT" source="DBERVON"/>
+    </input>
     <input node="P_CV_CONTRACT_RESULTS">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
@@ -1406,16 +1416,14 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYR" source="TAXYR"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENO$INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DBERVON$TAXYRSTARTDT" source="TAXYRSTARTDT"/>
     </input>
-    <input node="AGG_CASHFLOW">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CashflowAmount" source="CashflowAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="DBERVON"/>
-    </input>
-    <joinAttribute name="MANDT"/>
-    <joinAttribute name="INTRENO"/>
-    <joinAttribute name="TAXYRSTARTDT"/>
+    <joinAttribute name="JOIN$MANDT$MANDT"/>
+    <joinAttribute name="JOIN$INTRENO$INTRENO"/>
+    <joinAttribute name="JOIN$DBERVON$TAXYRSTARTDT"/>
   </calculationView>
   <calculationView xsi:type="Calculation:TableFunctionView" id="TF_LT_FINANCIALS" tableFunctionName="OSR_BUSINESS_SEMANTIC.db.TFunctions::TF_LT_FINANCIALS">
     <descriptions>
@@ -2208,7 +2216,9 @@
   
     <attribute id="OWNER_CODE_DESC" order="115" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Owner type"/>
+  
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="OWNER_CODE_DESC"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -2304,11 +2314,11 @@
       <upperLeftCorner x="118" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="P_CV_CONTRACT_RESULTS" modelObjectNameSpace="J_CONTRACT_CASHFLOW" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="AGG_CASHFLOW" modelObjectNameSpace="J_CONTRACT_CASHFLOW" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="AGG_CASHFLOW" modelObjectNameSpace="J_CONTRACT_CASHFLOW" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_CV_CONTRACT_RESULTS" modelObjectNameSpace="J_CONTRACT_CASHFLOW" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
