@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_LT_FINANCIALS" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_LT_FINANCIALS"/>
-<localVariables/>
+<localVariables/> 
 <variableMappings/>
 <dataSources>
   <DataSource id="OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_FINANCIALS">
+    <resourceUri>OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_FINANCIALS</resourceUri>
+  </DataSource>
+  <DataSource id="P_FINANCIALS_LT$$$$OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_FINANCIALS$$">
     <resourceUri>OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_FINANCIALS</resourceUri>
   </DataSource>
 </dataSources>
@@ -70,6 +73,7 @@
       <viewAttribute id="BLART">
         <descriptions defaultDescription="Document Type"/>
       </viewAttribute>
+  
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -83,28 +87,18 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL_1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="TFKHVOT_TXT30" source="TFKHVOT_TXT30"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TFKTVOT_TXT30" source="TFKTVOT_TXT30"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="TFK003T_LTEXT" source="TFK003T_LTEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TFK001AT_TXT50" source="TFK001AT_TXT50"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:TableFunctionView" id="TF_LT_FINANCIALS" tableFunctionName="OSR_BUSINESS_SEMANTIC.db.TFunctions::TF_LT_FINANCIALS">
-    <viewAttributes/>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_LTFINANCIALS_FINANCIALS" cardinality="C1_N" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_LTFINANCIALS_FINANCIALS" cardinality="C1_N" joinType="inner">
     <viewAttributes>
       <viewAttribute id="HVORG">
         <descriptions defaultDescription="Main Transaction for Line Item"/>
@@ -133,12 +127,6 @@
       <viewAttribute id="AUGDT">
         <descriptions defaultDescription="Clearing date"/>
       </viewAttribute>
-      <viewAttribute id="FBNUM">
-        <descriptions defaultDescription="FBNUM"/>
-      </viewAttribute>
-      <viewAttribute id="PERSL">
-        <descriptions defaultDescription="PERSL"/>
-      </viewAttribute>
       <viewAttribute id="TFKHVOT_TXT30">
         <descriptions defaultDescription="TFKHVOT_TXT30"/>
       </viewAttribute>
@@ -154,20 +142,27 @@
       <viewAttribute id="BLART">
         <descriptions defaultDescription="BLART"/>
       </viewAttribute>
-      <viewAttribute id="MANDT">
-        <descriptions defaultDescription="MANDT"/>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="Form Bundle Number"/>
+      </viewAttribute>
+      <viewAttribute id="PERSL">
+        <descriptions defaultDescription="Key for Period Assignment"/>
       </viewAttribute>
       <viewAttribute id="DFKK_H_GPART">
-        <descriptions defaultDescription="DFKK_H_GPART"/>
+        <descriptions defaultDescription="Business Partner Number"/>
       </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="TF_LT_FINANCIALS">
+    <input node="P_FINANCIALS_LT">
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
     </input>
     <input node="P_FINANCIALS">
       <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
@@ -185,12 +180,53 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TFK001AT_TXT50" source="TFK001AT_TXT50"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
     </input>
-    <joinAttribute name="MANDT"/>
+    <joinAttribute name="JOIN$MANDT$MANDT"/>
     <joinAttribute name="FBNUM"/>
     <joinAttribute name="DFKK_H_GPART"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="P_FINANCIALS_LT" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions>
+      <comment text="Filters only Land Tax main / subs and data from 2011"/>
+    </descriptions>
+    <viewAttributes>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="Form Bundle Number"/>
+      </viewAttribute>
+      <viewAttribute id="PERSL">
+        <descriptions defaultDescription="Key for Period Assignment"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_GPART">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="HVORG">
+        <descriptions defaultDescription="Main Transaction for Line Item"/>
+      </viewAttribute>
+      <viewAttribute id="TVORG">
+        <descriptions defaultDescription="Subtransaction for Document Item"/>
+      </viewAttribute>
+      <viewAttribute id="KOFIZ">
+        <descriptions defaultDescription="Account Determination ID"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_FINANCIALS_LT$$$$OSR_BUSINESS_SEMANTIC.db.Business_Models::CV_FINANCIALS$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
+    </input>
+    <filter>&quot;HVORG&quot; = '4000' AND &quot;TVORG&quot; = '0150' AND &quot;PERSL&quot; != '' AND &quot;PERSL&quot; &gt; '2010' AND &quot;KOFIZ&quot; = 'LT'</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_LTFINANCIALS_FINANCIALS">
@@ -223,13 +259,13 @@
       <descriptions defaultDescription="Clearing date"/>
       <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="AUGDT"/>
     </attribute>
-    <attribute id="FBNUM" order="10" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Form bundle number"/>
-      <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="FBNUM"/>
-    </attribute>
-    <attribute id="PERSL" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Period key"/>
+    <attribute id="PERSL" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Key for Period Assignment"/>
       <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="PERSL"/>
+    </attribute>
+    <attribute id="FBNUM" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Form Bundle Number"/>
+      <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="FBNUM"/>
     </attribute>
     <attribute id="TFKHVOT_TXT30" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Main Transaction"/>
@@ -257,19 +293,13 @@
       <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="BLART"/>
   
     </attribute>
-  
     <attribute id="MANDT" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Client"/>
-  
       <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="MANDT"/>
-  
     </attribute>
-  
     <attribute id="DFKK_H_GPART" order="18" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Business partner"/>
-  
+      <descriptions defaultDescription="Business Partner Number"/>
       <keyMapping columnObjectName="J_LTFINANCIALS_FINANCIALS" columnName="DFKK_H_GPART"/>
-  
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -296,24 +326,24 @@
     </shape>
   
     <shape expanded="true" modelObjectName="P_FINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="356"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="TF_LT_FINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="356"/>
+      <upperLeftCorner x="92" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_LTFINANCIALS_FINANCIALS" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="221" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="TF_LT_FINANCIALS" modelObjectNameSpace="J_LTFINANCIALS_FINANCIALS" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
+    <shape modelObjectName="P_FINANCIALS_LT" modelObjectNameSpace="J_LTFINANCIALS_FINANCIALS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="379" y="20"/>
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="P_FINANCIALS" modelObjectNameSpace="J_LTFINANCIALS_FINANCIALS" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="379" y="20"/>
+      <upperLeftCorner x="679" y="30"/>
       <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_FINANCIALS_LT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="376"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
 </layout>
