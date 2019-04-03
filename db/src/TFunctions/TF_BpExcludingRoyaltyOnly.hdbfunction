@@ -1,4 +1,4 @@
-FUNCTION "OSR_BUSINESS_SEMANTIC.db.TFunctions::TF_BP_Only_Rolyalty"( )
+FUNCTION "osr.business.semantic.db.TFunctions::TF_BpExcludingRoyaltyOnly"( )
        RETURNS table ("PARTNER" NVARCHAR(10)) 
        LANGUAGE SQLSCRIPT 
        SQL SECURITY INVOKER AS 
@@ -16,10 +16,9 @@ RETURN
                                                         WHEN ("RLTYP" NOT IN ('ZRCLI', 'ZRAHD', 'ZRHD', 'ZRSL', 'MKK')) THEN '1'
                                                         ELSE '0'
                                                     END AS "OTHERROLE_FLAG"
-                                            FROM "OSR_BUSINESS_SEMANTIC.db.synonyms::BUT100"
+                                            FROM "osr.business.semantic.db.synonyms::BUT100"
                                         )
                                         GROUP BY "PARTNER"
-                                        HAVING MAX("ROYROLE_FLAG") = 1
-                                        AND MAX("OTHERROLE_FLAG") = 0;
+                                        HAVING MAX("ROYROLE_FLAG") != 1 OR (MAX("ROYROLE_FLAG") = 1 AND MAX("OTHERROLE_FLAG") = 1);
 
 END;
