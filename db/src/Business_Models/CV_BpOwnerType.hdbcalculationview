@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models::CV_BpOwnerType" applyPrivilegeType="NONE" dataCategory="DIMENSION" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false" cacheEnabled="true">
+<descriptions defaultDescription="Land tax contract results view"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.synonyms::LTCNRES">
+    <resourceUri>osr.business.semantic.db.synonyms::LTCNRES</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models::CV_BpContract">
+    <resourceUri>osr.business.semantic.db.Business_Models::CV_BpContract</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::CODE_ID">
+    <resourceUri>osr.business.semantic.db.synonyms::CODE_ID</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CNRES" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOCN">
+        <descriptions defaultDescription="INTRENOCN"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="OWNERTYPE">
+        <descriptions defaultDescription="OWNERTYPE"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::LTCNRES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/></input>
+    <filter>&quot;TAXYRSTARTDT&quot;!='20090701'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPCONTRACT_CNRES" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="INTRENO"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="ZZ_PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="OWNERTYPE">
+        <descriptions defaultDescription="OWNERTYPE"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_BpContract">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/></input>
+    <input node="P_CNRES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENOCN"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="INTRENO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_BpContract">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="INTRENO"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="ZZ_PARTNER"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models::CV_BpContract">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/></input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPCONTRACT_CNRES_OWNERDESC" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="INTRENO"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="ZZ_PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="OWNERTYPE">
+        <descriptions defaultDescription="OWNERTYPE"/>
+      </viewAttribute>
+    
+      <viewAttribute id="OWNER_CODE_DESC">
+        <descriptions defaultDescription="OWNER_CODE_DESC"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPCONTRACT_CNRES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/></input>
+    <input node="P_OWNER_DESC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="CODE_ID"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="OWNERTYPE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_OWNER_DESC">
+    <viewAttributes>
+      <viewAttribute id="OWNER_CODE_DESC">
+        <descriptions defaultDescription="CODE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CODE_ID">
+        <descriptions defaultDescription="CODE_ID"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::CODE_ID">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODE_ID" source="CODE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="CODE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_BPCONTRACT_CNRES_OWNERDESC">
+  <attributes>
+    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="J_BPCONTRACT_CNRES_OWNERDESC" columnName="MANDT"/>
+    </attribute>
+    <attribute id="ZZ_PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner"/>
+      <keyMapping columnObjectName="J_BPCONTRACT_CNRES_OWNERDESC" columnName="ZZ_PARTNER"/>
+    </attribute>
+    <attribute id="TAXYRSTARTDT" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Year Start Date"/>
+      <keyMapping columnObjectName="J_BPCONTRACT_CNRES_OWNERDESC" columnName="TAXYRSTARTDT"/>
+    </attribute>
+    <attribute id="OWNERTYPE" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Land tax code id"/>
+      <keyMapping columnObjectName="J_BPCONTRACT_CNRES_OWNERDESC" columnName="OWNERTYPE"/>
+    </attribute>
+  
+    <attribute id="OWNER_CODE_DESC" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Land Tax Code Description"/>
+  
+      <keyMapping columnObjectName="J_BPCONTRACT_CNRES_OWNERDESC" columnName="OWNER_CODE_DESC"/>
+  
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/></logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="328" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CNRES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="516"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPCONTRACT_CNRES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CV_BpContract" modelObjectNameSpace="J_BPCONTRACT_CNRES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CNRES" modelObjectNameSpace="J_BPCONTRACT_CNRES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CV_BpContract" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="516"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_BPCONTRACT_CNRES_OWNERDESC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="328" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPCONTRACT_CNRES" modelObjectNameSpace="J_BPCONTRACT_CNRES_OWNERDESC" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_OWNER_DESC" modelObjectNameSpace="J_BPCONTRACT_CNRES_OWNERDESC" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="315" y="1008"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_OWNER_DESC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="395" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
