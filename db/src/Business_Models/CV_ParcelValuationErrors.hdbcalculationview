@@ -215,7 +215,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_ROW_NO" source="Z_RUN_ROW_NO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
     </input>
-  
     <filter>&quot;TAXYRSTARTDT&quot;!='20090701'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_PLRES" filterExpressionLanguage="COLUMN_ENGINE">
@@ -433,7 +432,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_ROW_NO" source="Z_RUN_ROW_NO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
     </input>
-  
     <filter>&quot;TAXYRSTARTDT&quot;!='20090701'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_PLRES_NAPLVL" cardinality="C1_N" joinType="inner">
@@ -738,6 +736,66 @@
     <joinAttribute name="MANDT"/>
     <joinAttribute name="INTRENOPL"/>
     <joinAttribute name="TAXYRSTARTDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_OUTPUT_MAXVALPERYEAR" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="PL_RELVNTVAL" aggregationType="sum">
+        <descriptions defaultDescription="PL_RELVNTVAL"/>
+      </viewAttribute>
+      <viewAttribute id="PL_INTRENONA">
+        <descriptions defaultDescription="PL_INTRENONA"/>
+      </viewAttribute>
+      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
+        <descriptions defaultDescription="VAL_RELVNTVAL"/>
+      </viewAttribute>
+      <viewAttribute id="ActiveValuation">
+        <descriptions defaultDescription="ActiveValuation"/>
+      </viewAttribute>
+      <viewAttribute id="VAL_INTRENONA">
+        <descriptions defaultDescription="VAL_INTRENONA"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOPL">
+        <descriptions defaultDescription="INTRENOPL"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="NANO">
+        <descriptions defaultDescription="NANO"/>
+      </viewAttribute>
+      <viewAttribute id="MAX_INTRENONA" aggregationType="max">
+        <descriptions defaultDescription="INTRENONA"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="NewestValuation" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;VAL_INTRENONA&quot;=&quot;MAX_INTRENONA&quot;,'X','')</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="J_LIMIT_OUTPUT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PL_RELVNTVAL" source="PL_RELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_INTRENONA" source="VAL_INTRENONA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
+    </input>
+    <input node="AGG_MAX_VAL_ID_PER_YEAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAX_INTRENONA" source="INTRENONA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    </input>
+    <joinAttribute name="INTRENOPL"/>
+    <joinAttribute name="TAXYRSTARTDT"/>
+    <joinAttribute name="MANDT"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_OWNERSHIPCNRESP">
     <viewAttributes>
@@ -1285,15 +1343,15 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_OUTPUT_MAXVALPERYEAR" cardinality="C1_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PARCELS_TAXCALCS">
     <viewAttributes>
-      <viewAttribute id="PL_RELVNTVAL" aggregationType="sum">
+      <viewAttribute id="PL_RELVNTVAL">
         <descriptions defaultDescription="PL_RELVNTVAL"/>
       </viewAttribute>
       <viewAttribute id="PL_INTRENONA">
         <descriptions defaultDescription="PL_INTRENONA"/>
       </viewAttribute>
-      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
+      <viewAttribute id="VAL_RELVNTVAL">
         <descriptions defaultDescription="VAL_RELVNTVAL"/>
       </viewAttribute>
       <viewAttribute id="ActiveValuation">
@@ -1311,20 +1369,83 @@
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
       </viewAttribute>
+      <viewAttribute id="BPARTNER">
+        <descriptions defaultDescription="BPARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="OWNERFRACTION">
+        <descriptions defaultDescription="OWNERFRACTION"/>
+      </viewAttribute>
+      <viewAttribute id="OWNERFACTOR">
+        <descriptions defaultDescription="OWNERFACTOR"/>
+      </viewAttribute>
+      <viewAttribute id="OWNERPERCENT">
+        <descriptions defaultDescription="OWNERPERCENT"/>
+      </viewAttribute>
+      <viewAttribute id="BPRELVNTVAL">
+        <descriptions defaultDescription="BPRELVNTVAL"/>
+      </viewAttribute>
+      <viewAttribute id="CalculatedBPRelevantValue">
+        <descriptions defaultDescription="CalculatedBPRelevantValue"/>
+      </viewAttribute>
+      <viewAttribute id="PROPTAXAMT">
+        <descriptions defaultDescription="PROPTAXAMT"/>
+      </viewAttribute>
+      <viewAttribute id="CONCESSCODE">
+        <descriptions defaultDescription="CONCESSCODE"/>
+      </viewAttribute>
+      <viewAttribute id="CONCESSPCT">
+        <descriptions defaultDescription="CONCESSPCT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOCN">
+        <descriptions defaultDescription="INTRENOCN"/>
+      </viewAttribute>
+      <viewAttribute id="OWNERTYPE">
+        <descriptions defaultDescription="OWNERTYPE"/>
+      </viewAttribute>
+      <viewAttribute id="TAXRATECODE">
+        <descriptions defaultDescription="TAXRATECODE"/>
+      </viewAttribute>
+      <viewAttribute id="CalculatedTotalBPTaxableValue">
+        <descriptions defaultDescription="CalculatedTotalBPTaxableValue"/>
+      </viewAttribute>
+      <viewAttribute id="BASE_AMOUNT">
+        <descriptions defaultDescription="BASE_AMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="TAX_PERCENT">
+        <descriptions defaultDescription="TAX_PERCENT"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURBASE_AMT">
+        <descriptions defaultDescription="ABSURBASE_AMT"/>
+      </viewAttribute>
+      <viewAttribute id="MIN_VALUE">
+        <descriptions defaultDescription="MIN_VALUE"/>
+      </viewAttribute>
       <viewAttribute id="NANO">
         <descriptions defaultDescription="NANO"/>
       </viewAttribute>
-      <viewAttribute id="MAX_INTRENONA" aggregationType="max">
-        <descriptions defaultDescription="INTRENONA"/>
+      <viewAttribute id="TOTBPTAXABLEVAL">
+        <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
+      </viewAttribute>
+      <viewAttribute id="BPTAXABLEVAL">
+        <descriptions defaultDescription="BPTAXABLEVAL"/>
+      </viewAttribute>
+      <viewAttribute id="CalculatedParcelTaxableValue">
+        <descriptions defaultDescription="CalculatedParcelTaxableValue"/>
+      </viewAttribute>
+      <viewAttribute id="NewestValuation">
+        <descriptions defaultDescription="NewestValuation"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="NewestValuation" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;VAL_INTRENONA&quot;=&quot;MAX_INTRENONA&quot;,'X','')</formula>
+      <calculatedViewAttribute id="CalculatedParcelTaxPotential" datatype="DECIMAL" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(isnull(&quot;TAX_PERCENT&quot;),0,(&quot;CalculatedParcelTaxableValue&quot;/&quot;CalculatedTotalBPTaxableValue&quot;)*(decfloat(&quot;BASE_AMOUNT&quot;)+(decfloat(&quot;CalculatedTotalBPTaxableValue&quot;)-decfloat(&quot;MIN_VALUE&quot;))*(decfloat(&quot;TAX_PERCENT&quot;)/100)))</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="TaxDifference" datatype="DECIMAL" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+        <formula>&quot;CalculatedParcelTaxPotential&quot;-&quot;PROPTAXAMT&quot;</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="J_LIMIT_OUTPUT">
+    <input node="NEJ_PARCELS_TAXRATES">
       <mapping xsi:type="Calculation:AttributeMapping" target="PL_RELVNTVAL" source="PL_RELVNTVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
@@ -1333,144 +1454,167 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="BPARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERFRACTION" source="OWNERFRACTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERFACTOR" source="OWNERFACTOR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERPERCENT" source="OWNERPERCENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPRELVNTVAL" source="BPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CalculatedBPRelevantValue" source="CalculatedBPRelevantValue"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROPTAXAMT" source="PROPTAXAMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSCODE" source="CONCESSCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSPCT" source="CONCESSPCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CalculatedTotalBPTaxableValue" source="CalculatedTotalBPTaxableValue"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BASE_AMOUNT" source="BASE_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PERCENT" source="TAX_PERCENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURBASE_AMT" source="ABSURBASE_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MIN_VALUE" source="MIN_VALUE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPTAXABLEVAL" source="BPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CalculatedParcelTaxableValue" source="CalculatedParcelTaxableValue"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NewestValuation" source="NewestValuation"/>
     </input>
-    <input node="AGG_MAX_VAL_ID_PER_YEAR">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MAX_INTRENONA" source="INTRENONA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-    </input>
-    <joinAttribute name="INTRENOPL"/>
-    <joinAttribute name="TAXYRSTARTDT"/>
-    <joinAttribute name="MANDT"/>
   </calculationView>
 </calculationViews>
-<logicalModel id="NEJ_PARCELS_TAXRATES">
+<logicalModel id="P_PARCELS_TAXCALCS">
   <attributes>
-    <attribute id="PL_INTRENONA" order="4" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="PL_INTRENONA" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PL_INTRENONA"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="PL_INTRENONA"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="PL_INTRENONA"/>
     </attribute>
-    <attribute id="ActiveValuation" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ActiveValuation" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ActiveValuation"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="ActiveValuation"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="ActiveValuation"/>
     </attribute>
-    <attribute id="VAL_INTRENONA" order="7" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="VAL_INTRENONA" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="VAL_INTRENONA"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="VAL_INTRENONA"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="VAL_INTRENONA"/>
     </attribute>
-    <attribute id="TAXYRSTARTDT" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXYRSTARTDT" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TAXYRSTARTDT"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="TAXYRSTARTDT"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TAXYRSTARTDT"/>
     </attribute>
-    <attribute id="INTRENOPL" order="9" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="INTRENOPL" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="INTRENOPL"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="INTRENOPL"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="INTRENOPL"/>
     </attribute>
-    <attribute id="MANDT" order="10" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MANDT" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MANDT"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="MANDT"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="MANDT"/>
     </attribute>
-    <attribute id="BPARTNER" order="11" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BPARTNER" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BPARTNER"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="BPARTNER"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="BPARTNER"/>
     </attribute>
-    <attribute id="OWNERFRACTION" order="12" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNERFRACTION" order="11" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OWNERFRACTION"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="OWNERFRACTION"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="OWNERFRACTION"/>
     </attribute>
-    <attribute id="OWNERFACTOR" order="13" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNERFACTOR" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OWNERFACTOR"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="OWNERFACTOR"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="OWNERFACTOR"/>
     </attribute>
-    <attribute id="OWNERPERCENT" order="14" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNERPERCENT" order="13" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OWNERPERCENT"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="OWNERPERCENT"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="OWNERPERCENT"/>
     </attribute>
-    <attribute id="CONCESSCODE" order="18" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CONCESSCODE" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CONCESSCODE"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="CONCESSCODE"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CONCESSCODE"/>
     </attribute>
-    <attribute id="CONCESSPCT" order="19" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CONCESSPCT" order="18" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CONCESSPCT"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="CONCESSPCT"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CONCESSPCT"/>
     </attribute>
-    <attribute id="INTRENOCN" order="20" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="INTRENOCN" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="INTRENOCN"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="INTRENOCN"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="INTRENOCN"/>
     </attribute>
-    <attribute id="OWNERTYPE" order="21" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNERTYPE" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OWNERTYPE"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="OWNERTYPE"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="OWNERTYPE"/>
     </attribute>
-    <attribute id="TAXRATECODE" order="22" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXRATECODE" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TAXRATECODE"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="TAXRATECODE"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TAXRATECODE"/>
     </attribute>
-    <attribute id="BASE_AMOUNT" hidden="true" order="24" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BASE_AMOUNT" hidden="true" order="23" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BASE_AMOUNT"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="BASE_AMOUNT"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="BASE_AMOUNT"/>
     </attribute>
-    <attribute id="TAX_PERCENT" order="25" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAX_PERCENT" order="24" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TAX_PERCENT"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="TAX_PERCENT"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TAX_PERCENT"/>
     </attribute>
-    <attribute id="ABSURBASE_AMT" hidden="true" order="26" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ABSURBASE_AMT" hidden="true" order="25" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABSURBASE_AMT"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="ABSURBASE_AMT"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="ABSURBASE_AMT"/>
     </attribute>
-    <attribute id="MIN_VALUE" hidden="true" order="27" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MIN_VALUE" hidden="true" order="26" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MIN_VALUE"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="MIN_VALUE"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="MIN_VALUE"/>
     </attribute>
-    <attribute id="NANO" order="28" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="NANO" order="27" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="NANO"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="NANO"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="NANO"/>
     </attribute>
-    <attribute id="TOTBPTAXABLEVAL" order="29" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TOTBPTAXABLEVAL" order="28" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="TOTBPTAXABLEVAL"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TOTBPTAXABLEVAL"/>
     </attribute>
   
-    <attribute id="NewestValuation" order="32" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="NewestValuation" order="31" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="NewestValuation"/>
-      <keyMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="NewestValuation"/>
+  
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="NewestValuation"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="PL_RELVNTVAL" order="3" aggregationType="sum" measureType="simple">
+    <measure id="PL_RELVNTVAL" order="2" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="PL_RELVNTVAL"/>
-      <measureMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="PL_RELVNTVAL"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="PL_RELVNTVAL"/>
     </measure>
-    <measure id="VAL_RELVNTVAL" order="5" aggregationType="sum" measureType="simple">
+    <measure id="VAL_RELVNTVAL" order="4" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="VAL_RELVNTVAL"/>
-      <measureMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="VAL_RELVNTVAL"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="VAL_RELVNTVAL"/>
     </measure>
-    <measure id="BPRELVNTVAL" order="15" aggregationType="sum" measureType="simple">
+    <measure id="BPRELVNTVAL" order="14" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BPRELVNTVAL"/>
-      <measureMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="BPRELVNTVAL"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="BPRELVNTVAL"/>
     </measure>
-    <measure id="CalculatedBPRelevantValue" order="16" aggregationType="sum" measureType="simple">
+    <measure id="CalculatedBPRelevantValue" order="15" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CalculatedBPRelevantValue"/>
-      <measureMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="CalculatedBPRelevantValue"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CalculatedBPRelevantValue"/>
     </measure>
-    <measure id="PROPTAXAMT" order="17" aggregationType="sum" measureType="simple">
+    <measure id="PROPTAXAMT" order="16" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="PROPTAXAMT"/>
-      <measureMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="PROPTAXAMT"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="PROPTAXAMT"/>
     </measure>
-    <measure id="CalculatedTotalBPTaxableValue" order="23" aggregationType="sum" measureType="simple">
+    <measure id="CalculatedTotalBPTaxableValue" order="22" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CalculatedTotalBPTaxableValue"/>
-      <measureMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="CalculatedTotalBPTaxableValue"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CalculatedTotalBPTaxableValue"/>
     </measure>
-    <measure id="BPTAXABLEVAL" order="30" aggregationType="sum" measureType="simple">
+    <measure id="BPTAXABLEVAL" order="29" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BPTAXABLEVAL"/>
-      <measureMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="BPTAXABLEVAL"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="BPTAXABLEVAL"/>
     </measure>
-    <measure id="CalculatedParcelTaxableValue" order="31" aggregationType="sum" measureType="simple">
+    <measure id="CalculatedParcelTaxableValue" order="30" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CalculatedParcelTaxableValue"/>
-      <measureMapping columnObjectName="NEJ_PARCELS_TAXRATES" columnName="CalculatedParcelTaxableValue"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CalculatedParcelTaxableValue"/>
+    </measure>
+  
+    <measure id="CalculatedParcelTaxPotential" order="32" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CalculatedParcelTaxPotential"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CalculatedParcelTaxPotential"/>
+    </measure>
+    <measure id="TaxDifference" order="33" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="TaxDifference"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TaxDifference"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
@@ -1485,42 +1629,29 @@
       
       
       
-      </measure>
-  
-    <measure id="CalculatedParcelTaxPotential" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
-      <descriptions defaultDescription="CalculatedParcelTaxPotential"/>
-      <formula>if(isnull(&quot;TAX_PERCENT&quot;),0,(&quot;CalculatedParcelTaxableValue&quot;/&quot;CalculatedTotalBPTaxableValue&quot;)*(&quot;BASE_AMOUNT&quot;+(decfloat(&quot;CalculatedTotalBPTaxableValue&quot;)-decfloat(&quot;MIN_VALUE&quot;))*(decfloat(&quot;TAX_PERCENT&quot;)/100)))</formula>
       
-      
-      
-      
-      </measure>
-  
-    <measure id="TaxDifference" order="33" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
-      <formula>&quot;CalculatedParcelTaxPotential&quot;-&quot;PROPTAXAMT&quot;</formula>
-      </measure>
-  </calculatedMeasures>
+      </measure></calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="152.02578805601854" y="112"/>
+      <upperLeftCorner x="150.78494700868092" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_NAPLVL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="583.5028234199193" y="1362.9999916553497"/>
+      <upperLeftCorner x="263.3639306848156" y="1501.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PLRES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="102.05818655974252" y="1372.9999916553497"/>
+      <upperLeftCorner x="508.9192938246388" y="1501.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PLRES_NAPLVL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="226.06773575018644" y="1183.9999928474426"/>
+      <upperLeftCorner x="511.99999999999983" y="1321.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PLRES" modelObjectNameSpace="J_PLRES_NAPLVL" modelObjectType="JoinNodeInput">
@@ -1532,11 +1663,11 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_NAPLVL_PLVALPERYEAR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="489.06773575018644" y="1201.4999928474426"/>
+      <upperLeftCorner x="301.9999999999999" y="1329.4999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_LIMIT_OUTPUT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="425.4354253501716" y="1016.9999940395355"/>
+      <upperLeftCorner x="423.6186204514353" y="1161.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_PLRES_NAPLVL" modelObjectNameSpace="J_LIMIT_OUTPUT" modelObjectType="JoinNodeInput">
@@ -1548,11 +1679,11 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_PLRESB" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="304.8273135508817" y="856.9999952316284"/>
+      <upperLeftCorner x="304.0527934162716" y="981.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_OUTPUT_PLRESB" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="489.1399204858774" y="696.9999964237213"/>
+      <upperLeftCorner x="489.4989737321197" y="821.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_OUTPUT_MAXVALPERYEAR" modelObjectNameSpace="J_OUTPUT_PLRESB" modelObjectType="JoinNodeInput">
@@ -1563,12 +1694,25 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
+    <shape expanded="true" modelObjectName="J_OUTPUT_MAXVALPERYEAR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="514.0527934162717" y="981.9999940395355"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_LIMIT_OUTPUT" modelObjectNameSpace="J_OUTPUT_MAXVALPERYEAR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="AGG_MAX_VAL_ID_PER_YEAR" modelObjectNameSpace="J_OUTPUT_MAXVALPERYEAR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="P_CV_OWNERSHIPCNRESP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="279.1399204858774" y="696.9999964237213"/>
+      <upperLeftCorner x="279.4989737321196" y="821.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PARCELS_TAXDETAILS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="411.4664154731645" y="536.9999976158142"/>
+      <upperLeftCorner x="413.2342550634777" y="661.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_OUTPUT_PLRESB" modelObjectNameSpace="J_PARCELS_TAXDETAILS" modelObjectType="JoinNodeInput">
@@ -1580,16 +1724,16 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CNRES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="201.4664154731645" y="536.9999976158142"/>
+      <upperLeftCorner x="203.23425506347763" y="661.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_LTAXRATE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="376.9999988079071"/>
+      <upperLeftCorner x="95.30097637522812" y="501.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PARCELS_CONTRACTDETAILS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="376.9999988079071"/>
+      <upperLeftCorner x="305.3009763752281" y="501.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_PARCELS_TAXDETAILS" modelObjectNameSpace="J_PARCELS_CONTRACTDETAILS" modelObjectType="JoinNodeInput">
@@ -1601,7 +1745,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_PARCELS_TAXRATES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="152.02578805601854" y="217"/>
+      <upperLeftCorner x="159.1000549461699" y="341.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_PARCELS_CONTRACTDETAILS" modelObjectNameSpace="NEJ_PARCELS_TAXRATES" modelObjectType="JoinNodeInput">
@@ -1614,20 +1758,12 @@
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_MAX_VAL_ID_PER_YEAR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="817.0677357501866" y="1184.4999928474426"/>
+      <upperLeftCorner x="92" y="1339.4999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="J_OUTPUT_MAXVALPERYEAR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="514.8273135508816" y="856.9999952316284"/>
+    <shape expanded="true" modelObjectName="P_PARCELS_TAXCALCS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="159.1000549461699" y="236.9999988079071"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="J_LIMIT_OUTPUT" modelObjectNameSpace="J_OUTPUT_MAXVALPERYEAR" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="AGG_MAX_VAL_ID_PER_YEAR" modelObjectNameSpace="J_OUTPUT_MAXVALPERYEAR" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
     </shape>
   </shapes>
 </layout>
