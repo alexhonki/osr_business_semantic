@@ -1438,10 +1438,16 @@
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CalculatedParcelTaxPotential" datatype="DECIMAL" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(isnull(&quot;TAX_PERCENT&quot;),0,(&quot;CalculatedParcelTaxableValue&quot;/&quot;CalculatedTotalBPTaxableValue&quot;)*(decfloat(&quot;BASE_AMOUNT&quot;)+(decfloat(&quot;CalculatedTotalBPTaxableValue&quot;)-decfloat(&quot;MIN_VALUE&quot;))*(decfloat(&quot;TAX_PERCENT&quot;)/100)))</formula>
+        <formula>decfloat(&quot;CalculatedParcelTaxProportionPercentage&quot;)*decfloat(&quot;CalculatedTotalBPTaxPotential&quot;)</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="TaxDifference" datatype="DECIMAL" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
-        <formula>&quot;CalculatedParcelTaxPotential&quot;-&quot;PROPTAXAMT&quot;</formula>
+        <formula>decfloat(decfloat(&quot;CalculatedParcelTaxPotential&quot;)-decfloat(&quot;PROPTAXAMT&quot;))</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CalculatedParcelTaxProportionPercentage" datatype="DECIMAL" length="15" scale="7" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CalculatedParcelTaxableValue&quot;=0,0,decfloat(&quot;CalculatedParcelTaxableValue&quot;)/decfloat(&quot;CalculatedTotalBPTaxableValue&quot;))</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CalculatedTotalBPTaxPotential" datatype="DECIMAL" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(isnull(&quot;BASE_AMOUNT&quot;),0,decfloat(&quot;BASE_AMOUNT&quot;)+((decfloat(&quot;CalculatedTotalBPTaxableValue&quot;)-decfloat(&quot;MIN_VALUE&quot;))*(decfloat(&quot;TAX_PERCENT&quot;)/100)))</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -1615,6 +1621,14 @@
     <measure id="TaxDifference" order="33" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="TaxDifference"/>
       <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TaxDifference"/>
+    </measure>
+    <measure id="CalculatedParcelTaxProportionPercentage" order="34" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CalculatedParcelTaxProportionPercentage"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CalculatedParcelTaxProportionPercentage"/>
+    </measure>
+    <measure id="CalculatedTotalBPTaxPotential" order="35" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CalculatedTotalBPTaxPotential"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CalculatedTotalBPTaxPotential"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
