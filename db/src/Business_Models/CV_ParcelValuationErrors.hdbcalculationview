@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models::CV_ParcelValuationErrors" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.business.semantic.db.Business_Models::CV_ParcelValuationErrors" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_ParcelValuationErrors"/>
 <localVariables/>
 <variableMappings/>
@@ -1645,8 +1645,21 @@
       
       
       
+      
       </measure></calculatedMeasures>
-  <restrictedMeasures/>
+  <restrictedMeasures>
+    <measure id="TaxDiffNewestValuation" order="36" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TaxDifference">
+      <descriptions defaultDescription="Tax Difference from Newest Valuation">
+        <comment text="Tax Difference from Newest Valuation"/>
+      </descriptions>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="NewestValuation">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="X"/>
+        </filter>
+        <attributeName>NewestValuation</attributeName>
+      </restriction>
+      </measure>
+  </restrictedMeasures>
   <localDimensions/>
 </logicalModel>
 <layout>
@@ -1782,4 +1795,4 @@
     </shape>
   </shapes>
 </layout>
-</Calculation:scenario>  
+</Calculation:scenario>
