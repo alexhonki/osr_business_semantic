@@ -545,20 +545,11 @@
     </input>
     <filter>&quot;Counter&quot;&gt;1</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_LIMIT_OUTPUT" cardinality="CN_1" joinType="inner">
+  <calculationView xsi:type="Calculation:JoinView" id="J_LIMIT_MULTI_VALS" cardinality="CN_1" joinType="inner">
     <descriptions>
       <comment text="Limit model output to only parcels that have more than one valuation for a year"/>
     </descriptions>
     <viewAttributes>
-      <viewAttribute id="PL_RELVNTVAL" aggregationType="sum">
-        <descriptions defaultDescription="PL_RELVNTVAL"/>
-      </viewAttribute>
-      <viewAttribute id="PL_INTRENONA">
-        <descriptions defaultDescription="PL_INTRENONA"/>
-      </viewAttribute>
-      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
-        <descriptions defaultDescription="VAL_RELVNTVAL"/>
-      </viewAttribute>
       <viewAttribute id="ActiveValuation">
         <descriptions defaultDescription="ActiveValuation"/>
       </viewAttribute>
@@ -574,9 +565,6 @@
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
       </viewAttribute>
-      <viewAttribute id="NANO">
-        <descriptions defaultDescription="NANO"/>
-      </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$INTRENOPL$INTRENOPL"/>
       <viewAttribute hidden="true" id="JOIN$TAXYRSTARTDT$TAXYRSTARTDT"/>
       <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
@@ -584,12 +572,8 @@
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_PLRES_NAPLVL">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_RELVNTVAL" source="PL_RELVNTVAL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VAL_INTRENONA" source="VAL_INTRENONA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENOPL$INTRENOPL" source="INTRENOPL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TAXYRSTARTDT$TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
@@ -652,15 +636,6 @@
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_OUTPUT_PLRESB" cardinality="C1_N" joinType="leftOuter">
     <viewAttributes>
-      <viewAttribute id="PL_RELVNTVAL" aggregationType="sum">
-        <descriptions defaultDescription="PL_RELVNTVAL"/>
-      </viewAttribute>
-      <viewAttribute id="PL_INTRENONA">
-        <descriptions defaultDescription="PL_INTRENONA"/>
-      </viewAttribute>
-      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
-        <descriptions defaultDescription="VAL_RELVNTVAL"/>
-      </viewAttribute>
       <viewAttribute id="ActiveValuation">
         <descriptions defaultDescription="ActiveValuation"/>
       </viewAttribute>
@@ -695,32 +670,38 @@
         <descriptions defaultDescription="INTRENOCN"/>
       </viewAttribute>
     
+      <viewAttribute id="NewestValuation">
+        <descriptions defaultDescription="NewestValuation"/>
+      </viewAttribute>
+    
+      <viewAttribute id="PL_INTRENONA">
+        <descriptions defaultDescription="PL_INTRENONA"/>
+      </viewAttribute>
       <viewAttribute id="NANO">
         <descriptions defaultDescription="NANO"/>
       </viewAttribute>
-    
-      <viewAttribute id="NewestValuation">
-        <descriptions defaultDescription="NewestValuation"/>
+      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
+        <descriptions defaultDescription="VAL_RELVNTVAL"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CalculatedBPRelevantValue" datatype="DECIMAL" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
-        <formula>(decfloat(&quot;OWNERPERCENT&quot;)/100)*decfloat(&quot;VAL_RELVNTVAL&quot;)</formula>
+        <formula>(decfloat(&quot;VAL_RELVNTVAL&quot;)*decfloat(&quot;OWNERFRACTION&quot;))/decfloat(&quot;OWNERFACTOR&quot;)</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="J_OUTPUT_MAXVALPERYEAR">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_RELVNTVAL" source="PL_RELVNTVAL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
+    <input node="J_OUTPUT">
       <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VAL_INTRENONA" source="VAL_INTRENONA"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="NewestValuation" source="NewestValuation"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
     </input>
     <input node="P_CV_PLRESB">
       <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="BPARTNER"/>
@@ -737,17 +718,8 @@
     <joinAttribute name="INTRENOPL"/>
     <joinAttribute name="TAXYRSTARTDT"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_OUTPUT_MAXVALPERYEAR" cardinality="C1_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_MAXVALPERYEAR" cardinality="C1_1" joinType="leftOuter" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
-      <viewAttribute id="PL_RELVNTVAL" aggregationType="sum">
-        <descriptions defaultDescription="PL_RELVNTVAL"/>
-      </viewAttribute>
-      <viewAttribute id="PL_INTRENONA">
-        <descriptions defaultDescription="PL_INTRENONA"/>
-      </viewAttribute>
-      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
-        <descriptions defaultDescription="VAL_RELVNTVAL"/>
-      </viewAttribute>
       <viewAttribute id="ActiveValuation">
         <descriptions defaultDescription="ActiveValuation"/>
       </viewAttribute>
@@ -763,9 +735,6 @@
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
       </viewAttribute>
-      <viewAttribute id="NANO">
-        <descriptions defaultDescription="NANO"/>
-      </viewAttribute>
       <viewAttribute id="MAX_INTRENONA" aggregationType="max">
         <descriptions defaultDescription="INTRENONA"/>
       </viewAttribute>
@@ -774,19 +743,18 @@
       <calculatedViewAttribute id="NewestValuation" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;VAL_INTRENONA&quot;=&quot;MAX_INTRENONA&quot;,'X','')</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="Counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>1</formula>
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="J_LIMIT_OUTPUT">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_RELVNTVAL" source="PL_RELVNTVAL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
+    <input node="J_LIMIT_MULTI_VALS">
       <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VAL_INTRENONA" source="VAL_INTRENONA"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
-    </input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/></input>
     <input node="AGG_MAX_VAL_ID_PER_YEAR">
       <mapping xsi:type="Calculation:AttributeMapping" target="MAX_INTRENONA" source="INTRENONA"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
@@ -865,15 +833,6 @@
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_PARCELS_TAXDETAILS" cardinality="C1_N" joinType="leftOuter">
     <viewAttributes>
-      <viewAttribute id="PL_RELVNTVAL" aggregationType="sum">
-        <descriptions defaultDescription="PL_RELVNTVAL"/>
-      </viewAttribute>
-      <viewAttribute id="PL_INTRENONA">
-        <descriptions defaultDescription="PL_INTRENONA"/>
-      </viewAttribute>
-      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
-        <descriptions defaultDescription="VAL_RELVNTVAL"/>
-      </viewAttribute>
       <viewAttribute id="ActiveValuation">
         <descriptions defaultDescription="ActiveValuation"/>
       </viewAttribute>
@@ -919,9 +878,6 @@
       <viewAttribute id="INTRENOCN">
         <descriptions defaultDescription="INTRENOCN"/>
       </viewAttribute>
-      <viewAttribute id="NANO">
-        <descriptions defaultDescription="NANO"/>
-      </viewAttribute>
       <viewAttribute id="BPTAXABLEVAL" aggregationType="sum">
         <descriptions defaultDescription="Land Tax: BP Taxable value per parcel"/>
       </viewAttribute>
@@ -929,13 +885,20 @@
       <viewAttribute id="NewestValuation">
         <descriptions defaultDescription="NewestValuation"/>
       </viewAttribute>
+    
+      <viewAttribute id="PL_INTRENONA">
+        <descriptions defaultDescription="PL_INTRENONA"/>
+      </viewAttribute>
+      <viewAttribute id="NANO">
+        <descriptions defaultDescription="NANO"/>
+      </viewAttribute>
+      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
+        <descriptions defaultDescription="VAL_RELVNTVAL"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_OUTPUT_PLRESB">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_RELVNTVAL" source="PL_RELVNTVAL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VAL_INTRENONA" source="VAL_INTRENONA"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -948,9 +911,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="BPRELVNTVAL" source="PL_BPRELVNTVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CalculatedBPRelevantValue" source="CalculatedBPRelevantValue"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="NewestValuation" source="NewestValuation"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
     </input>
     <input node="P_CV_OWNERSHIPCNRESP">
       <mapping xsi:type="Calculation:AttributeMapping" target="PROPTAXAMT" source="PROPTAXAMT"/>
@@ -988,6 +954,10 @@
       <viewAttribute id="TOTBPTAXABLEVAL">
         <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
       </viewAttribute>
+    
+      <viewAttribute id="TAXAMOUNT">
+        <descriptions defaultDescription="TAXAMOUNT"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -999,6 +969,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_LTAXRATE">
@@ -1087,15 +1059,6 @@
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_PARCELS_CONTRACTDETAILS" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
-      <viewAttribute id="PL_RELVNTVAL" aggregationType="sum">
-        <descriptions defaultDescription="PL_RELVNTVAL"/>
-      </viewAttribute>
-      <viewAttribute id="PL_INTRENONA">
-        <descriptions defaultDescription="PL_INTRENONA"/>
-      </viewAttribute>
-      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
-        <descriptions defaultDescription="VAL_RELVNTVAL"/>
-      </viewAttribute>
       <viewAttribute id="ActiveValuation">
         <descriptions defaultDescription="ActiveValuation"/>
       </viewAttribute>
@@ -1147,9 +1110,6 @@
       <viewAttribute id="TAXRATECODE">
         <descriptions defaultDescription="TAXRATECODE"/>
       </viewAttribute>
-      <viewAttribute id="NANO">
-        <descriptions defaultDescription="NANO"/>
-      </viewAttribute>
       <viewAttribute id="TOTBPTAXABLEVAL">
         <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
       </viewAttribute>
@@ -1159,6 +1119,20 @@
     
       <viewAttribute id="NewestValuation">
         <descriptions defaultDescription="NewestValuation"/>
+      </viewAttribute>
+    
+      <viewAttribute id="TAXAMOUNT">
+        <descriptions defaultDescription="TAXAMOUNT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="PL_INTRENONA">
+        <descriptions defaultDescription="PL_INTRENONA"/>
+      </viewAttribute>
+      <viewAttribute id="NANO">
+        <descriptions defaultDescription="NANO"/>
+      </viewAttribute>
+      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
+        <descriptions defaultDescription="VAL_RELVNTVAL"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -1171,9 +1145,6 @@
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="J_PARCELS_TAXDETAILS">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_RELVNTVAL" source="PL_RELVNTVAL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VAL_INTRENONA" source="VAL_INTRENONA"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -1189,15 +1160,19 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSCODE" source="CONCESSCODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSPCT" source="CONCESSPCT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BPTAXABLEVAL" source="BPTAXABLEVAL"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="NewestValuation" source="NewestValuation"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
     </input>
     <input node="P_CNRES">
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -1208,15 +1183,6 @@
   </calculationView>
   <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_PARCELS_TAXRATES" cardinality="C1_N" joinType="leftOuter">
     <viewAttributes>
-      <viewAttribute id="PL_RELVNTVAL" aggregationType="sum">
-        <descriptions defaultDescription="PL_RELVNTVAL"/>
-      </viewAttribute>
-      <viewAttribute id="PL_INTRENONA">
-        <descriptions defaultDescription="PL_INTRENONA"/>
-      </viewAttribute>
-      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
-        <descriptions defaultDescription="VAL_RELVNTVAL"/>
-      </viewAttribute>
       <viewAttribute id="ActiveValuation">
         <descriptions defaultDescription="ActiveValuation"/>
       </viewAttribute>
@@ -1283,9 +1249,6 @@
       <viewAttribute id="MIN_VALUE">
         <descriptions defaultDescription="MIN_VALUE"/>
       </viewAttribute>
-      <viewAttribute id="NANO">
-        <descriptions defaultDescription="NANO"/>
-      </viewAttribute>
       <viewAttribute id="TOTBPTAXABLEVAL">
         <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
       </viewAttribute>
@@ -1299,13 +1262,24 @@
       <viewAttribute id="NewestValuation">
         <descriptions defaultDescription="NewestValuation"/>
       </viewAttribute>
+    
+      <viewAttribute id="TAXAMOUNT">
+        <descriptions defaultDescription="TAXAMOUNT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="PL_INTRENONA">
+        <descriptions defaultDescription="PL_INTRENONA"/>
+      </viewAttribute>
+      <viewAttribute id="NANO">
+        <descriptions defaultDescription="NANO"/>
+      </viewAttribute>
+      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
+        <descriptions defaultDescription="VAL_RELVNTVAL"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_PARCELS_CONTRACTDETAILS">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_RELVNTVAL" source="PL_RELVNTVAL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VAL_INTRENONA" source="VAL_INTRENONA"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -1324,12 +1298,17 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CalculatedTotalBPTaxableValue" source="CalculatedTotalBPTaxableValue"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BPTAXABLEVAL" source="BPTAXABLEVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CalculatedParcelTaxableValue" source="CalculatedParcelTaxableValue"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="NewestValuation" source="NewestValuation"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
     </input>
     <input node="P_LTAXRATE">
       <mapping xsi:type="Calculation:AttributeMapping" target="BASE_AMOUNT" source="BASE_AMOUNT"/>
@@ -1345,15 +1324,6 @@
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_PARCELS_TAXCALCS">
     <viewAttributes>
-      <viewAttribute id="PL_RELVNTVAL">
-        <descriptions defaultDescription="PL_RELVNTVAL"/>
-      </viewAttribute>
-      <viewAttribute id="PL_INTRENONA">
-        <descriptions defaultDescription="PL_INTRENONA"/>
-      </viewAttribute>
-      <viewAttribute id="VAL_RELVNTVAL">
-        <descriptions defaultDescription="VAL_RELVNTVAL"/>
-      </viewAttribute>
       <viewAttribute id="ActiveValuation">
         <descriptions defaultDescription="ActiveValuation"/>
       </viewAttribute>
@@ -1420,9 +1390,6 @@
       <viewAttribute id="MIN_VALUE">
         <descriptions defaultDescription="MIN_VALUE"/>
       </viewAttribute>
-      <viewAttribute id="NANO">
-        <descriptions defaultDescription="NANO"/>
-      </viewAttribute>
       <viewAttribute id="TOTBPTAXABLEVAL">
         <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
       </viewAttribute>
@@ -1435,10 +1402,24 @@
       <viewAttribute id="NewestValuation">
         <descriptions defaultDescription="NewestValuation"/>
       </viewAttribute>
+    
+      <viewAttribute id="TAXAMOUNT">
+        <descriptions defaultDescription="TAXAMOUNT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="PL_INTRENONA">
+        <descriptions defaultDescription="PL_INTRENONA"/>
+      </viewAttribute>
+      <viewAttribute id="NANO">
+        <descriptions defaultDescription="NANO"/>
+      </viewAttribute>
+      <viewAttribute id="VAL_RELVNTVAL">
+        <descriptions defaultDescription="VAL_RELVNTVAL"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CalculatedParcelTaxPotential" datatype="DECIMAL" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
-        <formula>decfloat(&quot;CalculatedParcelTaxProportionPercentage&quot;)*decfloat(&quot;CalculatedTotalBPTaxPotential&quot;)</formula>
+        <formula>round(decfloat(if(&quot;CalculatedParcelTaxableValue&quot;=0,0,decfloat(&quot;CalculatedParcelTaxableValue&quot;)/decfloat(&quot;CalculatedTotalBPTaxableValue&quot;)))*decfloat(if(isnull(&quot;BASE_AMOUNT&quot;),0,decfloat(&quot;BASE_AMOUNT&quot;)+((decfloat(&quot;CalculatedTotalBPTaxableValue&quot;)-decfloat(&quot;MIN_VALUE&quot;))*(decfloat(&quot;TAX_PERCENT&quot;)/100)))),2)</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="TaxDifference" datatype="DECIMAL" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
         <formula>decfloat(decfloat(&quot;CalculatedParcelTaxPotential&quot;)-decfloat(&quot;PROPTAXAMT&quot;))</formula>
@@ -1452,9 +1433,6 @@
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="NEJ_PARCELS_TAXRATES">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_RELVNTVAL" source="PL_RELVNTVAL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VAL_INTRENONA" source="VAL_INTRENONA"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -1477,158 +1455,251 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PERCENT" source="TAX_PERCENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ABSURBASE_AMT" source="ABSURBASE_AMT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MIN_VALUE" source="MIN_VALUE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BPTAXABLEVAL" source="BPTAXABLEVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CalculatedParcelTaxableValue" source="CalculatedParcelTaxableValue"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="NewestValuation" source="NewestValuation"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
     </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_OUTPUT" cardinality="C1_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="ActiveValuation">
+        <descriptions defaultDescription="ActiveValuation"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOPL">
+        <descriptions defaultDescription="INTRENOPL"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="NewestValuation">
+        <descriptions defaultDescription="NewestValuation"/>
+      </viewAttribute>
+      <viewAttribute id="PL_INTRENONA">
+        <descriptions defaultDescription="INTRENONA"/>
+      </viewAttribute>
+      <viewAttribute id="VAL_INTRENONA">
+        <descriptions defaultDescription="INTRENONA"/>
+      </viewAttribute>
+      <viewAttribute id="NANO">
+        <descriptions defaultDescription="NANO"/>
+      </viewAttribute>
+      <viewAttribute id="VAL_RELVNTVAL" aggregationType="sum">
+        <descriptions defaultDescription="RELVNTVAL"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="AGG_REMOVE_ACTIVE_EQ_NEWEST">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NewestValuation" source="NewestValuation"/>
+    </input>
+    <input node="J_PLRES_NAPLVL">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="PL_INTRENONA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_INTRENONA" source="VAL_INTRENONA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_RELVNTVAL" source="VAL_RELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    </input>
+    <joinAttribute name="TAXYRSTARTDT"/>
+    <joinAttribute name="INTRENOPL"/>
+    <joinAttribute name="MANDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_REMOVE_ACTIVE_EQ_NEWEST" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="ActiveValuation">
+        <descriptions defaultDescription="ActiveValuation"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOPL">
+        <descriptions defaultDescription="INTRENOPL"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="NewestValuation">
+        <descriptions defaultDescription="NewestValuation"/>
+      </viewAttribute>
+      <viewAttribute id="Counter" aggregationType="sum">
+        <descriptions defaultDescription="Counter"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_MAXVALPERYEAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NewestValuation" source="NewestValuation"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Counter" source="Counter"/>
+    </input>
+    <filter>not(&quot;ActiveValuation&quot;='X' and &quot;NewestValuation&quot; = 'X')</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="P_PARCELS_TAXCALCS">
   <attributes>
-    <attribute id="PL_INTRENONA" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="PL_INTRENONA"/>
-      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="PL_INTRENONA"/>
-    </attribute>
-    <attribute id="ActiveValuation" order="5" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ActiveValuation" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ActiveValuation"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="ActiveValuation"/>
     </attribute>
-    <attribute id="VAL_INTRENONA" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="VAL_INTRENONA" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="VAL_INTRENONA"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="VAL_INTRENONA"/>
     </attribute>
-    <attribute id="TAXYRSTARTDT" order="7" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXYRSTARTDT" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TAXYRSTARTDT"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TAXYRSTARTDT"/>
     </attribute>
-    <attribute id="INTRENOPL" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="INTRENOPL" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="INTRENOPL"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="INTRENOPL"/>
     </attribute>
-    <attribute id="MANDT" order="9" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MANDT" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MANDT"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="MANDT"/>
     </attribute>
-    <attribute id="BPARTNER" order="10" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BPARTNER" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BPARTNER"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="BPARTNER"/>
     </attribute>
-    <attribute id="OWNERFRACTION" order="11" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNERFRACTION" order="8" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OWNERFRACTION"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="OWNERFRACTION"/>
     </attribute>
-    <attribute id="OWNERFACTOR" order="12" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNERFACTOR" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OWNERFACTOR"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="OWNERFACTOR"/>
     </attribute>
-    <attribute id="OWNERPERCENT" order="13" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNERPERCENT" order="10" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OWNERPERCENT"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="OWNERPERCENT"/>
     </attribute>
-    <attribute id="CONCESSCODE" order="17" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CONCESSCODE" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CONCESSCODE"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CONCESSCODE"/>
     </attribute>
-    <attribute id="CONCESSPCT" order="18" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CONCESSPCT" order="15" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CONCESSPCT"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CONCESSPCT"/>
     </attribute>
-    <attribute id="INTRENOCN" order="19" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="INTRENOCN" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="INTRENOCN"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="INTRENOCN"/>
     </attribute>
-    <attribute id="OWNERTYPE" order="20" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNERTYPE" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OWNERTYPE"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="OWNERTYPE"/>
     </attribute>
-    <attribute id="TAXRATECODE" order="21" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXRATECODE" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TAXRATECODE"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TAXRATECODE"/>
     </attribute>
-    <attribute id="BASE_AMOUNT" hidden="true" order="23" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BASE_AMOUNT" hidden="true" order="20" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BASE_AMOUNT"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="BASE_AMOUNT"/>
     </attribute>
-    <attribute id="TAX_PERCENT" order="24" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAX_PERCENT" order="21" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TAX_PERCENT"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TAX_PERCENT"/>
     </attribute>
-    <attribute id="ABSURBASE_AMT" hidden="true" order="25" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ABSURBASE_AMT" hidden="true" order="22" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABSURBASE_AMT"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="ABSURBASE_AMT"/>
     </attribute>
-    <attribute id="MIN_VALUE" hidden="true" order="26" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MIN_VALUE" hidden="true" order="23" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MIN_VALUE"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="MIN_VALUE"/>
     </attribute>
-    <attribute id="NANO" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="NANO"/>
-      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="NANO"/>
-    </attribute>
-    <attribute id="TOTBPTAXABLEVAL" order="28" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
-      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TOTBPTAXABLEVAL"/>
-    </attribute>
   
-    <attribute id="NewestValuation" order="31" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="NewestValuation" order="27" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="NewestValuation"/>
   
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="NewestValuation"/>
   
     </attribute>
+  
+    <attribute id="PL_INTRENONA" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PL_INTRENONA"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="PL_INTRENONA"/>
+    </attribute>
+    <attribute id="NANO" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NANO"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="NANO"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="PL_RELVNTVAL" order="2" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="PL_RELVNTVAL"/>
-      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="PL_RELVNTVAL"/>
-    </measure>
-    <measure id="VAL_RELVNTVAL" order="4" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="VAL_RELVNTVAL"/>
-      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="VAL_RELVNTVAL"/>
-    </measure>
-    <measure id="BPRELVNTVAL" order="14" aggregationType="sum" measureType="simple">
+    <measure id="BPRELVNTVAL" order="11" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BPRELVNTVAL"/>
       <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="BPRELVNTVAL"/>
     </measure>
-    <measure id="CalculatedBPRelevantValue" order="15" aggregationType="sum" measureType="simple">
+    <measure id="CalculatedBPRelevantValue" order="12" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CalculatedBPRelevantValue"/>
       <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CalculatedBPRelevantValue"/>
     </measure>
-    <measure id="PROPTAXAMT" order="16" aggregationType="sum" measureType="simple">
+    <measure id="PROPTAXAMT" order="13" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="PROPTAXAMT"/>
       <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="PROPTAXAMT"/>
     </measure>
-    <measure id="CalculatedTotalBPTaxableValue" order="22" aggregationType="sum" measureType="simple">
+    <measure id="CalculatedTotalBPTaxableValue" order="19" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CalculatedTotalBPTaxableValue"/>
       <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CalculatedTotalBPTaxableValue"/>
     </measure>
-    <measure id="BPTAXABLEVAL" order="29" aggregationType="sum" measureType="simple">
+    <measure id="TOTBPTAXABLEVAL" order="24" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TOTBPTAXABLEVAL"/>
+    </measure>
+    <measure id="BPTAXABLEVAL" order="25" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BPTAXABLEVAL"/>
       <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="BPTAXABLEVAL"/>
     </measure>
-    <measure id="CalculatedParcelTaxableValue" order="30" aggregationType="sum" measureType="simple">
+    <measure id="CalculatedParcelTaxableValue" order="26" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CalculatedParcelTaxableValue"/>
       <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CalculatedParcelTaxableValue"/>
     </measure>
   
-    <measure id="CalculatedParcelTaxPotential" order="32" aggregationType="sum" measureType="simple">
+    <measure id="CalculatedParcelTaxPotential" order="28" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CalculatedParcelTaxPotential"/>
       <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CalculatedParcelTaxPotential"/>
     </measure>
-    <measure id="TaxDifference" order="33" aggregationType="sum" measureType="simple">
+    <measure id="TaxDifference" order="29" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="TaxDifference"/>
       <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TaxDifference"/>
     </measure>
-    <measure id="CalculatedParcelTaxProportionPercentage" order="34" aggregationType="sum" measureType="simple">
+    <measure id="CalculatedParcelTaxProportionPercentage" order="30" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CalculatedParcelTaxProportionPercentage"/>
       <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CalculatedParcelTaxProportionPercentage"/>
     </measure>
-    <measure id="CalculatedTotalBPTaxPotential" order="35" aggregationType="sum" measureType="simple">
+    <measure id="CalculatedTotalBPTaxPotential" order="31" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CalculatedTotalBPTaxPotential"/>
       <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="CalculatedTotalBPTaxPotential"/>
+    </measure>
+  
+    <measure id="TAXAMOUNT" order="33" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="TAXAMOUNT"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TAXAMOUNT"/>
+    </measure>
+  
+    <measure id="VAL_RELVNTVAL" order="36" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="VAL_RELVNTVAL"/>
+      <measureMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="VAL_RELVNTVAL"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
@@ -1648,7 +1719,7 @@
       
       </measure></calculatedMeasures>
   <restrictedMeasures>
-    <measure id="TaxDiffNewestValuation" order="36" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TaxDifference">
+    <measure id="TaxDiffNewestValuation" order="32" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TaxDifference">
       <descriptions defaultDescription="Tax Difference from Newest Valuation">
         <comment text="Tax Difference from Newest Valuation"/>
       </descriptions>
@@ -1658,28 +1729,28 @@
         </filter>
         <attributeName>NewestValuation</attributeName>
       </restriction>
-      </measure>
+    </measure>
   </restrictedMeasures>
   <localDimensions/>
 </logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="150" y="112"/>
+      <upperLeftCorner x="413.7763306815059" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_NAPLVL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="263" y="1501"/>
+      <upperLeftCorner x="302.00000000000006" y="1766.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PLRES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="508" y="1501"/>
+      <upperLeftCorner x="521.4810930339784" y="1766.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PLRES_NAPLVL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="511" y="1321"/>
+      <upperLeftCorner x="512" y="1606.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PLRES" modelObjectNameSpace="J_PLRES_NAPLVL" modelObjectType="JoinNodeInput">
@@ -1691,30 +1762,30 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_NAPLVL_PLVALPERYEAR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="301" y="1329"/>
+      <upperLeftCorner x="302.00000000000006" y="1614.4999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="J_LIMIT_OUTPUT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="423" y="1161"/>
+    <shape expanded="true" modelObjectName="J_LIMIT_MULTI_VALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="328.66666666666674" y="1426.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_PLRES_NAPLVL" modelObjectNameSpace="J_LIMIT_OUTPUT" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_PLRES_NAPLVL" modelObjectNameSpace="J_LIMIT_MULTI_VALS" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="AGG_NAPLVL_PLVALPERYEAR" modelObjectNameSpace="J_LIMIT_OUTPUT" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="AGG_NAPLVL_PLVALPERYEAR" modelObjectNameSpace="J_LIMIT_MULTI_VALS" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_PLRESB" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="304" y="981"/>
+      <upperLeftCorner x="189.6522411877653" y="981.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_OUTPUT_PLRESB" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="489" y="821"/>
+      <upperLeftCorner x="216.31890785443198" y="821.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_OUTPUT_MAXVALPERYEAR" modelObjectNameSpace="J_OUTPUT_PLRESB" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_OUTPUT" modelObjectNameSpace="J_OUTPUT_PLRESB" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
@@ -1722,30 +1793,30 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="J_OUTPUT_MAXVALPERYEAR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="514" y="981"/>
+    <shape expanded="true" modelObjectName="J_MAXVALPERYEAR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="1266.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_LIMIT_OUTPUT" modelObjectNameSpace="J_OUTPUT_MAXVALPERYEAR" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_LIMIT_MULTI_VALS" modelObjectNameSpace="J_MAXVALPERYEAR" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="AGG_MAX_VAL_ID_PER_YEAR" modelObjectNameSpace="J_OUTPUT_MAXVALPERYEAR" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="AGG_MAX_VAL_ID_PER_YEAR" modelObjectNameSpace="J_MAXVALPERYEAR" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_MAX_VAL_ID_PER_YEAR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="1339"/>
+      <upperLeftCorner x="92.00000000000004" y="1624.4999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CV_OWNERSHIPCNRESP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="279" y="821"/>
+      <upperLeftCorner x="474.67694028399256" y="821.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PARCELS_TAXDETAILS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="413" y="661"/>
+      <upperLeftCorner x="388.4045678186747" y="661.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_OUTPUT_PLRESB" modelObjectNameSpace="J_PARCELS_TAXDETAILS" modelObjectType="JoinNodeInput">
@@ -1757,16 +1828,16 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CNRES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="203" y="661"/>
+      <upperLeftCorner x="177.67628752580885" y="661.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_LTAXRATE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="95" y="501"/>
+      <upperLeftCorner x="461.9455032413142" y="501.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PARCELS_CONTRACTDETAILS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="305" y="501"/>
+      <upperLeftCorner x="204.34295419247547" y="501.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_PARCELS_TAXDETAILS" modelObjectNameSpace="J_PARCELS_CONTRACTDETAILS" modelObjectType="JoinNodeInput">
@@ -1778,7 +1849,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_PARCELS_TAXRATES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="159" y="341"/>
+      <upperLeftCorner x="397.12577589743813" y="341.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_PARCELS_CONTRACTDETAILS" modelObjectNameSpace="NEJ_PARCELS_TAXRATES" modelObjectType="JoinNodeInput">
@@ -1790,7 +1861,24 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PARCELS_TAXCALCS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="159" y="236"/>
+      <upperLeftCorner x="397.12577589743813" y="236.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_OUTPUT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="424.4164848462598" y="981.9999940395355"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="AGG_REMOVE_ACTIVE_EQ_NEWEST" modelObjectNameSpace="J_OUTPUT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="J_PLRES_NAPLVL" modelObjectNameSpace="J_OUTPUT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_REMOVE_ACTIVE_EQ_NEWEST" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="1141.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
