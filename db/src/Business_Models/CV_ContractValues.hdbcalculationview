@@ -812,12 +812,12 @@
         <descriptions defaultDescription="FBNUM"/>
       </viewAttribute>
     
-      <viewAttribute id="CashflowAmount" aggregationType="sum">
-        <descriptions defaultDescription="CashflowAmount"/>
-      </viewAttribute>
-    
       <viewAttribute id="OWNER_CODE_DESC">
         <descriptions defaultDescription="OWNER_CODE_DESC"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CashflowAmount" aggregationType="sum">
+        <descriptions defaultDescription="CashflowAmount"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -935,9 +935,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_STD" source="MATCH_PERSON_FN_STD"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON" source="MATCH_PERSON"/>
     
-      <mapping xsi:type="Calculation:AttributeMapping" target="CashflowAmount" source="CashflowAmount"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CashflowAmount" source="CashflowAmount"/>
     </input>
     <input node="TF_LtFinancials">
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
@@ -1283,12 +1283,12 @@
       <viewAttribute id="MATCH_PERSON">
         <descriptions defaultDescription="MATCH_PERSON"/>
       </viewAttribute>
-      <viewAttribute id="CashflowAmount" aggregationType="sum">
-        <descriptions defaultDescription="CashflowAmount"/>
-      </viewAttribute>
     
       <viewAttribute id="OWNER_CODE_DESC">
         <descriptions defaultDescription="OWNER_CODE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="CashflowAmount" aggregationType="sum">
+        <descriptions defaultDescription="CashflowAmount"/>
       </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
       <viewAttribute hidden="true" id="JOIN$INTRENO$INTRENO"/>
@@ -1433,9 +1433,6 @@
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_CASHFLOW">
     <viewAttributes>
-      <viewAttribute id="CashflowAmount" aggregationType="sum">
-        <descriptions defaultDescription="CashflowAmount"/>
-      </viewAttribute>
     
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
@@ -1445,13 +1442,21 @@
       </viewAttribute>
       <viewAttribute id="DBERVON">
         <descriptions defaultDescription="Start of Calculation Period"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="DBEAR">
+        <descriptions defaultDescription="DBEAR"/>
+      </viewAttribute>
+      <viewAttribute id="CashflowAmount" aggregationType="sum">
+        <descriptions defaultDescription="CashflowAmount"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_CV_Cashflow">
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBEAR" source="DBEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CashflowAmount" source="CashflowAmount"/>
     </input>
   </calculationView>
@@ -1712,12 +1717,12 @@
       </viewAttribute>
       <viewAttribute id="XFLOWTYPE">
         <descriptions defaultDescription="Cash Flow Type Description"/>
-      </viewAttribute></viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="CashflowAmount" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;FLOWTYPE&quot;='P102' or &quot;FLOWTYPE&quot;='P112', -1 * &quot;BBWHR&quot;, &quot;BBWHR&quot;)</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+      </viewAttribute>
+      <viewAttribute id="CashflowAmount">
+        <descriptions defaultDescription="CashflowAmount"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models::CV_Cashflow">
       <mapping xsi:type="Calculation:AttributeMapping" target="CONDVALIDFROM" source="CONDVALIDFROM"/>
@@ -1805,6 +1810,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CTDATEACTORIG" source="CTDATEACTORIG"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="XFLOWTYPE" source="XFLOWTYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CashflowAmount" source="CashflowAmount"/>
     </input>
     <filter>&quot;FLOWTYPE&quot;!='P200' and &quot;FLOWTYPE&quot;!='P201' and &quot;FLOWTYPE&quot;!='P202'</filter>
   </calculationView>
@@ -2212,7 +2219,7 @@
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="FBNUM"/>
     </attribute>
   
-    <attribute id="OWNER_CODE_DESC" order="115" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNER_CODE_DESC" order="114" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Owner type"/>
   
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="OWNER_CODE_DESC"/>
@@ -2273,8 +2280,7 @@
       <descriptions defaultDescription="Clearing amount in clearing currency"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="AUGBT"/>
     </measure>
-  
-    <measure id="CashflowAmount" order="114" aggregationType="sum" measureType="simple">
+    <measure id="CashflowAmount" order="115" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CashflowAmount"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="CashflowAmount"/>
     </measure>
