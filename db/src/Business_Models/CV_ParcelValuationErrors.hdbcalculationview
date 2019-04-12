@@ -7,17 +7,17 @@
   <DataSource id="osr.business.semantic.db.synonyms::LTNAPLVL">
     <resourceUri>osr.business.semantic.db.synonyms::LTNAPLVL</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models::CV_ParcelResults">
-    <resourceUri>osr.business.semantic.db.Business_Models::CV_ParcelResults</resourceUri>
+  <DataSource id="osr.business.semantic.db.synonyms::LTPLRES">
+    <resourceUri>osr.business.semantic.db.synonyms::LTPLRES</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models::CV_ParcelResultsBp">
-    <resourceUri>osr.business.semantic.db.Business_Models::CV_ParcelResultsBp</resourceUri>
+  <DataSource id="osr.business.semantic.db.synonyms::LTPLRESB">
+    <resourceUri>osr.business.semantic.db.synonyms::LTPLRESB</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models::CV_OwnershipCnresp">
-    <resourceUri>osr.business.semantic.db.Business_Models::CV_OwnershipCnresp</resourceUri>
+  <DataSource id="osr.business.semantic.db.synonyms::LTCNRESP">
+    <resourceUri>osr.business.semantic.db.synonyms::LTCNRESP</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models::CV_ContractResults">
-    <resourceUri>osr.business.semantic.db.Business_Models::CV_ContractResults</resourceUri>
+  <DataSource id="osr.business.semantic.db.synonyms::LTCNRES">
+    <resourceUri>osr.business.semantic.db.synonyms::LTCNRES</resourceUri>
   </DataSource>
   <DataSource id="osr.business.semantic.db.synonyms::CDS_LAND.TAB.LTAXRATE">
     <resourceUri>osr.business.semantic.db.synonyms::CDS_LAND.TAB.LTAXRATE</resourceUri>
@@ -89,9 +89,9 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models::CV_ParcelResults">
+    <input node="osr.business.semantic.db.synonyms::LTPLRES">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PL_RELVNTVAL" source="RELVNTVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PL_INTRENONA" source="INTRENONA"/>
@@ -260,7 +260,7 @@
     <joinAttribute name="JOIN$TAXYRSTARTDT$TAXYRSTARTDT"/>
     <joinAttribute name="JOIN$MANDT$MANDT"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_PLRESB">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PLRESB">
     <viewAttributes>
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
@@ -292,7 +292,7 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models::CV_ParcelResultsBp">
+    <input node="osr.business.semantic.db.synonyms::LTPLRESB">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -387,7 +387,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PL_PLNO" source="PL_PLNO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PL_NANO" source="PL_NANO"/>
     </input>
-    <input node="P_CV_PLRESB">
+    <input node="P_PLRESB">
       <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="BPARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERFRACTION" source="OWNERFRACTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERFACTOR" source="OWNERFACTOR"/>
@@ -468,6 +468,57 @@
     <joinAttribute name="INTRENOPL"/>
     <joinAttribute name="MANDT"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_REMOVE_ACTIVE_EQ_NEWEST" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="ActiveValuation">
+        <descriptions defaultDescription="ActiveValuation"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOPL">
+        <descriptions defaultDescription="INTRENOPL"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="NewestValuation">
+        <descriptions defaultDescription="NewestValuation"/>
+      </viewAttribute>
+    
+      <viewAttribute id="VAL_NANO">
+        <descriptions defaultDescription="VAL_NANO"/>
+      </viewAttribute>
+      <viewAttribute id="VAL_PLNO">
+        <descriptions defaultDescription="VAL_PLNO"/>
+      </viewAttribute>
+      <viewAttribute id="Counter" aggregationType="sum">
+        <descriptions defaultDescription="Counter"/>
+      </viewAttribute>
+      <viewAttribute id="PL_PLNO">
+        <descriptions defaultDescription="PL_PLNO"/>
+      </viewAttribute>
+      <viewAttribute id="PL_NANO">
+        <descriptions defaultDescription="PL_NANO"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_MAXVALPERYEAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NewestValuation" source="NewestValuation"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Counter" source="Counter"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_NANO" source="VAL_NANO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_PLNO" source="VAL_PLNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PL_PLNO" source="PL_PLNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PL_NANO" source="PL_NANO"/>
+    </input>
+    <filter>not(&quot;ActiveValuation&quot;='X' and &quot;NewestValuation&quot; = 'X')</filter>
+  </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_MAXVALPERYEAR" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="ActiveValuation">
@@ -540,6 +591,13 @@
       <viewAttribute id="INTRENONA" aggregationType="max">
         <descriptions defaultDescription="INTRENONA"/>
       </viewAttribute>
+      <viewAttribute id="VAL_NANO">
+        <descriptions defaultDescription="VAL_NANO"/>
+      </viewAttribute>
+      <viewAttribute id="VAL_PLNO">
+        <descriptions defaultDescription="VAL_PLNO"/>
+      </viewAttribute>
+    
       <viewAttribute id="INTRENOPL">
         <descriptions defaultDescription="INTRENOPL"/>
       </viewAttribute>
@@ -549,14 +607,7 @@
       </viewAttribute>
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute id="VAL_NANO">
-        <descriptions defaultDescription="VAL_NANO"/>
-      </viewAttribute>
-      <viewAttribute id="VAL_PLNO">
-        <descriptions defaultDescription="VAL_PLNO"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_NAPLVL">
@@ -569,7 +620,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="VAL_PLNO" source="VAL_PLNO"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_OWNERSHIPCNRESP">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CNRESP">
     <viewAttributes>
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="Client"/>
@@ -599,7 +650,7 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models::CV_OwnershipCnresp">
+    <input node="osr.business.semantic.db.synonyms::LTCNRESP">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -712,7 +763,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PL_PLNO" source="PL_PLNO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PL_NANO" source="PL_NANO"/>
     </input>
-    <input node="P_CV_OWNERSHIPCNRESP">
+    <input node="P_CNRESP">
       <mapping xsi:type="Calculation:AttributeMapping" target="PROPTAXAMT" source="PROPTAXAMT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSCODE" source="CONCESSCODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSPCT" source="CONCESSPCT"/>
@@ -727,7 +778,7 @@
     <joinAttribute name="TAXYRSTARTDT"/>
     <joinAttribute name="INTRENOPL"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_ContractResults">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CNRES">
     <viewAttributes>
       <viewAttribute id="OWNERTYPE">
         <descriptions defaultDescription="OWNERTYPE"/>
@@ -755,9 +806,9 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models::CV_ContractResults">
+    <input node="osr.business.semantic.db.synonyms::LTCNRES">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
@@ -976,7 +1027,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PL_PLNO" source="PL_PLNO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PL_NANO" source="PL_NANO"/>
     </input>
-    <input node="P_CV_ContractResults">
+    <input node="P_CNRES">
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
@@ -1303,57 +1354,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PL_NANO" source="PL_NANO"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="AGG_REMOVE_ACTIVE_EQ_NEWEST" filterExpressionLanguage="COLUMN_ENGINE">
-    <viewAttributes>
-      <viewAttribute id="ActiveValuation">
-        <descriptions defaultDescription="ActiveValuation"/>
-      </viewAttribute>
-      <viewAttribute id="TAXYRSTARTDT">
-        <descriptions defaultDescription="TAXYRSTARTDT"/>
-      </viewAttribute>
-      <viewAttribute id="INTRENOPL">
-        <descriptions defaultDescription="INTRENOPL"/>
-      </viewAttribute>
-      <viewAttribute id="MANDT">
-        <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute id="NewestValuation">
-        <descriptions defaultDescription="NewestValuation"/>
-      </viewAttribute>
-      <viewAttribute id="Counter" aggregationType="sum">
-        <descriptions defaultDescription="Counter"/>
-      </viewAttribute>
-    
-      <viewAttribute id="VAL_NANO">
-        <descriptions defaultDescription="VAL_NANO"/>
-      </viewAttribute>
-      <viewAttribute id="VAL_PLNO">
-        <descriptions defaultDescription="VAL_PLNO"/>
-      </viewAttribute>
-      <viewAttribute id="PL_PLNO">
-        <descriptions defaultDescription="PL_PLNO"/>
-      </viewAttribute>
-      <viewAttribute id="PL_NANO">
-        <descriptions defaultDescription="PL_NANO"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="J_MAXVALPERYEAR">
-      <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NewestValuation" source="NewestValuation"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Counter" source="Counter"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_NANO" source="VAL_NANO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_PLNO" source="VAL_PLNO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_PLNO" source="PL_PLNO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PL_NANO" source="PL_NANO"/>
-    </input>
-    <filter>not(&quot;ActiveValuation&quot;='X' and &quot;NewestValuation&quot; = 'X')</filter>
-  </calculationView>
 </calculationViews>
 <logicalModel id="P_PARCELS_TAXCALCS">
   <attributes>
@@ -1593,7 +1593,7 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="P_CV_PLRESB" modelObjectNameSpace="CalculationView">
+    <shape expanded="true" modelObjectName="P_PLRESB" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="189" y="981"/>
       <rectangleSize height="30" width="160"/>
     </shape>
@@ -1605,7 +1605,7 @@
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_CV_PLRESB" modelObjectNameSpace="J_OUTPUT_PLRESB" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_PLRESB" modelObjectNameSpace="J_OUTPUT_PLRESB" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
@@ -1622,6 +1622,11 @@
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
+    <shape expanded="true" modelObjectName="AGG_REMOVE_ACTIVE_EQ_NEWEST" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="1141"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="J_MAXVALPERYEAR" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="302" y="1266"/>
       <rectangleSize height="30" width="160"/>
@@ -1640,7 +1645,7 @@
       <rectangleSize height="30" width="160"/>
     </shape>
   
-    <shape expanded="true" modelObjectName="P_CV_OWNERSHIPCNRESP" modelObjectNameSpace="CalculationView">
+    <shape expanded="true" modelObjectName="P_CNRESP" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="474" y="821"/>
       <rectangleSize height="30" width="160"/>
     </shape>
@@ -1652,11 +1657,11 @@
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_CV_OWNERSHIPCNRESP" modelObjectNameSpace="J_PARCELS_TAXDETAILS" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_CNRESP" modelObjectNameSpace="J_PARCELS_TAXDETAILS" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="P_CV_ContractResults" modelObjectNameSpace="CalculationView">
+    <shape expanded="true" modelObjectName="P_CNRES" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="177" y="661"/>
       <rectangleSize height="30" width="160"/>
     </shape>
@@ -1673,7 +1678,7 @@
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_CV_ContractResults" modelObjectNameSpace="J_PARCELS_CONTRACTDETAILS" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_CNRES" modelObjectNameSpace="J_PARCELS_CONTRACTDETAILS" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
@@ -1692,11 +1697,6 @@
     <shape expanded="true" modelObjectName="P_PARCELS_TAXCALCS" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="397" y="236"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="AGG_REMOVE_ACTIVE_EQ_NEWEST" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="1141"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
