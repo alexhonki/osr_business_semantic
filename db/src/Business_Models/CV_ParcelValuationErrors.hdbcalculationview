@@ -524,9 +524,6 @@
       <viewAttribute id="ActiveValuation">
         <descriptions defaultDescription="ActiveValuation"/>
       </viewAttribute>
-      <viewAttribute id="VAL_INTRENONA">
-        <descriptions defaultDescription="VAL_INTRENONA"/>
-      </viewAttribute>
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
       </viewAttribute>
@@ -535,9 +532,6 @@
       </viewAttribute>
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute id="MAX_INTRENONA" aggregationType="max">
-        <descriptions defaultDescription="INTRENONA"/>
       </viewAttribute>
     
       <viewAttribute id="VAL_NANO">
@@ -552,7 +546,13 @@
       <viewAttribute id="PL_NANO">
         <descriptions defaultDescription="PL_NANO"/>
       </viewAttribute>
-    </viewAttributes>
+    
+      <viewAttribute id="VAL_INTRENONA">
+        <descriptions defaultDescription="VAL_INTRENONA"/>
+      </viewAttribute>
+      <viewAttribute id="MAX_INTRENONA" aggregationType="max">
+        <descriptions defaultDescription="INTRENONA"/>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="NewestValuation" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;VAL_INTRENONA&quot;=&quot;MAX_INTRENONA&quot;,'X','')</formula>
@@ -1533,7 +1533,16 @@
       
       
       
-      </measure></calculatedMeasures>
+      
+      </measure>
+    <measure id="ContractCounter" order="40" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="ContractCounter"/>
+      <exceptionAggregation>
+        <attribute attributeName="INTRENOCN"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
   <restrictedMeasures>
     <measure id="TaxDiffNewestValuation" order="32" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TaxDifference">
       <descriptions defaultDescription="Tax Difference from Newest Valuation">
@@ -1545,7 +1554,7 @@
         </filter>
         <attributeName>NewestValuation</attributeName>
       </restriction>
-    </measure>
+      </measure>
   </restrictedMeasures>
   <localDimensions/>
 </logicalModel>
