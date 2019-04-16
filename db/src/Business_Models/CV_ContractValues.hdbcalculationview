@@ -262,6 +262,10 @@
       <viewAttribute id="OWNER_CODE_DESC">
         <descriptions defaultDescription="Land Tax Code Description"/>
       </viewAttribute>
+    
+      <viewAttribute id="RECNDPO">
+        <descriptions defaultDescription="Cash Flow Generated Starting On"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="TAXYR" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
@@ -354,6 +358,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON" source="MATCH_PERSON"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNDPO" source="RECNDPO"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_CONTRACT_FBNUM" cardinality="C1_1" joinType="leftOuter">
@@ -630,6 +636,10 @@
       <viewAttribute id="CTLCGROSSAMOUNT" aggregationType="sum">
         <descriptions defaultDescription="CTLCGROSSAMOUNT"/>
       </viewAttribute>
+    
+      <viewAttribute id="RECNDPO">
+        <descriptions defaultDescription="RECNDPO"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -724,6 +734,8 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CTLCNETAMOUNT" source="CTLCNETAMOUNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CTLCGROSSAMOUNT" source="CTLCGROSSAMOUNT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNDPO" source="RECNDPO"/>
     </input>
     <input node="TF_LtFinancials">
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
@@ -998,6 +1010,9 @@
       <viewAttribute id="CTLCGROSSAMOUNT" aggregationType="sum">
         <descriptions defaultDescription="CTLCGROSSAMOUNT"/>
       </viewAttribute>
+      <viewAttribute id="RECNDPO">
+        <descriptions defaultDescription="RECNDPO"/>
+      </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
       <viewAttribute hidden="true" id="JOIN$INTRENO$INTRENO"/>
       <viewAttribute hidden="true" id="JOIN$DBERVON$TAXYRSTARTDT"/>
@@ -1097,6 +1112,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYR" source="TAXYR"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECNDPO" source="RECNDPO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENO$INTRENO" source="INTRENO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DBERVON$TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -1723,6 +1739,11 @@
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="OWNER_CODE_DESC"/>
   
     </attribute>
+  
+    <attribute id="RECNDPO" order="90" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Cash Flow Generated Starting On"/>
+      <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="RECNDPO"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -1784,11 +1805,11 @@
     </measure>
   
     <measure id="CTLCNETAMOUNT" order="88" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="CTLCNETAMOUNT"/>
+      <descriptions defaultDescription="Net Amount in Local Currency"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="CTLCNETAMOUNT"/>
     </measure>
     <measure id="CTLCGROSSAMOUNT" order="89" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="CTLCGROSSAMOUNT"/>
+      <descriptions defaultDescription="Gross Amount in Local Currency"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="CTLCGROSSAMOUNT"/>
     </measure>
   </baseMeasures>
