@@ -476,6 +476,57 @@
     <joinAttribute name="INTRENOPL"/>
     <joinAttribute name="MANDT"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_MAXVALPERYEAR" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="ActiveValuation">
+        <descriptions defaultDescription="ActiveValuation"/>
+      </viewAttribute>
+    
+      <viewAttribute id="VAL_INTRENONA">
+        <descriptions defaultDescription="VAL_INTRENONA"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOPL">
+        <descriptions defaultDescription="INTRENOPL"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="MAX_INTRENONA" aggregationType="max">
+        <descriptions defaultDescription="INTRENONA"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes>
+    
+      <calculatedViewAttribute id="NewestValuation" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(&quot;VAL_INTRENONA&quot;=&quot;MAX_INTRENONA&quot;,'X','')</formula>
+    
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="KeepFlag" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(&quot;ActiveValuation&quot;='X' and &quot;NewestValuation&quot;='X',1,0)</formula>
+    
+      </calculatedViewAttribute></calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="J_LIMIT_MULTI_VALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_INTRENONA" source="VAL_INTRENONA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/></input>
+    <input node="AGG_MAX_VAL_ID_PER_YEAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAX_INTRENONA" source="INTRENONA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    </input>
+    <joinAttribute name="INTRENOPL"/>
+    <joinAttribute name="TAXYRSTARTDT"/>
+    <joinAttribute name="MANDT"/>
+  </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_REMOVE_ACTIVE_EQ_NEWEST" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="TAXYRSTARTDT">
@@ -498,55 +549,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="KeepFlag" source="KeepFlag"/></input>
     <filter>&quot;KeepFlag&quot;=0</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_MAXVALPERYEAR" cardinality="CN_1" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="TAXYRSTARTDT">
-        <descriptions defaultDescription="TAXYRSTARTDT"/>
-      </viewAttribute>
-      <viewAttribute id="INTRENOPL">
-        <descriptions defaultDescription="INTRENOPL"/>
-      </viewAttribute>
-      <viewAttribute id="MANDT">
-        <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute id="ActiveValuation">
-        <descriptions defaultDescription="ActiveValuation"/>
-      </viewAttribute>
-    
-      <viewAttribute id="VAL_INTRENONA">
-        <descriptions defaultDescription="VAL_INTRENONA"/>
-      </viewAttribute>
-      <viewAttribute id="MAX_INTRENONA" aggregationType="max">
-        <descriptions defaultDescription="INTRENONA"/>
-      </viewAttribute></viewAttributes>
-    <calculatedViewAttributes>
-    
-      <calculatedViewAttribute id="KeepFlag" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-    
-        <formula>if(&quot;ActiveValuation&quot;='X' and &quot;NewestValuation&quot;='X',1,0)</formula>
-    
-      </calculatedViewAttribute>
-    
-      <calculatedViewAttribute id="NewestValuation" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;VAL_INTRENONA&quot;=&quot;MAX_INTRENONA&quot;,'X','')</formula>
-      </calculatedViewAttribute></calculatedViewAttributes>
-    <restrictedViewAttributes/>
-    <input node="J_LIMIT_MULTI_VALS">
-      <mapping xsi:type="Calculation:AttributeMapping" target="ActiveValuation" source="ActiveValuation"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VAL_INTRENONA" source="VAL_INTRENONA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/></input>
-    <input node="AGG_MAX_VAL_ID_PER_YEAR">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MAX_INTRENONA" source="INTRENONA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-    </input>
-    <joinAttribute name="INTRENOPL"/>
-    <joinAttribute name="TAXYRSTARTDT"/>
-    <joinAttribute name="MANDT"/>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_MAX_VAL_ID_PER_YEAR">
     <viewAttributes>
@@ -1251,6 +1253,10 @@
       <calculatedViewAttribute id="CalculatedTotalBPTaxPotential" datatype="DECIMAL" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
         <formula>if(isnull(&quot;BASE_AMOUNT&quot;),0,decfloat(&quot;BASE_AMOUNT&quot;)+((decfloat(&quot;CalculatedTotalBPTaxableValue&quot;)-decfloat(&quot;MIN_VALUE&quot;))*(decfloat(&quot;TAX_PERCENT&quot;)/100)))</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="TaxDiffDirection" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(sign(&quot;TaxDifference&quot;)=-1,'-',if(sign(&quot;TaxDifference&quot;)=1,'+',''))</formula>
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="NEJ_PARCELS_TAXRATES">
@@ -1396,6 +1402,11 @@
       <descriptions defaultDescription="NewestValuation"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="NewestValuation"/>
     </attribute>
+  
+    <attribute id="TaxDiffDirection" order="40" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Difference Direction (+/-)"/>
+      <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TaxDiffDirection"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -1472,6 +1483,7 @@
       
       
       
+      
       </measure>
     <measure id="ContractCounter" order="35" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="ContractCounter"/>
@@ -1479,6 +1491,7 @@
         <attribute attributeName="INTRENOCN"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       </measure>
   </calculatedMeasures>
@@ -1493,7 +1506,7 @@
         </filter>
         <attributeName>NewestValuation</attributeName>
       </restriction>
-    </measure>
+      </measure>
   </restrictedMeasures>
   <localDimensions/>
 </logicalModel>
@@ -1583,10 +1596,6 @@
       <upperLeftCorner x="119" y="17"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="AGG_REMOVE_ACTIVE_EQ_NEWEST" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="214" y="1134"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
   
     <shape expanded="true" modelObjectName="J_MAXVALPERYEAR" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="213" y="1266"/>
@@ -1599,6 +1608,10 @@
     <shape modelObjectName="AGG_MAX_VAL_ID_PER_YEAR" modelObjectNameSpace="J_MAXVALPERYEAR" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_REMOVE_ACTIVE_EQ_NEWEST" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="214" y="1134"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_MAX_VAL_ID_PER_YEAR" modelObjectNameSpace="CalculationView">
