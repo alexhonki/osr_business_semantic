@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models::CV_TasksInteractions" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:DataFoundation="http://www.sap.com/ndb/BiModelDataFoundation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" id="osr.business.semantic.db.Business_Models::CV_TasksInteractions" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_TasksInteractions"/>
 <localVariables/>
 <variableMappings/>
@@ -88,6 +88,7 @@ if(match(&quot;DESCRIPTION&quot;,'*RTS*') , 'RTS',
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_Pivot_2nd_LT_Type" datatype="VARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>if(match(&quot;DESCRIPTION&quot;,'*RTS*') , 'RTS',
 if(match(&quot;DESCRIPTION&quot;,'*Reprint*') , 'Request - Reprint',
 if(match(&quot;DESCRIPTION&quot;,'*Refund*') , 'Request - Refund',
@@ -117,12 +118,45 @@ if(match(&quot;DESCRIPTION&quot;,'*First Claim*') , 'LT12 First Claim',
 if(match(&quot;DESCRIPTION&quot;,'*LT12*') and not match(&quot;DESCRIPTION&quot;,'*First Claim*') , 'LT12',
 if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
  'Other'))))))))))))))))))))))))))))</formula>
+    
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Secondary_LT_Type" datatype="VARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;CC_LT_Type&quot;!=&quot;CC_Pivot_2nd_LT_Type&quot;,&quot;CC_Pivot_2nd_LT_Type&quot;,'NA')</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Days_Bt_Creation_Mod" datatype="INTEGER" expressionLanguage="SQL">
         <formula>DAYS_BETWEEN(&quot;CC_Created_Date&quot;, &quot;CC_Last_Changed&quot;)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_LT_Type_Group" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT Form',
+if(match(&quot;DESCRIPTION&quot;,'*LT12*') and not match(&quot;DESCRIPTION&quot;,'*First Claim*'), 'LT Form',
+if(match(&quot;DESCRIPTION&quot;,'*First Claim*') , 'LT Form',
+if(match(&quot;DESCRIPTION&quot;,'*LT13*') , 'LT Form',
+if(match(&quot;DESCRIPTION&quot;,'*LT15*') , 'LT Form',
+if(match(&quot;DESCRIPTION&quot;,'*LT16*') , 'LT Form',
+if(match(&quot;DESCRIPTION&quot;,'*LT18*') , 'LT Form',
+if(match(&quot;DESCRIPTION&quot;,'*LT19*') , 'LT Form',
+if(match(&quot;DESCRIPTION&quot;,'*LT20*') , 'LT Form',
+if(match(&quot;DESCRIPTION&quot;,'*LT21*') , 'LT Form',
+if(match(&quot;DESCRIPTION&quot;,'*Complaint*') , 'Complaint',
+if(match(&quot;DESCRIPTION&quot;,'*Complex*') , 'Complex',
+if(match(&quot;DESCRIPTION&quot;,'*Compliance*') , 'Compliance',
+if(match(&quot;DESCRIPTION&quot;,'*Deceased*') , 'Deceased',
+if(match(&quot;DESCRIPTION&quot;,'*Disaster*') , 'Disaster',
+if(match(&quot;DESCRIPTION&quot;,'*Ownership*') , 'Disputes',
+if(match(&quot;DESCRIPTION&quot;,'*Share Interest*') , 'Disputes',
+if(match(&quot;DESCRIPTION&quot;,'*Valuation*') , 'Disputes',
+if(match(&quot;DESCRIPTION&quot;,'*Duplicate*') , 'Duplicate',
+if(match(&quot;DESCRIPTION&quot;,'*Email Assessment*') , 'Email Assessment',
+if(match(&quot;DESCRIPTION&quot;,'*EPO *') , 'EPO',
+if(match(&quot;DESCRIPTION&quot;,'*MOSN*') , 'MOSN',
+if(match(&quot;DESCRIPTION&quot;,'*Objection*') , 'Objection',
+if(match(&quot;DESCRIPTION&quot;,'*COA*') , 'Requests',
+if(match(&quot;DESCRIPTION&quot;,'*Receipt*') , 'Requests',
+if(match(&quot;DESCRIPTION&quot;,'*Refund*') , 'Requests',
+if(match(&quot;DESCRIPTION&quot;,'*Reprint*') , 'Requests',
+if(match(&quot;DESCRIPTION&quot;,'*RTS*') , 'RTS',
+ 'Other'))))))))))))))))))))))))))))</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -207,6 +241,10 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <viewAttribute id="CC_Days_Bt_Creation_Mod" aggregationType="sum">
         <descriptions defaultDescription="CC_Days_Bt_Creation_Mod"/>
       </viewAttribute>
+    
+      <viewAttribute id="CC_LT_Type_Group">
+        <descriptions defaultDescription="CC_LT_Type_Group"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -225,6 +263,8 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Secondary_LT_Type" source="CC_Secondary_LT_Type"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_Mod"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LT_Type_Group" source="CC_LT_Type_Group"/>
     </input>
     <input node="P_PROCESS_TYPE_TEXT">
       <mapping xsi:type="Calculation:AttributeMapping" target="P_DESCRIPTION" source="P_DESCRIPTION"/>
@@ -245,8 +285,8 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <descriptions defaultDescription="Object ID"/>
       <keyMapping columnObjectName="J_TASK_PROCESS_TYPE" columnName="OBJECT_ID"/>
     </attribute>
-    <attribute id="PROCESS_TYPE" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Process Type (ID)"/>
+    <attribute id="PROCESS_TYPE" order="4" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="P_DESCRIPTION">
+      <descriptions defaultDescription="Process Type"/>
       <keyMapping columnObjectName="J_TASK_PROCESS_TYPE" columnName="PROCESS_TYPE"/>
     </attribute>
     <attribute id="CREATED_BY" order="5" displayAttribute="false" attributeHierarchyActive="false">
@@ -262,7 +302,7 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <keyMapping columnObjectName="J_TASK_PROCESS_TYPE" columnName="ARCHIVING_FLAG"/>
     </attribute>
     <attribute id="P_DESCRIPTION" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Process Type"/>
+      <descriptions defaultDescription="Process Type (Desc)"/>
       <keyMapping columnObjectName="J_TASK_PROCESS_TYPE" columnName="P_DESCRIPTION"/>
     </attribute>
   
@@ -277,7 +317,7 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <keyMapping columnObjectName="J_TASK_PROCESS_TYPE" columnName="CC_Last_Changed"/>
     </attribute>
     <attribute id="DESCRIPTION" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Description"/>
+      <descriptions defaultDescription="Task Description"/>
       <keyMapping columnObjectName="J_TASK_PROCESS_TYPE" columnName="DESCRIPTION"/>
     </attribute>
   
@@ -290,7 +330,14 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
   
     <attribute id="CC_Secondary_LT_Type" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Secondary Land Tax Type"/>
+  
       <keyMapping columnObjectName="J_TASK_PROCESS_TYPE" columnName="CC_Secondary_LT_Type"/>
+  
+    </attribute>
+  
+    <attribute id="CC_LT_Type_Group" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LT Type Group"/>
+      <keyMapping columnObjectName="J_TASK_PROCESS_TYPE" columnName="CC_LT_Type_Group"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -320,7 +367,22 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
-  <localDimensions/>
+  <localDimensions>
+    <localDimension id="LT_Types">
+      <attributeRef xsi:type="DataFoundation:Attribute">CC_LT_Type_Group</attributeRef>
+      <attributeRef xsi:type="DataFoundation:Attribute">CC_LT_Type</attributeRef>
+      <hierarchies>
+        <hierarchy xsi:type="Dimension:LeveledHierarchy" id="LT_Types" aggregateAllNodes="true" orphanedNodesHandling="ROOT_NODES" rootNodeVisibility="ADD_ROOT_NODE" withRootNode="true" nodeStyle="LEVEL_NAME_ENFORCED" cacheEnabled="true" cycleHandling="BREAKUP" emptyValueIsNull="true">
+          <descriptions defaultDescription="LT_Types"/>
+          <unassignedMemberProperties mode="FALSE"/>
+          <levels>
+            <level levelAttribute="CC_LT_Type_Group" levelType="MDLEVEL_TYPE_REGULAR" order="1" orderAttribute="CC_LT_Type_Group" sortDirection="ASC"/>
+            <level levelAttribute="CC_LT_Type" levelType="MDLEVEL_TYPE_ALL" order="2" orderAttribute="CC_LT_Type" sortDirection="ASC"/>
+          </levels>
+        </hierarchy>
+      </hierarchies>
+    </localDimension>
+  </localDimensions>
 </logicalModel>
 <layout>
   <shapes>
