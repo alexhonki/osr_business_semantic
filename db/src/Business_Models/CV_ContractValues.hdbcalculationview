@@ -7,6 +7,9 @@
   <DataSource id="osr.business.semantic.db.Business_Models::CV_ContractResults">
     <resourceUri>osr.business.semantic.db.Business_Models::CV_ContractResults</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models::CV_LtFinancials">
+    <resourceUri>osr.business.semantic.db.Business_Models::CV_LtFinancials</resourceUri>
+  </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models::CV_Cashflow">
     <resourceUri>osr.business.semantic.db.Business_Models::CV_Cashflow</resourceUri>
   </DataSource>
@@ -612,16 +615,6 @@
         <descriptions defaultDescription="MATCH_PERSON"/>
       </viewAttribute>
     
-      <viewAttribute id="BETRH" aggregationType="sum">
-        <descriptions defaultDescription="BETRH"/>
-      </viewAttribute>
-      <viewAttribute id="AUGBT" aggregationType="sum">
-        <descriptions defaultDescription="AUGBT"/>
-      </viewAttribute>
-      <viewAttribute id="FBNUM">
-        <descriptions defaultDescription="FBNUM"/>
-      </viewAttribute>
-    
       <viewAttribute id="OWNER_CODE_DESC">
         <descriptions defaultDescription="OWNER_CODE_DESC"/>
       </viewAttribute>
@@ -639,6 +632,18 @@
     
       <viewAttribute id="InvoicedAmount" aggregationType="sum">
         <descriptions defaultDescription="InvoicedAmount"/>
+      </viewAttribute>
+      <viewAttribute id="PostedAmount" aggregationType="sum">
+        <descriptions defaultDescription="Posted Amount (excl. Reversed)"/>
+      </viewAttribute>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="Form Bundle Number"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="Posted amount"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBT" aggregationType="sum">
+        <descriptions defaultDescription="Clearing amount"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -737,17 +742,18 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="InvoicedAmount" source="InvoicedAmount"/>
     </input>
-    <input node="TF_LtFinancials">
+    <input node="AGG_CV_LTFINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PostedAmount" source="PostedAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="DFKK_H_GPART"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYR" source="PERSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
     </input>
     <joinAttribute name="MANDT"/>
     <joinAttribute name="ZZ_PARTNER"/>
-    <joinAttribute name="TAXYR"/>
+    <joinAttribute name="TAXYRSTARTDT"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_CONTRACT_CASHFLOW" cardinality="C1_1" joinType="rightOuter">
     <viewAttributes>
@@ -1121,13 +1127,46 @@
     <joinAttribute name="JOIN$INTRENO$INTRENO"/>
     <joinAttribute name="JOIN$DBERVON$TAXYRSTARTDT"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:TableFunctionView" id="TF_LtFinancials" tableFunctionName="osr.business.semantic.db.TFunctions::TF_LtFinancials">
-    <descriptions>
-      <comment text=""/>
-    </descriptions>
-    <viewAttributes/>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_CV_LTFINANCIALS" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="PostedAmount" aggregationType="sum">
+        <descriptions defaultDescription="Posted Amount (excl. Reversed)"/>
+      </viewAttribute>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="Form Bundle Number"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="Posted amount"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBT" aggregationType="sum">
+        <descriptions defaultDescription="Clearing amount"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_GPART">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="Tax Year Start Date"/>
+      </viewAttribute>
+      <viewAttribute id="HVORG">
+        <descriptions defaultDescription="Main Transaction (ID)"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models::CV_LtFinancials">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PostedAmount" source="PostedAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
+    </input>
+    <filter>&quot;HVORG&quot;='4000'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_CASHFLOW">
     <viewAttributes>
@@ -1137,6 +1176,10 @@
       <viewAttribute id="ReassessmentAmount" aggregationType="sum">
         <descriptions defaultDescription="ReassessmentAmount"/>
       </viewAttribute>
+      <viewAttribute id="InvoicedAmount" aggregationType="sum">
+        <descriptions defaultDescription="InvoicedAmount"/>
+      </viewAttribute>
+    
     
     
     
@@ -1152,11 +1195,7 @@
       </viewAttribute>
       <viewAttribute id="DBEAR">
         <descriptions defaultDescription="DBEAR"/>
-      </viewAttribute>
-      <viewAttribute id="InvoicedAmount" aggregationType="sum">
-        <descriptions defaultDescription="InvoicedAmount"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_CV_Cashflow">
@@ -1190,6 +1229,10 @@
       <viewAttribute id="ReassessmentAmount">
         <descriptions defaultDescription="Reassessment Amount"/>
       </viewAttribute>
+      <viewAttribute id="InvoicedAmount">
+        <descriptions defaultDescription="Invoiced Amount"/>
+      </viewAttribute>
+    
       <viewAttribute id="CTLCNETAMOUNT">
         <descriptions defaultDescription="Net Amount in Local Currency"/>
       </viewAttribute>
@@ -1369,11 +1412,7 @@
       </viewAttribute>
       <viewAttribute id="XFLOWTYPE">
         <descriptions defaultDescription="Cash Flow Type Description"/>
-      </viewAttribute>
-      <viewAttribute id="InvoicedAmount">
-        <descriptions defaultDescription="Invoiced Amount"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models::CV_Cashflow">
@@ -1736,24 +1775,25 @@
       <descriptions defaultDescription="MATCH_PERSON"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="MATCH_PERSON"/>
     </attribute>
-    <attribute id="FBNUM" order="85" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Form Bundle Number"/>
-      <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="FBNUM"/>
-    </attribute>
   
-    <attribute id="OWNER_CODE_DESC" order="86" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNER_CODE_DESC" order="83" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Owner type"/>
   
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="OWNER_CODE_DESC"/>
   
     </attribute>
   
-    <attribute id="RECNDPO" order="88" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="RECNDPO" order="85" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Cash Flow Generated Starting On"/>
   
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="RECNDPO"/>
   
-    </attribute></attributes>
+    </attribute>
+    <attribute id="FBNUM" order="90" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FBNUM"/>
+      <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="FBNUM"/>
+    </attribute>
+  </attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="TOTBPRELVNTVAL" order="37" aggregationType="sum" measureType="simple">
@@ -1800,35 +1840,41 @@
       <descriptions defaultDescription="Land Tax -  Absentee surcharge"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="ABSURCHARGE"/>
     </measure>
-    <measure id="BETRH" order="83" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Amount in local currency"/>
-      <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="BETRH"/>
-    </measure>
-    <measure id="AUGBT" order="84" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Clearing amount in clearing currency"/>
-      <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="AUGBT"/>
-    </measure>
-    <measure id="CashflowAmount" order="87" aggregationType="sum" measureType="simple">
+    <measure id="CashflowAmount" order="84" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CashflowAmount"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="CashflowAmount"/>
     </measure>
-    <measure id="ReassessmentAmount" order="89" aggregationType="sum" measureType="simple">
+    <measure id="ReassessmentAmount" order="86" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="ReassessmentAmount"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="ReassessmentAmount"/>
     </measure>
   
-    <measure id="InvoicedAmount" order="91" aggregationType="sum" measureType="simple">
+    <measure id="InvoicedAmount" order="88" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="InvoicedAmount"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="InvoicedAmount"/>
     </measure>
+    <measure id="PostedAmount" order="89" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PostedAmount"/>
+      <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="PostedAmount"/>
+    </measure>
+    <measure id="BETRH" order="91" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BETRH"/>
+      <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="BETRH"/>
+    </measure>
+    <measure id="AUGBT" order="92" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AUGBT"/>
+      <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="AUGBT"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures>
-    <measure id="ContractCounter" order="90" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+    <measure id="ContractCounter" order="87" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="ContractCounter"/>
       <exceptionAggregation>
         <attribute attributeName="INTRENO"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
       
       
       
@@ -1857,8 +1903,8 @@
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="TF_LtFinancials" modelObjectNameSpace="J_CONTRACT_FBNUM" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="401" y="52"/>
+    <shape modelObjectName="AGG_CV_LTFINANCIALS" modelObjectNameSpace="J_CONTRACT_FBNUM" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="375" y="30"/>
       <rectangleSize width="250"/>
     </shape>
   
@@ -1874,10 +1920,11 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="TF_LtFinancials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="405" y="376"/>
+    <shape expanded="true" modelObjectName="AGG_CV_LTFINANCIALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="414" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+  
     <shape expanded="true" modelObjectName="AGG_CASHFLOW" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="91" y="536"/>
       <rectangleSize height="30" width="160"/>

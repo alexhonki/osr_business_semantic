@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models::CV_LtFinancials" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.business.semantic.db.Business_Models::CV_LtFinancials" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_LT_FINANCIALS"/>
 <localVariables/> 
 <variableMappings/>
@@ -466,7 +466,57 @@
     </measure>
   </baseMeasures>
   <calculatedMeasures/>
-  <restrictedMeasures/>
+  <restrictedMeasures>
+    <measure id="ReversedAmount" order="22" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      <descriptions defaultDescription="Reversed Amount"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="05"/>
+        </filter>
+        <attributeName>AUGRD</attributeName>
+      </restriction>
+      </measure>
+    <measure id="AssessedAmount" order="23" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      <descriptions defaultDescription="Assessed Amount"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
+        </filter>
+        <attributeName>AUGRD</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="TA"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="ZM"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      </measure>
+    <measure id="TransferredAmount" order="24" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      <descriptions defaultDescription="Transferred Amount"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="TA"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      </measure>
+  
+    <measure id="MiscAmount" order="25" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      <descriptions defaultDescription="Miscellaneous Amount"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="ZM"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      </measure>
+  </restrictedMeasures>
   <localDimensions/>
 </logicalModel>
 <layout>
