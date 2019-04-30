@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models::CV_HomeExemptionReengagement" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_HomeExemptionReengagement"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models::CV_OwnershipCnresp">
+    <resourceUri>osr.business.semantic.db.Business_Models::CV_OwnershipCnresp</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models::CV_ContractResults">
+    <resourceUri>osr.business.semantic.db.Business_Models::CV_ContractResults</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_OWNERSHIPCNRESP" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOCN">
+        <descriptions defaultDescription="Contract Key (INTRENO)"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="Tax Year Start Date"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOPL">
+        <descriptions defaultDescription="Parcel Intreno"/>
+      </viewAttribute>
+      <viewAttribute id="CONCESSCODE">
+        <descriptions defaultDescription="Land tax: Exemption/deduction code"/>
+      </viewAttribute>
+      <viewAttribute id="PLNO">
+        <descriptions defaultDescription="Parcel Number"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="OWNERTYPE">
+        <descriptions defaultDescription="Land tax code id"/>
+      </viewAttribute>
+      <viewAttribute id="OWNER_CODE_DESC">
+        <descriptions defaultDescription="Land Tax Code Description"/>
+      </viewAttribute>
+      <viewAttribute id="LAND_USE_TEXT">
+        <descriptions defaultDescription="Land Use Description"/>
+      </viewAttribute>
+      <viewAttribute id="Counter">
+        <descriptions defaultDescription="Parcel Count"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_NEXT_TAX_YEAR" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
+        <formula>string(component(date(&quot;TAXYRSTARTDT&quot;),1) + 1) + '0701'</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="HE_Counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CONCESSCODE&quot;='R',1,0)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models::CV_OwnershipCnresp">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSCODE" source="CONCESSCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLNO" source="PLNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAND_USE_TEXT" source="LAND_USE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Counter" source="Counter"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_CONTRACTRESULTS">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="Internal Key of Real Estate Object"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="Tax Year Start Date"/>
+      </viewAttribute>
+      <viewAttribute id="TOTBPTAXABLEVAL">
+        <descriptions defaultDescription="Land Tax: BP Taxable value per parcel"/>
+      </viewAttribute>
+      <viewAttribute id="TAXAMOUNT">
+        <descriptions defaultDescription="Land Tax - Tax amount"/>
+      </viewAttribute>
+      <viewAttribute id="TAXESTIMATE">
+        <descriptions defaultDescription="Land Tax - Estimated Tax"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models::CV_ContractResults">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_HE_NONLIABLE" cardinality="C1_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="INTRENOCN">
+        <descriptions defaultDescription="INTRENOCN"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_NEXT_TAX_YEAR">
+        <descriptions defaultDescription="CC_NEXT_TAX_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CNRESP_HE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_NEXT_TAX_YEAR" source="CC_NEXT_TAX_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    </input>
+    <input node="P_CNRES_NONLIABLE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="INTRENOCN"/>
+    <joinAttribute name="TAXYRSTARTDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_NEXTYEAR_OWNERSHIP" cardinality="C1_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="INTRENO"/>
+      </viewAttribute>
+      <viewAttribute id="CURR_TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="PREV_TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
+      <viewAttribute hidden="true" id="JOIN$INTRENOCN$INTRENO"/>
+      <viewAttribute hidden="true" id="JOIN$CC_NEXT_TAX_YEAR$TAXYRSTARTDT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_HE_NONLIABLE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PREV_TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENOCN$INTRENO" source="INTRENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_NEXT_TAX_YEAR$TAXYRSTARTDT" source="CC_NEXT_TAX_YEAR"/>
+    </input>
+    <input node="J_NOHE_LIABLE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENOCN$INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_NEXT_TAX_YEAR$TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    </input>
+    <joinAttribute name="JOIN$MANDT$MANDT"/>
+    <joinAttribute name="JOIN$INTRENOCN$INTRENO"/>
+    <joinAttribute name="JOIN$CC_NEXT_TAX_YEAR$TAXYRSTARTDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="P_CNRESP_HE" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOCN">
+        <descriptions defaultDescription="INTRENOCN"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_NEXT_TAX_YEAR">
+        <descriptions defaultDescription="CC_NEXT_TAX_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="HE_Counter" aggregationType="sum">
+        <descriptions defaultDescription="HE_Counter"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_OWNERSHIPCNRESP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_NEXT_TAX_YEAR" source="CC_NEXT_TAX_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HE_Counter" source="HE_Counter"/>
+    </input>
+    <filter>&quot;HE_Counter&quot;&gt;0</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CNRES_NONLIABLE" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="INTRENO"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="TOTBPTAXABLEVAL">
+        <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
+      </viewAttribute>
+      <viewAttribute id="TAXAMOUNT">
+        <descriptions defaultDescription="TAXAMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXESTIMATE">
+        <descriptions defaultDescription="TAXESTIMATE"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_CONTRACTRESULTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
+    </input>
+    <filter>&quot;TAXAMOUNT&quot;=0</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_BP_NOHE" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOCN">
+        <descriptions defaultDescription="Contract Key (INTRENO)"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="Tax Year Start Date"/>
+      </viewAttribute>
+      <viewAttribute id="HE_Counter" aggregationType="sum">
+        <descriptions defaultDescription="HE_Counter_1"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_OWNERSHIPCNRESP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HE_Counter" source="HE_Counter"/>
+    </input>
+    <filter>&quot;HE_Counter&quot;=0</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_NOHE_LIABLE" cardinality="C1_1" joinType="inner" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="INTRENO"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
+      <viewAttribute hidden="true" id="JOIN$INTRENOCN$INTRENO"/>
+      <viewAttribute hidden="true" id="JOIN$TAXYRSTARTDT$TAXYRSTARTDT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="AGG_BP_NOHE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENOCN$INTRENO" source="INTRENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TAXYRSTARTDT$TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    </input>
+    <input node="P_CNRES_LIABLE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENOCN$INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TAXYRSTARTDT$TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    </input>
+    <joinAttribute name="JOIN$MANDT$MANDT"/>
+    <joinAttribute name="JOIN$INTRENOCN$INTRENO"/>
+    <joinAttribute name="JOIN$TAXYRSTARTDT$TAXYRSTARTDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CNRES_LIABLE" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="INTRENO"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="TOTBPTAXABLEVAL">
+        <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
+      </viewAttribute>
+      <viewAttribute id="TAXAMOUNT">
+        <descriptions defaultDescription="TAXAMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXESTIMATE">
+        <descriptions defaultDescription="TAXESTIMATE"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_CONTRACTRESULTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
+    </input>
+    <filter>&quot;TAXAMOUNT&quot;&gt;0 or &quot;TAXESTIMATE&quot;&gt;0</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_NEXTYEAR_OWNERSHIP">
+  <attributes>
+    <attribute id="MANDT" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MANDT"/>
+      <keyMapping columnObjectName="J_NEXTYEAR_OWNERSHIP" columnName="MANDT"/>
+    </attribute>
+    <attribute id="INTRENO" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="INTRENO"/>
+      <keyMapping columnObjectName="J_NEXTYEAR_OWNERSHIP" columnName="INTRENO"/>
+    </attribute>
+    <attribute id="PREV_TAXYRSTARTDT" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TAXYRSTARTDT"/>
+      <keyMapping columnObjectName="J_NEXTYEAR_OWNERSHIP" columnName="PREV_TAXYRSTARTDT"/>
+    </attribute>
+    <attribute id="CURR_TAXYRSTARTDT" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TAXYRSTARTDT"/>
+      <keyMapping columnObjectName="J_NEXTYEAR_OWNERSHIP" columnName="CURR_TAXYRSTARTDT"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures>
+    <measure id="ContractCounter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="ContractCounter"/>
+      <exceptionAggregation>
+        <attribute attributeName="INTRENO"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="381.7075288482744" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_CV_OWNERSHIPCNRESP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="411.8083199971081" y="691.9999964237213"/>
+      <rectangleSize height="30" width="241"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CV_CONTRACTRESULTS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="151.0000000000001" y="691.9999976158142"/>
+      <rectangleSize height="30" width="214"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_HE_NONLIABLE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="106.33333333333337" y="349.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CNRESP_HE" modelObjectNameSpace="J_HE_NONLIABLE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CNRES_NONLIABLE" modelObjectNameSpace="J_HE_NONLIABLE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_NEXTYEAR_OWNERSHIP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="381.7075288482744" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_HE_NONLIABLE" modelObjectNameSpace="J_NEXTYEAR_OWNERSHIP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="J_NOHE_LIABLE" modelObjectNameSpace="J_NEXTYEAR_OWNERSHIP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CNRESP_HE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="218.00000000000006" y="517.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CNRES_NONLIABLE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-6" y="517"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_BP_NOHE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="608" y="518"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_NOHE_LIABLE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="493" y="350"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="AGG_BP_NOHE" modelObjectNameSpace="J_NOHE_LIABLE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CNRES_LIABLE" modelObjectNameSpace="J_NOHE_LIABLE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CNRES_LIABLE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="423" y="518"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
