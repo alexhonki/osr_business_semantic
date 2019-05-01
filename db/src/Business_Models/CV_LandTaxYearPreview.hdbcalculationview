@@ -1,0 +1,900 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models::CV_LandTaxYearPreview" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="Land Tax Year Preview"/>
+<localVariables>
+  <variable id="IP_PREVIEW_TAX_YEAR" parameter="true">
+    <descriptions defaultDescription="Preview Tax Year"/>
+    <variableProperties datatype="INTEGER" mandatory="true">
+      <valueDomain type=""/>
+      <selection multiLine="false" type="Single"/>
+      <defaultRange lowValue="if(int(component(now(),2)) &gt;= 7,int(component(now(),1))+2,int(component(now(),1))+1)" lowExpression="true"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models::CV_ParcelResultsBp">
+    <resourceUri>osr.business.semantic.db.Business_Models::CV_ParcelResultsBp</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::LTCNEXMD">
+    <resourceUri>osr.business.semantic.db.synonyms::LTCNEXMD</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::CODE_ID">
+    <resourceUri>osr.business.semantic.db.synonyms::CODE_ID</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::ZBUT0000UZQMZ7">
+    <resourceUri>osr.business.semantic.db.synonyms::ZBUT0000UZQMZ7</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::CDS_LAND.TAB.LTAXRATE">
+    <resourceUri>osr.business.semantic.db.synonyms::CDS_LAND.TAB.LTAXRATE</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PARCEL_RESULT_BP" filterExpressionLanguage="SQL">
+    <descriptions>
+      <comment text="only picks the year needed to calculate the preview year"/>
+    </descriptions>
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="Tax Year Start Date"/>
+      </viewAttribute>
+      <viewAttribute id="BPARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="BPRELVNTVAL">
+        <descriptions defaultDescription="BP Relevant Value"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOCN">
+        <descriptions defaultDescription="Internal Key of Real Estate Object (CN)"/>
+      </viewAttribute>
+    
+      <viewAttribute id="INTRENOPL">
+        <descriptions defaultDescription="Internal Key of Real Estate Object (PL)"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_TAX_YEAR" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>int(leftstr(string(&quot;TAXYRSTARTDT&quot;), 4))+1</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_ParcelCounter" datatype="INTEGER" expressionLanguage="SQL">
+    
+        <formula>1</formula>
+    
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models::CV_ParcelResultsBp">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="BPARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPRELVNTVAL" source="BPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+    </input>
+    <filter>&quot;CC_TAX_YEAR&quot;='$$IP_PREVIEW_TAX_YEAR$$'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_LTCNEXMD">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOPL">
+        <descriptions defaultDescription="INTRENOPL"/>
+      </viewAttribute>
+    
+      <viewAttribute id="INTRENOCN">
+        <descriptions defaultDescription="INTRENOCN"/>
+      </viewAttribute>
+      <viewAttribute id="VALIDFROM">
+        <descriptions defaultDescription="VALIDFROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALIDTO">
+        <descriptions defaultDescription="VALIDTO"/>
+      </viewAttribute>
+      <viewAttribute id="CONCESSPCT">
+        <descriptions defaultDescription="CONCESSPCT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_EXEMPT_COUNT" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::LTCNEXMD">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALIDFROM" source="VALIDFROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALIDTO" source="VALIDTO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSPCT" source="CONCESSPCT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_PARCELBP_EXCEMPT" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="BPARTNER">
+        <descriptions defaultDescription="BPARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BPRELVNTVAL" aggregationType="sum">
+        <descriptions defaultDescription="BPRELVNTVAL"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOCN">
+        <descriptions defaultDescription="INTRENOCN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_TAX_YEAR">
+        <descriptions defaultDescription="CC_TAX_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ParcelCounter" aggregationType="sum">
+        <descriptions defaultDescription="CC_ParcelCounter"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CONCESSPCT" aggregationType="sum">
+        <descriptions defaultDescription="CONCESSPCT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_EXEMPT_COUNT" aggregationType="sum">
+        <descriptions defaultDescription="CC_EXEMPT_COUNT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_PARCEL_RESULT_BP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="BPARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPRELVNTVAL" source="BPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_YEAR" source="CC_TAX_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ParcelCounter" source="CC_ParcelCounter"/>
+    </input>
+    <input node="P_LTCNEXMD">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSPCT" source="CONCESSPCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXEMPT_COUNT" source="CC_EXEMPT_COUNT"/>
+    </input>
+    <joinAttribute leftColumn="MANDT" rightColumn="MANDT" operator="EQ"/>
+    <joinAttribute leftColumn="INTRENOPL" rightColumn="INTRENOPL" operator="EQ"/>
+    <joinAttribute leftColumn="INTRENOCN" rightColumn="INTRENOCN" operator="EQ"/>
+    <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="VALIDFROM" operator="GE"/>
+    <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="VALIDTO" operator="LE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PARCELBP_EXEMPT">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="BPARTNER">
+        <descriptions defaultDescription="BPARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BPRELVNTVAL">
+        <descriptions defaultDescription="BPRELVNTVAL"/>
+      </viewAttribute>
+      <viewAttribute id="CC_TAX_YEAR">
+        <descriptions defaultDescription="CC_TAX_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ParcelCounter">
+        <descriptions defaultDescription="CC_ParcelCounter"/>
+      </viewAttribute>
+      <viewAttribute id="CONCESSPCT">
+        <descriptions defaultDescription="CONCESSPCT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_EXEMPT_COUNT">
+        <descriptions defaultDescription="CC_EXEMPT_COUNT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_BP_AFF_LAND_VAL" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+        <formula>&quot;BPRELVNTVAL&quot;-if(&quot;BPRELVNTVAL&quot; &gt;= 0,if(not isNull(&quot;CONCESSPCT&quot;) and &quot;CONCESSPCT&quot; &gt;= 0,&quot;BPRELVNTVAL&quot;*&quot;CONCESSPCT&quot;/100,0),0)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_BP_EXEMPT_AMOUNT" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+        <formula>&quot;BPRELVNTVAL&quot;-&quot;CC_BP_AFF_LAND_VAL&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="NEJ_PARCELBP_EXCEMPT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="BPARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPRELVNTVAL" source="BPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_YEAR" source="CC_TAX_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ParcelCounter" source="CC_ParcelCounter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSPCT" source="CONCESSPCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXEMPT_COUNT" source="CC_EXEMPT_COUNT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_BP_NET_VALS">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="BPARTNER">
+        <descriptions defaultDescription="BPARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BPRELVNTVAL" aggregationType="sum">
+        <descriptions defaultDescription="BPRELVNTVAL"/>
+      </viewAttribute>
+      <viewAttribute id="CC_TAX_YEAR">
+        <descriptions defaultDescription="CC_TAX_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ParcelCounter" aggregationType="sum">
+        <descriptions defaultDescription="CC_ParcelCounter"/>
+      </viewAttribute>
+      <viewAttribute id="CC_EXEMPT_COUNT" aggregationType="sum">
+        <descriptions defaultDescription="CC_EXEMPT_COUNT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_AFF_LAND_VAL" aggregationType="sum">
+        <descriptions defaultDescription="CC_BP_AFF_LAND_VAL"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_EXEMPT_AMOUNT" aggregationType="sum">
+        <descriptions defaultDescription="CC_BP_EXEMPT_AMOUNT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_PartnerCounter" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="P_PARCELBP_EXEMPT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="BPARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPRELVNTVAL" source="BPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_YEAR" source="CC_TAX_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ParcelCounter" source="CC_ParcelCounter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXEMPT_COUNT" source="CC_EXEMPT_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_AFF_LAND_VAL" source="CC_BP_AFF_LAND_VAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_EXEMPT_AMOUNT" source="CC_BP_EXEMPT_AMOUNT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CODE_ID" filterExpressionLanguage="SQL">
+    <descriptions>
+      <comment text="Filter &quot;PERIOD_END&quot; = &apos;99991231&apos; and &quot;ACTIVE&quot; = &apos;X&apos;"/>
+    </descriptions>
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="CODE_ID">
+        <descriptions defaultDescription="CODE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="ACTIVE">
+        <descriptions defaultDescription="ACTIVE"/>
+      </viewAttribute>
+      <viewAttribute id="PERIOD_END">
+        <descriptions defaultDescription="PERIOD_END"/>
+      </viewAttribute>
+      <viewAttribute id="CODE_DESC">
+        <descriptions defaultDescription="CODE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="INDIVORG">
+        <descriptions defaultDescription="INDIVORG"/>
+      </viewAttribute>
+      <viewAttribute id="TAX_RATE">
+        <descriptions defaultDescription="TAX_RATE"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURCHARGE">
+        <descriptions defaultDescription="ABSURCHARGE"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::CODE_ID">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODE_ID" source="CODE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE" source="ACTIVE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIOD_END" source="PERIOD_END"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODE_DESC" source="CODE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDIVORG" source="INDIVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_RATE" source="TAX_RATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE" source="ABSURCHARGE"/>
+    </input>
+    <filter>&quot;PERIOD_END&quot; = '99991231' and &quot;ACTIVE&quot; = 'X'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CURR_OWNER_TYP" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="PERIODEND">
+        <descriptions defaultDescription="PERIODEND"/>
+      </viewAttribute>
+      <viewAttribute id="PERIODBEGIN">
+        <descriptions defaultDescription="PERIODBEGIN"/>
+      </viewAttribute>
+      <viewAttribute id="CODEID">
+        <descriptions defaultDescription="CODEID"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::ZBUT0000UZQMZ7">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIODEND" source="PERIODEND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIODBEGIN" source="PERIODBEGIN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODEID" source="CODEID"/>
+    </input>
+    <filter>&quot;PERIODBEGIN&quot;&lt;=now() and &quot;PERIODEND&quot;&gt;=now()</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_OWNER_TYPE" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="CODEID">
+        <descriptions defaultDescription="CODEID"/>
+      </viewAttribute>
+      <viewAttribute id="CODE_DESC">
+        <descriptions defaultDescription="CODE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="INDIVORG">
+        <descriptions defaultDescription="INDIVORG"/>
+      </viewAttribute>
+      <viewAttribute id="TAX_RATE">
+        <descriptions defaultDescription="TAX_RATE"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURCHARGE">
+        <descriptions defaultDescription="ABSURCHARGE"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CURR_OWNER_TYP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODEID" source="CODEID"/>
+    </input>
+    <input node="P_CODE_ID">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODE_DESC" source="CODE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDIVORG" source="INDIVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_RATE" source="TAX_RATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE" source="ABSURCHARGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODEID" source="CODE_ID"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="CODEID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPVAL_OWNERTYP" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="BPARTNER">
+        <descriptions defaultDescription="BPARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BPRELVNTVAL" aggregationType="sum">
+        <descriptions defaultDescription="BPRELVNTVAL"/>
+      </viewAttribute>
+      <viewAttribute id="CC_TAX_YEAR">
+        <descriptions defaultDescription="CC_TAX_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ParcelCounter" aggregationType="sum">
+        <descriptions defaultDescription="CC_ParcelCounter"/>
+      </viewAttribute>
+      <viewAttribute id="CC_EXEMPT_COUNT" aggregationType="sum">
+        <descriptions defaultDescription="CC_EXEMPT_COUNT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_AFF_LAND_VAL" aggregationType="sum">
+        <descriptions defaultDescription="CC_BP_AFF_LAND_VAL"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_EXEMPT_AMOUNT" aggregationType="sum">
+        <descriptions defaultDescription="CC_BP_EXEMPT_AMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="CODEID">
+        <descriptions defaultDescription="CODEID"/>
+      </viewAttribute>
+      <viewAttribute id="CODE_DESC">
+        <descriptions defaultDescription="CODE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="INDIVORG">
+        <descriptions defaultDescription="INDIVORG"/>
+      </viewAttribute>
+      <viewAttribute id="TAX_RATE">
+        <descriptions defaultDescription="TAX_RATE"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURCHARGE_FLAG">
+        <descriptions defaultDescription="ABSURCHARGE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_PartnerCounter" aggregationType="sum">
+        <descriptions defaultDescription="CC_Partner_Counter"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="AGG_BP_NET_VALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="BPARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPRELVNTVAL" source="BPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_YEAR" source="CC_TAX_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ParcelCounter" source="CC_ParcelCounter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXEMPT_COUNT" source="CC_EXEMPT_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_AFF_LAND_VAL" source="CC_BP_AFF_LAND_VAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_EXEMPT_AMOUNT" source="CC_BP_EXEMPT_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PartnerCounter" source="CC_PartnerCounter"/>
+    </input>
+    <input node="J_OWNER_TYPE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODEID" source="CODEID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODE_DESC" source="CODE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDIVORG" source="INDIVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_RATE" source="TAX_RATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE_FLAG" source="ABSURCHARGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="PARTNER"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="BPARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_LT_TAX_RATE">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="RATE_CODE">
+        <descriptions defaultDescription="RATE_CODE"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="BASE_AMOUNT">
+        <descriptions defaultDescription="BASE_AMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="MIN_VALUE">
+        <descriptions defaultDescription="MIN_VALUE"/>
+      </viewAttribute>
+      <viewAttribute id="MAX_VALUE">
+        <descriptions defaultDescription="MAX_VALUE"/>
+      </viewAttribute>
+      <viewAttribute id="TAX_PERCENT">
+        <descriptions defaultDescription="TAX_PERCENT"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURCHARGE">
+        <descriptions defaultDescription="ABSURCHARGE"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURBASE_AMT">
+        <descriptions defaultDescription="ABSURBASE_AMT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_TAXYEAR_STDATE" datatype="VARCHAR" length="8" expressionLanguage="SQL">
+        <formula>CONCAT(TO_CHAR(TO_INT(LEFT(&quot;VALID_FROM&quot;,4))+1),'0701')</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::CDS_LAND.TAB.LTAXRATE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RATE_CODE" source="RATE_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BASE_AMOUNT" source="BASE_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MIN_VALUE" source="MIN_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAX_VALUE" source="MAX_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PERCENT" source="TAX_PERCENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE" source="ABSURCHARGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURBASE_AMT" source="ABSURBASE_AMT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_BPVAL_TAXRATE" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="BPARTNER">
+        <descriptions defaultDescription="BPARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BPRELVNTVAL" aggregationType="sum">
+        <descriptions defaultDescription="BPRELVNTVAL"/>
+      </viewAttribute>
+      <viewAttribute id="CC_TAX_YEAR">
+        <descriptions defaultDescription="CC_TAX_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ParcelCounter" aggregationType="sum">
+        <descriptions defaultDescription="CC_ParcelCounter"/>
+      </viewAttribute>
+      <viewAttribute id="CC_EXEMPT_COUNT" aggregationType="sum">
+        <descriptions defaultDescription="CC_EXEMPT_COUNT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_AFF_LAND_VAL" aggregationType="sum">
+        <descriptions defaultDescription="CC_BP_AFF_LAND_VAL"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_EXEMPT_AMOUNT" aggregationType="sum">
+        <descriptions defaultDescription="CC_BP_EXEMPT_AMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="CODEID">
+        <descriptions defaultDescription="CODEID"/>
+      </viewAttribute>
+      <viewAttribute id="CODE_DESC">
+        <descriptions defaultDescription="CODE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="INDIVORG">
+        <descriptions defaultDescription="INDIVORG"/>
+      </viewAttribute>
+      <viewAttribute id="TAX_RATE_CODE">
+        <descriptions defaultDescription="TAX_RATE"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURCHARGE_FLAG">
+        <descriptions defaultDescription="ABSURCHARGE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_PartnerCounter" aggregationType="sum">
+        <descriptions defaultDescription="CC_PartnerCounter"/>
+      </viewAttribute>
+      <viewAttribute id="BASE_AMOUNT" aggregationType="sum">
+        <descriptions defaultDescription="BASE_AMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="MIN_VALUE">
+        <descriptions defaultDescription="MIN_VALUE"/>
+      </viewAttribute>
+      <viewAttribute id="MAX_VALUE">
+        <descriptions defaultDescription="MAX_VALUE"/>
+      </viewAttribute>
+      <viewAttribute id="TAX_PERCENT" aggregationType="sum">
+        <descriptions defaultDescription="TAX_PERCENT"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURCHARGE_RATE" aggregationType="sum">
+        <descriptions defaultDescription="ABSURCHARGE"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURBASE_AMT" aggregationType="sum">
+        <descriptions defaultDescription="ABSURBASE_AMT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPVAL_OWNERTYP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="BPARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPRELVNTVAL" source="BPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_YEAR" source="CC_TAX_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ParcelCounter" source="CC_ParcelCounter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXEMPT_COUNT" source="CC_EXEMPT_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_AFF_LAND_VAL" source="CC_BP_AFF_LAND_VAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_EXEMPT_AMOUNT" source="CC_BP_EXEMPT_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODEID" source="CODEID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODE_DESC" source="CODE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDIVORG" source="INDIVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_RATE_CODE" source="TAX_RATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE_FLAG" source="ABSURCHARGE_FLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PartnerCounter" source="CC_PartnerCounter"/>
+    </input>
+    <input node="P_LT_TAX_RATE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BASE_AMOUNT" source="BASE_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MIN_VALUE" source="MIN_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAX_VALUE" source="MAX_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PERCENT" source="TAX_PERCENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE_RATE" source="ABSURCHARGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURBASE_AMT" source="ABSURBASE_AMT"/>
+    </input>
+    <joinAttribute leftColumn="MANDT" rightColumn="CLIENT" operator="EQ"/>
+    <joinAttribute leftColumn="TAX_RATE" rightColumn="RATE_CODE" operator="EQ"/>
+    <joinAttribute leftColumn="CC_BP_AFF_LAND_VAL" rightColumn="MIN_VALUE" operator="GE"/>
+    <joinAttribute leftColumn="CC_BP_AFF_LAND_VAL" rightColumn="MAX_VALUE" operator="LE"/>
+    <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="CC_TAXYEAR_STDATE" operator="EQ"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPVAL_CALCS">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="BPARTNER">
+        <descriptions defaultDescription="BPARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BPRELVNTVAL">
+        <descriptions defaultDescription="BPRELVNTVAL"/>
+      </viewAttribute>
+      <viewAttribute id="CC_TAX_YEAR">
+        <descriptions defaultDescription="CC_TAX_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ParcelCounter">
+        <descriptions defaultDescription="CC_ParcelCounter"/>
+      </viewAttribute>
+      <viewAttribute id="CC_EXEMPT_COUNT">
+        <descriptions defaultDescription="CC_EXEMPT_COUNT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_AFF_LAND_VAL">
+        <descriptions defaultDescription="CC_BP_AFF_LAND_VAL"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_EXEMPT_AMOUNT">
+        <descriptions defaultDescription="CC_BP_EXEMPT_AMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="CODEID">
+        <descriptions defaultDescription="CODEID"/>
+      </viewAttribute>
+      <viewAttribute id="CODE_DESC">
+        <descriptions defaultDescription="CODE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="INDIVORG">
+        <descriptions defaultDescription="INDIVORG"/>
+      </viewAttribute>
+      <viewAttribute id="TAX_RATE">
+        <descriptions defaultDescription="TAX_RATE"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURCHARGE_FLAG">
+        <descriptions defaultDescription="ABSURCHARGE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_PartnerCounter">
+        <descriptions defaultDescription="CC_PartnerCounter"/>
+      </viewAttribute>
+      <viewAttribute id="BASE_AMOUNT">
+        <descriptions defaultDescription="BASE_AMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="MIN_VALUE">
+        <descriptions defaultDescription="MIN_VALUE"/>
+      </viewAttribute>
+      <viewAttribute id="MAX_VALUE">
+        <descriptions defaultDescription="MAX_VALUE"/>
+      </viewAttribute>
+      <viewAttribute id="TAX_PERCENT">
+        <descriptions defaultDescription="TAX_PERCENT"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURCHARGE_RATE">
+        <descriptions defaultDescription="ABSURCHARGE"/>
+      </viewAttribute>
+      <viewAttribute id="ABSURBASE_AMT">
+        <descriptions defaultDescription="ABSURBASE_AMT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_ABS_TOT" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;ABSURCHARGE_FLAG&quot; = 'X',if(&quot;CC_BP_AFF_LAND_VAL&quot;&gt;&quot;ABSURBASE_AMT&quot;,(&quot;CC_BP_AFF_LAND_VAL&quot;-&quot;ABSURBASE_AMT&quot;)*&quot;ABSURCHARGE_RATE&quot;/100,0),0)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_TAX_AMNT" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CC_BP_AFF_LAND_VAL&quot;&gt;=decfloat(&quot;MIN_VALUE&quot;) and &quot;CC_BP_AFF_LAND_VAL&quot;&lt;=decfloat(&quot;MAX_VALUE&quot;),
+&quot;BASE_AMOUNT&quot;+((&quot;CC_BP_AFF_LAND_VAL&quot;-decfloat(&quot;MIN_VALUE&quot;))*&quot;TAX_PERCENT&quot;/100),0)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_TAX_TOT_WABS" datatype="DECIMAL" length="13" scale="1" expressionLanguage="SQL">
+    
+        <formula>&quot;CC_ABS_TOT&quot;+&quot;CC_TAX_AMNT&quot;</formula>
+    
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_BP_ASSD_TAX" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CC_TAX_TOT_WABS&quot;&gt;0,1,0)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="NEJ_BPVAL_TAXRATE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="BPARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPRELVNTVAL" source="BPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_YEAR" source="CC_TAX_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ParcelCounter" source="CC_ParcelCounter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXEMPT_COUNT" source="CC_EXEMPT_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_AFF_LAND_VAL" source="CC_BP_AFF_LAND_VAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_EXEMPT_AMOUNT" source="CC_BP_EXEMPT_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODEID" source="CODEID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODE_DESC" source="CODE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDIVORG" source="INDIVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_RATE" source="TAX_RATE_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE_FLAG" source="ABSURCHARGE_FLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PartnerCounter" source="CC_PartnerCounter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BASE_AMOUNT" source="BASE_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MIN_VALUE" source="MIN_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAX_VALUE" source="MAX_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PERCENT" source="TAX_PERCENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE_RATE" source="ABSURCHARGE_RATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURBASE_AMT" source="ABSURBASE_AMT"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="P_BPVAL_CALCS">
+  <attributes>
+    <attribute id="MANDT" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="P_BPVAL_CALCS" columnName="MANDT"/>
+    </attribute>
+    <attribute id="TAXYRSTARTDT" order="2" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" hidden="true">
+      <descriptions defaultDescription="Tax Year Start Date"/>
+      <keyMapping columnObjectName="P_BPVAL_CALCS" columnName="TAXYRSTARTDT"/>
+    </attribute>
+    <attribute id="BPARTNER" order="3" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Number"/>
+      <keyMapping columnObjectName="P_BPVAL_CALCS" columnName="BPARTNER"/>
+    </attribute>
+  
+    <attribute id="CC_TAX_YEAR" order="5" displayAttribute="false" attributeHierarchyActive="false" hidden="true">
+      <descriptions defaultDescription="Tax Year"/>
+  
+      <keyMapping columnObjectName="P_BPVAL_CALCS" columnName="CC_TAX_YEAR"/>
+  
+    </attribute>
+  
+    <attribute id="CODEID" order="10" descriptionColumnName="CODE_DESC" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Owner Type"/>
+  
+      <keyMapping columnObjectName="P_BPVAL_CALCS" columnName="CODEID"/>
+  
+    </attribute>
+    <attribute id="CODE_DESC" hidden="true" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Owner Type Description"/>
+      <keyMapping columnObjectName="P_BPVAL_CALCS" columnName="CODE_DESC"/>
+    </attribute>
+    <attribute id="INDIVORG" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Type of Business Partner"/>
+      <keyMapping columnObjectName="P_BPVAL_CALCS" columnName="INDIVORG"/>
+    </attribute>
+    <attribute id="TAX_RATE" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Rate Code"/>
+      <keyMapping columnObjectName="P_BPVAL_CALCS" columnName="TAX_RATE"/>
+    </attribute>
+    <attribute id="ABSURCHARGE_FLAG" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Absentee Owner Type"/>
+      <keyMapping columnObjectName="P_BPVAL_CALCS" columnName="ABSURCHARGE_FLAG"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="BPRELVNTVAL" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BP Land Valuation"/>
+      <measureMapping columnObjectName="P_BPVAL_CALCS" columnName="BPRELVNTVAL"/>
+    </measure>
+  
+    <measure id="CC_ParcelCounter" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Parcel Counter"/>
+      <measureMapping columnObjectName="P_BPVAL_CALCS" columnName="CC_ParcelCounter"/>
+    </measure>
+  
+    <measure id="CC_EXEMPT_COUNT" order="7" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Exemption Counter"/>
+      <measureMapping columnObjectName="P_BPVAL_CALCS" columnName="CC_EXEMPT_COUNT"/>
+    </measure>
+    <measure id="CC_BP_AFF_LAND_VAL" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BP Net Land Valuation (After Exemption)"/>
+      <measureMapping columnObjectName="P_BPVAL_CALCS" columnName="CC_BP_AFF_LAND_VAL"/>
+    </measure>
+    <measure id="CC_BP_EXEMPT_AMOUNT" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BP Exemption Amount"/>
+      <measureMapping columnObjectName="P_BPVAL_CALCS" columnName="CC_BP_EXEMPT_AMOUNT"/>
+    </measure>
+    <measure id="CC_PartnerCounter" order="15" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Business Partner Counter"/>
+      <measureMapping columnObjectName="P_BPVAL_CALCS" columnName="CC_PartnerCounter"/>
+    </measure>
+    <measure id="CC_ABS_TOT" order="16" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Absentee Tax Amount"/>
+      <measureMapping columnObjectName="P_BPVAL_CALCS" columnName="CC_ABS_TOT"/>
+    </measure>
+    <measure id="CC_TAX_AMNT" order="17" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Amount"/>
+      <measureMapping columnObjectName="P_BPVAL_CALCS" columnName="CC_TAX_AMNT"/>
+    </measure>
+  
+    <measure id="CC_TAX_TOT_WABS" order="18" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total Tax Amount (inc. Abs)"/>
+      <measureMapping columnObjectName="P_BPVAL_CALCS" columnName="CC_TAX_TOT_WABS"/>
+    </measure>
+    <measure id="CC_BP_ASSD_TAX" order="19" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Count To Be Assessed BP "/>
+      <measureMapping columnObjectName="P_BPVAL_CALCS" columnName="CC_BP_ASSD_TAX"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="497" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_PARCEL_RESULT_BP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="351" y="1106"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_LTCNEXMD" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="541" y="1106"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="NEJ_PARCELBP_EXCEMPT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="511" y="946"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_PARCEL_RESULT_BP" modelObjectNameSpace="NEJ_PARCELBP_EXCEMPT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_LTCNEXMD" modelObjectNameSpace="NEJ_PARCELBP_EXCEMPT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_PARCELBP_EXEMPT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="512" y="831"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="AGG_BP_NET_VALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="511" y="679"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CODE_ID" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="301" y="821"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CURR_OWNER_TYP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="821"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_OWNER_TYPE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="275" y="661"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CURR_OWNER_TYP" modelObjectNameSpace="J_OWNER_TYPE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CODE_ID" modelObjectNameSpace="J_OWNER_TYPE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPVAL_OWNERTYP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="301" y="501"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="AGG_BP_NET_VALS" modelObjectNameSpace="J_BPVAL_OWNERTYP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="J_OWNER_TYPE" modelObjectNameSpace="J_BPVAL_OWNERTYP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="325" y="33"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_LT_TAX_RATE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="521" y="501"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="NEJ_BPVAL_TAXRATE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="497" y="341"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPVAL_OWNERTYP" modelObjectNameSpace="NEJ_BPVAL_TAXRATE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_LT_TAX_RATE" modelObjectNameSpace="NEJ_BPVAL_TAXRATE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BPVAL_CALCS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="497" y="221"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
