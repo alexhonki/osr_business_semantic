@@ -1,0 +1,65 @@
+PROCEDURE "osr.business.semantic.db.Procedures::P_ContractValuesStaticTable"( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+
+	output_table =
+	SELECT
+		"MANDT",
+		"INTRENO",
+		"RERF",
+		"DERF",
+		"TERF",
+		"RBEAR",
+		"DBEAR",
+		"TBEAR",
+		"RESPONSIBLE",
+		"ZZ_NOIA_DATE",
+		"ZZ_STAT_COMMENT",
+		"ZZ_PARTNER",
+		"REAS",
+		"DNIS",
+		"LT12",
+		"TAXYRSTARTDT",
+		"ACTIVE",
+		"OWNERTYPE",
+		"INDIVORG",
+		"TAXRATECODE",
+		"ZEROVALCN",
+		"TAXYRENDDT",
+		"CHUSER",
+		"CHDATE",
+		"CHTIME",
+		"TAXYR",
+		"OWNER_CODE_DESC",
+		"FBNUM",
+		SUM("TOTBPRELVNTVAL") AS "TOTBPRELVNTVAL",
+		SUM("TOTBPCONCESSVAL") AS "TOTBPCONCESSVAL",
+		SUM("TOTBPTAXABLEVAL") AS "TOTBPTAXABLEVAL",
+		SUM("ADJUSTMENT") AS "ADJUSTMENT",
+		SUM("TAXAMOUNT") AS "TAXAMOUNT",
+		SUM("TAXESTIMATE") AS "TAXESTIMATE",
+		SUM("PROPERTYCNT") AS "PROPERTYCNT",
+		SUM("PARCELCNT") AS "PARCELCNT",
+		SUM("SDDPLCNT") AS "SDDPLCNT",
+		SUM("CONCPLCNT") AS "CONCPLCNT",
+		SUM("ABSURCHARGE") AS "ABSURCHARGE",
+		SUM("CashflowAmount") AS "CashflowAmount",
+		SUM("ReassessmentAmount") AS "ReassessmentAmount",
+		SUM("InvoicedAmount") AS "InvoicedAmount",
+		SUM("BETRH") AS "BETRH",
+		SUM("AUGBT") AS "AUGBT",
+		SUM("AssessmentAmount") AS "AssessmentAmount",
+		SUM("UnpostedAmount") AS "UnpostedAmount",
+		SUM("ContractCounter") AS "ContractCounter"
+	FROM "osr.business.semantic.db.Business_Models::CV_ContractValues"
+	GROUP BY "MANDT", "INTRENO", "RERF", "DERF", "TERF", "RBEAR", "DBEAR", "TBEAR", "RESPONSIBLE", "ZZ_NOIA_DATE", "ZZ_STAT_COMMENT", "ZZ_PARTNER", "REAS", "DNIS", "LT12", "TAXYRSTARTDT", "ACTIVE", "OWNERTYPE", "INDIVORG", "TAXRATECODE", "ZEROVALCN", "TAXYRENDDT", "CHUSER", "CHDATE", "CHTIME", "TAXYR", "OWNER_CODE_DESC", "FBNUM";
+	
+	DELETE FROM "osr.business.semantic.db.Tables::LTContractValues";
+	
+	INSERT INTO "osr.business.semantic.db.Tables::LTContractValues"
+	SELECT * FROM :output_table;
+   
+END
