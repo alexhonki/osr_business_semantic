@@ -3,11 +3,11 @@
 <descriptions defaultDescription="Land Tax Year Preview"/>
 <localVariables>
   <variable id="IP_PREVIEW_TAX_YEAR" parameter="true">
-    <descriptions defaultDescription="Preview Tax Year"/>
-    <variableProperties datatype="INTEGER" mandatory="true">
-      <valueDomain type=""/>
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="VARCHAR" length="4" mandatory="true">
+      <valueDomain type="empty"/>
       <selection multiLine="false" type="Single"/>
-      <defaultRange lowValue="if(int(component(now(),2)) &gt;= 7,int(component(now(),1))+2,int(component(now(),1))+1)" lowExpression="true"/>
+      <defaultRange lowValue="2020"/>
     </variableProperties>
   </variable>
 </localVariables>
@@ -690,7 +690,9 @@
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_BP_ASSD_TAX_FLAG" datatype="VARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>if(&quot;CC_TAX_TOT_WABS&quot;&gt;0,'X','')</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -763,7 +765,9 @@
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_TOTBPRELVNTVAL_COUNT" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>if(&quot;5Y_TOTBPRELVNTVAL&quot;&gt;0,1,0)</formula>
+    
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_TOTBPCONCESSVAL_COUNT" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;5Y_TOTBPCONCESSVAL&quot;&gt;0,1,0)</formula>
@@ -791,7 +795,7 @@
     </input>
     <filter>to_int(&quot;TAXYRSTARTDT&quot;)&gt;=to_int(CONCAT(to_char(to_int('$$IP_PREVIEW_TAX_YEAR$$')-6),'0701')) and to_int(&quot;TAXYRSTARTDT&quot;)&lt;=to_int(CONCAT(to_char(to_int('$$IP_PREVIEW_TAX_YEAR$$')-2),'0701'))</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="AGG_5Y_CONTRES">
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_5Y_CONTRES" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="ZZ_PARTNER">
         <descriptions defaultDescription="Business Partner"/>
@@ -861,7 +865,9 @@
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_LASTYEAR_TAXLIABLE_FLAG" datatype="VARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>if(&quot;CC_LAST_YEAR_TAX_LIABLE&quot;&gt;0,'X','')</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -1294,7 +1300,7 @@
     </shape>
     <shape modelObjectName="AGG_5Y_CONTRES" modelObjectNameSpace="J_BPVALS_5YAVG" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="270.4326171875"/>
+      <rectangleSize width="270"/>
     </shape>
   </shapes>
 </layout>
