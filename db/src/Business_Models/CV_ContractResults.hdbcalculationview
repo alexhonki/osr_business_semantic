@@ -657,7 +657,11 @@
         <descriptions defaultDescription="TRANSPOSSTO"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_TAX_LIABLE_COUNT" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;TAXAMOUNT&quot;&gt;0,1,0)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="J_BPCONTRACT_CNRES">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -979,8 +983,22 @@
       <descriptions defaultDescription="Land Tax -  Absentee surcharge"/>
       <measureMapping columnObjectName="J_BPCONTRACT_CNRES_OWNERDESC" columnName="ABSURCHARGE"/>
     </measure>
+  
+    <measure id="CC_TAX_LIABLE_COUNT" order="57" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Land Tax - Tax Liable for the Period"/>
+      <measureMapping columnObjectName="J_BPCONTRACT_CNRES_OWNERDESC" columnName="CC_TAX_LIABLE_COUNT"/>
+    </measure>
   </baseMeasures>
-  <calculatedMeasures/>
+  <calculatedMeasures>
+    <measure id="CO_BPCONUTER" order="56" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="Land Tax - BP Count"/>
+      <exceptionAggregation>
+        <attribute attributeName="ZZ_PARTNER"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      
+      </measure>
+  </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
