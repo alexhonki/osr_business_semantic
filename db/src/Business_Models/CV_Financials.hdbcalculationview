@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models::CV_Financials" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV FINANCIALS"/>
-<localVariables/>
+<localVariables>
+  <variable id="IP_KeyDate" parameter="true">
+    <descriptions defaultDescription="Key Date"/>
+    <variableProperties datatype="DATE" mandatory="false" defaultExpressionLanguage="COLUMN_ENGINE">
+      <valueDomain type="Date"/>
+      <selection multiLine="false" type="Single"/>
+      <defaultRange lowValue="date(leftstr(string(now()),10))" lowExpression="true"/>
+    </variableProperties>
+  </variable>
+</localVariables>
 <variableMappings/>
 <dataSources>
   <DataSource id="osr.business.semantic.db.synonyms::DFKKOP">
@@ -429,7 +438,34 @@
         <descriptions defaultDescription="DEBT_SET"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="OpenItemFlag" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(
+&quot;STAKZ&quot; != 'R' 
+AND 
+&quot;STAKZ&quot; != 'S' 
+AND 
+(
+    (
+        &quot;AUGST&quot;='' AND date(&quot;DFKKOP_BUDAT&quot;) &lt;= date('$$IP_KeyDate$$')
+    ) 
+    OR 
+    (
+        &quot;AUGST&quot;='9' 
+        AND 
+        (
+            date(&quot;AUGDT&quot;) &gt; date('$$IP_KeyDate$$') 
+            AND 
+            (
+                date(&quot;DFKKOP_BUDAT&quot;) &lt;= date('$$IP_KeyDate$$') 
+                OR 
+                date(&quot;AUGBD&quot;) &lt;= date('$$IP_KeyDate$$')
+            )
+        )
+    )
+),'X','')</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::DFKKOP">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -952,6 +988,10 @@
       <viewAttribute id="DFKK_H_BUDAT">
         <descriptions defaultDescription="BUDAT"/>
       </viewAttribute>
+    
+      <viewAttribute id="OpenItemFlag">
+        <descriptions defaultDescription="OpenItemFlag"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1082,6 +1122,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKKOP_BUDAT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
     </input>
     <input node="P_TFKHVOT">
       <mapping xsi:type="Calculation:AttributeMapping" target="TFKHVOT_TXT30" source="TFKHVOT_TXT30"/>
@@ -1496,6 +1538,10 @@
       <viewAttribute id="DFKK_H_BUDAT">
         <descriptions defaultDescription="BUDAT"/>
       </viewAttribute>
+    
+      <viewAttribute id="OpenItemFlag">
+        <descriptions defaultDescription="OpenItemFlag"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1627,6 +1673,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
     </input>
     <input node="P_TFKTVOT">
       <mapping xsi:type="Calculation:AttributeMapping" target="TFKTVOT_TXT30" source="TFKTVOT_TXT30"/>
@@ -2051,6 +2099,10 @@
       <viewAttribute id="DFKK_H_BUDAT">
         <descriptions defaultDescription="BUDAT"/>
       </viewAttribute>
+    
+      <viewAttribute id="OpenItemFlag">
+        <descriptions defaultDescription="OpenItemFlag"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -2183,6 +2235,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
     </input>
     <input node="P_TFK003T">
       <mapping xsi:type="Calculation:AttributeMapping" target="TFK003T_LTEXT" source="TFK003T_LTEXT"/>
@@ -2604,6 +2658,10 @@
       <viewAttribute id="DFKK_H_BUDAT">
         <descriptions defaultDescription="BUDAT"/>
       </viewAttribute>
+    
+      <viewAttribute id="OpenItemFlag">
+        <descriptions defaultDescription="OpenItemFlag"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -2738,6 +2796,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
     </input>
     <input node="P_TFK001AT">
       <mapping xsi:type="Calculation:AttributeMapping" target="TFK001AT_TXT50" source="TXT50"/>
@@ -3217,6 +3277,11 @@
     <attribute id="DFKK_H_BUDAT" order="132" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Posting Date in the Document"/>
       <keyMapping columnObjectName="J_FINANCIALS_FISCAL_TFKHVOT_TFKTVOT_TFK003T_TFK001AT" columnName="DFKK_H_BUDAT"/>
+    </attribute>
+  
+    <attribute id="OpenItemFlag" order="133" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OpenItemFlag"/>
+      <keyMapping columnObjectName="J_FINANCIALS_FISCAL_TFKHVOT_TFKTVOT_TFK003T_TFK001AT" columnName="OpenItemFlag"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
