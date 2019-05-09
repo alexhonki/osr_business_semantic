@@ -363,11 +363,7 @@
         <descriptions defaultDescription="CURR_TAXYRSTARTDT"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="CurrPrevYear" datatype="NVARCHAR" length="4" expressionLanguage="SQL">
-        <formula>'Prev'</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+    <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_NEXTYEAR_OWNERSHIP">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -424,11 +420,7 @@
         <descriptions defaultDescription="CURR_TAXYRSTARTDT"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="CurrPrevYear" datatype="NVARCHAR" length="4" expressionLanguage="SQL">
-        <formula>'Curr'</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+    <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_NEXTYEAR_OWNERSHIP">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -480,11 +472,12 @@
       <viewAttribute id="LAND_USE_TEXT">
         <descriptions defaultDescription="Land Use Description"/>
       </viewAttribute>
-      <viewAttribute id="CurrPrevYear">
-        <descriptions defaultDescription="CurrPrevYear"/>
-      </viewAttribute>
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="PREV_TAXYRSTARTDT"/>
+      </viewAttribute>
+    
+      <viewAttribute datatype="NVARCHAR" length="4" id="CurrPrevYear">
+        <descriptions defaultDescription="CONS_CurrPrevYear"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -499,8 +492,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LAND_USE_TEXT" source="LAND_USE_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CurrPrevYear" source="CurrPrevYear"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="PREV_TAXYRSTARTDT"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CurrPrevYear" null="false" value="Prev"/>
     </input>
     <input node="J_CURRYROWNERSHIP" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -512,8 +506,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LAND_USE_TEXT" source="LAND_USE_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CurrPrevYear" source="CurrPrevYear"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="CURR_TAXYRSTARTDT"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CurrPrevYear" null="false" value="Curr"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -555,13 +550,14 @@
       <descriptions defaultDescription="Land Use Description"/>
       <keyMapping columnObjectName="U_FINALOUTPUT" columnName="LAND_USE_TEXT"/>
     </attribute>
-    <attribute id="CurrPrevYear" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CurrPrevYear"/>
-      <keyMapping columnObjectName="U_FINALOUTPUT" columnName="CurrPrevYear"/>
-    </attribute>
-    <attribute id="TAXYRSTARTDT" order="12" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXYRSTARTDT" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Year Start Date"/>
       <keyMapping columnObjectName="U_FINALOUTPUT" columnName="TAXYRSTARTDT"/>
+    </attribute>
+  
+    <attribute id="CONS_CurrPrevYear" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CONS_CurrPrevYear"/>
+      <keyMapping columnObjectName="U_FINALOUTPUT" columnName="CurrPrevYear"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -573,6 +569,7 @@
         <attribute attributeName="INTRENO"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       </measure>
   </calculatedMeasures>
