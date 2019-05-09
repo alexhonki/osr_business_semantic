@@ -205,10 +205,10 @@
       <viewAttribute id="INTRENO">
         <descriptions defaultDescription="INTRENO"/>
       </viewAttribute>
-      <viewAttribute id="CURR_TAXYRSTARTDT">
+      <viewAttribute id="PREV_TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
       </viewAttribute>
-      <viewAttribute id="PREV_TAXYRSTARTDT">
+      <viewAttribute id="CURR_TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
       </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
@@ -359,6 +359,9 @@
       <viewAttribute id="LAND_USE_TEXT">
         <descriptions defaultDescription="Land Use Description"/>
       </viewAttribute>
+      <viewAttribute id="CURR_TAXYRSTARTDT">
+        <descriptions defaultDescription="CURR_TAXYRSTARTDT"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CurrPrevYear" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
@@ -370,6 +373,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PREV_TAXYRSTARTDT" source="PREV_TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_TAXYRSTARTDT" source="CURR_TAXYRSTARTDT"/>
     </input>
     <input node="P_CV_OWNERSHIPCNRESP">
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
@@ -395,9 +399,6 @@
       <viewAttribute id="INTRENO">
         <descriptions defaultDescription="INTRENO"/>
       </viewAttribute>
-      <viewAttribute id="CURR_TAXYRSTARTDT">
-        <descriptions defaultDescription="TAXYRSTARTDT"/>
-      </viewAttribute>
       <viewAttribute id="INTRENOPL">
         <descriptions defaultDescription="Parcel Intreno"/>
       </viewAttribute>
@@ -418,6 +419,9 @@
       </viewAttribute>
       <viewAttribute id="LAND_USE_TEXT">
         <descriptions defaultDescription="Land Use Description"/>
+      </viewAttribute>
+      <viewAttribute id="CURR_TAXYRSTARTDT">
+        <descriptions defaultDescription="CURR_TAXYRSTARTDT"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -441,11 +445,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="LAND_USE_TEXT" source="LAND_USE_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENOCN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_TAXYRSTARTDT" source="TAXYRSTARTDT"/>
     </input>
     <joinAttribute name="MANDT"/>
     <joinAttribute name="INTRENO"/>
-    <joinAttribute name="CURR_TAXYRSTARTDT"/>
   </calculationView>
   <calculationView xsi:type="Calculation:UnionView" id="U_FINALOUTPUT">
     <viewAttributes>
@@ -454,9 +456,6 @@
       </viewAttribute>
       <viewAttribute id="INTRENO">
         <descriptions defaultDescription="INTRENO"/>
-      </viewAttribute>
-      <viewAttribute id="TAXYRSTARTDT">
-        <descriptions defaultDescription="PREV_TAXYRSTARTDT"/>
       </viewAttribute>
       <viewAttribute id="INTRENOPL">
         <descriptions defaultDescription="Parcel Intreno"/>
@@ -482,13 +481,15 @@
       <viewAttribute id="CurrPrevYear">
         <descriptions defaultDescription="CurrPrevYear"/>
       </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="PREV_TAXYRSTARTDT"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_PREVYROWNERSHIP">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="PREV_TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSCODE" source="CONCESSCODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PLNO" source="PLNO"/>
@@ -497,11 +498,11 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LAND_USE_TEXT" source="LAND_USE_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CurrPrevYear" source="CurrPrevYear"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="PREV_TAXYRSTARTDT"/>
     </input>
     <input node="J_CURRYROWNERSHIP">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="CURR_TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSCODE" source="CONCESSCODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PLNO" source="PLNO"/>
@@ -510,6 +511,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LAND_USE_TEXT" source="LAND_USE_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CurrPrevYear" source="CurrPrevYear"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="CURR_TAXYRSTARTDT"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -523,41 +525,41 @@
       <descriptions defaultDescription="Contract Intreno"/>
       <keyMapping columnObjectName="U_FINALOUTPUT" columnName="INTRENO"/>
     </attribute>
-    <attribute id="TAXYRSTARTDT" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Tax Year Start Date"/>
-      <keyMapping columnObjectName="U_FINALOUTPUT" columnName="TAXYRSTARTDT"/>
-    </attribute>
-    <attribute id="INTRENOPL" order="5" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="INTRENOPL" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Parcel Intreno"/>
       <keyMapping columnObjectName="U_FINALOUTPUT" columnName="INTRENOPL"/>
     </attribute>
-    <attribute id="CONCESSCODE" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CONCESSCODE" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land tax: Exemption/deduction code"/>
       <keyMapping columnObjectName="U_FINALOUTPUT" columnName="CONCESSCODE"/>
     </attribute>
-    <attribute id="PLNO" order="7" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="PLNO" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Parcel Number"/>
       <keyMapping columnObjectName="U_FINALOUTPUT" columnName="PLNO"/>
     </attribute>
-    <attribute id="ZZ_PARTNER" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ZZ_PARTNER" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Number"/>
       <keyMapping columnObjectName="U_FINALOUTPUT" columnName="ZZ_PARTNER"/>
     </attribute>
-    <attribute id="OWNERTYPE" order="9" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNERTYPE" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land tax code id"/>
       <keyMapping columnObjectName="U_FINALOUTPUT" columnName="OWNERTYPE"/>
     </attribute>
-    <attribute id="OWNER_CODE_DESC" order="10" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNER_CODE_DESC" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land Tax Code Description"/>
       <keyMapping columnObjectName="U_FINALOUTPUT" columnName="OWNER_CODE_DESC"/>
     </attribute>
-    <attribute id="LAND_USE_TEXT" order="11" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="LAND_USE_TEXT" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land Use Description"/>
       <keyMapping columnObjectName="U_FINALOUTPUT" columnName="LAND_USE_TEXT"/>
     </attribute>
-    <attribute id="CurrPrevYear" order="12" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CurrPrevYear" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CurrPrevYear"/>
       <keyMapping columnObjectName="U_FINALOUTPUT" columnName="CurrPrevYear"/>
+    </attribute>
+    <attribute id="TAXYRSTARTDT" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PREV_TAXYRSTARTDT"/>
+      <keyMapping columnObjectName="U_FINALOUTPUT" columnName="TAXYRSTARTDT"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
