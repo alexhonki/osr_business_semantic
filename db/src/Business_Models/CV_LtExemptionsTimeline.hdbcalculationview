@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models::CV_LtExemptionsTimeline" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_LtExemptionsTimeline"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models::CV_LtExemptions">
+    <resourceUri>osr.business.semantic.db.Business_Models::CV_LtExemptions</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::_SYS_BI.M_FISCAL_CALENDAR">
+    <resourceUri>osr.business.semantic.db.synonyms::_SYS_BI.M_FISCAL_CALENDAR</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_LTEXEMPTIONS">
+    <viewAttributes>
+      <viewAttribute id="VALIDFROM">
+        <descriptions defaultDescription="VALIDFROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALIDTO">
+        <descriptions defaultDescription="VALIDTO"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOCN">
+        <descriptions defaultDescription="INTRENOCN"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOPL">
+        <descriptions defaultDescription="INTRENOPL"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models::CV_LtExemptions">
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALIDFROM" source="VALIDFROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALIDTO" source="VALIDTO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_EXEMPTIONSCOUNT" cardinality="CN_1" joinType="rightOuter">
+    <viewAttributes>
+      <viewAttribute id="DATE">
+        <descriptions defaultDescription="DATE"/>
+      </viewAttribute>
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="FISCAL_PERIOD">
+        <descriptions defaultDescription="FISCAL_PERIOD"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOCN">
+        <descriptions defaultDescription="INTRENOCN"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENOPL">
+        <descriptions defaultDescription="INTRENOPL"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_LTEXEMPTIONS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+    </input>
+    <input node="P_FISCALCALENDAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE" source="DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_PERIOD" source="FISCAL_PERIOD"/>
+    </input>
+    <joinAttribute leftColumn="VALIDFROM" rightColumn="DATE" operator="GE"/>
+    <joinAttribute leftColumn="VALIDTO" rightColumn="DATE" operator="LE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FISCALCALENDAR">
+    <viewAttributes>
+      <viewAttribute id="DATE">
+        <descriptions defaultDescription="DATE"/>
+      </viewAttribute>
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="FISCAL_PERIOD">
+        <descriptions defaultDescription="FISCAL_PERIOD"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::_SYS_BI.M_FISCAL_CALENDAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE" source="DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_PERIOD" source="FISCAL_PERIOD"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="NEJ_EXEMPTIONSCOUNT">
+  <attributes>
+    <attribute id="DATE" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DATE"/>
+      <keyMapping columnObjectName="NEJ_EXEMPTIONSCOUNT" columnName="DATE"/>
+    </attribute>
+    <attribute id="FISCAL_YEAR" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FISCAL_YEAR"/>
+      <keyMapping columnObjectName="NEJ_EXEMPTIONSCOUNT" columnName="FISCAL_YEAR"/>
+    </attribute>
+    <attribute id="FISCAL_PERIOD" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FISCAL_PERIOD"/>
+      <keyMapping columnObjectName="NEJ_EXEMPTIONSCOUNT" columnName="FISCAL_PERIOD"/>
+    </attribute>
+    <attribute id="INTRENOCN" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="INTRENOCN"/>
+      <keyMapping columnObjectName="NEJ_EXEMPTIONSCOUNT" columnName="INTRENOCN"/>
+    </attribute>
+    <attribute id="INTRENOPL" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="INTRENOPL"/>
+      <keyMapping columnObjectName="NEJ_EXEMPTIONSCOUNT" columnName="INTRENOPL"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures>
+    <measure id="ContractCounter" order="4" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="ContractCounter"/>
+      <exceptionAggregation>
+        <attribute attributeName="INTRENOCN"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_CV_LTEXEMPTIONS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-96" y="331"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="NEJ_EXEMPTIONSCOUNT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="194"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CV_LTEXEMPTIONS" modelObjectNameSpace="NEJ_EXEMPTIONSCOUNT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_FISCALCALENDAR" modelObjectNameSpace="NEJ_EXEMPTIONSCOUNT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_FISCALCALENDAR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="242" y="323"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
