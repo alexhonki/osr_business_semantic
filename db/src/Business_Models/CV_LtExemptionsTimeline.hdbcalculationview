@@ -27,7 +27,17 @@
         <descriptions defaultDescription="INTRENOPL"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_VALITO" datatype="DATE" expressionLanguage="SQL">
+        <formula>TO_DATE(&quot;VALIDTO&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_VALIDFROM" datatype="DATE" expressionLanguage="SQL">
+        <formula>TO_DATE(&quot;VALIDFROM&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_Counter" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models::CV_LtExemptions">
       <mapping xsi:type="Calculation:AttributeMapping" target="VALIDFROM" source="VALIDFROM"/>
@@ -36,7 +46,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_EXEMPTIONSCOUNT" cardinality="CN_1" joinType="rightOuter">
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_EXEMPTIONSCOUNT" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="DATE">
         <descriptions defaultDescription="DATE"/>
@@ -53,22 +63,28 @@
       <viewAttribute id="INTRENOPL">
         <descriptions defaultDescription="INTRENOPL"/>
       </viewAttribute>
+    
+      <viewAttribute id="CC_Counter" aggregationType="sum">
+        <descriptions defaultDescription="CC_Counter"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_CV_LTEXEMPTIONS">
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Counter" source="CC_Counter"/>
     </input>
     <input node="P_FISCALCALENDAR">
       <mapping xsi:type="Calculation:AttributeMapping" target="DATE" source="DATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_PERIOD" source="FISCAL_PERIOD"/>
     </input>
-    <joinAttribute leftColumn="VALIDFROM" rightColumn="DATE" operator="GE"/>
-    <joinAttribute leftColumn="VALIDTO" rightColumn="DATE" operator="LE"/>
+    <joinAttribute leftColumn="CC_VALIDFROM" rightColumn="CC_VALIDTO" operator="LE"/>
+    <joinAttribute leftColumn="CC_VALITO" rightColumn="CC_VALIDFROM" operator="GE"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_FISCALCALENDAR">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FISCALCALENDAR" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="DATE">
         <descriptions defaultDescription="DATE"/>
@@ -80,13 +96,22 @@
         <descriptions defaultDescription="FISCAL_PERIOD"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_VALIDTO" datatype="DATE" expressionLanguage="SQL">
+        <formula>LAST_DAY(TO_DATE(&quot;DATE&quot;))</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_VALIDFROM" datatype="DATE" expressionLanguage="SQL">
+        <formula>TO_DATE(&quot;DATE&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::_SYS_BI.M_FISCAL_CALENDAR">
       <mapping xsi:type="Calculation:AttributeMapping" target="DATE" source="DATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_PERIOD" source="FISCAL_PERIOD"/>
     </input>
+  
+    <filter>RIGHT(&quot;DATE&quot;,2)='01' and TO_INT(&quot;FISCAL_YEAR&quot;) &lt;= TO_INT(EXTRACT_YEAR(CURRENT_DATE))+1</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="NEJ_EXEMPTIONSCOUNT">
@@ -129,19 +154,21 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="40" y="85"/>
+      <upperLeftCorner x="213.23951013324876" y="112"/>
+    
+      <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CV_LTEXEMPTIONS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-96" y="331"/>
+      <upperLeftCorner x="301.99999999999994" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_EXEMPTIONSCOUNT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="194"/>
+      <upperLeftCorner x="213.23951013324876" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CV_LTEXEMPTIONS" modelObjectNameSpace="NEJ_EXEMPTIONSCOUNT" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
+      <upperLeftCorner x="19" y="33"/>
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="P_FISCALCALENDAR" modelObjectNameSpace="NEJ_EXEMPTIONSCOUNT" modelObjectType="JoinNodeInput">
@@ -149,7 +176,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_FISCALCALENDAR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="242" y="323"/>
+      <upperLeftCorner x="91.99999999999997" y="481.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
