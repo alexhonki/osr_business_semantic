@@ -16,6 +16,9 @@
   <DataSource id="osr.business.semantic.db.Business_Models::CV_CrmSysUsersInfo">
     <resourceUri>osr.business.semantic.db.Business_Models::CV_CrmSysUsersInfo</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models::CV_ActivityUserStaus">
+    <resourceUri>osr.business.semantic.db.Business_Models::CV_ActivityUserStaus</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMDORDERADMH">
@@ -132,9 +135,6 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Secondary_LT_Type" datatype="VARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;CC_LT_Type&quot;!=&quot;CC_Pivot_2nd_LT_Type&quot;,&quot;CC_Pivot_2nd_LT_Type&quot;,'NA')</formula>
-      </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_Days_Bt_Creation_Mod" datatype="INTEGER" expressionLanguage="SQL">
-        <formula>DAYS_BETWEEN(&quot;CC_Created_Date&quot;, &quot;CC_Last_Changed&quot;)</formula>
       </calculatedViewAttribute></calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::CDS_CRM.TAB.CRMDORDERADMH">
@@ -217,9 +217,6 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <viewAttribute id="CC_Secondary_LT_Type">
         <descriptions defaultDescription="CC_Secondary_LT_Type"/>
       </viewAttribute>
-      <viewAttribute id="CC_Days_Bt_Creation_Mod" aggregationType="sum">
-        <descriptions defaultDescription="CC_Days_Bt_Creation_Mod"/>
-      </viewAttribute>
       <viewAttribute id="GUID">
         <descriptions defaultDescription="GUID"/>
       </viewAttribute>
@@ -240,7 +237,6 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_LT_Type" source="CC_LT_Type"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Secondary_LT_Type" source="CC_Secondary_LT_Type"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_Mod"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
     </input>
     <input node="P_PROCESS_TYPE_TEXT">
@@ -295,7 +291,7 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <mapping xsi:type="Calculation:AttributeMapping" target="CO_ActivityCounter" source="CO_ActivityCounter"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_TASK_ACTIV" cardinality="C1_N" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_TASK_ACTIV" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="CLIENT">
         <descriptions defaultDescription="CLIENT"/>
@@ -333,9 +329,6 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <viewAttribute id="CC_Secondary_LT_Type">
         <descriptions defaultDescription="CC_Secondary_LT_Type"/>
       </viewAttribute>
-      <viewAttribute id="CC_Days_Bt_Creation_Mod" aggregationType="sum">
-        <descriptions defaultDescription="CC_Days_Bt_Creation_Mod"/>
-      </viewAttribute>
       <viewAttribute id="CATEGORY">
         <descriptions defaultDescription="Category"/>
       </viewAttribute>
@@ -354,7 +347,9 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <viewAttribute id="OBJ_DESCRIPTION">
         <descriptions defaultDescription="Area Text"/>
       </viewAttribute>
-      <viewAttribute hidden="true" id="JOIN$GUID$GUID"/>
+      <viewAttribute id="GUID">
+        <descriptions defaultDescription="GUID"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -371,8 +366,7 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_LT_Type" source="CC_LT_Type"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Secondary_LT_Type" source="CC_Secondary_LT_Type"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_Mod"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$GUID$GUID" source="GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
     </input>
     <input node="P_CRMACTIV">
       <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
@@ -382,10 +376,10 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <mapping xsi:type="Calculation:AttributeMapping" target="CAT_DESCRIPTION" source="CAT_DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_DESCRIPTION" source="OBJ_DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$GUID$GUID" source="GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
     </input>
     <joinAttribute name="CLIENT"/>
-    <joinAttribute name="JOIN$GUID$GUID"/>
+    <joinAttribute name="GUID"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_USERINFO">
     <viewAttributes>
@@ -445,9 +439,6 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <viewAttribute id="CC_Secondary_LT_Type">
         <descriptions defaultDescription="CC_Secondary_LT_Type"/>
       </viewAttribute>
-      <viewAttribute id="CC_Days_Bt_Creation_Mod" aggregationType="sum">
-        <descriptions defaultDescription="CC_Days_Bt_Creation_Mod"/>
-      </viewAttribute>
       <viewAttribute id="CATEGORY">
         <descriptions defaultDescription="CATEGORY"/>
       </viewAttribute>
@@ -469,6 +460,10 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <viewAttribute id="CreatedByName">
         <descriptions defaultDescription="Full Name of Person"/>
       </viewAttribute>
+    
+      <viewAttribute id="GUID">
+        <descriptions defaultDescription="GUID"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -485,13 +480,14 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_LT_Type" source="CC_LT_Type"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Secondary_LT_Type" source="CC_Secondary_LT_Type"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_Mod"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTIVE" source="OBJECTIVE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DIRECTION" source="DIRECTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CommDirectionLabel" source="CC_CommDirectionLabel"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CAT_DESCRIPTION" source="CAT_DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_DESCRIPTION" source="OBJ_DESCRIPTION"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
     </input>
     <input node="P_USERINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="NAME_TEXT"/>
@@ -539,9 +535,6 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <viewAttribute id="CC_Secondary_LT_Type">
         <descriptions defaultDescription="CC_Secondary_LT_Type"/>
       </viewAttribute>
-      <viewAttribute id="CC_Days_Bt_Creation_Mod" aggregationType="sum">
-        <descriptions defaultDescription="CC_Days_Bt_Creation_Mod"/>
-      </viewAttribute>
       <viewAttribute id="CATEGORY">
         <descriptions defaultDescription="CATEGORY"/>
       </viewAttribute>
@@ -566,6 +559,10 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <viewAttribute id="ChangedByName">
         <descriptions defaultDescription="Full Name of Person"/>
       </viewAttribute>
+    
+      <viewAttribute id="GUID">
+        <descriptions defaultDescription="GUID"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -582,7 +579,6 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_LT_Type" source="CC_LT_Type"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Secondary_LT_Type" source="CC_Secondary_LT_Type"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_Mod"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTIVE" source="OBJECTIVE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DIRECTION" source="DIRECTION"/>
@@ -590,6 +586,8 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <mapping xsi:type="Calculation:AttributeMapping" target="CAT_DESCRIPTION" source="CAT_DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_DESCRIPTION" source="OBJ_DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
     </input>
     <input node="P_USERINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="ChangedByName" source="NAME_TEXT"/>
@@ -599,109 +597,256 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
     <joinAttribute name="CLIENT"/>
     <joinAttribute name="CHANGED_BY"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ACTUSERSTAT">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="TXT30">
+        <descriptions defaultDescription="TXT30"/>
+      </viewAttribute>
+      <viewAttribute id="ESTAT">
+        <descriptions defaultDescription="ESTAT"/>
+      </viewAttribute>
+      <viewAttribute id="OBJNR">
+        <descriptions defaultDescription="OBJNR"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models::CV_ActivityUserStaus">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXT30" source="TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESTAT" source="ESTAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_TASKACTIV_STAT" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="OBJECT_ID">
+        <descriptions defaultDescription="OBJECT_ID"/>
+      </viewAttribute>
+      <viewAttribute id="PROCESS_TYPE">
+        <descriptions defaultDescription="PROCESS_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CREATED_BY">
+        <descriptions defaultDescription="CREATED_BY"/>
+      </viewAttribute>
+      <viewAttribute id="CHANGED_BY">
+        <descriptions defaultDescription="CHANGED_BY"/>
+      </viewAttribute>
+      <viewAttribute id="ARCHIVING_FLAG">
+        <descriptions defaultDescription="ARCHIVING_FLAG"/>
+      </viewAttribute>
+      <viewAttribute id="P_DESCRIPTION">
+        <descriptions defaultDescription="P_DESCRIPTION"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Created_Date">
+        <descriptions defaultDescription="CC_Created_Date"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Last_Changed">
+        <descriptions defaultDescription="CC_Last_Changed"/>
+      </viewAttribute>
+      <viewAttribute id="DESCRIPTION">
+        <descriptions defaultDescription="DESCRIPTION"/>
+      </viewAttribute>
+      <viewAttribute id="CC_LT_Type">
+        <descriptions defaultDescription="CC_LT_Type"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Secondary_LT_Type">
+        <descriptions defaultDescription="CC_Secondary_LT_Type"/>
+      </viewAttribute>
+      <viewAttribute id="CATEGORY">
+        <descriptions defaultDescription="CATEGORY"/>
+      </viewAttribute>
+      <viewAttribute id="OBJECTIVE">
+        <descriptions defaultDescription="OBJECTIVE"/>
+      </viewAttribute>
+      <viewAttribute id="DIRECTION">
+        <descriptions defaultDescription="DIRECTION"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CommDirectionLabel">
+        <descriptions defaultDescription="CC_CommDirectionLabel"/>
+      </viewAttribute>
+      <viewAttribute id="CAT_DESCRIPTION">
+        <descriptions defaultDescription="CAT_DESCRIPTION"/>
+      </viewAttribute>
+      <viewAttribute id="OBJ_DESCRIPTION">
+        <descriptions defaultDescription="OBJ_DESCRIPTION"/>
+      </viewAttribute>
+      <viewAttribute id="CreatedByName">
+        <descriptions defaultDescription="CreatedByName"/>
+      </viewAttribute>
+      <viewAttribute id="ChangedByName">
+        <descriptions defaultDescription="ChangedByName"/>
+      </viewAttribute>
+      <viewAttribute id="TXT30">
+        <descriptions defaultDescription="TXT30"/>
+      </viewAttribute>
+      <viewAttribute id="ESTAT">
+        <descriptions defaultDescription="ESTAT"/>
+      </viewAttribute>
+      <viewAttribute id="GUID">
+        <descriptions defaultDescription="GUID"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_Days_Bt_Creation_Mod" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;TXT30&quot;='Completed' or &quot;TXT30&quot;='Finalised',daysbetween(&quot;CC_Created_Date&quot;, &quot;CC_Last_Changed&quot;),daysbetween(&quot;CC_Created_Date&quot;, now()))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="J_TASKACTIV_MODUSER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJECT_ID" source="OBJECT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_TYPE" source="PROCESS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="CREATED_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGED_BY" source="CHANGED_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ARCHIVING_FLAG" source="ARCHIVING_FLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="P_DESCRIPTION" source="P_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Created_Date" source="CC_Created_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Last_Changed" source="CC_Last_Changed"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LT_Type" source="CC_LT_Type"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Secondary_LT_Type" source="CC_Secondary_LT_Type"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTIVE" source="OBJECTIVE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIRECTION" source="DIRECTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CommDirectionLabel" source="CC_CommDirectionLabel"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CAT_DESCRIPTION" source="CAT_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_DESCRIPTION" source="OBJ_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ChangedByName" source="ChangedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
+    </input>
+    <input node="P_ACTUSERSTAT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXT30" source="TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESTAT" source="ESTAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="OBJNR"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="GUID"/>
+  </calculationView>
 </calculationViews>
-<logicalModel id="J_TASKACTIV_MODUSER">
+<logicalModel id="J_TASKACTIV_STAT">
   <attributes>
     <attribute id="CLIENT" order="2" displayAttribute="false" attributeHierarchyActive="false" hidden="true">
       <descriptions defaultDescription="SAP Client"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="CLIENT"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="CLIENT"/>
     </attribute>
     <attribute id="OBJECT_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Object ID"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="OBJECT_ID"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="OBJECT_ID"/>
     </attribute>
     <attribute id="PROCESS_TYPE" order="4" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="P_DESCRIPTION">
       <descriptions defaultDescription="Process Type"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="PROCESS_TYPE"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="PROCESS_TYPE"/>
     </attribute>
     <attribute id="CREATED_BY" order="5" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CreatedByName">
       <descriptions defaultDescription="Created By (Team Member)"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="CREATED_BY"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="CREATED_BY"/>
     </attribute>
     <attribute id="CHANGED_BY" order="6" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="ChangedByName">
       <descriptions defaultDescription="Changed By (Team Member)"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="CHANGED_BY"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="CHANGED_BY"/>
     </attribute>
     <attribute id="ARCHIVING_FLAG" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Archiving flag"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="ARCHIVING_FLAG"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="ARCHIVING_FLAG"/>
     </attribute>
     <attribute id="P_DESCRIPTION" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Process Type (Desc)"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="P_DESCRIPTION"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="P_DESCRIPTION"/>
     </attribute>
   
     <attribute id="CC_Created_Date" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Creation Date"/>
   
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="CC_Created_Date"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="CC_Created_Date"/>
   
     </attribute>
     <attribute id="CC_Last_Changed" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Changed date"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="CC_Last_Changed"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="CC_Last_Changed"/>
     </attribute>
     <attribute id="DESCRIPTION" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Task Description"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="DESCRIPTION"/>
     </attribute>
   
     <attribute id="CC_LT_Type" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land Tax Type"/>
   
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="CC_LT_Type"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="CC_LT_Type"/>
   
     </attribute>
   
     <attribute id="CC_Secondary_LT_Type" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Secondary Land Tax Type"/>
   
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="CC_Secondary_LT_Type"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="CC_Secondary_LT_Type"/>
   
     </attribute>
-    <attribute id="CATEGORY" order="16" semanticType="empty" descriptionColumnName="CAT_DESCRIPTION" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CATEGORY" order="14" semanticType="empty" descriptionColumnName="CAT_DESCRIPTION" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Category"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="CATEGORY"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="CATEGORY"/>
     </attribute>
-    <attribute id="OBJECTIVE" order="17" semanticType="empty" descriptionColumnName="OBJ_DESCRIPTION" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OBJECTIVE" order="15" semanticType="empty" descriptionColumnName="OBJ_DESCRIPTION" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Area"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="OBJECTIVE"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="OBJECTIVE"/>
     </attribute>
-    <attribute id="DIRECTION" order="18" semanticType="empty" descriptionColumnName="CC_CommDirectionLabel" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="DIRECTION" order="16" semanticType="empty" descriptionColumnName="CC_CommDirectionLabel" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Direction"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="DIRECTION"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="DIRECTION"/>
     </attribute>
-    <attribute id="CC_CommDirectionLabel" order="19" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_CommDirectionLabel" order="17" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Direction Text"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="CC_CommDirectionLabel"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="CC_CommDirectionLabel"/>
     </attribute>
-    <attribute id="CAT_DESCRIPTION" order="20" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CAT_DESCRIPTION" order="18" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Category Text"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="CAT_DESCRIPTION"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="CAT_DESCRIPTION"/>
     </attribute>
-    <attribute id="OBJ_DESCRIPTION" order="21" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OBJ_DESCRIPTION" order="19" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Area Text"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="OBJ_DESCRIPTION"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="OBJ_DESCRIPTION"/>
     </attribute>
-    <attribute id="CreatedByName" order="22" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CreatedByName" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CreatedByName"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="CreatedByName"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="CreatedByName"/>
     </attribute>
-    <attribute id="ChangedByName" order="23" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ChangedByName" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ChangedByName"/>
-      <keyMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="ChangedByName"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="ChangedByName"/>
+    </attribute>
+  
+    <attribute id="ESTAT" order="22" semanticType="empty" descriptionColumnName="TXT30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Status"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="ESTAT"/>
+    </attribute>
+    <attribute id="TXT30" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Status Text"/>
+      <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="TXT30"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="CC_Days_Bt_Creation_Mod" order="14" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Days of Process"/>
-      <measureMapping columnObjectName="J_TASKACTIV_MODUSER" columnName="CC_Days_Bt_Creation_Mod"/>
+    <measure id="CC_Days_Bt_Creation_Mod" order="24" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Day of Process (Age)"/>
+      <measureMapping columnObjectName="J_TASKACTIV_STAT" columnName="CC_Days_Bt_Creation_Mod"/>
+    </measure>
+    <measure id="CC_Days_Bt_Creation_Mod_Avg" order="25" aggregationType="avg" measureType="simple">
+      <descriptions defaultDescription="Average Day of Process (Age)"/>
+      <measureMapping columnObjectName="J_TASKACTIV_STAT" columnName="CC_Days_Bt_Creation_Mod"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
     <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
-      <descriptions defaultDescription="Count"/>
+      <descriptions defaultDescription="Task/Interactions Count"/>
       <exceptionAggregation>
         <attribute attributeName="OBJECT_ID"/>
       </exceptionAggregation>
@@ -712,35 +857,29 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       
       
       
-      </measure>
-  
-    <measure id="CC_AVG_Days_Process" order="15" aggregationType="avg" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="SQL" aggregatable="true">
-      <descriptions defaultDescription="Average Days of Process"/>
-      <formula>&quot;CC_Days_Bt_Creation_Mod&quot;</formula>
       
-      </measure>
-  </calculatedMeasures>
+      </measure></calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="464.1540766652871" y="112"/>
+      <upperLeftCorner x="489.69878369129805" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CRMDORDERADMH" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91.99999999999996" y="836.9999952316284"/>
+      <upperLeftCorner x="92.00000000000004" y="996.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PROCESS_TYPE_TEXT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302.00000000000006" y="836.9999952316284"/>
+      <upperLeftCorner x="302.00000000000017" y="996.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TASK_PROCESS_TYPE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118.66666666666659" y="676.9999964237213"/>
+      <upperLeftCorner x="118.66666666666667" y="836.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CRMDORDERADMH" modelObjectNameSpace="J_TASK_PROCESS_TYPE" modelObjectType="JoinNodeInput">
@@ -753,11 +892,11 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
     </shape>
   
     <shape expanded="true" modelObjectName="P_CRMACTIV" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="391.4811462265975" y="676.9999964237213"/>
+      <upperLeftCorner x="383.7457871081922" y="836.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TASK_ACTIV" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="145.3333333333332" y="516.9999976158142"/>
+      <upperLeftCorner x="145.33333333333337" y="676.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TASK_PROCESS_TYPE" modelObjectNameSpace="J_TASK_ACTIV" modelObjectType="JoinNodeInput">
@@ -769,11 +908,11 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_USERINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="509.98094564133305" y="516.9999976158142"/>
+      <upperLeftCorner x="485.84489257825464" y="676.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TASKACTIV_CREAUSER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="406.1297317828647" y="356.9999988079071"/>
+      <upperLeftCorner x="346.907014292752" y="516.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TASK_ACTIV" modelObjectNameSpace="J_TASKACTIV_CREAUSER" modelObjectType="JoinNodeInput">
@@ -785,7 +924,7 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TASKACTIV_MODUSER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="464.1540766652871" y="217"/>
+      <upperLeftCorner x="373.57368095941865" y="356.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TASKACTIV_CREAUSER" modelObjectNameSpace="J_TASKACTIV_MODUSER" modelObjectType="JoinNodeInput">
@@ -794,6 +933,23 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
     </shape>
     <shape modelObjectName="P_USERINFO" modelObjectNameSpace="J_TASKACTIV_MODUSER" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="368" y="24"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_ACTUSERSTAT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="583.5736809594188" y="356.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_TASKACTIV_STAT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="489.6987836912981" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_TASKACTIV_MODUSER" modelObjectNameSpace="J_TASKACTIV_STAT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_ACTUSERSTAT" modelObjectNameSpace="J_TASKACTIV_STAT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
   </shapes>
