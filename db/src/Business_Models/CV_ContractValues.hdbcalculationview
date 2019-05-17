@@ -125,7 +125,17 @@
     
       <viewAttribute id="OWNER_CODE_DESC">
         <descriptions defaultDescription="Land Tax Code Description"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="CC_TAX_LIABLE_COUNT">
+        <descriptions defaultDescription="Land Tax - Tax Liable for the Period"/>
+      </viewAttribute>
+      <viewAttribute id="SubDividerFlag">
+        <descriptions defaultDescription="Sub Divider Flag"/>
+      </viewAttribute>
+      <viewAttribute id="CC_OwnerType">
+        <descriptions defaultDescription="CC_OwnerType"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="TAXYR" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
         <formula>component(date(&quot;TAXYRENDDT&quot;),1)</formula>
@@ -169,7 +179,11 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHTIME" source="CHTIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE" source="ABSURCHARGE"/>
     
-      <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/></input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_LIABLE_COUNT" source="CC_TAX_LIABLE_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SubDividerFlag" source="SubDividerFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerType" source="CC_OwnerType"/>
+    </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_CONTRACT_FBNUM" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
@@ -313,6 +327,16 @@
       <viewAttribute id="AssessmentAmount" aggregationType="sum">
         <descriptions defaultDescription="AssessmentAmount"/>
       </viewAttribute>
+    
+      <viewAttribute id="CC_TAX_LIABLE_COUNT" aggregationType="sum">
+        <descriptions defaultDescription="CC_TAX_LIABLE_COUNT"/>
+      </viewAttribute>
+      <viewAttribute id="SubDividerFlag">
+        <descriptions defaultDescription="SubDividerFlag"/>
+      </viewAttribute>
+      <viewAttribute id="CC_OwnerType">
+        <descriptions defaultDescription="CC_OwnerType"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -362,6 +386,10 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="InvoicedAmount" source="InvoicedAmount"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="UnpostedAmount" source="UnpostedAmount"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_LIABLE_COUNT" source="CC_TAX_LIABLE_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SubDividerFlag" source="SubDividerFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerType" source="CC_OwnerType"/>
     </input>
     <input node="AGG_CV_LTFINANCIALS">
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
@@ -502,6 +530,15 @@
       <viewAttribute id="UnpostedAmount" aggregationType="sum">
         <descriptions defaultDescription="UnpostedAmount"/>
       </viewAttribute>
+      <viewAttribute id="CC_TAX_LIABLE_COUNT" aggregationType="sum">
+        <descriptions defaultDescription="CC_TAX_LIABLE_COUNT"/>
+      </viewAttribute>
+      <viewAttribute id="SubDividerFlag">
+        <descriptions defaultDescription="SubDividerFlag"/>
+      </viewAttribute>
+      <viewAttribute id="CC_OwnerType">
+        <descriptions defaultDescription="CC_OwnerType"/>
+      </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
       <viewAttribute hidden="true" id="JOIN$INTRENO$INTRENO"/>
       <viewAttribute hidden="true" id="JOIN$DBERVON$TAXYRSTARTDT"/>
@@ -556,6 +593,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYR" source="TAXYR"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_LIABLE_COUNT" source="CC_TAX_LIABLE_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SubDividerFlag" source="SubDividerFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerType" source="CC_OwnerType"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENO$INTRENO" source="INTRENO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DBERVON$TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -721,171 +761,186 @@
       <descriptions defaultDescription="Last Edited at"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="TBEAR"/>
     </attribute>
-    <attribute id="ZZ_NOIA_DATE" order="10" semanticType="empty" descriptionColumnName="ZZ_NOIA_DATE" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ZZ_NOIA_DATE" order="9" semanticType="empty" descriptionColumnName="ZZ_NOIA_DATE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="NOIA DATE"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="ZZ_NOIA_DATE"/>
     </attribute>
-    <attribute id="ZZ_STAT_COMMENT" order="11" semanticType="empty" descriptionColumnName="ZZ_STAT_COMMENT" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ZZ_STAT_COMMENT" order="10" semanticType="empty" descriptionColumnName="ZZ_STAT_COMMENT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ZZ_STAT_COMMENT"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="ZZ_STAT_COMMENT"/>
     </attribute>
-    <attribute id="ZZ_PARTNER" order="12" semanticType="empty" descriptionColumnName="ZZ_PARTNER" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ZZ_PARTNER" order="11" semanticType="empty" descriptionColumnName="ZZ_PARTNER" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="ZZ_PARTNER"/>
     </attribute>
-    <attribute id="REAS" order="13" semanticType="empty" descriptionColumnName="REAS" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="REAS" order="12" semanticType="empty" descriptionColumnName="REAS" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land Tax Status - REAS"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="REAS"/>
     </attribute>
-    <attribute id="DNIS" order="14" semanticType="empty" descriptionColumnName="DNIS" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="DNIS" order="13" semanticType="empty" descriptionColumnName="DNIS" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land Tax Status: Do Not Issue"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="DNIS"/>
     </attribute>
-    <attribute id="LT12" order="15" semanticType="empty" descriptionColumnName="LT12" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="LT12" order="14" semanticType="empty" descriptionColumnName="LT12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land Tax Status: LT12"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="LT12"/>
     </attribute>
-    <attribute id="TAXYRSTARTDT" order="16" semanticType="empty" descriptionColumnName="TAXYRSTARTDT" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXYRSTARTDT" order="15" semanticType="empty" descriptionColumnName="TAXYRSTARTDT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Year Start Date"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="TAXYRSTARTDT"/>
     </attribute>
-    <attribute id="ACTIVE" order="17" semanticType="empty" descriptionColumnName="ACTIVE" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ACTIVE" order="16" semanticType="empty" descriptionColumnName="ACTIVE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ACTIVE"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="ACTIVE"/>
     </attribute>
-    <attribute id="OWNERTYPE" order="18" semanticType="empty" descriptionColumnName="OWNERTYPE" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNERTYPE" order="17" semanticType="empty" descriptionColumnName="OWNERTYPE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Owner type (ID)"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="OWNERTYPE"/>
     </attribute>
-    <attribute id="INDIVORG" order="19" semanticType="empty" descriptionColumnName="INDIVORG" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="INDIVORG" order="18" semanticType="empty" descriptionColumnName="INDIVORG" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Individual or Organisation"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="INDIVORG"/>
     </attribute>
-    <attribute id="TAXRATECODE" order="20" semanticType="empty" descriptionColumnName="TAXRATECODE" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXRATECODE" order="19" semanticType="empty" descriptionColumnName="TAXRATECODE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rate Code"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="TAXRATECODE"/>
     </attribute>
-    <attribute id="ZEROVALCN" order="27" semanticType="empty" descriptionColumnName="ZEROVALCN" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ZEROVALCN" order="26" semanticType="empty" descriptionColumnName="ZEROVALCN" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land Tax - Zero Value exists on Contract"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="ZEROVALCN"/>
     </attribute>
-    <attribute id="TAXYRENDDT" order="32" semanticType="empty" descriptionColumnName="TAXYRENDDT" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXYRENDDT" order="31" semanticType="empty" descriptionColumnName="TAXYRENDDT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date: Valid To"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="TAXYRENDDT"/>
     </attribute>
-    <attribute id="CHUSER" order="33" semanticType="empty" descriptionColumnName="CHUSER" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CHUSER" order="32" semanticType="empty" descriptionColumnName="CHUSER" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Name"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="CHUSER"/>
     </attribute>
-    <attribute id="CHDATE" order="34" semanticType="empty" descriptionColumnName="CHDATE" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CHDATE" order="33" semanticType="empty" descriptionColumnName="CHDATE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Changed On"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="CHDATE"/>
     </attribute>
-    <attribute id="CHTIME" order="35" semanticType="empty" descriptionColumnName="CHTIME" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CHTIME" order="34" semanticType="empty" descriptionColumnName="CHTIME" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Changed At"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="CHTIME"/>
     </attribute>
-    <attribute id="TAXYR" order="37" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXYR" order="36" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Year"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="TAXYR"/>
     </attribute>
   
-    <attribute id="OWNER_CODE_DESC" order="38" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNER_CODE_DESC" order="37" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Owner type"/>
   
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="OWNER_CODE_DESC"/>
   
     </attribute>
-    <attribute id="FBNUM" order="43" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FBNUM" order="42" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FBNUM"/>
       <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="FBNUM"/>
+    </attribute>
+  
+    <attribute id="SubDividerFlag" order="48" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SubDividerFlag"/>
+      <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="SubDividerFlag"/>
+    </attribute>
+    <attribute id="CC_OwnerType" order="49" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_OwnerType"/>
+      <keyMapping columnObjectName="J_CONTRACT_FBNUM" columnName="CC_OwnerType"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="TOTBPRELVNTVAL" order="21" aggregationType="sum" measureType="simple">
+    <measure id="TOTBPRELVNTVAL" order="20" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax - Total BP relevant value"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="TOTBPRELVNTVAL"/>
     </measure>
-    <measure id="TOTBPCONCESSVAL" order="22" aggregationType="sum" measureType="simple">
+    <measure id="TOTBPCONCESSVAL" order="21" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax: BP Concession per parcel"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="TOTBPCONCESSVAL"/>
     </measure>
-    <measure id="TOTBPTAXABLEVAL" order="23" aggregationType="sum" measureType="simple">
+    <measure id="TOTBPTAXABLEVAL" order="22" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax: BP Taxable value per parcel"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="TOTBPTAXABLEVAL"/>
     </measure>
-    <measure id="ADJUSTMENT" order="24" aggregationType="sum" measureType="simple">
+    <measure id="ADJUSTMENT" order="23" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax - Tax Adjustment Amount"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="ADJUSTMENT"/>
     </measure>
-    <measure id="TAXAMOUNT" order="25" aggregationType="sum" measureType="simple">
+    <measure id="TAXAMOUNT" order="24" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax - Tax amount"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="TAXAMOUNT"/>
     </measure>
-    <measure id="TAXESTIMATE" order="26" aggregationType="sum" measureType="simple">
+    <measure id="TAXESTIMATE" order="25" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax - Estimated Tax"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="TAXESTIMATE"/>
     </measure>
-    <measure id="PROPERTYCNT" order="28" aggregationType="sum" measureType="simple">
+    <measure id="PROPERTYCNT" order="27" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax - Property Count"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="PROPERTYCNT"/>
     </measure>
-    <measure id="PARCELCNT" order="29" aggregationType="sum" measureType="simple">
+    <measure id="PARCELCNT" order="28" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax - Parcel Count"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="PARCELCNT"/>
     </measure>
-    <measure id="SDDPLCNT" order="30" aggregationType="sum" measureType="simple">
+    <measure id="SDDPLCNT" order="29" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax: Count of parcels with Sub-divider discount"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="SDDPLCNT"/>
     </measure>
-    <measure id="CONCPLCNT" order="31" aggregationType="sum" measureType="simple">
+    <measure id="CONCPLCNT" order="30" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax: Count of Parcels with Concessions (excluding SDD)"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="CONCPLCNT"/>
     </measure>
-    <measure id="ABSURCHARGE" order="36" aggregationType="sum" measureType="simple">
+    <measure id="ABSURCHARGE" order="35" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax -  Absentee surcharge"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="ABSURCHARGE"/>
     </measure>
-    <measure id="CashflowAmount" order="39" aggregationType="sum" measureType="simple">
+    <measure id="CashflowAmount" order="38" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CashflowAmount"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="CashflowAmount"/>
     </measure>
-    <measure id="ReassessmentAmount" order="40" aggregationType="sum" measureType="simple">
+    <measure id="ReassessmentAmount" order="39" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="ReassessmentAmount"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="ReassessmentAmount"/>
     </measure>
   
-    <measure id="InvoicedAmount" order="42" aggregationType="sum" measureType="simple">
+    <measure id="InvoicedAmount" order="41" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="InvoicedAmount"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="InvoicedAmount"/>
     </measure>
-    <measure id="BETRH" order="44" aggregationType="sum" measureType="simple">
+    <measure id="BETRH" order="43" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BETRH"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="BETRH"/>
     </measure>
-    <measure id="AUGBT" order="45" aggregationType="sum" measureType="simple">
+    <measure id="AUGBT" order="44" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="AUGBT"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="AUGBT"/>
     </measure>
   
-    <measure id="UnpostedAmount" order="46" aggregationType="sum" measureType="simple">
+    <measure id="UnpostedAmount" order="45" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="UnpostedAmount"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="UnpostedAmount"/>
     </measure>
   
-    <measure id="AssessmentAmount" order="47" aggregationType="sum" measureType="simple">
+    <measure id="AssessmentAmount" order="46" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="AssessmentAmount"/>
       <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="AssessmentAmount"/>
     </measure>
+  
+    <measure id="CC_TAX_LIABLE_COUNT" order="47" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_TAX_LIABLE_COUNT"/>
+      <measureMapping columnObjectName="J_CONTRACT_FBNUM" columnName="CC_TAX_LIABLE_COUNT"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures>
-    <measure id="ContractCounter" order="41" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+    <measure id="ContractCounter" order="40" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="ContractCounter"/>
       <exceptionAggregation>
         <attribute attributeName="INTRENO"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
