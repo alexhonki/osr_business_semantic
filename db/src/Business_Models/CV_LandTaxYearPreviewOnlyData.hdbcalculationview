@@ -362,7 +362,7 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="P_CURR_OWNER_TYP">
+    <input node="R_OWNER_TYP_LAST_REC">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CODEID" source="CODEID"/>
@@ -717,6 +717,41 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ABSURBASE_AMT" source="ABSURBASE_AMT"/>
     </input>
   </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_OWNER_TYP_LAST_REC">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="PERIODEND">
+        <descriptions defaultDescription="PERIODEND"/>
+      </viewAttribute>
+      <viewAttribute id="PERIODBEGIN">
+        <descriptions defaultDescription="PERIODBEGIN"/>
+      </viewAttribute>
+      <viewAttribute id="CODEID">
+        <descriptions defaultDescription="CODEID"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CURR_OWNER_TYP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIODEND" source="PERIODEND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIODBEGIN" source="PERIODBEGIN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODEID" source="CODEID"/>
+    </input>
+    <windowFunction>
+      <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="PERIODBEGIN" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
 </calculationViews>
 <logicalModel id="P_BPVAL_CALCS">
   <attributes>
@@ -859,14 +894,14 @@
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CURR_OWNER_TYP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="821"/>
+      <upperLeftCorner x="92" y="896"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_OWNER_TYPE" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="275" y="661"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="P_CURR_OWNER_TYP" modelObjectNameSpace="J_OWNER_TYPE" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="R_OWNER_TYP_LAST_REC" modelObjectNameSpace="J_OWNER_TYPE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
@@ -905,6 +940,11 @@
     <shape expanded="true" modelObjectName="P_BPVAL_CALCS" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="482" y="236"/>
       <rectangleSize height="30" width="160"/>
-    </shape></shapes>
+    </shape>
+    <shape expanded="true" modelObjectName="R_OWNER_TYP_LAST_REC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="780"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
