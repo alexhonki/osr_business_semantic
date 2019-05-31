@@ -148,8 +148,8 @@
       <viewAttribute id="SubDividerFlag">
         <descriptions defaultDescription="Sub Divider Flag"/>
       </viewAttribute>
-      <viewAttribute id="CC_OwnerType">
-        <descriptions defaultDescription="CC_OwnerType"/>
+      <viewAttribute id="CC_OwnerTypeDescription">
+        <descriptions defaultDescription="CC_OwnerTypeDescription"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -187,7 +187,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="5Y_PARCELCNT" source="PARCELCNT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="SubDividerFlag" source="SubDividerFlag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerType" source="CC_OwnerType"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
     </input>
     <filter>to_int(&quot;TAXYRSTARTDT&quot;)&gt;=to_int(CONCAT(to_char(to_int('$$IP_PREVIEW_TAX_YEAR$$')-6),'0701')) and to_int(&quot;TAXYRSTARTDT&quot;)&lt;=to_int(CONCAT(to_char(to_int('$$IP_PREVIEW_TAX_YEAR$$')-2),'0701'))</filter>
   </calculationView>
@@ -240,8 +240,8 @@
       <viewAttribute id="SubDividerFlag">
         <descriptions defaultDescription="SubDividerFlag"/>
       </viewAttribute>
-      <viewAttribute id="CC_OwnerType">
-        <descriptions defaultDescription="CC_OwnerType"/>
+      <viewAttribute id="CC_OwnerTypeDescription">
+        <descriptions defaultDescription="CC_OwnerTypeDescription"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -292,7 +292,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABSURCHARGE_COUNT" source="CC_ABSURCHARGE_COUNT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="SubDividerFlag" source="SubDividerFlag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerType" source="CC_OwnerType"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_BPVALS_5YAVG" cardinality="C1_N" joinType="leftOuter">
@@ -389,8 +389,11 @@
       <viewAttribute id="SubDividerFlag">
         <descriptions defaultDescription="SubDividerFlag"/>
       </viewAttribute>
-      <viewAttribute id="CC_OwnerType">
-        <descriptions defaultDescription="CC_OwnerType"/>
+      <viewAttribute id="5Y_TOTBPTAXABLEVAL" aggregationType="sum">
+        <descriptions defaultDescription="5Y_TOTBPTAXABLEVAL"/>
+      </viewAttribute>
+      <viewAttribute id="CC_OwnerTypeDescription">
+        <descriptions defaultDescription="CC_OwnerTypeDescription"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -429,7 +432,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_LASTYEAR_TAX_LIABLE_FLAG" source="CC_LASTYEAR_TAXLIABLE_FLAG"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="5Y_PARCELCNT" source="5Y_PARCELCNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SubDividerFlag" source="SubDividerFlag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerType" source="CC_OwnerType"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="5Y_TOTBPTAXABLEVAL" source="5Y_TOTBPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="ZZ_PARTNER"/>
     </input>
@@ -481,11 +485,13 @@
   
     <attribute id="SubDividerFlag" order="30" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SubDividerFlag"/>
+  
       <keyMapping columnObjectName="J_BPVALS_5YAVG" columnName="SubDividerFlag"/>
+  
     </attribute>
-    <attribute id="CC_OwnerType" order="31" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_OwnerType"/>
-      <keyMapping columnObjectName="J_BPVALS_5YAVG" columnName="CC_OwnerType"/>
+    <attribute id="CC_OwnerTypeDescription" order="32" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_OwnerTypeDescription"/>
+      <keyMapping columnObjectName="J_BPVALS_5YAVG" columnName="CC_OwnerTypeDescription"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -575,6 +581,11 @@
       <descriptions defaultDescription="5Y_PARCELCNT"/>
       <measureMapping columnObjectName="J_BPVALS_5YAVG" columnName="5Y_PARCELCNT"/>
     </measure>
+  
+    <measure id="5Y_TOTBPTAXABLEVAL" order="31" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="5Y_TOTBPTAXABLEVAL"/>
+      <measureMapping columnObjectName="J_BPVALS_5YAVG" columnName="5Y_TOTBPTAXABLEVAL"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures/>
   <restrictedMeasures/>
@@ -593,8 +604,8 @@
     </shape>
   
     <shape expanded="true" modelObjectName="P_CONTRACT_RES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="592" y="481"/>
-      <rectangleSize height="30" width="160"/>
+      <upperLeftCorner x="586" y="481"/>
+      <rectangleSize height="30" width="166"/>
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_5Y_CONTRES" modelObjectNameSpace="CalculationView">
