@@ -858,6 +858,13 @@
       <viewAttribute id="LAND_USE_TEXT">
         <descriptions defaultDescription="Land Use Code Descr."/>
       </viewAttribute>
+    
+      <viewAttribute id="TERF_1">
+        <descriptions defaultDescription="TERF"/>
+      </viewAttribute>
+      <viewAttribute id="CC_LandUseDescription">
+        <descriptions defaultDescription="CC_LandUseDescription"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -934,23 +941,40 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHUSER" source="CHUSER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CHDATE" source="CHDATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CHTIME" source="CHTIME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TERF_1" source="TERF"/>
     </input>
     <input node="P_LandUseCode">
       <mapping xsi:type="Calculation:AttributeMapping" target="LAND_USE_TEXT" source="LAND_USE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LandUseDescription" source="CC_LandUseDescription"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LANDUSECODE" source="LAND_USE_CD"/>
     </input>
     <joinAttribute name="LANDUSECODE"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_LandUseCode">
     <viewAttributes>
-      <viewAttribute id="LAND_USE_CD">
-        <descriptions defaultDescription="Land Use Code"/>
-      </viewAttribute>
       <viewAttribute id="LAND_USE_TEXT">
         <descriptions defaultDescription="Land Use Code Descr."/>
       </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
+    
+      <viewAttribute id="LAND_USE_CD">
+        <descriptions defaultDescription="Land Use Code"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_LandUseDescription" datatype="VARCHAR" length="30" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(in(&quot;LAND_USE_CD&quot;, '001', '004', '072', '094'), 'Vacant Land',
+if(in(&quot;LAND_USE_CD&quot;, '002', '003', '005', '008', '009', '010'),'Residential Land',
+if(in(&quot;LAND_USE_CD&quot;, '007', '011', '012', '013', '014', '015', '016', '017', '018', '022', '023', '024', '025', '026', '028', '029', '030', '031','032', '033', '034', '035', '036', '037','038', '039', '040','041', '042', '043', '044', '045', '046','047', '048'), 'Commercial Land',
+if(in(&quot;LAND_USE_CD&quot;, '006', '060', '061', '064', '065', '066', '067','068', '069', '070', '071','073','074','075','076','077', '078', '079','080','081','082','083','084','085', '086', '087', '088', '089', '093'), 'Primary Production Land',
+if(in(&quot;LAND_USE_CD&quot;, '049'), 'Moveable Dwelling Park',
+if(in(&quot;LAND_USE_CD&quot;, '021'), 'Retirement Village',
+if(in(&quot;LAND_USE_CD&quot;, '050', '052', '055', '056', '057', '097'), 'Recreational &amp; Public Land',
+if(in(&quot;LAND_USE_CD&quot;, '027', '051', '058'), 'Charitable Use',
+if(in(&quot;LAND_USE_CD&quot;, '052', '054', '059', '092', '096'), 'Government Land',
+if(in(&quot;LAND_USE_CD&quot;, '000', '019', '020', '062', '063', '090', '095', '098', '099'),'Other Land Use','OTHER'
+))))))))))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::LANDUSECODE">
       <mapping xsi:type="Calculation:AttributeMapping" target="LAND_USE_CD" source="LAND_USE_CD"/>
@@ -1191,7 +1215,16 @@
   
     <attribute id="LAND_USE_TEXT" order="73" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land Use Code Descr."/>
+  
       <keyMapping columnObjectName="J_ParcelResults_LandUseCode" columnName="LAND_USE_TEXT"/>
+  
+    </attribute>
+  
+    <attribute id="CC_LandUseDescription" order="74" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_LandUseDescription"/>
+  
+      <keyMapping columnObjectName="J_ParcelResults_LandUseCode" columnName="CC_LandUseDescription"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -1264,21 +1297,21 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="404.3053649407134" y="112"/>
+      <upperLeftCorner x="404" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_VILMPL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91.99999999999997" y="516.9999976158142"/>
+      <upperLeftCorner x="91" y="516"/>
       <rectangleSize height="30" width="194"/>
     </shape>
     <shape expanded="true" modelObjectName="P_LTPLRES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="336" y="516.9999976158142"/>
+      <upperLeftCorner x="336" y="516"/>
       <rectangleSize height="30" width="249"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ParcelResults" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="135.6666666666666" y="356.9999988079071"/>
+      <upperLeftCorner x="135" y="356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_VILMPL" modelObjectNameSpace="J_ParcelResults" modelObjectType="JoinNodeInput">
@@ -1291,7 +1324,7 @@
     </shape>
   
     <shape expanded="true" modelObjectName="J_ParcelResults_LandUseCode" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="404.3053649407134" y="217"/>
+      <upperLeftCorner x="404" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ParcelResults" modelObjectNameSpace="J_ParcelResults_LandUseCode" modelObjectType="JoinNodeInput">
@@ -1303,7 +1336,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_LandUseCode" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="456.2929228167035" y="356.9999988079071"/>
+      <upperLeftCorner x="456" y="356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
