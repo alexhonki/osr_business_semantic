@@ -144,6 +144,13 @@
       <viewAttribute id="5Y_PARCELCNT">
         <descriptions defaultDescription="Land Tax - Parcel Count"/>
       </viewAttribute>
+    
+      <viewAttribute id="SubDividerFlag">
+        <descriptions defaultDescription="Sub Divider Flag"/>
+      </viewAttribute>
+      <viewAttribute id="CC_OwnerType">
+        <descriptions defaultDescription="CC_OwnerType"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_LASTYEAR_TAX_LIABLE_COUNT" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
@@ -178,6 +185,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="5Y_CC_TAX_LIABLE_COUNT" source="CC_TAX_LIABLE_COUNT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="5Y_PARCELCNT" source="PARCELCNT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="SubDividerFlag" source="SubDividerFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerType" source="CC_OwnerType"/>
     </input>
     <filter>to_int(&quot;TAXYRSTARTDT&quot;)&gt;=to_int(CONCAT(to_char(to_int('$$IP_PREVIEW_TAX_YEAR$$')-6),'0701')) and to_int(&quot;TAXYRSTARTDT&quot;)&lt;=to_int(CONCAT(to_char(to_int('$$IP_PREVIEW_TAX_YEAR$$')-2),'0701'))</filter>
   </calculationView>
@@ -226,6 +236,13 @@
       <viewAttribute id="CC_ABSURCHARGE_COUNT" aggregationType="sum">
         <descriptions defaultDescription="CC_ABSURCHARGE_COUNT"/>
       </viewAttribute>
+    
+      <viewAttribute id="SubDividerFlag">
+        <descriptions defaultDescription="SubDividerFlag"/>
+      </viewAttribute>
+      <viewAttribute id="CC_OwnerType">
+        <descriptions defaultDescription="CC_OwnerType"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_5Y_TOTBPRELVNTVAL" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
@@ -273,6 +290,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TOTBPCONCESSVAL_COUNT" source="CC_TOTBPCONCESSVAL_COUNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="5Y_PARCELCNT" source="5Y_PARCELCNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABSURCHARGE_COUNT" source="CC_ABSURCHARGE_COUNT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="SubDividerFlag" source="SubDividerFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerType" source="CC_OwnerType"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_BPVALS_5YAVG" cardinality="C1_N" joinType="leftOuter">
@@ -362,6 +382,16 @@
       <viewAttribute id="CC_BP_ASSD_TAX_FLAG">
         <descriptions defaultDescription="CC_BP_ASSD_TAX_FLAG"/>
       </viewAttribute>
+    
+      <viewAttribute id="5Y_PARCELCNT" aggregationType="sum">
+        <descriptions defaultDescription="5Y_PARCELCNT"/>
+      </viewAttribute>
+      <viewAttribute id="SubDividerFlag">
+        <descriptions defaultDescription="SubDividerFlag"/>
+      </viewAttribute>
+      <viewAttribute id="CC_OwnerType">
+        <descriptions defaultDescription="CC_OwnerType"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -397,6 +427,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_5Y_PARCELCNT" source="CC_5Y_PARCELCNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_5Y_ABSURCHARGE" source="CC_5Y_ABSURCHARGE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_LASTYEAR_TAX_LIABLE_FLAG" source="CC_LASTYEAR_TAXLIABLE_FLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="5Y_PARCELCNT" source="5Y_PARCELCNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SubDividerFlag" source="SubDividerFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerType" source="CC_OwnerType"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BPARTNER" source="ZZ_PARTNER"/>
     </input>
@@ -444,6 +477,15 @@
     <attribute id="CC_BP_ASSD_TAX_FLAG" order="28" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land Tax - BP with estimated Tax Flag"/>
       <keyMapping columnObjectName="J_BPVALS_5YAVG" columnName="CC_BP_ASSD_TAX_FLAG"/>
+    </attribute>
+  
+    <attribute id="SubDividerFlag" order="30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SubDividerFlag"/>
+      <keyMapping columnObjectName="J_BPVALS_5YAVG" columnName="SubDividerFlag"/>
+    </attribute>
+    <attribute id="CC_OwnerType" order="31" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_OwnerType"/>
+      <keyMapping columnObjectName="J_BPVALS_5YAVG" columnName="CC_OwnerType"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -527,6 +569,11 @@
     <measure id="CC_5Y_ABSURCHARGE" order="26" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="5Y Avg - Absentee surcharge"/>
       <measureMapping columnObjectName="J_BPVALS_5YAVG" columnName="CC_5Y_ABSURCHARGE"/>
+    </measure>
+  
+    <measure id="5Y_PARCELCNT" order="29" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="5Y_PARCELCNT"/>
+      <measureMapping columnObjectName="J_BPVALS_5YAVG" columnName="5Y_PARCELCNT"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures/>

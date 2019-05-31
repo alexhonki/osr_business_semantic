@@ -10,8 +10,8 @@
   <DataSource id="osr.business.semantic.db.synonyms::VICNCN">
     <resourceUri>osr.business.semantic.db.synonyms::VICNCN</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.synonyms::CODE_ID">
-    <resourceUri>osr.business.semantic.db.synonyms::CODE_ID</resourceUri>
+  <DataSource id="osr.business.semantic.db.Business_Models::CV_OwnerTyperDescription">
+    <resourceUri>osr.business.semantic.db.Business_Models::CV_OwnerTyperDescription</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -445,6 +445,13 @@
       <viewAttribute id="OwnerTypeNEW">
         <descriptions defaultDescription="OwnerTypeNEW"/>
       </viewAttribute>
+    
+      <viewAttribute id="COUNT_CODE" aggregationType="sum">
+        <descriptions defaultDescription="COUNT_CODE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_OwnerTypeDescription">
+        <descriptions defaultDescription="CC_OwnerTypeDescription"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_TAX_LIABLE_COUNT" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
@@ -453,8 +460,7 @@
     
       <calculatedViewAttribute id="CC_OwnerType" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>if(&quot;ACTIVE&quot;='','Inactive',
-if(&quot;OWNERTYPE&quot;='','Other',&quot;OwnerTypeNEW&quot;))</formula>
+        <formula>if(&quot;OWNERTYPE&quot;='','Blank',&quot;OwnerTypeNEW&quot;)</formula>
     
       </calculatedViewAttribute>
     </calculatedViewAttributes>
@@ -498,6 +504,8 @@ if(&quot;OWNERTYPE&quot;='','Other',&quot;OwnerTypeNEW&quot;))</formula>
     <input node="P_OWNER_DESC">
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OwnerTypeNEW" source="OwnerTypeNEW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNT_CODE" source="COUNT_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="CODE_ID"/>
     </input>
@@ -515,7 +523,14 @@ if(&quot;OWNERTYPE&quot;='','Other',&quot;OwnerTypeNEW&quot;))</formula>
     
       <viewAttribute id="CODE_ID">
         <descriptions defaultDescription="CODE_ID"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="COUNT_CODE">
+        <descriptions defaultDescription="COUNT_CODE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_OwnerTypeDescription">
+        <descriptions defaultDescription="CC_OwnerTypeDescription"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="OwnerTypeNEW" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
         <formula>if(leftStr(&quot;CODE_ID&quot;,2)='NN','Other',
@@ -572,10 +587,13 @@ if(leftstr(&quot;CODE_ID&quot;,2)='CZ','Company','Other'))))))))))))))))))))))))
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::CODE_ID">
+    <input node="osr.business.semantic.db.Business_Models::CV_OwnerTyperDescription">
       <mapping xsi:type="Calculation:AttributeMapping" target="CODE_ID" source="CODE_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="CODE_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNT_CODE" source="COUNT_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -691,6 +709,11 @@ if(leftstr(&quot;CODE_ID&quot;,2)='CZ','Company','Other'))))))))))))))))))))))))
       <keyMapping columnObjectName="J_BPCONTRACT_CNRES_OWNERDESC" columnName="CC_OwnerType"/>
   
     </attribute>
+  
+    <attribute id="CC_OwnerTypeDescription" order="42" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_OwnerTypeDescription"/>
+      <keyMapping columnObjectName="J_BPCONTRACT_CNRES_OWNERDESC" columnName="CC_OwnerTypeDescription"/>
+    </attribute>
   </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="SubDividerFlag" order="39" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
@@ -749,6 +772,11 @@ if(leftstr(&quot;CODE_ID&quot;,2)='CZ','Company','Other'))))))))))))))))))))))))
       <descriptions defaultDescription="Land Tax - Tax Liable for the Period"/>
       <measureMapping columnObjectName="J_BPCONTRACT_CNRES_OWNERDESC" columnName="CC_TAX_LIABLE_COUNT"/>
     </measure>
+  
+    <measure id="COUNT_CODE" order="41" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="COUNT_CODE"/>
+      <measureMapping columnObjectName="J_BPCONTRACT_CNRES_OWNERDESC" columnName="COUNT_CODE"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures>
     <measure id="CO_BPCOUNTER" order="37" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -757,6 +785,7 @@ if(leftstr(&quot;CODE_ID&quot;,2)='CZ','Company','Other'))))))))))))))))))))))))
         <attribute attributeName="ZZ_PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
