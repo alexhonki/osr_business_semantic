@@ -227,6 +227,13 @@
       <viewAttribute id="ENDDA">
         <descriptions defaultDescription="ENDDA"/>
       </viewAttribute>
+    
+      <viewAttribute id="OTYPE">
+        <descriptions defaultDescription="OTYPE"/>
+      </viewAttribute>
+      <viewAttribute id="LANGU">
+        <descriptions defaultDescription="LANGU"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -235,8 +242,11 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="OBJID" source="OBJID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ENDDA" source="ENDDA"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OTYPE" source="OTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LANGU" source="LANGU"/>
     </input>
-    <filter>&quot;ENDDA&quot;='99991231'</filter>
+    <filter>&quot;ENDDA&quot;='99991231' and &quot;LANGU&quot; = 'E' and &quot;OTYPE&quot; = 'O'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_USRID_ORGUNIT" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
@@ -267,6 +277,31 @@
     </input>
     <joinAttribute name="MANDT"/>
     <joinAttribute name="PERNR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PA0001" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="ORGEH"/>
+      </viewAttribute>
+    
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PERNR">
+        <descriptions defaultDescription="PERNR"/>
+      </viewAttribute>
+      <viewAttribute id="ENDDA">
+        <descriptions defaultDescription="ENDDA"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.VirtualTable::PA0001">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ENDDA" source="ENDDA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+    </input>
+    <filter>&quot;ENDDA&quot;='99991231'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_USRORG_ORGDESC" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
@@ -384,31 +419,6 @@
     <joinAttribute name="MANDT"/>
     <joinAttribute name="BNAME"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_PA0001" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="MANDT">
-        <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute id="PERNR">
-        <descriptions defaultDescription="PERNR"/>
-      </viewAttribute>
-      <viewAttribute id="ENDDA">
-        <descriptions defaultDescription="ENDDA"/>
-      </viewAttribute>
-      <viewAttribute id="ORGEH">
-        <descriptions defaultDescription="ORGEH"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.VirtualTable::PA0001">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ENDDA" source="ENDDA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
-    </input>
-    <filter>&quot;ENDDA&quot;='99991231'</filter>
-  </calculationView>
 </calculationViews>
 <logicalModel id="J_USRADRP_ORGU">
   <attributes>
@@ -471,7 +481,9 @@
   
     <attribute id="ORGEH" order="16" descriptionColumnName="SHORT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team)"/>
+  
       <keyMapping columnObjectName="J_USRADRP_ORGU" columnName="ORGEH"/>
+  
     </attribute>
     <attribute id="SHORT" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team) Name"/>
@@ -496,21 +508,21 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="554.913511335652" y="112"/>
+      <upperLeftCorner x="554" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_USR21" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="603.1471978615358" y="516.9999976158142"/>
+      <upperLeftCorner x="603" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ADRP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="813.1471978615358" y="516.9999976158142"/>
+      <upperLeftCorner x="813" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADRP_USR21" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="629.8138645282024" y="356.9999988079071"/>
+      <upperLeftCorner x="629" y="356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_USR21" modelObjectNameSpace="J_ADRP_USR21" modelObjectType="JoinNodeInput">
@@ -523,15 +535,15 @@
     </shape>
   
     <shape expanded="true" modelObjectName="P_PA0105" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="71.99999999999997" y="676.9999964237213"/>
+      <upperLeftCorner x="71" y="676"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_HRP1000" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="393.1471978615358" y="516.9999976158142"/>
+      <upperLeftCorner x="393" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_USRID_ORGUNIT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118.66666666666666" y="520.3333309491475"/>
+      <upperLeftCorner x="118" y="520"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PA0105" modelObjectNameSpace="J_USRID_ORGUNIT" modelObjectType="JoinNodeInput">
@@ -542,8 +554,13 @@
       <upperLeftCorner x="336" y="24"/>
       <rectangleSize width="250"/>
     </shape>
+    <shape expanded="true" modelObjectName="P_PA0001" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="291" y="677"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="J_USRORG_ORGDESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="366.4805311948692" y="360.3333321412404"/>
+      <upperLeftCorner x="366" y="360"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_USRID_ORGUNIT" modelObjectNameSpace="J_USRORG_ORGDESC" modelObjectType="JoinNodeInput">
@@ -555,7 +572,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_USRADRP_ORGU" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="554.913511335652" y="217"/>
+      <upperLeftCorner x="554" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ADRP_USR21" modelObjectNameSpace="J_USRADRP_ORGU" modelObjectType="JoinNodeInput">
@@ -565,11 +582,6 @@
     <shape modelObjectName="J_USRORG_ORGDESC" modelObjectNameSpace="J_USRADRP_ORGU" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="390" y="33"/>
       <rectangleSize width="250"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_PA0001" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="291" y="677"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
