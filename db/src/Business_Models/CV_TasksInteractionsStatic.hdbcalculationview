@@ -83,8 +83,31 @@
       <viewAttribute id="CC_Days_Bt_Creation_Mod">
         <descriptions defaultDescription="CC_Days_Bt_Creation_Mod"/>
       </viewAttribute>
+    
+      <viewAttribute id="ACTIVITY_PARTNER">
+        <descriptions defaultDescription="ACTIVITY_PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="ACTIVPART_NAME">
+        <descriptions defaultDescription="ACTIVPART_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="EMP_PARTNER">
+        <descriptions defaultDescription="EMP_PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="EMP_NAME">
+        <descriptions defaultDescription="EMP_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="ORGEH"/>
+      </viewAttribute>
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="SHORT"/>
+      </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_RowCount" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Tables::LTTasksAndInteractions">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
@@ -111,6 +134,13 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ESTAT" source="ESTAT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TXT30" source="TXT30"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_Mod"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVPART_NAME" source="ACTIVPART_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMP_PARTNER" source="EMP_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMP_NAME" source="EMP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -214,6 +244,33 @@
       <descriptions defaultDescription="Secondary Land Tax Type"/>
       <keyMapping columnObjectName="P_TASKINTER_STATIC" columnName="CC_Secondary_LT_Type"/>
     </attribute>
+  
+    <attribute id="ACTIVITY_PARTNER" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Activity Partner"/>
+  
+      <keyMapping columnObjectName="P_TASKINTER_STATIC" columnName="ACTIVITY_PARTNER"/>
+  
+    </attribute>
+    <attribute id="ACTIVPART_NAME" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Activity Partner Name"/>
+      <keyMapping columnObjectName="P_TASKINTER_STATIC" columnName="ACTIVPART_NAME"/>
+    </attribute>
+    <attribute id="EMP_PARTNER" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Employee Responsible"/>
+      <keyMapping columnObjectName="P_TASKINTER_STATIC" columnName="EMP_PARTNER"/>
+    </attribute>
+    <attribute id="EMP_NAME" order="30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Employee Responsible Name"/>
+      <keyMapping columnObjectName="P_TASKINTER_STATIC" columnName="EMP_NAME"/>
+    </attribute>
+    <attribute id="ORGEH" order="31" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Org. Unit (Team)"/>
+      <keyMapping columnObjectName="P_TASKINTER_STATIC" columnName="ORGEH"/>
+    </attribute>
+    <attribute id="SHORT" order="32" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      <keyMapping columnObjectName="P_TASKINTER_STATIC" columnName="SHORT"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -225,12 +282,17 @@
       <descriptions defaultDescription="Average Day of Process (Age)"/>
       <measureMapping columnObjectName="P_TASKINTER_STATIC" columnName="CC_Days_Bt_Creation_Mod"/>
     </measure>
+  
+    <measure id="CC_RowCount" order="34" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_RowCount"/>
+      <measureMapping columnObjectName="P_TASKINTER_STATIC" columnName="CC_RowCount"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures>
     <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Task/Interactions Count"/>
       <exceptionAggregation>
-        <attribute attributeName="OBJECT_ID"/>
+        <attribute attributeName="GUID"/>
       </exceptionAggregation>
       <formula>1</formula>
       
@@ -241,19 +303,27 @@
       
       
       
-      </measure></calculatedMeasures>
+      
+      
+      
+      </measure>
+    <measure id="CC_TaskIntDurationAvg" order="33" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="SQL">
+      <descriptions defaultDescription="Task Duration (Aggr. Avg.)"/>
+      <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      </measure>
+  </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="520.915010674232" y="112"/>
+      <upperLeftCorner x="520" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TASKINTER_STATIC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="520.6126573212184" y="239.9999988079071"/>
+      <upperLeftCorner x="520" y="239"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
