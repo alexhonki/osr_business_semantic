@@ -146,7 +146,7 @@
     
       <calculatedViewAttribute id="LandTaxYear" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>string(component(date(&quot;TAXYRENDDT&quot;),1)-2) + '0630'</formula>
+        <formula>string(component(date(&quot;TAXYRENDDT&quot;),1)-1) + '0630'</formula>
     
       </calculatedViewAttribute>
     </calculatedViewAttributes>
@@ -736,6 +736,13 @@
       <viewAttribute id="FirstReassessment" aggregationType="min">
         <descriptions defaultDescription="POSTINGDATE"/>
       </viewAttribute>
+      <viewAttribute id="LatestReassessment" aggregationType="max">
+        <descriptions defaultDescription="POSTINGDATE"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentDate" aggregationType="max">
+        <descriptions defaultDescription="POSTINGDATE"/>
+      </viewAttribute>
+    
     
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
@@ -745,14 +752,7 @@
       </viewAttribute>
       <viewAttribute id="DBERVON">
         <descriptions defaultDescription="DBERVON"/>
-      </viewAttribute>
-      <viewAttribute id="LatestReassessment" aggregationType="max">
-        <descriptions defaultDescription="POSTINGDATE"/>
-      </viewAttribute>
-      <viewAttribute id="AssessmentDate" aggregationType="max">
-        <descriptions defaultDescription="POSTINGDATE"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="AGG_CASHFLOW">
@@ -820,9 +820,15 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="UnpostedAmount" source="UnpostedAmount"/></input>
   </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="AGG_REASDATES">
+  <calculationView xsi:type="Calculation:JoinView" id="J_ASST_REAS_DATES" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="FirstReassessment" aggregationType="min">
+        <descriptions defaultDescription="FirstReassessment"/>
+      </viewAttribute>
+      <viewAttribute id="LatestReassessment" aggregationType="max">
+        <descriptions defaultDescription="LatestReassessment"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentDate" aggregationType="max">
         <descriptions defaultDescription="POSTINGDATE"/>
       </viewAttribute>
       <viewAttribute id="MANDT">
@@ -834,19 +840,32 @@
       <viewAttribute id="DBERVON">
         <descriptions defaultDescription="Start of Calculation Period"/>
       </viewAttribute>
-      <viewAttribute id="LatestReassessment" aggregationType="max">
-        <descriptions defaultDescription="POSTINGDATE"/>
-      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
+      <viewAttribute hidden="true" id="JOIN$INTRENO$INTRENO"/>
+      <viewAttribute hidden="true" id="JOIN$DBERVON$DBERVON"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="P_CASHFLOW_INVREAS">
+    <input node="AGG_ASSTDATES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentDate" source="AssessmentDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENO$INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DBERVON$DBERVON" source="DBERVON"/>
+    </input>
+    <input node="AGG_REASDATES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FirstReassessment" source="FirstReassessment"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="LatestReassessment"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FirstReassessment" source="POSTINGDATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="POSTINGDATE"/>
-    </input></calculationView>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENO$INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DBERVON$DBERVON" source="DBERVON"/>
+    </input>
+    <joinAttribute name="JOIN$MANDT$MANDT"/>
+    <joinAttribute name="JOIN$INTRENO$INTRENO"/>
+    <joinAttribute name="JOIN$DBERVON$DBERVON"/>
+  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_Cashflow" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="INTRENO">
@@ -902,6 +921,33 @@
     </input>
     <filter>&quot;FLOWTYPE&quot;!='P200' and &quot;FLOWTYPE&quot;!='P201' and &quot;FLOWTYPE&quot;!='P202'</filter>
   </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_REASDATES">
+    <viewAttributes>
+      <viewAttribute id="FirstReassessment" aggregationType="min">
+        <descriptions defaultDescription="POSTINGDATE"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="Internal Key of Real Estate Object"/>
+      </viewAttribute>
+      <viewAttribute id="DBERVON">
+        <descriptions defaultDescription="Start of Calculation Period"/>
+      </viewAttribute>
+      <viewAttribute id="LatestReassessment" aggregationType="max">
+        <descriptions defaultDescription="POSTINGDATE"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CASHFLOW_INVREAS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FirstReassessment" source="POSTINGDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="POSTINGDATE"/>
+    </input></calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CASHFLOW_INVREAS" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="INTRENO">
@@ -1608,52 +1654,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentDate" source="AssessmentDate"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_ASST_REAS_DATES" cardinality="C1_1" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="FirstReassessment" aggregationType="min">
-        <descriptions defaultDescription="FirstReassessment"/>
-      </viewAttribute>
-      <viewAttribute id="LatestReassessment" aggregationType="max">
-        <descriptions defaultDescription="LatestReassessment"/>
-      </viewAttribute>
-      <viewAttribute id="AssessmentDate" aggregationType="max">
-        <descriptions defaultDescription="POSTINGDATE"/>
-      </viewAttribute>
-      <viewAttribute id="INTRENO">
-        <descriptions defaultDescription="Internal Key of Real Estate Object"/>
-      </viewAttribute>
-      <viewAttribute id="DBERVON">
-        <descriptions defaultDescription="Start of Calculation Period"/>
-      </viewAttribute>
-      <viewAttribute id="MANDT">
-        <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
-      <viewAttribute hidden="true" id="JOIN$INTRENO$INTRENO"/>
-      <viewAttribute hidden="true" id="JOIN$DBERVON$DBERVON"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="AGG_ASSTDATES">
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentDate" source="AssessmentDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENO$INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DBERVON$DBERVON" source="DBERVON"/>
-    </input>
-    <input node="AGG_REASDATES">
-      <mapping xsi:type="Calculation:AttributeMapping" target="FirstReassessment" source="FirstReassessment"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="LatestReassessment"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENO$INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DBERVON$DBERVON" source="DBERVON"/>
-    </input>
-    <joinAttribute name="JOIN$MANDT$MANDT"/>
-    <joinAttribute name="JOIN$INTRENO$INTRENO"/>
-    <joinAttribute name="JOIN$DBERVON$DBERVON"/>
-  </calculationView>
 </calculationViews>
 <logicalModel id="J_FTTPSTATUS_OUTPUT">
   <attributes>
@@ -1931,17 +1931,17 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="560.67570510514" y="112"/>
+      <upperLeftCorner x="560" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CV_ContractResults" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91.99999999999994" y="961.9999952316284"/>
+      <upperLeftCorner x="91" y="961"/>
       <rectangleSize height="30" width="349"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CONTRACT_FBNUM" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="209.4999999999999" y="641.9999976158142"/>
+      <upperLeftCorner x="209" y="641"/>
       <rectangleSize height="30" width="251"/>
     </shape>
     <shape modelObjectName="J_CONTRACT_CASHFLOW" modelObjectNameSpace="J_CONTRACT_FBNUM" modelObjectType="JoinNodeInput">
@@ -1954,7 +1954,7 @@
     </shape>
   
     <shape expanded="true" modelObjectName="J_CONTRACT_CASHFLOW" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="213.16666666666657" y="801.9999964237213"/>
+      <upperLeftCorner x="213" y="801"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CASHFLOWINFO" modelObjectNameSpace="J_CONTRACT_CASHFLOW" modelObjectType="JoinNodeInput">
@@ -1966,11 +1966,11 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_CV_LTFINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="503.4693944121133" y="801.9999964237213"/>
+      <upperLeftCorner x="503" y="801"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CASHFLOWINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="491" y="961.9999952316284"/>
+      <upperLeftCorner x="491" y="961"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="AGG_CASHFLOW" modelObjectNameSpace="J_CASHFLOWINFO" modelObjectType="JoinNodeInput">
@@ -1984,34 +1984,47 @@
   
   
     <shape expanded="true" modelObjectName="AGG_CASHFLOW" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="279.79847057598494" y="1416.9999916553497"/>
+      <upperLeftCorner x="279" y="1416"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_ASST_REAS_DATES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="517" y="1121"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="AGG_ASSTDATES" modelObjectNameSpace="J_ASST_REAS_DATES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="AGG_REASDATES" modelObjectNameSpace="J_ASST_REAS_DATES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
+  
+    <shape expanded="true" modelObjectName="P_CV_Cashflow" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="489" y="1551"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_REASDATES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="475.87140252254613" y="1281.9999928474426"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="P_CV_Cashflow" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="489.798470575985" y="1551.9999904632568"/>
+      <upperLeftCorner x="475" y="1281"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CASHFLOW_INVREAS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="489.798470575985" y="1406.9999916553497"/>
+      <upperLeftCorner x="489" y="1406"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_OUTPUT_ZERONOIA" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="213.16666666666652" y="489.4999988079071"/>
+      <upperLeftCorner x="213" y="489"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_FTTP_V_EXTP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="213.16666666666652" y="376.9999988079071"/>
+      <upperLeftCorner x="213" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FTTPSTATUS_OUTPUT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="560.67570510514" y="217"/>
+      <upperLeftCorner x="560" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CONTRACTFBNUM_REISSUES" modelObjectNameSpace="J_FTTPSTATUS_OUTPUT" modelObjectType="JoinNodeInput">
@@ -2024,7 +2037,7 @@
     </shape>
   
     <shape expanded="true" modelObjectName="J_CONTRACTFBNUM_REISSUES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="592.347924142925" y="481.9999988079071"/>
+      <upperLeftCorner x="592" y="481"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CONTRACT_FBNUM" modelObjectNameSpace="J_CONTRACTFBNUM_REISSUES" modelObjectType="JoinNodeInput">
@@ -2036,29 +2049,16 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ASFB" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="658.1697648391597" y="641.9999976158142"/>
+      <upperLeftCorner x="658" y="641"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CASHFLOW_INVASST" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="699.798470575985" y="1406.9999916553497"/>
+      <upperLeftCorner x="699" y="1406"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_ASSTDATES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="685.8714025225462" y="1281.9999928474426"/>
+      <upperLeftCorner x="685" y="1281"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="J_ASST_REAS_DATES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="517.6666666666666" y="1121.9999940395355"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="AGG_ASSTDATES" modelObjectNameSpace="J_ASST_REAS_DATES" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="AGG_REASDATES" modelObjectNameSpace="J_ASST_REAS_DATES" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
