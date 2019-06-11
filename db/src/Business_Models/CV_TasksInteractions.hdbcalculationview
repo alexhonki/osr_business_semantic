@@ -96,7 +96,7 @@ if(match(&quot;DESCRIPTION&quot;,'*Ownership*') , 'Dispute - Ownership',
 if(match(&quot;DESCRIPTION&quot;,'*Share Interest*') , 'Dispute - Share Interest',
 if(match(&quot;DESCRIPTION&quot;,'*Valuation*') , 'Dispute - Valuation',
 if(match(&quot;DESCRIPTION&quot;,'*Duplicate*') , 'Duplicate',
-if(match(&quot;DESCRIPTION&quot;,'*Email Assessment*') , 'Email Assessment',
+if(match(&quot;DESCRIPTION&quot;,'*Email Assessment*') OR match(&quot;DESCRIPTION&quot;,'*Email Assmnt*'), 'Email Assessment',
 if(match(&quot;DESCRIPTION&quot;,'*EPO *') , 'EPO',
 if(match(&quot;DESCRIPTION&quot;,'*MOSN*') , 'MOSN',
 if(match(&quot;DESCRIPTION&quot;,'*Objection*') , 'Objection',
@@ -106,7 +106,7 @@ if(match(&quot;DESCRIPTION&quot;,'*Refund*') , 'Request - Refund',
 if(match(&quot;DESCRIPTION&quot;,'*Reprint*') , 'Request - Reprint',
 if(match(&quot;DESCRIPTION&quot;,'*RTS*') , 'RTS',
 if(match(&quot;DESCRIPTION&quot;,'*Name Change*') or match(&quot;DESCRIPTION&quot;,'*Name Correction*') or match(&quot;DESCRIPTION&quot;,'*Change of Name*') or match(&quot;DESCRIPTION&quot;,'*Bank Detail*') or match(&quot;DESCRIPTION&quot;,'*Bank Account*') or match(&quot;DESCRIPTION&quot;,'*Direct Debit*'), 'Account Details Update',
-if(match(&quot;DESCRIPTION&quot;,'*Clerance*') , 'Clearance',
+if(match(&quot;DESCRIPTION&quot;,'*Clearance*') , 'Clearance',
 if(match(&quot;DESCRIPTION&quot;,'*Reissue*') or match(&quot;DESCRIPTION&quot;,'*Re-issue*') , 'Reissue',
 if(match(&quot;DESCRIPTION&quot;,'*DNRME CORRECTION*') , 'DNRME CORRECTION',
 'Other'))))))))))))))))))))))))))))))))</formula>
@@ -117,7 +117,7 @@ if(match(&quot;DESCRIPTION&quot;,'*DNRME CORRECTION*') , 'DNRME CORRECTION',
     
         <formula>if(match(&quot;DESCRIPTION&quot;,'*DNRME CORRECTION*') , 'DNRME CORRECTION',
 if(match(&quot;DESCRIPTION&quot;,'*Reissue*') or match(&quot;DESCRIPTION&quot;,'*Re-issue*') , 'Reissue',
-if(match(&quot;DESCRIPTION&quot;,'*Clerance*') , 'Clearance',
+if(match(&quot;DESCRIPTION&quot;,'*Clearance*') , 'Clearance',
 if(match(&quot;DESCRIPTION&quot;,'*Name Change*') or match(&quot;DESCRIPTION&quot;,'*Name Correction*') or match(&quot;DESCRIPTION&quot;,'*Change of Name*') or match(&quot;DESCRIPTION&quot;,'*Bank Detail*') or match(&quot;DESCRIPTION&quot;,'*Bank Account*') or match(&quot;DESCRIPTION&quot;,'*Direct Debit*'), 'Account Details Update',
 if(match(&quot;DESCRIPTION&quot;,'*RTS*') , 'RTS',
 if(match(&quot;DESCRIPTION&quot;,'*Reprint*') , 'Request - Reprint',
@@ -127,7 +127,7 @@ if(match(&quot;DESCRIPTION&quot;,'*COA*') , 'Request - COA',
 if(match(&quot;DESCRIPTION&quot;,'*Objection*') , 'Objection',
 if(match(&quot;DESCRIPTION&quot;,'*MOSN*') , 'MOSN',
 if(match(&quot;DESCRIPTION&quot;,'*EPO *'), 'EPO',
-if(match(&quot;DESCRIPTION&quot;,'*Email Assessment*') , 'Email Assessment',
+if(match(&quot;DESCRIPTION&quot;,'*Email Assessment*') OR match(&quot;DESCRIPTION&quot;,'*Email Assmnt*'), 'Email Assessment',
 if(match(&quot;DESCRIPTION&quot;,'*Duplicate*') , 'Duplicate',
 if(match(&quot;DESCRIPTION&quot;,'*Valuation*') , 'Dispute - Valuation',
 if(match(&quot;DESCRIPTION&quot;,'*Share Interest*') , 'Dispute - Share Interest',
@@ -409,6 +409,72 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
     </input>
     <joinAttribute name="CLIENT"/>
     <joinAttribute name="JOIN$GUID_SET$GUID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_LINK_ACTPARTNER" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="GUID_HI">
+        <descriptions defaultDescription="GUID_HI"/>
+      </viewAttribute>
+      <viewAttribute id="ACTIVITY_PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="ACTIVPART_NAME">
+        <descriptions defaultDescription="CC_FULLNAME"/>
+      </viewAttribute>
+    
+      <viewAttribute id="GUID_SET">
+        <descriptions defaultDescription="GUID_SET"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CRMLINK">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID_HI" source="GUID_HI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID_SET" source="GUID_SET"/>
+    </input>
+    <input node="J_ACTIV_PARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVPART_NAME" source="ACTIVPART_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID_SET" source="GUID"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="GUID_SET"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_EMP_PARTNER" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="EMP_PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="EMP_NAME">
+        <descriptions defaultDescription="CC_FULLNAME"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="GUID">
+        <descriptions defaultDescription="GUID"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$PARTNER_NO$PARTNER_GUID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_EMPLOYEE_PARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER_NO$PARTNER_GUID" source="PARTNER_NO"/>
+    </input>
+    <input node="P_CRMBUT000">
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMP_PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMP_NAME" source="CC_FULLNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER_NO$PARTNER_GUID" source="PARTNER_GUID"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="JOIN$PARTNER_NO$PARTNER_GUID"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMACTIV">
     <viewAttributes>
@@ -1178,72 +1244,6 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
     <joinAttribute name="CLIENT"/>
     <joinAttribute name="JOIN$PARTNER_NO$PARTNER_GUID"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_EMP_PARTNER" cardinality="C1_1" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="GUID">
-        <descriptions defaultDescription="GUID"/>
-      </viewAttribute>
-      <viewAttribute id="EMP_PARTNER">
-        <descriptions defaultDescription="PARTNER"/>
-      </viewAttribute>
-      <viewAttribute id="EMP_NAME">
-        <descriptions defaultDescription="CC_FULLNAME"/>
-      </viewAttribute>
-      <viewAttribute hidden="true" id="JOIN$PARTNER_NO$PARTNER_GUID"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="P_EMPLOYEE_PARTNER">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER_NO$PARTNER_GUID" source="PARTNER_NO"/>
-    </input>
-    <input node="P_CRMBUT000">
-      <mapping xsi:type="Calculation:AttributeMapping" target="EMP_PARTNER" source="PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="EMP_NAME" source="CC_FULLNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER_NO$PARTNER_GUID" source="PARTNER_GUID"/>
-    </input>
-    <joinAttribute name="CLIENT"/>
-    <joinAttribute name="JOIN$PARTNER_NO$PARTNER_GUID"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_LINK_ACTPARTNER" cardinality="C1_1" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="GUID_HI">
-        <descriptions defaultDescription="GUID_HI"/>
-      </viewAttribute>
-      <viewAttribute id="GUID_SET">
-        <descriptions defaultDescription="GUID_SET"/>
-      </viewAttribute>
-      <viewAttribute id="ACTIVITY_PARTNER">
-        <descriptions defaultDescription="PARTNER"/>
-      </viewAttribute>
-      <viewAttribute id="ACTIVPART_NAME">
-        <descriptions defaultDescription="CC_FULLNAME"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="P_CRMLINK">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GUID_HI" source="GUID_HI"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GUID_SET" source="GUID_SET"/>
-    </input>
-    <input node="J_ACTIV_PARTNER">
-      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVPART_NAME" source="ACTIVPART_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GUID_SET" source="GUID"/>
-    </input>
-    <joinAttribute name="CLIENT"/>
-    <joinAttribute name="GUID_SET"/>
-  </calculationView>
 </calculationViews>
 <logicalModel id="J_TASKACTIV_STAT">
   <attributes>
@@ -1367,7 +1367,9 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
   
     <attribute id="ORGEH" order="31" semanticType="empty" descriptionColumnName="SHORT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team)"/>
+  
       <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="ORGEH"/>
+  
     </attribute>
     <attribute id="SHORT" order="32" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team) Name"/>
@@ -1452,6 +1454,30 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="J_EMP_PARTNER" modelObjectNameSpace="J_LINK_PARTNERS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_LINK_ACTPARTNER" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="310" y="1321"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CRMLINK" modelObjectNameSpace="J_LINK_ACTPARTNER" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="J_ACTIV_PARTNER" modelObjectNameSpace="J_LINK_ACTPARTNER" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_EMP_PARTNER" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="546" y="1481"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_EMPLOYEE_PARTNER" modelObjectNameSpace="J_EMP_PARTNER" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="13" y="33"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CRMBUT000" modelObjectNameSpace="J_EMP_PARTNER" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
@@ -1549,30 +1575,6 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="P_CRMBUT000" modelObjectNameSpace="J_ACTIV_PARTNER" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape expanded="true" modelObjectName="J_EMP_PARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="546" y="1481"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="P_EMPLOYEE_PARTNER" modelObjectNameSpace="J_EMP_PARTNER" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="13" y="33"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="P_CRMBUT000" modelObjectNameSpace="J_EMP_PARTNER" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape expanded="true" modelObjectName="J_LINK_ACTPARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="310" y="1321"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="P_CRMLINK" modelObjectNameSpace="J_LINK_ACTPARTNER" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="J_ACTIV_PARTNER" modelObjectNameSpace="J_LINK_ACTPARTNER" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape></shapes>
