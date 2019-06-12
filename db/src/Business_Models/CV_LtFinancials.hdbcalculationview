@@ -181,6 +181,12 @@
       <calculatedViewAttribute id="CC_TAXYRSTARTDT" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
         <formula>string(int(&quot;PERSL&quot;)-1)+'0701'</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="LandTaxYear" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>string(int(&quot;PERSL&quot;)-1)+'0630'</formula>
+    
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="P_FINANCIALS_LT">
@@ -326,6 +332,9 @@
       <viewAttribute id="CreditDebitFlag">
         <descriptions defaultDescription="CreditDebitFlag"/>
       </viewAttribute>
+      <viewAttribute id="LandTaxYear">
+        <descriptions defaultDescription="LandTaxYear"/>
+      </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$CC_TAXYRSTARTDT$TAXYRSTARTDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -351,6 +360,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LandTaxYear" source="LandTaxYear"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_TAXYRSTARTDT$TAXYRSTARTDT" source="CC_TAXYRSTARTDT"/>
     </input>
     <input node="P_OWNER_TYPE">
@@ -495,6 +505,13 @@
       <keyMapping columnObjectName="J_FINANCIALS_OWNERTYPE" columnName="CreditDebitFlag"/>
   
     </attribute>
+  
+    <attribute id="LandTaxYear" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Land Owned As At"/>
+  
+      <keyMapping columnObjectName="J_FINANCIALS_OWNERTYPE" columnName="LandTaxYear"/>
+  
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -526,7 +543,7 @@
         </filter>
         <attributeName>AUGRD</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="AssessmentAmount" order="23" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Assessment Amount"/>
       <restriction logicalOperator="AND">
@@ -553,7 +570,7 @@
         </filter>
         <attributeName>HVORG</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="TransferredAmount" order="24" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Transferred Amount"/>
       <restriction logicalOperator="AND">
@@ -562,7 +579,7 @@
         </filter>
         <attributeName>BLART</attributeName>
       </restriction>
-      </measure>
+    </measure>
   
     <measure id="MiscAmount" order="25" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Miscellaneous Amount"/>
@@ -576,7 +593,8 @@
         <attributeName>BLART</attributeName>
   
       </restriction>
-      </measure>
+  
+    </measure>
   
     <measure id="OriginalAssessmentAmount" order="28" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Original Assessment Amount"/>
@@ -630,7 +648,8 @@
         <attributeName>TVORG</attributeName>
   
       </restriction>
-      </measure>
+  
+    </measure>
     <measure id="ReassessmentAmount" order="29" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Reassessment Amount"/>
       <restriction logicalOperator="AND">
@@ -663,35 +682,52 @@
         </filter>
         <attributeName>TVORG</attributeName>
       </restriction>
-      </measure>
+    </measure>
   
     <measure id="AssessmentAmountCleared" order="31" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT">
       <descriptions defaultDescription="Assessment Amount Cleared"/>
+  
       <restriction logicalOperator="AND">
+  
         <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
           <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
         </filter>
+  
         <attributeName>AUGRD</attributeName>
+  
       </restriction>
+  
       <restriction logicalOperator="AND">
+  
         <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
           <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="TA"/>
         </filter>
+  
         <attributeName>BLART</attributeName>
+  
       </restriction>
+  
       <restriction logicalOperator="AND">
+  
         <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
           <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="ZM"/>
         </filter>
+  
         <attributeName>BLART</attributeName>
+  
       </restriction>
+  
       <restriction logicalOperator="AND">
+  
         <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
           <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4000"/>
         </filter>
+  
         <attributeName>HVORG</attributeName>
+  
       </restriction>
-      </measure>
+  
+    </measure>
     <measure id="OriginalAssessmentAmountCleared" order="32" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT">
       <descriptions defaultDescription="Original Assessment Amount Cleared"/>
       <restriction logicalOperator="AND">
@@ -724,7 +760,7 @@
         </filter>
         <attributeName>TVORG</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="ReassessmentAmountCleared" order="33" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT">
       <descriptions defaultDescription="Reassessment Amount Cleared"/>
       <restriction logicalOperator="AND">
@@ -757,7 +793,7 @@
         </filter>
         <attributeName>TVORG</attributeName>
       </restriction>
-      </measure>
+    </measure>
   </restrictedMeasures>
   <localDimensions/>
 </logicalModel>

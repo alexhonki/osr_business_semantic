@@ -986,7 +986,7 @@
     <joinAttribute name="INTRENOCN"/>
     <joinAttribute name="TAXYRSTARTDT"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_PARCELS_TAXRATES" cardinality="C1_N" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_PARCELS_TAXRATES" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="VAL_INTRENONA">
         <descriptions defaultDescription="VAL_INTRENONA"/>
@@ -1255,7 +1255,9 @@
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="TaxDiffDirection" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>if(sign(&quot;TaxDifference&quot;)=-1,'-',if(sign(&quot;TaxDifference&quot;)=1,'+',''))</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -1393,22 +1395,31 @@
     </attribute>
   
     <attribute id="ActiveValuation" order="38" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ActiveValuation"/>
+      <descriptions defaultDescription="Active Valuation"/>
   
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="ActiveValuation"/>
   
     </attribute>
     <attribute id="NewestValuation" order="39" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="NewestValuation"/>
+      <descriptions defaultDescription="Newest Valuation"/>
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="NewestValuation"/>
     </attribute>
   
     <attribute id="TaxDiffDirection" order="40" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Difference Direction (+/-)"/>
+  
       <keyMapping columnObjectName="P_PARCELS_TAXCALCS" columnName="TaxDiffDirection"/>
+  
     </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="LandTaxYear" order="41" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Land Owned As At"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="8">
+        <formula>string(component(date(&quot;TAXYRSTARTDT&quot;),1))+'0630'</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures>
     <measure id="BPRELVNTVAL" order="10" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BPRELVNTVAL"/>
@@ -1484,13 +1495,15 @@
       
       
       
+      
       </measure>
     <measure id="ContractCounter" order="35" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
-      <descriptions defaultDescription="ContractCounter"/>
+      <descriptions defaultDescription="Contract Counter"/>
       <exceptionAggregation>
         <attribute attributeName="INTRENOCN"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       </measure>
