@@ -28,7 +28,25 @@ modules:
           service: '~{OSR-EDW-SOURCE-CRM-grantor-service}'
       - name: edw-ext-access-grantor
     description: ' '
+  - name: OSR_BUSINESS_SEMANTIC-DWF
+    type: dwf
+    path: DWF
+    requires:
+      - name: OSR_BUSINESS_SEMANTIC-dws
 
+  - name: OSR_BUSINESS_SEMANTIC-Backend
+    type: nodejs
+    path: Backend
+    provides:
+      - name: Backend_api
+        properties:
+          url: '${default-url}'
+    requires:
+      - name: OSR_BUSINESS_SEMANTIC-container
+      - name: OSR_BUSINESS_SEMANTIC-dws
+    properties:
+      API_END_POINT: '${xs-api-url}'
+    build-parameters: null
   
 resources:
   - name: OSR_BUSINESS_SEMANTIC-container
@@ -60,3 +78,8 @@ resources:
   - name: edw-ext-access-grantor
     type: org.cloudfoundry.existing-service
     description: edw-ext-access-grantor
+
+  - name: OSR_BUSINESS_SEMANTIC-dws
+    properties:
+      dwf-edw-client-name: '${service-name}'
+    type: com.sap.xs.dwf-edw-client
