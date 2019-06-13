@@ -1,0 +1,42 @@
+PROCEDURE "osr.business.semantic.db.Procedures::P_LtBpOverview"( )		
+   LANGUAGE SQLSCRIPT		
+   SQL SECURITY INVOKER		
+   --DEFAULT SCHEMA <default_schema_name>		
+   AS		
+BEGIN		
+		
+	output_table =	
+	SELECT	
+		"PARTNER",
+		"BIRTHDT",
+		"DEATHDT",
+		"CC_ZACN",
+		"CC_ABN",
+		"RES_STD_ADDR_ADDRESS_DELIVERY",
+		"RES_STD_ADDR_LOCALITY",
+		"RES_STD_ADDR_REGION",
+		"RES_STD_ADDR_POSTCODE1",
+		"RES_TEL_NUMBER",
+		"SER_STD_ADDR_ADDRESS_DELIVERY",
+		"SER_STD_ADDR_LOCALITY",
+		"SER_STD_ADDR_REGION",
+		"SER_STD_ADDR_POSTCODE1",
+		"SER_TEL_NUMBER",
+		"RES_SMTP_ADDR",
+		"SER_SMTP_ADDR",
+		"CC_FullName",
+		"CC_FirstName",
+		"CC_MiddleName",
+		"CC_LastName",
+		"CC_Age",
+		SUM("COUNT_1") AS "COUNT_1",
+		"CLIENT"
+	FROM "osr.business.semantic.db.Business_Models::CV_LtBpOverview"	
+	GROUP BY "PARTNER","BIRTHDT","DEATHDT","CC_ZACN","CC_ABN","RES_STD_ADDR_ADDRESS_DELIVERY","RES_STD_ADDR_LOCALITY","RES_STD_ADDR_REGION","RES_STD_ADDR_POSTCODE1","RES_TEL_NUMBER","SER_STD_ADDR_ADDRESS_DELIVERY","SER_STD_ADDR_LOCALITY","SER_STD_ADDR_REGION","SER_STD_ADDR_POSTCODE1","SER_TEL_NUMBER","RES_SMTP_ADDR","SER_SMTP_ADDR","CC_FullName","CC_FirstName","CC_MiddleName","CC_LastName","CC_Age","CLIENT";	
+		
+	DELETE FROM "osr.business.semantic.db.Tables::LtBpOverview";	
+		
+	INSERT INTO "osr.business.semantic.db.Tables::LtBpOverview"	
+	SELECT * FROM :output_table;	
+   		
+END		
