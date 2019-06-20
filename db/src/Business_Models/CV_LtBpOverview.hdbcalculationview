@@ -19,6 +19,12 @@
   <DataSource id="osr.business.semantic.db.Business_Models::CV_BpAddresses">
     <resourceUri>osr.business.semantic.db.Business_Models::CV_BpAddresses</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::BUT050">
+    <resourceUri>osr.business.semantic.db.synonyms::BUT050</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models::CV_BpContract">
+    <resourceUri>osr.business.semantic.db.Business_Models::CV_BpContract</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_BPINFO" filterExpressionLanguage="SQL">
@@ -91,7 +97,7 @@
     </input>
     <filter>&quot;BUT000_VALID_TO&quot; ='99991231235959'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPROLE">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPROLE" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="PARTNER">
         <descriptions defaultDescription="Business Partner Number"/>
@@ -106,6 +112,14 @@
     
       <viewAttribute id="CLIENT">
         <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+    
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="Date of Entry for ID Number"/>
+      </viewAttribute>
+    
+      <viewAttribute id="BUT0ID_VALID_TO">
+        <descriptions defaultDescription="Validity End for ID Number"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -125,7 +139,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="IDNUMBER" source="IDNUMBER"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_VALID_TO" source="BUT0ID_VALID_TO"/>
     </input>
+    <filter>&quot;ID_TYPE&quot; = 'ZABN' OR &quot;ID_TYPE&quot; = 'ZACN' OR &quot;ID_TYPE&quot; = 'ZUUID'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_ADR2" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
@@ -142,6 +161,10 @@
       <viewAttribute id="CLIENT">
         <descriptions defaultDescription="CLIENT"/>
       </viewAttribute>
+    
+      <viewAttribute id="FLGDEFAULT">
+        <descriptions defaultDescription="FLGDEFAULT"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -151,8 +174,10 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDRNUMBER" source="ADDRNUMBER"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="FLGDEFAULT" source="FLGDEFAULT"/>
     </input>
-    <filter>Date(&quot;VALID_TO&quot;) &gt;= Now() OR &quot;VALID_TO&quot; = ''</filter>
+    <filter>(Date(&quot;VALID_TO&quot;) &gt;= Now() OR &quot;VALID_TO&quot; = '') AND &quot;FLGDEFAULT&quot;='X'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_ACN" cardinality="C1_N" joinType="leftOuter">
     <viewAttributes>
@@ -630,7 +655,7 @@
       </rankThreshold>
     </windowFunction>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_ADR6">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ADR6" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="SMTP_ADDR">
         <descriptions defaultDescription="SMTP_ADDR"/>
@@ -641,14 +666,21 @@
       </viewAttribute>
       <viewAttribute id="ADDRNUMBER">
         <descriptions defaultDescription="ADDRNUMBER"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="FLGDEFAULT">
+        <descriptions defaultDescription="FLGDEFAULT"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::ADR6">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDRNUMBER" source="ADDRNUMBER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SMTP_ADDR" source="SMTP_ADDR"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="FLGDEFAULT" source="FLGDEFAULT"/>
     </input>
+    <filter>&quot;FLGDEFAULT&quot;='X'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_ADDRS" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
@@ -862,109 +894,584 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
     <joinAttribute name="PARTNER"/>
     <joinAttribute name="CLIENT"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PORTALID" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="ID_TYPE">
+        <descriptions defaultDescription="Identification Type Code"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="Date of Entry for ID Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_Delegate" datatype="VARCHAR" length="13" expressionLanguage="SQL">
+        <formula>'Do Not Use Delegate'</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="P_BPROLE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_TYPE" source="ID_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+    </input>
+    <filter>&quot;ID_TYPE&quot;='ZUUID'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PORTALID_RELS" cardinality="C1_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="Date of Entry for ID Number"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER2">
+        <descriptions defaultDescription="PARTNER2"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$PARTNER$PARTNER1"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_Delegate" datatype="VARCHAR" length="13" expressionLanguage="SQL">
+        <formula>'Use Delegate'</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="P_PORTALID">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER$PARTNER1" source="PARTNER"/>
+    </input>
+    <input node="P_BUT050">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER2" source="PARTNER2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER$PARTNER1" source="PARTNER1"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="JOIN$PARTNER$PARTNER1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BUT050" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="PARTNER2">
+        <descriptions defaultDescription="PARTNER2"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER1">
+        <descriptions defaultDescription="PARTNER1"/>
+      </viewAttribute>
+      <viewAttribute id="DATE_TO">
+        <descriptions defaultDescription="DATE_TO"/>
+      </viewAttribute>
+      <viewAttribute id="RELTYP">
+        <descriptions defaultDescription="RELTYP"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::BUT050">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER2" source="PARTNER2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_TO" source="DATE_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP" source="RELTYP"/>
+    </input>
+    <filter>TO_DATE(&quot;DATE_TO&quot;) &gt;= NOW() AND &quot;RELTYP&quot; = 'FMCA02'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_PORTALACC" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BIRTHDT">
+        <descriptions defaultDescription="BIRTHDT"/>
+      </viewAttribute>
+      <viewAttribute id="DEATHDT">
+        <descriptions defaultDescription="DEATHDT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ZACN">
+        <descriptions defaultDescription="CC_ZACN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ABN">
+        <descriptions defaultDescription="CC_ABN"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_ADDRESS_DELIVERY">
+        <descriptions defaultDescription="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_LOCALITY">
+        <descriptions defaultDescription="RES_STD_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_REGION">
+        <descriptions defaultDescription="RES_STD_ADDR_REGION"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="RES_STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+      <viewAttribute id="RES_TEL_NUMBER">
+        <descriptions defaultDescription="RES_TEL_NUMBER"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_ADDRESS_DELIVERY">
+        <descriptions defaultDescription="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_LOCALITY">
+        <descriptions defaultDescription="SER_STD_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_REGION">
+        <descriptions defaultDescription="SER_STD_ADDR_REGION"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="SER_STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+      <viewAttribute id="SER_TEL_NUMBER">
+        <descriptions defaultDescription="SER_TEL_NUMBER"/>
+      </viewAttribute>
+      <viewAttribute id="RES_SMTP_ADDR">
+        <descriptions defaultDescription="RES_SMTP_ADDR"/>
+      </viewAttribute>
+      <viewAttribute id="SER_SMTP_ADDR">
+        <descriptions defaultDescription="SER_SMTP_ADDR"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FullName">
+        <descriptions defaultDescription="CC_FullName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FirstName">
+        <descriptions defaultDescription="CC_FirstName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_MiddleName">
+        <descriptions defaultDescription="CC_MiddleName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_LastName">
+        <descriptions defaultDescription="CC_LastName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Age" aggregationType="sum">
+        <descriptions defaultDescription="CC_Age"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="Date of Entry for ID Number"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Delegate">
+        <descriptions defaultDescription="CC_Delegate"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_SERADDRS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEATHDT" source="DEATHDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZACN" source="CC_ZACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_ADDRESS_DELIVERY" source="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_LOCALITY" source="RES_STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_REGION" source="RES_STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_POSTCODE1" source="RES_STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_TEL_NUMBER" source="RES_TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_ADDRESS_DELIVERY" source="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_LOCALITY" source="SER_STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_REGION" source="SER_STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_POSTCODE1" source="SER_STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_TEL_NUMBER" source="SER_TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_SMTP_ADDR" source="RES_SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_SMTP_ADDR" source="SER_SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FirstName" source="CC_FirstName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_MiddleName" source="CC_MiddleName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LastName" source="CC_LastName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Age" source="CC_Age"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <input node="J_PORTALACC_RELS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Delegate" source="CC_Delegate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PORTALACC_RELS" cardinality="C1_1" joinType="fullOuter">
+    <viewAttributes>
+      <viewAttribute id="ID_PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="ID_CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="ID_BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="BUT0ID_ENTRY_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="ID_CC_Delegate">
+        <descriptions defaultDescription="CC_Delegate"/>
+      </viewAttribute>
+      <viewAttribute id="REL_BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="BUT0ID_ENTRY_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="REL_PARTNER2">
+        <descriptions defaultDescription="PARTNER2"/>
+      </viewAttribute>
+      <viewAttribute id="REL_CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="REL_CC_Delegate">
+        <descriptions defaultDescription="CC_Delegate"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="BUT0ID_ENTRY_DATE" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(not IsNull(&quot;ID_BUT0ID_ENTRY_DATE&quot;), &quot;ID_BUT0ID_ENTRY_DATE&quot;,&quot;REL_BUT0ID_ENTRY_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_Delegate" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(isNull(&quot;ID_CC_Delegate&quot;),'Only Use Delegate',if(isnull(&quot;REL_CC_Delegate&quot;),'Do Not Use Delegate','Use Delegate'))</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="PARTNER" datatype="NVARCHAR" length="10" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(not IsNull(&quot;ID_PARTNER&quot;),&quot;ID_PARTNER&quot;,&quot;REL_PARTNER2&quot;)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CLIENT" datatype="NVARCHAR" length="3" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(not isNull(&quot;ID_CLIENT&quot;),&quot;ID_CLIENT&quot;,&quot;REL_CLIENT&quot;)</formula>
+    
+      </calculatedViewAttribute></calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="P_PORTALID">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_CC_Delegate" source="CC_Delegate"/>
+    </input>
+    <input node="R_ONLY_ONE_REL">
+      <mapping xsi:type="Calculation:AttributeMapping" target="REL_BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REL_PARTNER2" source="PARTNER2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REL_CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REL_CC_Delegate" source="CC_Delegate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_PARTNER" source="PARTNER2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="ID_PARTNER"/>
+    <joinAttribute name="ID_CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_ONLY_ONE_REL">
+    <viewAttributes>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="BUT0ID_ENTRY_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER2">
+        <descriptions defaultDescription="PARTNER2"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Delegate">
+        <descriptions defaultDescription="CC_Delegate"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_PORTALID_RELS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER2" source="PARTNER2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Delegate" source="CC_Delegate"/>
+    </input>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>PARTNER2</partitionViewAttributeName>
+      <order byViewAttributeName="BUT0ID_ENTRY_DATE" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_OPTINFLAG" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BIRTHDT">
+        <descriptions defaultDescription="BIRTHDT"/>
+      </viewAttribute>
+      <viewAttribute id="DEATHDT">
+        <descriptions defaultDescription="DEATHDT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ZACN">
+        <descriptions defaultDescription="CC_ZACN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ABN">
+        <descriptions defaultDescription="CC_ABN"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_ADDRESS_DELIVERY">
+        <descriptions defaultDescription="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_LOCALITY">
+        <descriptions defaultDescription="RES_STD_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_REGION">
+        <descriptions defaultDescription="RES_STD_ADDR_REGION"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="RES_STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+      <viewAttribute id="RES_TEL_NUMBER">
+        <descriptions defaultDescription="RES_TEL_NUMBER"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_ADDRESS_DELIVERY">
+        <descriptions defaultDescription="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_LOCALITY">
+        <descriptions defaultDescription="SER_STD_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_REGION">
+        <descriptions defaultDescription="SER_STD_ADDR_REGION"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="SER_STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+      <viewAttribute id="SER_TEL_NUMBER">
+        <descriptions defaultDescription="SER_TEL_NUMBER"/>
+      </viewAttribute>
+      <viewAttribute id="RES_SMTP_ADDR">
+        <descriptions defaultDescription="RES_SMTP_ADDR"/>
+      </viewAttribute>
+      <viewAttribute id="SER_SMTP_ADDR">
+        <descriptions defaultDescription="SER_SMTP_ADDR"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FullName">
+        <descriptions defaultDescription="CC_FullName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FirstName">
+        <descriptions defaultDescription="CC_FirstName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_MiddleName">
+        <descriptions defaultDescription="CC_MiddleName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_LastName">
+        <descriptions defaultDescription="CC_LastName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Age" aggregationType="sum">
+        <descriptions defaultDescription="CC_Age"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="BUT0ID_ENTRY_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Delegate">
+        <descriptions defaultDescription="CC_Delegate"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_E_ASS_OPT">
+        <descriptions defaultDescription="Land Tax Electronic Assessment Opt"/>
+      </viewAttribute>
+    
+      <viewAttribute id="ZZ_OT_CONF">
+        <descriptions defaultDescription="Land Tax Owner Type Confirmation"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_PORTALACC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEATHDT" source="DEATHDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZACN" source="CC_ZACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_ADDRESS_DELIVERY" source="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_LOCALITY" source="RES_STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_REGION" source="RES_STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_POSTCODE1" source="RES_STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_TEL_NUMBER" source="RES_TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_ADDRESS_DELIVERY" source="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_LOCALITY" source="SER_STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_REGION" source="SER_STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_POSTCODE1" source="SER_STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_TEL_NUMBER" source="SER_TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_SMTP_ADDR" source="RES_SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_SMTP_ADDR" source="SER_SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FirstName" source="CC_FirstName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_MiddleName" source="CC_MiddleName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LastName" source="CC_LastName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Age" source="CC_Age"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Delegate" source="CC_Delegate"/>
+    </input>
+    <input node="P_BPCONTRACT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_E_ASS_OPT" source="ZZ_E_ASS_OPT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_OT_CONF" source="ZZ_OT_CONF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="ZZ_PARTNER"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPCONTRACT" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="ZZ_E_ASS_OPT">
+        <descriptions defaultDescription="Land Tax Electronic Assessment Opt"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_OT_CONF">
+        <descriptions defaultDescription="Land Tax Owner Type Confirmation"/>
+      </viewAttribute>
+    
+    
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models::CV_BpContract">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_E_ASS_OPT" source="ZZ_E_ASS_OPT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_OT_CONF" source="ZZ_OT_CONF"/>
+    </input>
+    <filter>&quot;ZZ_E_ASS_OPT&quot;='X'</filter>
+  </calculationView>
 </calculationViews>
-<logicalModel id="J_BPINFO_SERADDRS">
+<logicalModel id="J_BPINFO_OPTINFLAG">
   <attributes>
     <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_FullName">
       <descriptions defaultDescription="Business Partner"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="PARTNER"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="PARTNER"/>
     </attribute>
     <attribute id="BIRTHDT" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date of Birth"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="BIRTHDT"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="BIRTHDT"/>
     </attribute>
     <attribute id="DEATHDT" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date of Death"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="DEATHDT"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="DEATHDT"/>
     </attribute>
     <attribute id="CC_ZACN" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ACN"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="CC_ZACN"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="CC_ZACN"/>
     </attribute>
     <attribute id="CC_ABN" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABN"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="CC_ABN"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="CC_ABN"/>
     </attribute>
     <attribute id="RES_STD_ADDR_ADDRESS_DELIVERY" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Residential Address"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="RES_STD_ADDR_ADDRESS_DELIVERY"/>
     </attribute>
     <attribute id="RES_STD_ADDR_LOCALITY" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Residential Suburb"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="RES_STD_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="RES_STD_ADDR_LOCALITY"/>
     </attribute>
     <attribute id="RES_STD_ADDR_REGION" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Residential State"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="RES_STD_ADDR_REGION"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="RES_STD_ADDR_REGION"/>
     </attribute>
     <attribute id="RES_STD_ADDR_POSTCODE1" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Residential Post Code"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="RES_STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="RES_STD_ADDR_POSTCODE1"/>
     </attribute>
     <attribute id="RES_TEL_NUMBER" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Residential Tel Number"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="RES_TEL_NUMBER"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="RES_TEL_NUMBER"/>
     </attribute>
     <attribute id="SER_STD_ADDR_ADDRESS_DELIVERY" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Service Address"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="SER_STD_ADDR_ADDRESS_DELIVERY"/>
     </attribute>
     <attribute id="SER_STD_ADDR_LOCALITY" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Service Suburb"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="SER_STD_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="SER_STD_ADDR_LOCALITY"/>
     </attribute>
     <attribute id="SER_STD_ADDR_REGION" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Service State"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="SER_STD_ADDR_REGION"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="SER_STD_ADDR_REGION"/>
     </attribute>
     <attribute id="SER_STD_ADDR_POSTCODE1" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Service Post Code"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="SER_STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="SER_STD_ADDR_POSTCODE1"/>
     </attribute>
     <attribute id="SER_TEL_NUMBER" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Service Tel Number"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="SER_TEL_NUMBER"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="SER_TEL_NUMBER"/>
     </attribute>
     <attribute id="RES_SMTP_ADDR" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Residential Email"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="RES_SMTP_ADDR"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="RES_SMTP_ADDR"/>
     </attribute>
     <attribute id="SER_SMTP_ADDR" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Service Email"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="SER_SMTP_ADDR"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="SER_SMTP_ADDR"/>
     </attribute>
   
     <attribute id="CC_FullName" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Name"/>
   
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="CC_FullName"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="CC_FullName"/>
   
     </attribute>
     <attribute id="CC_FirstName" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="First Name"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="CC_FirstName"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="CC_FirstName"/>
     </attribute>
     <attribute id="CC_MiddleName" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Middle Name"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="CC_MiddleName"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="CC_MiddleName"/>
     </attribute>
     <attribute id="CC_LastName" order="22" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Name"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="CC_LastName"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="CC_LastName"/>
     </attribute>
     <attribute id="CC_Age" order="23" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Age"/>
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="CC_Age"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="CC_Age"/>
     </attribute>
   
     <attribute id="CLIENT" order="24" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAP Client"/>
   
-      <keyMapping columnObjectName="J_BPINFO_SERADDRS" columnName="CLIENT"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="CLIENT"/>
+  
+    </attribute>
+  
+    <attribute id="BUT0ID_ENTRY_DATE" order="25" displayAttribute="false" attributeHierarchyActive="false" hidden="true">
+      <descriptions defaultDescription="Portal Account Creation Date"/>
+  
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="BUT0ID_ENTRY_DATE"/>
+  
+    </attribute>
+    <attribute id="CC_Delegate" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Use Delegate for Portal"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="CC_Delegate"/>
+    </attribute>
+    <attribute id="ZZ_E_ASS_OPT" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Opt. In Electronic Assessment"/>
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="ZZ_E_ASS_OPT"/>
+    </attribute>
+  
+    <attribute id="ZZ_OT_CONF" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Owner Type Confirmed"/>
+  
+      <keyMapping columnObjectName="J_BPINFO_OPTINFLAG" columnName="ZZ_OT_CONF"/>
   
     </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_PortalAccountCreationDate" order="29" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Portal Account Creation Date"/>
+      <keyCalculation datatype="DATE" expressionLanguage="SQL">
+        <formula>TO_DATE(&quot;BUT0ID_ENTRY_DATE&quot;)</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures/>
   <calculatedMeasures>
     <measure id="COUNT_1" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -980,6 +1487,8 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       
       
       
+      
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -988,25 +1497,25 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="773" y="112"/>
+      <upperLeftCorner x="896" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="856"/>
+      <upperLeftCorner x="773" y="1236"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPROLE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="1016"/>
+      <upperLeftCorner x="969" y="1396"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ADR2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="932" y="856"/>
+      <upperLeftCorner x="92" y="1236"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="536"/>
+      <upperLeftCorner x="727" y="876"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="J_BPINFO_ACN" modelObjectType="JoinNodeInput">
@@ -1018,7 +1527,7 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="275" y="696"/>
+      <upperLeftCorner x="800" y="1036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BPINFO" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
@@ -1030,16 +1539,16 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BP_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="512" y="864"/>
+      <upperLeftCorner x="563" y="1244"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BP_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="864"/>
+      <upperLeftCorner x="983" y="1244"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="643" y="376"/>
+      <upperLeftCorner x="700" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="J_BPINFO_RESADDRS" modelObjectType="JoinNodeInput">
@@ -1051,11 +1560,11 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="J_RESID_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="670" y="544"/>
+      <upperLeftCorner x="512" y="884"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRS_PHONE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="748" y="696"/>
+      <upperLeftCorner x="327" y="1036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="J_ADDRS_PHONE" modelObjectType="JoinNodeInput">
@@ -1067,7 +1576,7 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="722" y="856"/>
+      <upperLeftCorner x="353" y="1236"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="J_ADDRES_EMAIL" modelObjectType="JoinNodeInput">
@@ -1080,25 +1589,25 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
     </shape>
   
     <shape expanded="true" modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="847" y="1016"/>
+      <upperLeftCorner x="466" y="1406"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_ADR6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="632" y="1016"/>
+      <upperLeftCorner x="256" y="1396"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="839" y="1141"/>
+      <upperLeftCorner x="466" y="1521"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SERVICE_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="880" y="544"/>
+      <upperLeftCorner x="302" y="884"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="773" y="217"/>
+      <upperLeftCorner x="673" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="J_BPINFO_SERADDRS" modelObjectType="JoinNodeInput">
@@ -1108,6 +1617,72 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
     <shape modelObjectName="J_SERVICE_ADDRS" modelObjectNameSpace="J_BPINFO_SERADDRS" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="451" y="30"/>
       <rectangleSize width="293"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_PORTALID" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1403" y="1241"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_PORTALID_RELS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1147" y="1036"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_PORTALID" modelObjectNameSpace="J_PORTALID_RELS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_BUT050" modelObjectNameSpace="J_PORTALID_RELS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BUT050" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1193" y="1236"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPINFO_PORTALACC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="985" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="J_BPINFO_PORTALACC" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="24" y="30"/>
+      <rectangleSize width="293"/>
+    </shape>
+    <shape modelObjectName="J_PORTALACC_RELS" modelObjectNameSpace="J_BPINFO_PORTALACC" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="369" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_PORTALACC_RELS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1080" y="696"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_PORTALID" modelObjectNameSpace="J_PORTALACC_RELS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="R_ONLY_ONE_REL" modelObjectNameSpace="J_PORTALACC_RELS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="R_ONLY_ONE_REL" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1147" y="894"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_BPINFO_OPTINFLAG" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="896" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_PORTALACC" modelObjectNameSpace="J_BPINFO_OPTINFLAG" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="293"/>
+    </shape>
+    <shape modelObjectName="P_BPCONTRACT" modelObjectNameSpace="J_BPINFO_OPTINFLAG" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="380" y="174"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BPCONTRACT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="769" y="376"/>
+      <rectangleSize height="30" width="160"/>
     </shape></shapes>
 </layout>
 </Calculation:scenario>
