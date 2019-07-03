@@ -4,11 +4,20 @@
 <localVariables/>
 <variableMappings/>
 <dataSources>
-  <DataSource id="osr.business.semantic.db.synonyms::CDS_CRM.TAB.CRMDORDERADMH">
-    <resourceUri>osr.business.semantic.db.synonyms::CDS_CRM.TAB.CRMDORDERADMH</resourceUri>
+  <DataSource id="osr.business.semantic.db.synonyms::CRMD_ORDERADM_H">
+    <resourceUri>osr.business.semantic.db.synonyms::CRMD_ORDERADM_H</resourceUri>
   </DataSource>
   <DataSource id="osr.business.semantic.db.synonyms::CRMC_PROC_TYPE_T">
     <resourceUri>osr.business.semantic.db.synonyms::CRMC_PROC_TYPE_T</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::CRMDLINK">
+    <resourceUri>osr.business.semantic.db.synonyms::CRMDLINK</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::BUT000_CRM">
+    <resourceUri>osr.business.semantic.db.synonyms::BUT000_CRM</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::CRMDPARTNER">
+    <resourceUri>osr.business.semantic.db.synonyms::CRMDPARTNER</resourceUri>
   </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models::CV_CrmActivities">
     <resourceUri>osr.business.semantic.db.Business_Models::CV_CrmActivities</resourceUri>
@@ -18,15 +27,6 @@
   </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models::CV_ActivityUserStaus">
     <resourceUri>osr.business.semantic.db.Business_Models::CV_ActivityUserStaus</resourceUri>
-  </DataSource>
-  <DataSource id="osr.business.semantic.db.synonyms::CRMDLINK">
-    <resourceUri>osr.business.semantic.db.synonyms::CRMDLINK</resourceUri>
-  </DataSource>
-  <DataSource id="osr.business.semantic.db.synonyms::CRMDPARTNER">
-    <resourceUri>osr.business.semantic.db.synonyms::CRMDPARTNER</resourceUri>
-  </DataSource>
-  <DataSource id="osr.business.semantic.db.VirtualTable::BUT000">
-    <resourceUri>osr.business.semantic.db.VirtualTable::BUT000</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -154,7 +154,7 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
         <formula>if(&quot;CC_LT_Type&quot;!=&quot;CC_Pivot_2nd_LT_Type&quot;,&quot;CC_Pivot_2nd_LT_Type&quot;,'NA')</formula>
       </calculatedViewAttribute></calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::CDS_CRM.TAB.CRMDORDERADMH">
+    <input node="osr.business.semantic.db.synonyms::CRMD_ORDERADM_H">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OBJECT_ID" source="OBJECT_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_TYPE" source="PROCESS_TYPE"/>
@@ -475,6 +475,180 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
     </input>
     <joinAttribute name="CLIENT"/>
     <joinAttribute name="JOIN$PARTNER_NO$PARTNER_GUID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMLINK" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="GUID_HI">
+        <descriptions defaultDescription="GUID_HI"/>
+      </viewAttribute>
+      <viewAttribute id="GUID_SET">
+        <descriptions defaultDescription="GUID_SET"/>
+      </viewAttribute>
+      <viewAttribute id="OBJTYPE_SET">
+        <descriptions defaultDescription="OBJTYPE_SET"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::CRMDLINK">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID_HI" source="GUID_HI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID_SET" source="GUID_SET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJTYPE_SET" source="OBJTYPE_SET"/>
+    </input>
+    <filter>&quot;OBJTYPE_SET&quot;='07'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_ACTIV_PARTNER" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="ACTIVITY_PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="ACTIVPART_NAME">
+        <descriptions defaultDescription="CC_FULLNAME"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="GUID">
+        <descriptions defaultDescription="GUID"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$PARTNER_NO$PARTNER_GUID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CLIENT_PARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER_NO$PARTNER_GUID" source="PARTNER_NO"/>
+    </input>
+    <input node="P_CRMBUT000">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVPART_NAME" source="CC_FULLNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER_NO$PARTNER_GUID" source="PARTNER_GUID"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="JOIN$PARTNER_NO$PARTNER_GUID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_EMPLOYEE_PARTNER" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="GUID">
+        <descriptions defaultDescription="GUID"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER_NO">
+        <descriptions defaultDescription="PARTNER_NO"/>
+      </viewAttribute>
+    
+      <viewAttribute id="PARTNER_FCT">
+        <descriptions defaultDescription="PARTNER_FCT"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CRMPARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_FCT" source="PARTNER_FCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO" source="PARTNER_NO"/>
+    </input>
+    <filter>&quot;PARTNER_FCT&quot;='00000014'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMBUT000">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER_GUID">
+        <descriptions defaultDescription="PARTNER_GUID"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_LAST">
+        <descriptions defaultDescription="NAME_LAST"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_FIRST">
+        <descriptions defaultDescription="NAME_FIRST"/>
+      </viewAttribute>
+    
+      <viewAttribute id="MC_NAME1">
+        <descriptions defaultDescription="MC_NAME1"/>
+      </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_FULLNAME" datatype="VARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;TYPE&quot;='1',&quot;NAME_FIRST&quot;+' '+ &quot;NAME_LAST&quot;,&quot;MC_NAME1&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::BUT000_CRM">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_LAST" source="NAME_LAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_FIRST" source="NAME_FIRST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_GUID" source="PARTNER_GUID"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="MC_NAME1" source="MC_NAME1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CLIENT_PARTNER" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="GUID">
+        <descriptions defaultDescription="GUID"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER_NO">
+        <descriptions defaultDescription="PARTNER_NO"/>
+      </viewAttribute>
+    
+      <viewAttribute id="PARTNER_FCT">
+        <descriptions defaultDescription="PARTNER_FCT"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CRMPARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_FCT" source="PARTNER_FCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO" source="PARTNER_NO"/>
+    </input>
+    <filter>&quot;PARTNER_FCT&quot;='00000009'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMPARTNER" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="GUID">
+        <descriptions defaultDescription="GUID"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER_FCT">
+        <descriptions defaultDescription="PARTNER_FCT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER_NO">
+        <descriptions defaultDescription="PARTNER_NO"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::CRMDPARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_FCT" source="PARTNER_FCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO" source="PARTNER_NO"/>
+    </input>
+    <filter>&quot;PARTNER_FCT&quot; = '00000009' OR &quot;PARTNER_FCT&quot; = '00000014'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMACTIV">
     <viewAttributes>
@@ -1070,180 +1244,6 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
     <joinAttribute name="CLIENT"/>
     <joinAttribute name="GUID"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMLINK" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="GUID_HI">
-        <descriptions defaultDescription="GUID_HI"/>
-      </viewAttribute>
-      <viewAttribute id="GUID_SET">
-        <descriptions defaultDescription="GUID_SET"/>
-      </viewAttribute>
-      <viewAttribute id="OBJTYPE_SET">
-        <descriptions defaultDescription="OBJTYPE_SET"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::CRMDLINK">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GUID_HI" source="GUID_HI"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GUID_SET" source="GUID_SET"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OBJTYPE_SET" source="OBJTYPE_SET"/>
-    </input>
-    <filter>&quot;OBJTYPE_SET&quot;='07'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMPARTNER" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="GUID">
-        <descriptions defaultDescription="GUID"/>
-      </viewAttribute>
-      <viewAttribute id="PARTNER_FCT">
-        <descriptions defaultDescription="PARTNER_FCT"/>
-      </viewAttribute>
-      <viewAttribute id="PARTNER_NO">
-        <descriptions defaultDescription="PARTNER_NO"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::CRMDPARTNER">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_FCT" source="PARTNER_FCT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO" source="PARTNER_NO"/>
-    </input>
-    <filter>&quot;PARTNER_FCT&quot; = '00000009' OR &quot;PARTNER_FCT&quot; = '00000014'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMBUT000">
-    <viewAttributes>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="PARTNER">
-        <descriptions defaultDescription="PARTNER"/>
-      </viewAttribute>
-      <viewAttribute id="NAME_LAST">
-        <descriptions defaultDescription="NAME_LAST"/>
-      </viewAttribute>
-      <viewAttribute id="NAME_FIRST">
-        <descriptions defaultDescription="NAME_FIRST"/>
-      </viewAttribute>
-      <viewAttribute id="PARTNER_GUID">
-        <descriptions defaultDescription="PARTNER_GUID"/>
-      </viewAttribute>
-    
-      <viewAttribute id="MC_NAME1">
-        <descriptions defaultDescription="MC_NAME1"/>
-      </viewAttribute>
-      <viewAttribute id="TYPE">
-        <descriptions defaultDescription="TYPE"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_FULLNAME" datatype="VARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;TYPE&quot;='1',&quot;NAME_FIRST&quot;+' '+ &quot;NAME_LAST&quot;,&quot;MC_NAME1&quot;)</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
-    <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.VirtualTable::BUT000">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_LAST" source="NAME_LAST"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_FIRST" source="NAME_FIRST"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_GUID" source="PARTNER_GUID"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="MC_NAME1" source="MC_NAME1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
-    </input>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_EMPLOYEE_PARTNER" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="GUID">
-        <descriptions defaultDescription="GUID"/>
-      </viewAttribute>
-      <viewAttribute id="PARTNER_FCT">
-        <descriptions defaultDescription="PARTNER_FCT"/>
-      </viewAttribute>
-      <viewAttribute id="PARTNER_NO">
-        <descriptions defaultDescription="PARTNER_NO"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="P_CRMPARTNER">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_FCT" source="PARTNER_FCT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO" source="PARTNER_NO"/>
-    </input>
-    <filter>&quot;PARTNER_FCT&quot;='00000014'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CLIENT_PARTNER" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="GUID">
-        <descriptions defaultDescription="GUID"/>
-      </viewAttribute>
-      <viewAttribute id="PARTNER_FCT">
-        <descriptions defaultDescription="PARTNER_FCT"/>
-      </viewAttribute>
-      <viewAttribute id="PARTNER_NO">
-        <descriptions defaultDescription="PARTNER_NO"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="P_CRMPARTNER">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_FCT" source="PARTNER_FCT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO" source="PARTNER_NO"/>
-    </input>
-    <filter>&quot;PARTNER_FCT&quot;='00000009'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_ACTIV_PARTNER" cardinality="C1_1" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="GUID">
-        <descriptions defaultDescription="GUID"/>
-      </viewAttribute>
-      <viewAttribute id="ACTIVITY_PARTNER">
-        <descriptions defaultDescription="PARTNER"/>
-      </viewAttribute>
-      <viewAttribute id="ACTIVPART_NAME">
-        <descriptions defaultDescription="CC_FULLNAME"/>
-      </viewAttribute>
-      <viewAttribute hidden="true" id="JOIN$PARTNER_NO$PARTNER_GUID"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="P_CLIENT_PARTNER">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER_NO$PARTNER_GUID" source="PARTNER_NO"/>
-    </input>
-    <input node="P_CRMBUT000">
-      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVPART_NAME" source="CC_FULLNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER_NO$PARTNER_GUID" source="PARTNER_GUID"/>
-    </input>
-    <joinAttribute name="CLIENT"/>
-    <joinAttribute name="JOIN$PARTNER_NO$PARTNER_GUID"/>
-  </calculationView>
 </calculationViews>
 <logicalModel id="J_TASKACTIV_STAT">
   <attributes>
@@ -1482,6 +1482,40 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <rectangleSize width="250"/>
     </shape>
   
+    <shape expanded="true" modelObjectName="P_CRMLINK" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="336" y="1481"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_ACTIV_PARTNER" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="126" y="1481"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CLIENT_PARTNER" modelObjectNameSpace="J_ACTIV_PARTNER" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CRMBUT000" modelObjectNameSpace="J_ACTIV_PARTNER" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_EMPLOYEE_PARTNER" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="553" y="1641"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_CRMBUT000" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="330" y="1641"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CLIENT_PARTNER" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="106" y="1641"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CRMPARTNER" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="133" y="1786"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
   
     <shape expanded="true" modelObjectName="P_CRMACTIV" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="328" y="856"/>
@@ -1541,40 +1575,6 @@ if(match(&quot;DESCRIPTION&quot;,'*LT11*') , 'LT11',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="P_ACTUSERSTAT" modelObjectNameSpace="J_TASKACTIV_STAT" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="P_CRMLINK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="336" y="1481"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_CRMPARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="133" y="1786"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="P_CRMBUT000" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="330" y="1641"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_EMPLOYEE_PARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="553" y="1641"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_CLIENT_PARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="106" y="1641"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="J_ACTIV_PARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="126" y="1481"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="P_CLIENT_PARTNER" modelObjectNameSpace="J_ACTIV_PARTNER" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="P_CRMBUT000" modelObjectNameSpace="J_ACTIV_PARTNER" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape></shapes>
