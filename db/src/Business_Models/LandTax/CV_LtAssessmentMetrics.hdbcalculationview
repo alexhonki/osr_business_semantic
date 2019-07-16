@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.business.semantic.db.Business_Models.LandTax::CV_LtAssessmentMetrics" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_LtAssessmentMetrics"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CV_LtFinancials">
+    <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CV_LtFinancials</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::LTAXASFB">
+    <resourceUri>osr.business.semantic.db.synonyms::LTAXASFB</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_LTFINANCIALS" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="HVORG">
+        <descriptions defaultDescription="Main Transaction (ID)"/>
+      </viewAttribute>
+      <viewAttribute id="TVORG">
+        <descriptions defaultDescription="Sub Transaction (ID)"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentAmount">
+        <descriptions defaultDescription="Assessment Amount"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT">
+        <descriptions defaultDescription="Posting Date"/>
+      </viewAttribute>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="Form Bundle Number"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_GPART">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="Tax Year Start Date"/>
+      </viewAttribute>
+      <viewAttribute id="OriginalAssessmentAmount">
+        <descriptions defaultDescription="Original Assessment Amount"/>
+      </viewAttribute>
+      <viewAttribute id="ReassessmentAmount">
+        <descriptions defaultDescription="Reassessment Amount"/>
+      </viewAttribute>
+    
+      <viewAttribute id="AssessmentCounter">
+        <descriptions defaultDescription="Assessment Counter"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.LandTax::CV_LtFinancials">
+      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OriginalAssessmentAmount" source="OriginalAssessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmount" source="ReassessmentAmount"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentCounter" source="AssessmentCounter"/>
+    </input>
+    <filter>&quot;HVORG&quot;='4000'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_LTAXASFB" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="ASSESS_FBNUM">
+        <descriptions defaultDescription="ASSESS_FBNUM"/>
+      </viewAttribute>
+      <viewAttribute id="REISSUE_DATE">
+        <descriptions defaultDescription="REISSUE_DATE"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="ReissueCount" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(isnull(&quot;ASSESS_FBNUM&quot;),0,1)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::LTAXASFB">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSESS_FBNUM" source="ASSESS_FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REISSUE_DATE" source="REISSUE_DATE"/>
+    </input>
+    <filter>&quot;REISSUE_DATE&quot;!='00000000'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="U_FINANCIALS_ASFB">
+    <viewAttributes>
+      <viewAttribute id="HVORG">
+        <descriptions defaultDescription="HVORG"/>
+      </viewAttribute>
+      <viewAttribute id="TVORG">
+        <descriptions defaultDescription="TVORG"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentAmount" aggregationType="sum">
+        <descriptions defaultDescription="AssessmentAmount"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT">
+        <descriptions defaultDescription="DFKK_H_BUDAT"/>
+      </viewAttribute>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="FBNUM"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_GPART">
+        <descriptions defaultDescription="DFKK_H_GPART"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="OriginalAssessmentAmount" aggregationType="sum">
+        <descriptions defaultDescription="OriginalAssessmentAmount"/>
+      </viewAttribute>
+      <viewAttribute id="ReassessmentAmount" aggregationType="sum">
+        <descriptions defaultDescription="ReassessmentAmount"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentCounter" aggregationType="sum">
+        <descriptions defaultDescription="AssessmentCounter"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_LTFINANCIALS" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OriginalAssessmentAmount" source="OriginalAssessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmount" source="ReassessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentCounter" source="AssessmentCounter"/>
+    </input>
+    <input node="J_REISSUE_TAXYEAR" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="HVORG" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TVORG" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="AssessmentAmount" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="REISSUE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="ASSESS_FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DFKK_H_GPART" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="OriginalAssessmentAmount" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ReassessmentAmount" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentCounter" source="ReissueCount"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_REISSUE_TAXYEAR" cardinality="CN_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="REISSUE_DATE">
+        <descriptions defaultDescription="REISSUE_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="ASSESS_FBNUM">
+        <descriptions defaultDescription="ASSESS_FBNUM"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="ReissueCount" aggregationType="sum">
+        <descriptions defaultDescription="ReissueCount"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_LTAXASFB">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSESS_FBNUM" source="ASSESS_FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REISSUE_DATE" source="REISSUE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ReissueCount" source="ReissueCount"/>
+    </input>
+    <input node="AGG_FBNUM_TAXYEAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSESS_FBNUM" source="FBNUM"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="ASSESS_FBNUM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_FBNUM_TAXYEAR">
+    <viewAttributes>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="FBNUM"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentCounter" aggregationType="sum">
+        <descriptions defaultDescription="Assessment Counter"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_LTFINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentCounter" source="AssessmentCounter"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="U_FINANCIALS_ASFB">
+  <attributes>
+    <attribute id="HVORG" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Main Transaction (ID)"/>
+      <keyMapping columnObjectName="U_FINANCIALS_ASFB" columnName="HVORG"/>
+    </attribute>
+    <attribute id="TVORG" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Sub Transaction (ID)"/>
+      <keyMapping columnObjectName="U_FINANCIALS_ASFB" columnName="TVORG"/>
+    </attribute>
+    <attribute id="DFKK_H_BUDAT" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Posting Date"/>
+      <keyMapping columnObjectName="U_FINANCIALS_ASFB" columnName="DFKK_H_BUDAT"/>
+    </attribute>
+    <attribute id="FBNUM" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Form Bundle Number"/>
+      <keyMapping columnObjectName="U_FINANCIALS_ASFB" columnName="FBNUM"/>
+    </attribute>
+    <attribute id="MANDT" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="U_FINANCIALS_ASFB" columnName="MANDT"/>
+    </attribute>
+    <attribute id="DFKK_H_GPART" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Number"/>
+      <keyMapping columnObjectName="U_FINANCIALS_ASFB" columnName="DFKK_H_GPART"/>
+    </attribute>
+    <attribute id="TAXYRSTARTDT" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Year Start Date"/>
+      <keyMapping columnObjectName="U_FINANCIALS_ASFB" columnName="TAXYRSTARTDT"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="AssessmentAmount" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Assessment Amount"/>
+      <measureMapping columnObjectName="U_FINANCIALS_ASFB" columnName="AssessmentAmount"/>
+    </measure>
+    <measure id="OriginalAssessmentAmount" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Original Assessment Amount"/>
+      <measureMapping columnObjectName="U_FINANCIALS_ASFB" columnName="OriginalAssessmentAmount"/>
+    </measure>
+    <measure id="ReassessmentAmount" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Reassessment Amount"/>
+      <measureMapping columnObjectName="U_FINANCIALS_ASFB" columnName="ReassessmentAmount"/>
+    </measure>
+  
+    <measure id="AssessmentCounter" order="11" aggregationType="sum" measureType="simple" hidden="true">
+      <descriptions defaultDescription="Assessment Counter"/>
+      <measureMapping columnObjectName="U_FINANCIALS_ASFB" columnName="AssessmentCounter"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures>
+    <measure id="OriginalAssessmentCounter" order="12" aggregationType="sum" datatype="INTEGER" length="10" scale="0" baseMeasure="AssessmentCounter">
+      <descriptions defaultDescription="Original Assessment Counter"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4000"/>
+        </filter>
+        <attributeName>HVORG</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="TVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="0150"/>
+        </filter>
+        <attributeName>TVORG</attributeName>
+      </restriction>
+    </measure>
+    <measure id="ReassessmentCounter" order="13" aggregationType="sum" datatype="INTEGER" length="10" scale="0" baseMeasure="AssessmentCounter">
+      <descriptions defaultDescription="Reassessment Counter"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4000"/>
+        </filter>
+        <attributeName>HVORG</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="TVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="0190"/>
+        </filter>
+        <attributeName>TVORG</attributeName>
+      </restriction>
+    </measure>
+    <measure id="ReissueCounter" order="14" aggregationType="sum" datatype="INTEGER" length="10" scale="0" baseMeasure="AssessmentCounter">
+      <descriptions defaultDescription="Reissue Counter"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true" value=""/>
+        </filter>
+        <attributeName>HVORG</attributeName>
+      </restriction>
+    </measure>
+  
+    <measure id="AssessmentsCounter" order="15" aggregationType="sum" datatype="INTEGER" length="10" scale="0" baseMeasure="AssessmentCounter">
+      <descriptions defaultDescription="Assessments Counter"/>
+  
+      <restriction logicalOperator="AND">
+  
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4000"/>
+        </filter>
+  
+        <attributeName>HVORG</attributeName>
+  
+      </restriction>
+  
+    </measure>
+  </restrictedMeasures>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="329" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_CV_LTFINANCIALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="356" y="641"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_LTAXASFB" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="496"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="U_FINANCIALS_ASFB" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="329" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_REISSUE_TAXYEAR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="275" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_LTAXASFB" modelObjectNameSpace="J_REISSUE_TAXYEAR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="AGG_FBNUM_TAXYEAR" modelObjectNameSpace="J_REISSUE_TAXYEAR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_FBNUM_TAXYEAR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="301" y="506"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CV_ActivityUserStaus" applyPrivilegeType="NONE" dataCategory="DIMENSION" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_ActivityUserStaus"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.synonyms::JSTO">
+    <resourceUri>osr.business.semantic.db.synonyms::JSTO</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::JEST">
+    <resourceUri>osr.business.semantic.db.synonyms::JEST</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::TJ30T">
+    <resourceUri>osr.business.semantic.db.synonyms::TJ30T</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_JSTO" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="OBJNR">
+        <descriptions defaultDescription="OBJNR"/>
+      </viewAttribute>
+      <viewAttribute id="OBTYP">
+        <descriptions defaultDescription="OBTYP"/>
+      </viewAttribute>
+      <viewAttribute id="STSMA">
+        <descriptions defaultDescription="STSMA"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::JSTO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBTYP" source="OBTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STSMA" source="STSMA"/></input>
+    <filter>&quot;OBTYP&quot;='COH'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_JEST" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="OBJNR">
+        <descriptions defaultDescription="OBJNR"/>
+      </viewAttribute>
+      <viewAttribute id="STAT">
+        <descriptions defaultDescription="STAT"/>
+      </viewAttribute>
+      <viewAttribute id="INACT">
+        <descriptions defaultDescription="INACT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::JEST">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT" source="STAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INACT" source="INACT"/>
+    </input>
+    <filter>&quot;INACT&quot;!='X'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_TJ30T" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="STSMA">
+        <descriptions defaultDescription="STSMA"/>
+      </viewAttribute>
+      <viewAttribute id="SPRAS">
+        <descriptions defaultDescription="SPRAS"/>
+      </viewAttribute>
+      <viewAttribute id="TXT30">
+        <descriptions defaultDescription="TXT30"/>
+      </viewAttribute>
+      <viewAttribute id="ESTAT">
+        <descriptions defaultDescription="ESTAT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::TJ30T">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STSMA" source="STSMA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPRAS" source="SPRAS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXT30" source="TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESTAT" source="ESTAT"/>
+    </input>
+    <filter>&quot;SPRAS&quot;='E'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_JSTO_TJ30T" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="STSMA">
+        <descriptions defaultDescription="STSMA"/>
+      </viewAttribute>
+      <viewAttribute id="TXT30">
+        <descriptions defaultDescription="TXT30"/>
+      </viewAttribute>
+      <viewAttribute id="ESTAT">
+        <descriptions defaultDescription="ESTAT"/>
+      </viewAttribute>
+      <viewAttribute id="OBJNR">
+        <descriptions defaultDescription="OBJNR"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_JSTO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STSMA" source="STSMA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+    </input>
+    <input node="P_TJ30T">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXT30" source="TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESTAT" source="ESTAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STSMA" source="STSMA"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="STSMA"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_JSTO_JEST" cardinality="CN_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="TXT30">
+        <descriptions defaultDescription="TXT30"/>
+      </viewAttribute>
+      <viewAttribute id="ESTAT">
+        <descriptions defaultDescription="ESTAT"/>
+      </viewAttribute>
+      <viewAttribute id="OBJNR">
+        <descriptions defaultDescription="OBJNR"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_JSTO_TJ30T">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXT30" source="TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESTAT" source="ESTAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/></input>
+    <input node="P_JEST">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESTAT" source="STAT"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="OBJNR"/>
+    <joinAttribute name="ESTAT"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_JSTO_JEST">
+  <attributes>
+    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MANDT"/>
+      <keyMapping columnObjectName="J_JSTO_JEST" columnName="MANDT"/>
+    </attribute>
+    <attribute id="TXT30" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TXT30"/>
+      <keyMapping columnObjectName="J_JSTO_JEST" columnName="TXT30"/>
+    </attribute>
+    <attribute id="ESTAT" order="3" descriptionColumnName="TXT30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ESTAT"/>
+      <keyMapping columnObjectName="J_JSTO_JEST" columnName="ESTAT"/>
+    </attribute>
+    <attribute id="OBJNR" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OBJNR"/>
+      <keyMapping columnObjectName="J_JSTO_JEST" columnName="OBJNR"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/></logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="328" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_JSTO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="516"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_JEST" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="395" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_TJ30T" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="516"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_JSTO_TJ30T" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_JSTO" modelObjectNameSpace="J_JSTO_TJ30T" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_TJ30T" modelObjectNameSpace="J_JSTO_TJ30T" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_JSTO_JEST" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="328" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_JSTO_TJ30T" modelObjectNameSpace="J_JSTO_JEST" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_JEST" modelObjectNameSpace="J_JSTO_JEST" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="360" y="33"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
