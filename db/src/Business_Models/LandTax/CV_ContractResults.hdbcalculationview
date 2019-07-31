@@ -446,12 +446,16 @@
       <viewAttribute id="CC_OwnerTypeDescription">
         <descriptions defaultDescription="CC_OwnerTypeDescription"/>
       </viewAttribute>
+    
+      <viewAttribute id="CODE_ID">
+        <descriptions defaultDescription="CODE_ID"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_TAX_AMOUNT_LIABLE_COUNT" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;TAXAMOUNT&quot;&gt;0,1,0)</formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_TAX_ESTIMATE_LIABLE_COUNT" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_TAX_ESTIMATE_LIABLE_COUNT" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;TAXESTIMATE&quot;&gt;0,1,0)</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="Difference_Flag" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
@@ -498,6 +502,7 @@
     <input node="P_OwnerTyperDescription">
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODE_ID" source="CODE_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="CODE_ID"/>
     </input>
@@ -512,12 +517,12 @@
       <viewAttribute id="CC_OwnerTypeDescription">
         <descriptions defaultDescription="CC_OwnerTypeDescription"/>
       </viewAttribute>
+      <viewAttribute id="CODE_ID">
+        <descriptions defaultDescription="CODE_ID"/>
+      </viewAttribute>
     
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute id="CODE_ID">
-        <descriptions defaultDescription="CODE_ID"/>
       </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -688,12 +693,12 @@
       <viewAttribute id="CC_OwnerTypeDescription">
         <descriptions defaultDescription="CC_OwnerTypeDescription"/>
       </viewAttribute>
-    
-      <viewAttribute id="CC_TAX_ESTIMATE_LIABLE_COUNT">
-        <descriptions defaultDescription="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
-      </viewAttribute>
       <viewAttribute id="Difference_Flag">
         <descriptions defaultDescription="Difference_Flag"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_TAX_ESTIMATE_LIABLE_COUNT" aggregationType="sum">
+        <descriptions defaultDescription="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -738,9 +743,9 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNER_CODE_DESC" source="OWNER_CODE_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Difference_Flag" source="Difference_Flag"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_ESTIMATE_LIABLE_COUNT" source="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Difference_Flag" source="Difference_Flag"/>
     </input>
     <input node="P_TAXRATE">
       <mapping xsi:type="Calculation:AttributeMapping" target="TaxBracket" source="TaxBracket"/>
@@ -787,27 +792,27 @@
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="TBEAR"/>
     </attribute>
     <attribute id="ZZ_NOIA_DATE" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Date of NOIA"/>
+      <descriptions defaultDescription="NOIA/FTTP Date"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="ZZ_NOIA_DATE"/>
     </attribute>
     <attribute id="ZZ_STAT_COMMENT" order="10" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Status Change Comment"/>
+      <descriptions defaultDescription="Status Comment"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="ZZ_STAT_COMMENT"/>
     </attribute>
     <attribute id="ZZ_PARTNER" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Business Partner"/>
+      <descriptions defaultDescription="BP no."/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="ZZ_PARTNER"/>
     </attribute>
     <attribute id="REAS" order="12" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Tax Status - REAS"/>
+      <descriptions defaultDescription="REAS Flag"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="REAS"/>
     </attribute>
     <attribute id="DNIS" order="13" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Tax Status: Do Not Issue"/>
+      <descriptions defaultDescription="DNIS Flag"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="DNIS"/>
     </attribute>
     <attribute id="LT12" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Tax Status: LT12"/>
+      <descriptions defaultDescription="LT12 Flag"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="LT12"/>
     </attribute>
     <attribute id="TAXYRSTARTDT" order="15" displayAttribute="false" attributeHierarchyActive="false">
@@ -819,11 +824,11 @@
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="ACTIVE"/>
     </attribute>
     <attribute id="OWNERTYPE" order="17" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land tax code id"/>
+      <descriptions defaultDescription="Owner type (ID)"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="OWNERTYPE"/>
     </attribute>
     <attribute id="INDIVORG" order="18" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Individual or organisation"/>
+      <descriptions defaultDescription="Ind/Org"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="INDIVORG"/>
     </attribute>
     <attribute id="TAXRATECODE" order="19" displayAttribute="false" attributeHierarchyActive="false">
@@ -835,15 +840,15 @@
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="ZEROVALCN"/>
     </attribute>
     <attribute id="TAXYRENDDT" order="31" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Date: Valid To"/>
+      <descriptions defaultDescription="Tax Year End Date"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="TAXYRENDDT"/>
     </attribute>
     <attribute id="CHUSER" order="32" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="User Name"/>
+      <descriptions defaultDescription="Changed By"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="CHUSER"/>
     </attribute>
     <attribute id="CHDATE" order="33" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Changed On"/>
+      <descriptions defaultDescription="Last change date"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="CHDATE"/>
     </attribute>
     <attribute id="CHTIME" order="34" displayAttribute="false" attributeHierarchyActive="false">
@@ -859,84 +864,82 @@
     </attribute>
   
     <attribute id="OWNER_CODE_DESC" order="40" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CODE_DESC"/>
+      <descriptions defaultDescription="Owner type"/>
   
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="OWNER_CODE_DESC"/>
   
     </attribute>
     <attribute id="CC_OwnerTypeDescription" order="41" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_OwnerTypeDescription"/>
+      <descriptions defaultDescription="Consolidated Owner Type"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="CC_OwnerTypeDescription"/>
     </attribute>
-  
-    <attribute id="CC_TAX_ESTIMATE_LIABLE_COUNT" order="42" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
-  
-      <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
-  
-    </attribute>
-    <attribute id="Difference_Flag" order="43" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="Difference_Flag" order="42" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Difference_Flag"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="Difference_Flag"/>
     </attribute>
   </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="SubDividerFlag" order="38" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Tax - Sub Divider Flag"/>
+      <descriptions defaultDescription="SDD Flag"/>
       <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="1">
         <formula>if(&quot;SDDPLCNT&quot;&gt;=6,'X','')</formula>
       </keyCalculation>
       </calculatedAttribute></calculatedAttributes>
   <baseMeasures>
     <measure id="TOTBPRELVNTVAL" order="20" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Land Tax - Total BP relevant value"/>
+      <descriptions defaultDescription="BP relevant value"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="TOTBPRELVNTVAL"/>
     </measure>
     <measure id="TOTBPCONCESSVAL" order="21" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Land Tax: BP Concession per parcel"/>
+      <descriptions defaultDescription="BP exempt value"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="TOTBPCONCESSVAL"/>
     </measure>
     <measure id="TOTBPTAXABLEVAL" order="22" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Land Tax: BP Taxable value per parcel"/>
+      <descriptions defaultDescription="BP taxable value"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="TOTBPTAXABLEVAL"/>
     </measure>
     <measure id="ADJUSTMENT" order="23" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Land Tax - Tax Adjustment Amount"/>
+      <descriptions defaultDescription="Minor adjustment"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="ADJUSTMENT"/>
     </measure>
     <measure id="TAXAMOUNT" order="24" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Land Tax - Tax amount"/>
+      <descriptions defaultDescription="Tax Amount"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="TAXAMOUNT"/>
     </measure>
     <measure id="TAXESTIMATE" order="25" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Land Tax - Estimated Tax"/>
+      <descriptions defaultDescription="Estimated Tax"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="TAXESTIMATE"/>
     </measure>
     <measure id="PROPERTYCNT" order="27" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Land Tax - Property Count"/>
+      <descriptions defaultDescription="No. QVAS properties"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="PROPERTYCNT"/>
     </measure>
     <measure id="PARCELCNT" order="28" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Land Tax - Parcel Count"/>
+      <descriptions defaultDescription="No. Parcels"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="PARCELCNT"/>
     </measure>
     <measure id="SDDPLCNT" order="29" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Land Tax: Count of parcels with Sub-divider discount"/>
+      <descriptions defaultDescription="No. SDD parcels"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="SDDPLCNT"/>
     </measure>
     <measure id="CONCPLCNT" order="30" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Land Tax: Count of Parcels with Concessions (excluding SDD)"/>
+      <descriptions defaultDescription="No. Exempt parcels"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="CONCPLCNT"/>
     </measure>
     <measure id="ABSURCHARGE" order="35" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Land Tax -  Absentee surcharge"/>
+      <descriptions defaultDescription="Absentee Surcharge"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="ABSURCHARGE"/>
     </measure>
   
     <measure id="CC_TAX_LIABLE_COUNT" order="37" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax - Tax Amount Liable for the Period"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="CC_TAX_LIABLE_COUNT"/>
-    </measure></baseMeasures>
+    </measure>
+    <measure id="CC_TAX_ESTIMATE_LIABLE_COUNT" order="43" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Land Tax - Tax Estimate Liable for the Period"/>
+      <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
+    </measure>
+  </baseMeasures>
   <calculatedMeasures>
     <measure id="CO_BPCOUNTER" order="36" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Land Tax - BP Count"/>
@@ -944,6 +947,9 @@
         <attribute attributeName="ZZ_PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
+      
       
       
       
@@ -1023,7 +1029,7 @@
     </shape>
     <shape modelObjectName="J_BPCONTRACT_CNRES_OWNERDESC" modelObjectNameSpace="NEJ_CONTRACTS_TAXRATES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
+      <rectangleSize width="277.533203125"/>
     </shape>
     <shape modelObjectName="P_TAXRATE" modelObjectNameSpace="NEJ_CONTRACTS_TAXRATES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="547" y="88"/>
