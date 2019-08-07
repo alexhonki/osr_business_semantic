@@ -95,13 +95,13 @@
       </viewAttribute></viewAttributes>
     <calculatedViewAttributes>
     
-      <calculatedViewAttribute id="Source" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="Source" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
     
         <formula>'Tasks &amp; Interactions'</formula>
     
       </calculatedViewAttribute>
     
-      <calculatedViewAttribute id="CC_PRT_Type" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_PRT_Type" datatype="NVARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
     
         <formula>if(match(&quot;DESCRIPTION&quot;,'1 Registration (paper)*') , 'WM - 1 Registration (paper)',
 if(match(&quot;DESCRIPTION&quot;,'1 Registration (e-reg)') , 'WM - 1 Registration (e-reg)',
@@ -296,38 +296,36 @@ if(match(&quot;DESCRIPTION&quot;,'1 Disaster Relief*'), 'WM - 1 Disaster Relief'
       <keyMapping columnObjectName="P_TasksInteractions" columnName="SHORT"/>
     </attribute>
   
-    <attribute id="Source" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Source or Work Item"/>
-  
-      <keyMapping columnObjectName="P_TasksInteractions" columnName="Source"/>
-  
-    </attribute>
-  
-    <attribute id="CREATED_BY" order="28" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CREATED_BY" order="27" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Created By (Team Member)"/>
   
       <keyMapping columnObjectName="P_TasksInteractions" columnName="CREATED_BY"/>
   
     </attribute>
-    <attribute id="CC_PRT_Type" order="30" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_PRT_Type" order="32" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CC_PRT_Type"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="CC_PRT_Type"/>
+    </attribute>
+  
+    <attribute id="Source" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Source"/>
+      <keyMapping columnObjectName="P_TasksInteractions" columnName="Source"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="CC_RowCount" order="31" aggregationType="sum" measureType="simple">
+    <measure id="CC_RowCount" order="29" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CC_RowCount"/>
       <measureMapping columnObjectName="P_TasksInteractions" columnName="CC_RowCount"/>
     </measure>
   
-    <measure id="CC_Days_Bt_Creation_Mod" order="32" aggregationType="sum" measureType="simple">
+    <measure id="CC_Days_Bt_Creation_Mod" order="30" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CC_Days_Bt_Creation_Mod"/>
       <measureMapping columnObjectName="P_TasksInteractions" columnName="CC_Days_Bt_Creation_Mod"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
-    <measure id="CC_TaskIntDurationAvg" order="29" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="SQL">
+    <measure id="CC_TaskIntDurationAvg" order="28" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="SQL">
       <descriptions defaultDescription="Task Duration (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
       
@@ -335,14 +333,20 @@ if(match(&quot;DESCRIPTION&quot;,'1 Disaster Relief*'), 'WM - 1 Disaster Relief'
       
       
       
+      
+      
+      
       </measure>
   
-    <measure id="Counter" order="33" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+    <measure id="Counter" order="31" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Task/Interactions Count"/>
       <exceptionAggregation>
         <attribute attributeName="GUID"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
