@@ -96,6 +96,26 @@
       <viewAttribute id="CC_PortalAccountCreationDate">
         <descriptions defaultDescription="CC_PortalAccountCreationDate"/>
       </viewAttribute>
+    
+      <viewAttribute id="RISK_CATEGORY">
+        <descriptions defaultDescription="RISK_CATEGORY"/>
+      </viewAttribute>
+      <viewAttribute id="RISK_SCORE">
+        <descriptions defaultDescription="RISK_SCORE"/>
+      </viewAttribute>
+      <viewAttribute id="CODEID">
+        <descriptions defaultDescription="CODEID"/>
+      </viewAttribute>
+      <viewAttribute id="PERIODBEGIN">
+        <descriptions defaultDescription="PERIODBEGIN"/>
+      </viewAttribute>
+      <viewAttribute id="PERIODEND">
+        <descriptions defaultDescription="PERIODEND"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CUST_ID">
+        <descriptions defaultDescription="CUST_ID"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -129,6 +149,14 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_E_ASS_OPT" source="ZZ_E_ASS_OPT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_OT_CONF" source="ZZ_OT_CONF"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PortalAccountCreationDate" source="CC_PortalAccountCreationDate"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="RISK_CATEGORY" source="RISK_CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RISK_SCORE" source="RISK_SCORE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODEID" source="CODEID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIODBEGIN" source="PERIODBEGIN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIODEND" source="PERIODEND"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -251,9 +279,47 @@
       <descriptions defaultDescription="Portal Account Creation Date"/>
       <keyMapping columnObjectName="P_BPOVERVIEW" columnName="CC_PortalAccountCreationDate"/>
     </attribute>
+  
+    <attribute id="RISK_CATEGORY" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Risk Category"/>
+  
+      <keyMapping columnObjectName="P_BPOVERVIEW" columnName="RISK_CATEGORY"/>
+  
+    </attribute>
+    <attribute id="CODEID" order="31" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Code ID"/>
+      <keyMapping columnObjectName="P_BPOVERVIEW" columnName="CODEID"/>
+    </attribute>
+    <attribute id="PERIODBEGIN" order="32" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Period Begin"/>
+      <keyMapping columnObjectName="P_BPOVERVIEW" columnName="PERIODBEGIN"/>
+    </attribute>
+    <attribute id="PERIODEND" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Period End"/>
+      <keyMapping columnObjectName="P_BPOVERVIEW" columnName="PERIODEND"/>
+    </attribute>
+  
+    <attribute id="CUST_ID" order="34" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BP Number"/>
+  
+      <keyMapping columnObjectName="P_BPOVERVIEW" columnName="CUST_ID"/>
+  
+    </attribute>
   </attributes>
-  <calculatedAttributes/>
-  <baseMeasures/>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_Land_Tax_Insights_Flag" order="35" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Land Tax Insights Flag"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="40">
+        <formula>IF (&quot;RISK_SCORE&quot;&gt;=36, 'LT Insights Exist','')</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
+  <baseMeasures>
+    <measure id="RISK_SCORE" order="30" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Risk Score"/>
+      <measureMapping columnObjectName="P_BPOVERVIEW" columnName="RISK_SCORE"/>
+    </measure>
+  </baseMeasures>
   <calculatedMeasures>
     <measure id="COUNT_1" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="BP Counter"/>
@@ -261,6 +327,10 @@
         <attribute attributeName="PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
+      
+      
       
       
       

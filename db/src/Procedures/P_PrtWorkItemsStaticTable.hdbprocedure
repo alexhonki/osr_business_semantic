@@ -1,0 +1,34 @@
+PROCEDURE "osr.business.semantic.db.Procedures::P_PrtWorkItemsStaticTable"( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+
+	output_table =	
+	SELECT	
+	"CLIENT",
+	"CreatedDate",
+	"Change_CompletedDate",
+	"CreatedByName",
+	"Changed_CompletedName",
+	"ORGEH",
+	"SHORT",
+	"Source",
+	SUM("CC_RowCount") AS "CC_RowCount",
+	SUM("CC_Days_Bt_Creation_Mod") AS "CC_Days_Bt_Creation_Mod",
+	"WorkItemDescription",
+	"Status",
+	"WorkItemID",
+	"WorkItemType",
+	"CC_Status",
+	"CC_WorkItemGroup"
+
+	FROM "osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorkItems" 
+	GROUP BY "CLIENT","CreatedDate","Change_CompletedDate","CreatedByName","Changed_CompletedName","ORGEH","SHORT","Source","WorkItemDescription","Status","WorkItemID","WorkItemType","CC_Status","CC_WorkItemGroup";
+
+	DELETE FROM "osr.business.semantic.db.Tables::T_PrtWorkItems";
+	
+	INSERT INTO "osr.business.semantic.db.Tables::T_PrtWorkItems"	
+	SELECT * FROM :output_table;	
+END
