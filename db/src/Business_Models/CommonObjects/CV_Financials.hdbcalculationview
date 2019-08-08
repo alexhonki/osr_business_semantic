@@ -471,16 +471,7 @@ AND
     
       </calculatedViewAttribute>
       <calculatedViewAttribute id="OverdueStatus" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;AUGST&quot;='9',
-    if(&quot;STUDT&quot;='00000000',
-        if(date(&quot;DFKKOP_FAEDN&quot;)&gt;=date(&quot;AUGDT&quot;),
-        'Finalised ontime',
-        'Finalised overdue'),
-        if(date(&quot;STUDT&quot;)&gt;=date(&quot;AUGDT&quot;),
-        'Finalised ontime',
-        'Finalised overdue'
-        )
-    ),
+        <formula>if(&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND date('$$IP_KeyDate$$')&lt;date(&quot;AUGDT&quot;)),
     if(&quot;STUDT&quot;='00000000',
         if(date(&quot;DFKKOP_FAEDN&quot;)&gt;=date('$$IP_KeyDate$$'),
         'Not due',
@@ -489,21 +480,20 @@ AND
         'Not due',
         'Overdue'
         )
+    ),
+    if(&quot;STUDT&quot;='00000000',
+        if(date(&quot;DFKKOP_FAEDN&quot;)&gt;=date(&quot;AUGDT&quot;),
+        'Finalised ontime',
+        'Finalised overdue'),
+        if(date(&quot;STUDT&quot;)&gt;=date(&quot;AUGDT&quot;),
+        'Finalised ontime',
+        'Finalised overdue'
+        )
     )
 )</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="Age" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;AUGST&quot; = '9',
-    if(&quot;STUDT&quot;='00000000',
-        if(date(&quot;DFKKOP_FAEDN&quot;)&lt;date(&quot;AUGDT&quot;),
-            int((component(date(&quot;AUGDT&quot;),1) - component(date(&quot;DFKKOP_FAEDN&quot;),1)) * 12 + (component(date(&quot;AUGDT&quot;),2) - component(date(&quot;DFKKOP_FAEDN&quot;),2))),
-            null
-        ),
-        if(date(&quot;STUDT&quot;)&lt;date(&quot;AUGDT&quot;),
-            int((component(date(&quot;AUGDT&quot;),1) - component(date(&quot;STUDT&quot;),1)) * 12 + (component(date(&quot;AUGDT&quot;),2) - component(date(&quot;STUDT&quot;),2))),
-            null
-        )
-    ),
+        <formula>if(&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND date('$$IP_KeyDate$$')&lt;date(&quot;AUGDT&quot;)),
     if(&quot;STUDT&quot;='00000000',
         if(date(&quot;DFKKOP_FAEDN&quot;)&lt;date('$$IP_KeyDate$$'),
             int((component(date('$$IP_KeyDate$$'),1) - component(date(&quot;DFKKOP_FAEDN&quot;),1)) * 12 + (component(date('$$IP_KeyDate$$'),2) - component(date(&quot;DFKKOP_FAEDN&quot;),2))),
@@ -511,6 +501,16 @@ AND
         ),
         if(date(&quot;STUDT&quot;)&lt;date('$$IP_KeyDate$$'),
             int((component(date('$$IP_KeyDate$$'),1) - component(date(&quot;STUDT&quot;),1)) * 12 + (component(date('$$IP_KeyDate$$'),2) - component(date(&quot;STUDT&quot;),2))),
+            null
+        )
+    ),
+    if(&quot;STUDT&quot;='00000000',
+        if(date(&quot;DFKKOP_FAEDN&quot;)&lt;date(&quot;AUGDT&quot;),
+            int((component(date(&quot;AUGDT&quot;),1) - component(date(&quot;DFKKOP_FAEDN&quot;),1)) * 12 + (component(date(&quot;AUGDT&quot;),2) - component(date(&quot;DFKKOP_FAEDN&quot;),2))),
+            null
+        ),
+        if(date(&quot;STUDT&quot;)&lt;date(&quot;AUGDT&quot;),
+            int((component(date(&quot;AUGDT&quot;),1) - component(date(&quot;STUDT&quot;),1)) * 12 + (component(date(&quot;AUGDT&quot;),2) - component(date(&quot;STUDT&quot;),2))),
             null
         )
     )
@@ -3875,4 +3875,4 @@ if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23
     </shape>
   </shapes>
 </layout>
-</Calculation:scenario>
+</Calculation:scenario> 
