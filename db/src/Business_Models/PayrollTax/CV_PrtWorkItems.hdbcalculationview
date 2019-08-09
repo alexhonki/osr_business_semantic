@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorkItems" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:DataFoundation="http://www.sap.com/ndb/BiModelDataFoundation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorkItems" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_PrtWorkItems"/>
 <localVariables/>
 <variableMappings/>
@@ -7,599 +7,490 @@
   <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTasksInteractions">
     <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTasksInteractions</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Workflow">
-    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Workflow</resourceUri>
+  <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorflow">
+    <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorflow</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_PrtTasksInteractions">
+  <calculationView xsi:type="Calculation:UnionView" id="U_PrtTasksInteractions_Workflow">
     <viewAttributes>
-      <viewAttribute id="TI_Counter">
-        <descriptions defaultDescription="Task/Interactions Count"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CLIENT">
+      <viewAttribute id="CLIENT">
         <descriptions defaultDescription="SAP Client"/>
       </viewAttribute>
-      <viewAttribute id="TI_OBJECT_ID">
-        <descriptions defaultDescription="Object ID"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CREATED_BY">
-        <descriptions defaultDescription="Created By (Team Member)"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CHANGED_BY">
-        <descriptions defaultDescription="Changed By (Team Member)"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CC_Created_Date">
+      <viewAttribute id="CreatedDate">
         <descriptions defaultDescription="Creation Date"/>
       </viewAttribute>
-      <viewAttribute id="TI_CC_Last_Changed">
+      <viewAttribute id="Change_CompletedDate">
         <descriptions defaultDescription="Last Changed date"/>
       </viewAttribute>
-      <viewAttribute id="TI_DESCRIPTION">
-        <descriptions defaultDescription="Task Description"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CreatedByName">
+      <viewAttribute id="CreatedByName">
         <descriptions defaultDescription="CreatedByName"/>
       </viewAttribute>
-      <viewAttribute id="TI_ChangedByName">
+      <viewAttribute id="Changed_CompletedName">
         <descriptions defaultDescription="ChangedByName"/>
       </viewAttribute>
-      <viewAttribute id="TI_ESTAT">
-        <descriptions defaultDescription="Status"/>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="Org. Unit (Team)"/>
       </viewAttribute>
-      <viewAttribute id="TI_TXT30">
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      </viewAttribute>
+      <viewAttribute id="Source">
+        <descriptions defaultDescription="Source or Work Item"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_RowCount" aggregationType="sum">
+        <descriptions defaultDescription="CC_RowCountTI"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_Days_Bt_Creation_Mod" aggregationType="sum">
+        <descriptions defaultDescription="CC_Days_Bt_Creation_ModWF"/>
+      </viewAttribute>
+      <viewAttribute id="WorkItemDescription">
+        <descriptions defaultDescription="Work Item Desc"/>
+      </viewAttribute>
+      <viewAttribute id="Status">
         <descriptions defaultDescription="Status Text"/>
       </viewAttribute>
-      <viewAttribute id="TI_CC_Days_Bt_Creation_Mod">
-        <descriptions defaultDescription="Day of Process (Age)"/>
+      <viewAttribute id="WorkItemID">
+        <descriptions defaultDescription="Work Item ID"/>
       </viewAttribute>
-      <viewAttribute id="TI_CC_Days_Bt_Creation_Mod_Avg">
-        <descriptions defaultDescription="Average Day of Process (Age)"/>
-      </viewAttribute>
-      <viewAttribute id="TI_ACTIVITY_PARTNER">
-        <descriptions defaultDescription="Activity Partner"/>
-      </viewAttribute>
-      <viewAttribute id="TI_ACTIVPART_NAME">
-        <descriptions defaultDescription="Activity Partner Name"/>
-      </viewAttribute>
-      <viewAttribute id="TI_EMP_PARTNER">
-        <descriptions defaultDescription="Employee Responsible"/>
-      </viewAttribute>
-      <viewAttribute id="TI_EMP_NAME">
-        <descriptions defaultDescription="Employee Responsible Name"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CC_TaskIntDurationAvg">
-        <descriptions defaultDescription="Task Duration (Aggr. Avg.)"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CC_RowCount">
-        <descriptions defaultDescription="CC_RowCount"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CC_PRT_Type">
+      <viewAttribute id="WorkItemType">
         <descriptions defaultDescription="CC_PRT_Type"/>
       </viewAttribute>
     
-      <viewAttribute id="TI_ORGEH">
-        <descriptions defaultDescription="Org. Unit (Team)"/>
-      </viewAttribute>
-      <viewAttribute id="TI_SHORT">
-        <descriptions defaultDescription="Org. Unit (Team) Name"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTasksInteractions">
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_Counter" source="Counter"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_OBJECT_ID" source="OBJECT_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CREATED_BY" source="CREATED_BY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CHANGED_BY" source="CHANGED_BY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_Created_Date" source="CC_Created_Date"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_Last_Changed" source="CC_Last_Changed"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_DESCRIPTION" source="DESCRIPTION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CreatedByName" source="CreatedByName"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_ChangedByName" source="ChangedByName"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_ESTAT" source="ESTAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_TXT30" source="TXT30"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_Mod"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_Days_Bt_Creation_Mod_Avg" source="CC_Days_Bt_Creation_Mod_Avg"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_ACTIVPART_NAME" source="ACTIVPART_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_EMP_PARTNER" source="EMP_PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_EMP_NAME" source="EMP_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_TaskIntDurationAvg" source="CC_TaskIntDurationAvg"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_RowCount" source="CC_RowCount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_PRT_Type" source="CC_PRT_Type"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_ORGEH" source="ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_SHORT" source="SHORT"/>
-    </input>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_Workflow">
-    <viewAttributes>
-      <viewAttribute id="WF_CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_ID">
-        <descriptions defaultDescription="WI_ID"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_TYPE">
-        <descriptions defaultDescription="WI_TYPE"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_TEXT">
-        <descriptions defaultDescription="WI_TEXT"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_STAT">
-        <descriptions defaultDescription="WI_STAT"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_CD">
-        <descriptions defaultDescription="WI_CD"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_CT">
-        <descriptions defaultDescription="WI_CT"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_AAGENT">
-        <descriptions defaultDescription="WI_AAGENT"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_AED">
-        <descriptions defaultDescription="WI_AED"/>
-      </viewAttribute>
-    
-      <viewAttribute id="WF_WorkflowCounter">
-        <descriptions defaultDescription="WorkflowCounter"/>
-      </viewAttribute>
-      <viewAttribute id="Counter">
-        <descriptions defaultDescription="Counter"/>
-      </viewAttribute>
-      <viewAttribute id="WF_CreatedByUser">
-        <descriptions defaultDescription="Full Name of Person"/>
-      </viewAttribute>
-      <viewAttribute id="WF_ORGEH">
-        <descriptions defaultDescription="Org. Unit (Team)"/>
-      </viewAttribute>
-      <viewAttribute id="WF_SHORT">
-        <descriptions defaultDescription="Org. Unit (Team) Name"/>
-      </viewAttribute>
-      <viewAttribute id="WF_ChangedByUser">
-        <descriptions defaultDescription="Full Name of Person"/>
-      </viewAttribute>
-      <viewAttribute id="CC_WF_Created_Date">
-        <descriptions defaultDescription="CC_WF_Created_Date"/>
-      </viewAttribute>
-      <viewAttribute id="CC_WF_End_Date">
-        <descriptions defaultDescription="CC_WF_End_Date"/>
+      <viewAttribute id="CC_Status">
+        <descriptions defaultDescription="CC_TI_Status"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_WF_Type" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(match(&quot;WF_WI_TEXT&quot;,'*E-Registration CHECK*Betting*Tax*') , 'WF- Rego Check - e-reg  (BT)',
-if(match(&quot;WF_WI_TEXT&quot;,'*E-Registration CHECK*Payroll*Tax*') , 'WF- Rego Check - e-reg  (PRT)',
-if(match(&quot;WF_WI_TEXT&quot;,'*APPROVE: Registration*Possible Duplicates*') , 'WF- Rego Check - Possible Duplicates',
-if(match(&quot;WF_WI_TEXT&quot;,'*REVIEW: Payroll*Reason Group Wages equal to DGE Wages*') , 'WF - Group wages equal to DGE Wages',
-if(match(&quot;WF_WI_TEXT&quot;,'*REVIEW: Payroll*BP Excess Group Deduction*') , 'WF - BP Excess Group Deduction',
-if(match(&quot;WF_WI_TEXT&quot;,'*ASSESSMENT CHECK:*has an excess rebate for allocation*') , 'WF - BP Excess Rebate for Allocation',
-if(match(&quot;WF_WI_TEXT&quot;,'*REVIEW*Request for Reassessment*') , 'WF- Request for Reassessment',
-if(match(&quot;WF_WI_TEXT&quot;,'*WF- Acknowledge- Request for Reassessment*') , 'WF- Acknowledge- Request for Reassessment',
-if(match(&quot;WF_WI_TEXT&quot;,'*REVIEW: Payroll*BP Ceased Employment*') , 'WF - BP Ceased Employment',
-if(match(&quot;WF_WI_TEXT&quot;,'*REVIEW: Payroll*BP Status Change*') , 'WF - BP Status Change – Annual',
-if(match(&quot;WF_WI_TEXT&quot;,'*REVIEW: Payroll*BP Final Rtn Status Change*') , 'WF - BP Status Change – Final',
-if(match(&quot;WF_WI_TEXT&quot;,'*CHECK: Default Assmt failed*BP_CANCELLED*') , 'WF - Default Assmt Failed (BP_Cancelled)',
-if(match(&quot;WF_WI_TEXT&quot;,'*CHECK: Default Assmt failed*ILLEGAL_FIN_STATUS*') , 'WF - Default Assmt Failed (Illegal_Fin_Status)',
-if(match(&quot;WF_WI_TEXT&quot;,'*CHECK: Default Assmt failed*NO_FORMB_TYPE*') , 'WF - Default Assmt Failed (No_FormB_Type)',
-if(match(&quot;WF_WI_TEXT&quot;,'*CHECK: Default Assmt failed*NO_RETURNS_FOUND*') , 'WF - Default Assmt Failed (No_Returns_Found)',
-if(match(&quot;WF_WI_TEXT&quot;,'*CHECK: Default Assmt failed*NO_TAX_LIABILITY*') , 'WF - Default Assmt Failed (No_Tax_Liability)',
-if(match(&quot;WF_WI_TEXT&quot;,'*CHECK: Default Assmt failed*PAYABLE_UNDER_AUD20*') , 'WF - Default Assmt Failed (Payable_Under_AUD20)',
-if(match(&quot;WF_WI_TEXT&quot;,'*CHECK: Default Assmt failed*RETURN_LODGED*') , 'WF - Default Assmt Failed (Return_Lodged)',
-if(match(&quot;WF_WI_TEXT&quot;,'*CHECK: Default Assmt failed*NO_PERIOD_KEY*') , 'WF - Default Assmt Failed (No Period Key)',
-if(match(&quot;WF_WI_TEXT&quot;,'*REVIEW: Payroll*BP Administrator Appointed*') , 'WF - BP Administrator Appointed',
-if(match(&quot;WF_WI_TEXT&quot;,'*BP Administrator Ceased*') , 'WF - BP Administrator Ceased',
-if(match(&quot;WF_WI_TEXT&quot;,'*REGISTRATION CHECK*Pre-Liability Wages*') , 'WF - Registration check – Pre-Liability Wages',
-if(match(&quot;WF_WI_TEXT&quot;,'*REGISTRATION CHECK*Assessment for Past Periods Required*') , 'WF - Rego check – Assessment for Past Periods Required',
-if(match(&quot;WF_WI_TEXT&quot;,'*REGISTRATION CHECK*PT-Date Exceeded Threshold*') , 'WF - Registration check – PT-Date Exceeded Threshold',
-if(match(&quot;WF_WI_TEXT&quot;,'*REGISTRATION CHECK*Update Group Membership Relationship*') , 'WF - Registration check – Update Group Member Relationship',
-if(match(&quot;WF_WI_TEXT&quot;,'*REGISTRATION CHECK*Update Group Relationship*') , 'WF - Registration check – Update Group Relationship',
-if(match(&quot;WF_WI_TEXT&quot;,'*REGISTRATION CHECK*trying to change their app type*') , 'WF - Rego check – BP is trying to change their applicant type',
-if(match(&quot;WF_WI_TEXT&quot;,'*REGISTRATION CHECK*Update DGE Status*') , 'WF - Update DGE Status',
-if(match(&quot;WF_WI_TEXT&quot;,'*REGISTRATION CHECK*ABN Manual Check Required*') , 'WF - Registration check – ABN Manual Check Required',
-if(match(&quot;WF_WI_TEXT&quot;,'*ACKNOWLEDGE*Request for Reassessment*') , 'WF - Acknowledge- Request for Reassessment',
-if(match(&quot;WF_WI_TEXT&quot;,'*APPROVE: Refund of*') , 'WF - Non-bulk refunds - Sup Only',
-if(match(&quot;WF_WI_TEXT&quot;,'*APPROVE: Payment Spec Refund*') , 'WF - Non-bulk refunds - Sup Only',
-'Other'))))))))))))))))))))))))))))))))</formula>
+      <calculatedViewAttribute id="CC_WorkItemGroup" datatype="NVARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(match(&quot;WorkItemType&quot;,'WM - 1 Registration (paper)') , 'Registrations',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Registration (e-reg)') , 'Registrations',
+if(match(&quot;WorkItemType&quot;,'WF- Rego Check - e-reg  (BT)') , 'Registrations',
+if(match(&quot;WorkItemType&quot;,'WF- Rego Check - e-reg  (PRT)') , 'Registrations',
+if(match(&quot;WorkItemType&quot;,'WF- Rego Check - Possible Duplicates') , 'Registrations',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Rego wage request') , 'Registrations',
+if(match(&quot;WorkItemType&quot;,'WF - Non-bulk refunds - Sup Only') , 'Refunds',
+if(match(&quot;WorkItemType&quot;,'WF - Group wages equal to DGE Wages') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WF - BP Excess Group Deduction') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WF - BP Excess Rebate for Allocation') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WF- Request for Reassessment') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WF- Acknowledge- Request for Reassessment') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Annual Return 2018/19') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Annual Return 2017/18') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Reassessment') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Refund') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Excess Deduction') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Process Payment Slips received') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WM - RTI Request') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WM - 1 P9 Exemption Request') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WM - 1 UTI &amp; Penalty Tax Review') , 'Defaults &amp; UTI &amp; Penalty Tax Reviews',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Default assessment') , 'Defaults &amp; UTI &amp; Penalty Tax Reviews',
+if(match(&quot;WorkItemType&quot;,'WF - BP Ceased Employment') , 'Registration Cancellations',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Cancellations (Phone)') , 'Registration Cancellations',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Cancellations (MO)') , 'Registration Cancellations',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Cancellations (HF)') , 'Registration Cancellations',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Cancellations (AN)') , 'Registration Cancellations',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Cancellations (CI)') , 'Registration Cancellations',
+if(match(&quot;WorkItemType&quot;,'WF - BP Status Change – Annual') , 'Status Change',
+if(match(&quot;WorkItemType&quot;,'WF - BP Status Change – Final') , 'Status Change',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Status change (Phone)') , 'Status Change',
+if(match(&quot;WorkItemType&quot;,'WM -  1 Status Change (P9)') , 'Status Change',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Status change (MO)') , 'Status Change',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Status change (HF)') , 'Status Change',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Status change (AN)') , 'Status Change',
+if(match(&quot;WorkItemType&quot;,'WF - Default Assmt Failed (BP_Cancelled)') , 'Default Assessments',
+if(match(&quot;WorkItemType&quot;,'WF - Default Assmt Failed (Illegal_Fin_Status)') , 'Default Assessments',
+if(match(&quot;WorkItemType&quot;,'WF - Default Assmt Failed (No_FormB_Type)') , 'Default Assessments',
+if(match(&quot;WorkItemType&quot;,'WF - Default Assmt Failed (No_Returns_Found)') , 'Default Assessments',
+if(match(&quot;WorkItemType&quot;,'WF - Default Assmt Failed (No_Tax_Liability)') , 'Default Assessments',
+if(match(&quot;WorkItemType&quot;,'WF - Default Assmt Failed (Payable_Under_AUD20)') , 'Default Assessments',
+if(match(&quot;WorkItemType&quot;,'WF - Default Assmt Failed (Return_Lodged)') , 'Default Assessments',
+if(match(&quot;WorkItemType&quot;,'WF - Default Assmt Failed (No_Period_Key)') , 'Default Assessments',
+if(match(&quot;WorkItemType&quot;,'WM - Annual Default)') , 'Default Assessments',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Frequency change') , 'Frequency Change',
+if(match(&quot;WorkItemType&quot;,'WF - BP Administrator Appointed') , 'Insolvency Requests',
+if(match(&quot;WorkItemType&quot;,'WF - BP Administrator Ceased') , 'Insolvency Requests',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Insolvency: New') , 'Insolvency Requests',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Insolvency: Request info') , 'Insolvency Requests',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Cancellation - INS') , 'Insolvency Requests',
+if(match(&quot;WorkItemType&quot;,'WM - Insolvency: Subject to DOCA') , 'Insolvency Requests',
+if(match(&quot;WorkItemType&quot;,'WM - Insolvency: Ready to Default') , 'Insolvency Requests',
+if(match(&quot;WorkItemType&quot;,'WM - Insolvency: Liquidators Appointed') , 'Insolvency Requests',
+if(match(&quot;WorkItemType&quot;,'WM - Insolvency: R &amp; M Appointed') , 'Insolvency Requests',
+if(match(&quot;WorkItemType&quot;,'WM - Insolvency: Administrators Appointed') , 'Insolvency Requests',
+if(match(&quot;WorkItemType&quot;,'WF - Registration check – Pre-Liability Wages') , 'Other Workflows',
+if(match(&quot;WorkItemType&quot;,'WF - Rego check – Assessment for Past Periods Required') , 'Other Workflows',
+if(match(&quot;WorkItemType&quot;,'WF - Registration check – PT-Date Exceeded Threshold') , 'Other Workflows',
+if(match(&quot;WorkItemType&quot;,'WF - Registration check – Update Group Member Relationship') , 'Other Workflows',
+if(match(&quot;WorkItemType&quot;,'WF - Registration check – Update Group Relationship') , 'Other Workflows',
+if(match(&quot;WorkItemType&quot;,'WF - Rego check – BP is trying to change their applicant type') , 'Other Workflows',
+if(match(&quot;WorkItemType&quot;,'WF - Update DGE Status') , 'Other Workflows',
+if(match(&quot;WorkItemType&quot;,'WF - Registration check – ABN Manual Check Required') , 'Other Workflows',
+if(match(&quot;WorkItemType&quot;,'WF- Acknowledge- Request for Reassessment') , 'Other Workflows',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Returned Refund Cheques') , 'Other Whitemail',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Miscellaneous') , 'Other Whitemail',
+if(match(&quot;WorkItemType&quot;,'WM - 1 2nd Requests/Urgent') , 'Other Whitemail',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Objection') , 'Other Whitemail',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief ') , 'Other Whitemail',
+'Other Type')))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Workflow">
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_ID" source="WI_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_TYPE" source="WI_TYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_TEXT" source="WI_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_STAT" source="WI_STAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_CD" source="WI_CD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_CT" source="WI_CT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_AAGENT" source="WI_AAGENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_AED" source="WI_AED"/>
+    <input node="P_PRT_TI" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedDate" source="CC_Created_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Change_CompletedDate" source="CC_Last_Changed"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Changed_CompletedName" source="ChangedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
     
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WorkflowCounter" source="WorkflowCounter"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Counter" source="Counter"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_CreatedByUser" source="WF_CreatedByUser"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_ORGEH" source="ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_SHORT" source="SHORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_ChangedByUser" source="WF_ChangedByUser"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WF_Created_Date" source="CC_WF_Created_Date"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WF_End_Date" source="CC_WF_End_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCountTI"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_ModTI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemDescription" source="DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="OBJECT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemType" source="CC_PRT_Type"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Status" source="CC_TI_Status"/>
     </input>
-    <filter>&quot;WF_WI_TYPE&quot; = 'W'</filter>
+  
+    <input node="P_PRT_WF" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedDate" source="CC_CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Change_CompletedDate" source="CC_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Changed_CompletedName" source="CompletedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
+    
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCountWF"/>
+  
+    
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_ModWF"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemDescription" source="WI_TEXT"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="WI_STAT"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WI_ID"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemType" source="CC_PRT_WF_Type"/>
+  
+    
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Status" source="CC_StatusWF"/>
+  
+    </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:UnionView" id="U_PrtTasksInteractions_Workflow" filterExpressionLanguage="COLUMN_ENGINE">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PRT_TI">
     <viewAttributes>
-      <viewAttribute id="TI_Counter" aggregationType="sum">
-        <descriptions defaultDescription="Task/Interactions Count"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CLIENT">
+      <viewAttribute id="CLIENT">
         <descriptions defaultDescription="SAP Client"/>
       </viewAttribute>
-      <viewAttribute id="TI_OBJECT_ID">
-        <descriptions defaultDescription="Object ID"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CREATED_BY">
-        <descriptions defaultDescription="Created By (Team Member)"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CHANGED_BY">
-        <descriptions defaultDescription="Changed By (Team Member)"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CC_Created_Date">
+      <viewAttribute id="CC_Created_Date">
         <descriptions defaultDescription="Creation Date"/>
       </viewAttribute>
-      <viewAttribute id="TI_CC_Last_Changed">
+      <viewAttribute id="CC_Last_Changed">
         <descriptions defaultDescription="Last Changed date"/>
       </viewAttribute>
-      <viewAttribute id="TI_DESCRIPTION">
-        <descriptions defaultDescription="Task Description"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CreatedByName">
+    
+      <viewAttribute id="CreatedByName">
         <descriptions defaultDescription="CreatedByName"/>
       </viewAttribute>
-      <viewAttribute id="TI_ChangedByName">
+      <viewAttribute id="ChangedByName">
         <descriptions defaultDescription="ChangedByName"/>
       </viewAttribute>
-      <viewAttribute id="TI_ESTAT">
-        <descriptions defaultDescription="Status"/>
-      </viewAttribute>
-      <viewAttribute id="TI_TXT30">
-        <descriptions defaultDescription="Status Text"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CC_Days_Bt_Creation_Mod" aggregationType="sum">
-        <descriptions defaultDescription="Day of Process (Age)"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CC_Days_Bt_Creation_Mod_Avg" aggregationType="sum">
-        <descriptions defaultDescription="Average Day of Process (Age)"/>
-      </viewAttribute>
-      <viewAttribute id="TI_ACTIVITY_PARTNER">
-        <descriptions defaultDescription="Activity Partner"/>
-      </viewAttribute>
-      <viewAttribute id="TI_ACTIVPART_NAME">
-        <descriptions defaultDescription="Activity Partner Name"/>
-      </viewAttribute>
-      <viewAttribute id="TI_EMP_PARTNER">
-        <descriptions defaultDescription="Employee Responsible"/>
-      </viewAttribute>
-      <viewAttribute id="TI_EMP_NAME">
-        <descriptions defaultDescription="Employee Responsible Name"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CC_TaskIntDurationAvg" aggregationType="sum">
-        <descriptions defaultDescription="Task Duration (Aggr. Avg.)"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CC_RowCount" aggregationType="sum">
-        <descriptions defaultDescription="CC_RowCount"/>
-      </viewAttribute>
-      <viewAttribute id="TI_CC_PRT_Type">
-        <descriptions defaultDescription="CC_PRT_Type"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_ID">
-        <descriptions defaultDescription="WI_ID"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_TYPE">
-        <descriptions defaultDescription="WI_TYPE"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_TEXT">
-        <descriptions defaultDescription="WI_TEXT"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_STAT">
-        <descriptions defaultDescription="WI_STAT"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_CD">
-        <descriptions defaultDescription="WI_CD"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_CT">
-        <descriptions defaultDescription="WI_CT"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_AAGENT">
-        <descriptions defaultDescription="WI_AAGENT"/>
-      </viewAttribute>
-      <viewAttribute id="WF_WI_AED">
-        <descriptions defaultDescription="WI_AED"/>
-      </viewAttribute>
-      <viewAttribute id="WF_CC_WF_Type">
-        <descriptions defaultDescription="CC_WF_Type"/>
-      </viewAttribute>
-    
-      <viewAttribute id="WF_WorkflowCounter" aggregationType="sum">
-        <descriptions defaultDescription="WorkflowCounter"/>
-      </viewAttribute>
-      <viewAttribute id="Counter" aggregationType="sum">
-        <descriptions defaultDescription="Counter"/>
-      </viewAttribute>
-    
-      <viewAttribute id="WF_CreatedByUser">
-        <descriptions defaultDescription="Full Name of Person"/>
-      </viewAttribute>
-      <viewAttribute id="WF_ORGEH">
+      <viewAttribute id="ORGEH">
         <descriptions defaultDescription="Org. Unit (Team)"/>
       </viewAttribute>
-      <viewAttribute id="WF_SHORT">
+      <viewAttribute id="SHORT">
         <descriptions defaultDescription="Org. Unit (Team) Name"/>
       </viewAttribute>
-      <viewAttribute id="WF_ChangedByUser">
-        <descriptions defaultDescription="Full Name of Person"/>
+      <viewAttribute id="Source">
+        <descriptions defaultDescription="Source or Work Item"/>
       </viewAttribute>
-      <viewAttribute id="CC_WF_Created_Date">
-        <descriptions defaultDescription="CC_WF_Created_Date"/>
+      <viewAttribute id="DESCRIPTION">
+        <descriptions defaultDescription="Task Description"/>
       </viewAttribute>
-      <viewAttribute id="CC_WF_End_Date">
-        <descriptions defaultDescription="CC_WF_End_Date"/>
+      <viewAttribute id="TXT30">
+        <descriptions defaultDescription="Status Text"/>
       </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
+      <viewAttribute id="OBJECT_ID">
+        <descriptions defaultDescription="Object ID"/>
+      </viewAttribute>
+      <viewAttribute id="CC_PRT_Type">
+        <descriptions defaultDescription="CC_PRT_Type"/>
+      </viewAttribute>
+      <viewAttribute id="CHANGED_BY">
+        <descriptions defaultDescription="Changed By (Team Member)"/>
+      </viewAttribute>
+      <viewAttribute id="P_DESCRIPTION">
+        <descriptions defaultDescription="Process Type (Desc)"/>
+      </viewAttribute>
+      <viewAttribute id="ESTAT">
+        <descriptions defaultDescription="Status"/>
+      </viewAttribute>
+    
+      <viewAttribute id="PROCESS_TYPE">
+        <descriptions defaultDescription="Process Type"/>
+      </viewAttribute>
+      <viewAttribute id="CATEGORY">
+        <descriptions defaultDescription="Category"/>
+      </viewAttribute>
+      <viewAttribute id="OBJECTIVE">
+        <descriptions defaultDescription="Area"/>
+      </viewAttribute>
+      <viewAttribute id="OBJ_DESCRIPTION">
+        <descriptions defaultDescription="Area Text"/>
+      </viewAttribute>
+      <viewAttribute id="EMP_PARTNER">
+        <descriptions defaultDescription="Employee Responsible"/>
+      </viewAttribute>
+      <viewAttribute id="EMP_NAME">
+        <descriptions defaultDescription="Employee Responsible Name"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_RowCountTI" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_Days_Bt_Creation_ModTI" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;TXT30&quot;='Completed' or &quot;TXT30&quot;='Finalised',daysbetween(&quot;CC_Created_Date&quot;, &quot;CC_Last_Changed&quot;),daysbetween(&quot;CC_Created_Date&quot;, now()))</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_TI_Status" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(&quot;TXT30&quot; = 'Completed' OR &quot;TXT30&quot; = 'Finalised', 'Closed Status', 'Open Status')</formula>
+    
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="P_PrtTasksInteractions" emptyUnionBehavior="NO_ROW">
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_Counter" source="TI_Counter"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CLIENT" source="TI_CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_OBJECT_ID" source="TI_OBJECT_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CREATED_BY" source="TI_CREATED_BY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CHANGED_BY" source="TI_CHANGED_BY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_Created_Date" source="TI_CC_Created_Date"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_Last_Changed" source="TI_CC_Last_Changed"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_DESCRIPTION" source="TI_DESCRIPTION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CreatedByName" source="TI_CreatedByName"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_ChangedByName" source="TI_ChangedByName"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_ESTAT" source="TI_ESTAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_TXT30" source="TI_TXT30"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_Days_Bt_Creation_Mod" source="TI_CC_Days_Bt_Creation_Mod"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_Days_Bt_Creation_Mod_Avg" source="TI_CC_Days_Bt_Creation_Mod_Avg"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_ACTIVITY_PARTNER" source="TI_ACTIVITY_PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_ACTIVPART_NAME" source="TI_ACTIVPART_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_EMP_PARTNER" source="TI_EMP_PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_EMP_NAME" source="TI_EMP_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_TaskIntDurationAvg" source="TI_CC_TaskIntDurationAvg"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_RowCount" source="TI_CC_RowCount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TI_CC_PRT_Type" source="TI_CC_PRT_Type"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_WI_ID" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_WI_TYPE" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_WI_TEXT" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_WI_STAT" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_WI_CD" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_WI_CT" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_WI_AAGENT" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_WI_AED" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_CC_WF_Type" null="true" value=""/>
+    <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTasksInteractions">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJECT_ID" source="OBJECT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_TYPE" source="PROCESS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGED_BY" source="CHANGED_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="P_DESCRIPTION" source="P_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Created_Date" source="CC_Created_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Last_Changed" source="CC_Last_Changed"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTIVE" source="OBJECTIVE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_DESCRIPTION" source="OBJ_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ChangedByName" source="ChangedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESTAT" source="ESTAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXT30" source="TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMP_PARTNER" source="EMP_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMP_NAME" source="EMP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
     
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_WorkflowCounter" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Counter" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRT_Type" source="CC_PRT_Type"/>
+    </input></calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PRT_WF">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedDate">
+        <descriptions defaultDescription="Creation Date"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedDate">
+        <descriptions defaultDescription="Completed Date"/>
+      </viewAttribute>
+      <viewAttribute id="CreatedByName">
+        <descriptions defaultDescription="Created By Name"/>
+      </viewAttribute>
+      <viewAttribute id="CompletedByName">
+        <descriptions defaultDescription="Completed By Name"/>
+      </viewAttribute>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="Org. Unit (Team)"/>
+      </viewAttribute>
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      </viewAttribute>
+      <viewAttribute id="Source">
+        <descriptions defaultDescription="Source"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TEXT">
+        <descriptions defaultDescription="Work Item Desc"/>
+      </viewAttribute>
+      <viewAttribute id="WI_STAT">
+        <descriptions defaultDescription="Work Item Status"/>
+      </viewAttribute>
+      <viewAttribute id="WI_ID">
+        <descriptions defaultDescription="Work Item ID"/>
+      </viewAttribute>
+      <viewAttribute id="CC_PRT_WF_Type">
+        <descriptions defaultDescription="PRT Workflow Type"/>
+      </viewAttribute>
     
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_CreatedByUser" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_ORGEH" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_SHORT" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WF_ChangedByUser" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_WF_Created_Date" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_WF_End_Date" null="true" value=""/>
-    </input>
-    <input node="P_Workflow" emptyUnionBehavior="NO_ROW">
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_Counter" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_CLIENT" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_OBJECT_ID" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_CREATED_BY" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_CHANGED_BY" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_CC_Created_Date" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_CC_Last_Changed" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_DESCRIPTION" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_CreatedByName" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_ChangedByName" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_ESTAT" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_TXT30" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_CC_Days_Bt_Creation_Mod" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_CC_Days_Bt_Creation_Mod_Avg" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_ACTIVITY_PARTNER" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_ACTIVPART_NAME" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_EMP_PARTNER" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_EMP_NAME" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_CC_TaskIntDurationAvg" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_CC_RowCount" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TI_CC_PRT_Type" null="true" value=""/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_ID" source="WF_WI_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_TYPE" source="WF_WI_TYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_TEXT" source="WF_WI_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_STAT" source="WF_WI_STAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_CD" source="WF_WI_CD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_CT" source="WF_WI_CT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_AAGENT" source="WF_WI_AAGENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WI_AED" source="WF_WI_AED"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_CC_WF_Type" source="CC_WF_Type"/>
+      <viewAttribute id="WI_TYPE">
+        <descriptions defaultDescription="Work Item Type"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CHCKWI">
+        <descriptions defaultDescription="Work Item Superordinate"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RH_TASK">
+        <descriptions defaultDescription="Task ID"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_RowCountWF" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_Days_Bt_Creation_ModWF" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;WI_STAT&quot;='COMPLETED',daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;),daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;))</formula>
+      </calculatedViewAttribute>
     
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_WorkflowCounter" source="WF_WorkflowCounter"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Counter" source="Counter"/>
+      <calculatedViewAttribute id="CC_StatusWF" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
     
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_CreatedByUser" source="WF_CreatedByUser"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_ORGEH" source="WF_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_SHORT" source="WF_SHORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WF_ChangedByUser" source="WF_ChangedByUser"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WF_Created_Date" source="CC_WF_Created_Date"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WF_End_Date" source="CC_WF_End_Date"/>
-    </input>
-    <filter>&quot;TI_CC_PRT_Type&quot; != 'Other' OR &quot;WF_CC_WF_Type&quot; != 'Other'</filter>
-  </calculationView>
+        <formula>if(&quot;WI_STAT&quot; = 'COMPLETED' OR &quot;WI_STAT&quot; = 'FINALISED', 'Closed Status', 'Open Status')</formula>
+    
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorflow">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_ID" source="WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TYPE" source="WI_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TEXT" source="WI_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_STAT" source="WI_STAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CHCKWI" source="WI_CHCKWI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RH_TASK" source="WI_RH_TASK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedDate" source="CC_CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedDate" source="CC_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CompletedByName" source="CompletedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRT_WF_Type" source="CC_PRT_WF_Type"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/></input></calculationView>
 </calculationViews>
 <logicalModel id="U_PrtTasksInteractions_Workflow">
   <attributes>
-    <attribute id="TI_CLIENT" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CLIENT" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAP Client"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_CLIENT"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CLIENT"/>
     </attribute>
-    <attribute id="TI_OBJECT_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Object ID"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_OBJECT_ID"/>
-    </attribute>
-    <attribute id="TI_CREATED_BY" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Created By (Team Member)"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_CREATED_BY"/>
-    </attribute>
-    <attribute id="TI_CHANGED_BY" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Changed By (Team Member)"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_CHANGED_BY"/>
-    </attribute>
-    <attribute id="TI_CC_Created_Date" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CreatedDate" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Creation Date"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_CC_Created_Date"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CreatedDate"/>
     </attribute>
-    <attribute id="TI_CC_Last_Changed" order="7" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="Change_CompletedDate" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Changed date"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_CC_Last_Changed"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="Change_CompletedDate"/>
     </attribute>
-    <attribute id="TI_DESCRIPTION" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Task Description"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_DESCRIPTION"/>
+    <attribute id="CreatedByName" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Created By Name"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CreatedByName"/>
     </attribute>
-    <attribute id="TI_CreatedByName" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CreatedByName"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_CreatedByName"/>
+    <attribute id="Changed_CompletedName" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Changed By Name"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="Changed_CompletedName"/>
     </attribute>
-    <attribute id="TI_ChangedByName" order="10" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ChangedByName"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_ChangedByName"/>
-    </attribute>
-    <attribute id="TI_ESTAT" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Status"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_ESTAT"/>
-    </attribute>
-    <attribute id="TI_TXT30" order="12" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Status Text"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_TXT30"/>
-    </attribute>
-    <attribute id="TI_ACTIVITY_PARTNER" order="15" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Activity Partner"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_ACTIVITY_PARTNER"/>
-    </attribute>
-    <attribute id="TI_ACTIVPART_NAME" order="16" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Activity Partner Name"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_ACTIVPART_NAME"/>
-    </attribute>
-    <attribute id="TI_EMP_PARTNER" order="17" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Employee Responsible"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_EMP_PARTNER"/>
-    </attribute>
-    <attribute id="TI_EMP_NAME" order="18" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Employee Responsible Name"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_EMP_NAME"/>
-    </attribute>
-    <attribute id="TI_CC_PRT_Type" order="21" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_PRT_Type"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_CC_PRT_Type"/>
-    </attribute>
-    <attribute id="WF_WI_ID" order="22" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="WI_ID"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_WI_ID"/>
-    </attribute>
-    <attribute id="WF_WI_TYPE" order="23" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="WI_TYPE"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_WI_TYPE"/>
-    </attribute>
-    <attribute id="WF_WI_TEXT" order="24" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="WI_TEXT"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_WI_TEXT"/>
-    </attribute>
-    <attribute id="WF_WI_STAT" order="25" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="WI_STAT"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_WI_STAT"/>
-    </attribute>
-    <attribute id="WF_WI_CD" order="26" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="WI_CD"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_WI_CD"/>
-    </attribute>
-    <attribute id="WF_WI_CT" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="WI_CT"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_WI_CT"/>
-    </attribute>
-    <attribute id="WF_WI_AAGENT" order="28" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="WI_AAGENT"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_WI_AAGENT"/>
-    </attribute>
-    <attribute id="WF_WI_AED" order="29" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="WI_AED"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_WI_AED"/>
-    </attribute>
-    <attribute id="WF_CC_WF_Type" order="30" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_WF_Type"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_CC_WF_Type"/>
-    </attribute>
-  
-    <attribute id="WF_CreatedByUser" order="33" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Full Name of Person"/>
-  
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_CreatedByUser"/>
-  
-    </attribute>
-    <attribute id="WF_ORGEH" order="34" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ORGEH" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team)"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_ORGEH"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="ORGEH"/>
     </attribute>
-    <attribute id="WF_SHORT" order="35" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SHORT" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team) Name"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_SHORT"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="SHORT"/>
     </attribute>
-    <attribute id="WF_ChangedByUser" order="36" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Full Name of Person"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_ChangedByUser"/>
+    <attribute id="Source" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Source or Work Item"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="Source"/>
     </attribute>
-    <attribute id="CC_WF_Created_Date" order="37" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_WF_Created_Date"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_WF_Created_Date"/>
+    <attribute id="WorkItemDescription" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Work Item Desc"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WorkItemDescription"/>
     </attribute>
-    <attribute id="CC_WF_End_Date" order="38" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_WF_End_Date"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_WF_End_Date"/>
+    <attribute id="Status" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Original Status"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="Status"/>
+    </attribute>
+    <attribute id="WorkItemID" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Work Item ID"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WorkItemID"/>
+    </attribute>
+    <attribute id="WorkItemType" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Work Item Group"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WorkItemType"/>
+    </attribute>
+  
+    <attribute id="CC_Status" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Open or Closed Status"/>
+  
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_Status"/>
+  
+    </attribute>
+    <attribute id="CC_WorkItemGroup" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_WorkItemGroup"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_WorkItemGroup"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="TI_Counter" order="1" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Task/Interactions Count"/>
-      <measureMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_Counter"/>
-    </measure>
-    <measure id="TI_CC_Days_Bt_Creation_Mod" order="13" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Day of Process (Age)"/>
-      <measureMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_CC_Days_Bt_Creation_Mod"/>
-    </measure>
-    <measure id="TI_CC_Days_Bt_Creation_Mod_Avg" order="14" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Average Day of Process (Age)"/>
-      <measureMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_CC_Days_Bt_Creation_Mod_Avg"/>
-    </measure>
-    <measure id="TI_CC_TaskIntDurationAvg" order="19" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Task Duration (Aggr. Avg.)"/>
-      <measureMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_CC_TaskIntDurationAvg"/>
-    </measure>
-    <measure id="TI_CC_RowCount" order="20" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="CC_RowCount"/>
-      <measureMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="TI_CC_RowCount"/>
+    <measure id="CC_RowCount" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Row Count"/>
+      <measureMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_RowCount"/>
     </measure>
   
-    <measure id="WF_WorkflowCounter" order="31" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="WorkflowCounter"/>
-      <measureMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WF_WorkflowCounter"/>
-    </measure>
-    <measure id="Counter" order="32" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Counter"/>
-      <measureMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="Counter"/>
+    <measure id="CC_Days_Bt_Creation_Mod" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Days Between Creation"/>
+      <measureMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_Days_Bt_Creation_Mod"/>
     </measure>
   </baseMeasures>
-  <calculatedMeasures/>
+  <calculatedMeasures>
+    <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="WorkItemID"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </measure>
+  
+    <measure id="CC_WorkItemDurationAvg" order="10" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
+      <descriptions defaultDescription="Workflow Item (Aggr. Avg.)"/>
+      <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </measure>
+  </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
@@ -609,17 +500,17 @@ if(match(&quot;WF_WI_TEXT&quot;,'*APPROVE: Payment Spec Refund*') , 'WF - Non-bu
       <upperLeftCorner x="40" y="85"/>
     </shape>
   
-    <shape expanded="false" modelObjectName="P_PrtTasksInteractions" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-15" y="313"/>
+    <shape expanded="true" modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="40" y="186"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="P_Workflow" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="188" y="313"/>
+    <shape expanded="true" modelObjectName="P_PRT_TI" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-10" y="306"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
-    <shape expanded="true" modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="186"/>
+    <shape expanded="true" modelObjectName="P_PRT_WF" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="216" y="306"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
