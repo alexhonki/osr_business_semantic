@@ -10,9 +10,12 @@
   <DataSource id="osr.business.semantic.db.synonyms::THOC">
     <resourceUri>osr.business.semantic.db.synonyms::THOC</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::_SYS_BI.M_FISCAL_CALENDAR">
+    <resourceUri>osr.business.semantic.db.synonyms::_SYS_BI.M_FISCAL_CALENDAR</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_TimeDimension">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_TimeDimension" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="DATE_SQL">
         <descriptions defaultDescription="DATE_SQL"/>
@@ -42,7 +45,11 @@
         <descriptions defaultDescription="DAY"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_Weekend" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;DayOfWeek&quot; = '05' or &quot;DayOfWeek&quot; = '06', 'X','')</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::_SYS_BI.M_TIME_DIMENSION">
       <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
@@ -55,14 +62,30 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="DayOfWeek" source="DAY_OF_WEEK"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DayOfMonth" source="DAY"/>
     </input>
+    <filter>&quot;DATETIME_SAP&quot; LIKE '%000000'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_THOC">
-    <viewAttributes/>
-    <calculatedViewAttributes/>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_THOC" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="DATUM">
+        <descriptions defaultDescription="DATUM"/>
+      </viewAttribute>
+      <viewAttribute id="IDENT">
+        <descriptions defaultDescription="IDENT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_PublicHoliday" datatype="NVARCHAR" length="1" expressionLanguage="SQL">
+        <formula>'X'</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::THOC"/>
+    <input node="osr.business.semantic.db.synonyms::THOC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATUM" source="DATUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IDENT" source="IDENT"/>
+    </input>
+    <filter>&quot;IDENT&quot;='Z1'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+  <calculationView xsi:type="Calculation:JoinView" id="J_TimeDim_THOC" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="DATE_SQL">
         <descriptions defaultDescription="DATE_SQL"/>
@@ -85,15 +108,31 @@
       <viewAttribute id="CalendarWeek">
         <descriptions defaultDescription="WEEK"/>
       </viewAttribute>
-      <viewAttribute id="CalendarDayOfWeek">
+      <viewAttribute id="DayOfWeek">
         <descriptions defaultDescription="DAY_OF_WEEK"/>
       </viewAttribute>
       <viewAttribute id="DayOfMonth">
         <descriptions defaultDescription="DAY"/>
-      </viewAttribute></viewAttributes>
-    <calculatedViewAttributes/>
+      </viewAttribute>
+      <viewAttribute id="CC_Weekend">
+        <descriptions defaultDescription="CC_BusinessDay"/>
+      </viewAttribute>
+      <viewAttribute id="CC_PublicHoliday">
+        <descriptions defaultDescription="CC_PublicHoliday"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_BusinessDay" datatype="NVARCHAR" length="16" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CC_Weekend&quot; = 'X'  or &quot;CC_RemoveNull&quot; = 'X', 'Non Business Day', 'Business Day')
+</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_RemoveNull" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(isnull(&quot;CC_PublicHoliday&quot;),'','X')</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="P_TimeDimension" emptyUnionBehavior="NO_ROW">
+    <input node="P_TimeDimension">
       <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DATETIME_SAP" source="DATETIME_SAP"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SAP" source="DATE_SAP"/>
@@ -101,67 +140,145 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CalendarQuarter" source="CalendarQuarter"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CalendarMonth" source="CalendarMonth"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CalendarWeek" source="CalendarWeek"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CalendarDayOfWeek" source="DayOfWeek"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DayOfMonth" source="DayOfMonth"/></input>
-    <input node="P_THOC" emptyUnionBehavior="NO_ROW">
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DATE_SQL" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DATETIME_SAP" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DATE_SAP" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CalendarYear" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CalendarQuarter" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CalendarMonth" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CalendarWeek" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CalendarDayOfWeek" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DayOfMonth" null="true" value=""/></input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DayOfWeek" source="DayOfWeek"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DayOfMonth" source="DayOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Weekend" source="CC_Weekend"/>
+    </input>
+    <input node="P_THOC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PublicHoliday" source="CC_PublicHoliday"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SAP" source="DATUM"/>
+    </input>
+    <joinAttribute name="DATE_SAP"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FiscalCal">
+    <viewAttributes>
+      <viewAttribute id="DATE_SQL">
+        <descriptions defaultDescription="DATE_SQL"/>
+      </viewAttribute>
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FISCAL_PERIOD"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_FY1" datatype="VARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
+        <formula>int(&quot;FISCAL_YEAR&quot;)-1</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_FY2" datatype="VARCHAR" length="3" expressionLanguage="SQL">
+        <formula>CONCAT('/',right(&quot;FISCAL_YEAR&quot;,2))</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_FinYear" datatype="VARCHAR" length="7" expressionLanguage="SQL">
+        <formula>CONCAT(&quot;CC_FY1&quot;,&quot;CC_FY2&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::_SYS_BI.M_FISCAL_CALENDAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FISCAL_PERIOD"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_TimeTHOC_Fiscal" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="DATE_SQL">
+        <descriptions defaultDescription="DATE_SQL"/>
+      </viewAttribute>
+      <viewAttribute id="CalendarYear">
+        <descriptions defaultDescription="YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="CalendarQuarter">
+        <descriptions defaultDescription="QUARTER"/>
+      </viewAttribute>
+      <viewAttribute id="CalendarMonth">
+        <descriptions defaultDescription="MONTH"/>
+      </viewAttribute>
+      <viewAttribute id="CalendarWeek">
+        <descriptions defaultDescription="WEEK"/>
+      </viewAttribute>
+      <viewAttribute id="DayOfWeek">
+        <descriptions defaultDescription="DAY_OF_WEEK"/>
+      </viewAttribute>
+      <viewAttribute id="DayOfMonth">
+        <descriptions defaultDescription="DAY"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BusinessDay">
+        <descriptions defaultDescription="CC_BusinessDay"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FinYear">
+        <descriptions defaultDescription="CC_FinYear"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_TimeDim_THOC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CalendarYear" source="CalendarYear"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CalendarQuarter" source="CalendarQuarter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CalendarMonth" source="CalendarMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CalendarWeek" source="CalendarWeek"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DayOfWeek" source="DayOfWeek"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DayOfMonth" source="DayOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BusinessDay" source="CC_BusinessDay"/>
+    </input>
+    <input node="P_FiscalCal">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FinYear" source="CC_FinYear"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+    </input>
+    <joinAttribute name="DATE_SQL"/>
   </calculationView>
 </calculationViews>
-<logicalModel id="Union_1">
+<logicalModel id="J_TimeTHOC_Fiscal">
   <attributes>
-    <attribute id="DATE_SQL" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="DATE_SQL"/>
-      <keyMapping columnObjectName="Union_1" columnName="DATE_SQL"/>
+    <attribute id="DATE_SQL" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Date"/>
+      <keyMapping columnObjectName="J_TimeTHOC_Fiscal" columnName="DATE_SQL"/>
     </attribute>
-    <attribute id="DATETIME_SAP" order="2" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="DATETIME_SAP"/>
-      <keyMapping columnObjectName="Union_1" columnName="DATETIME_SAP"/>
+    <attribute id="CalendarYear" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Year"/>
+      <keyMapping columnObjectName="J_TimeTHOC_Fiscal" columnName="CalendarYear"/>
     </attribute>
-    <attribute id="DATE_SAP" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="DATE_SAP"/>
-      <keyMapping columnObjectName="Union_1" columnName="DATE_SAP"/>
-    </attribute>
-    <attribute id="CalendarYear" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Calendar Year"/>
-      <keyMapping columnObjectName="Union_1" columnName="CalendarYear"/>
-    </attribute>
-    <attribute id="CalendarQuarter" order="5" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CalendarQuarter" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Calendar Quarter"/>
-      <keyMapping columnObjectName="Union_1" columnName="CalendarQuarter"/>
+      <keyMapping columnObjectName="J_TimeTHOC_Fiscal" columnName="CalendarQuarter"/>
     </attribute>
-    <attribute id="CalendarMonth" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CalendarMonth" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Calendar Month"/>
-      <keyMapping columnObjectName="Union_1" columnName="CalendarMonth"/>
+      <keyMapping columnObjectName="J_TimeTHOC_Fiscal" columnName="CalendarMonth"/>
     </attribute>
-    <attribute id="CalendarWeek" order="7" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CalendarWeek" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Calendar Week"/>
-      <keyMapping columnObjectName="Union_1" columnName="CalendarWeek"/>
+      <keyMapping columnObjectName="J_TimeTHOC_Fiscal" columnName="CalendarWeek"/>
     </attribute>
-    <attribute id="CalendarDayOfWeek" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Calendar Day of Week"/>
-      <keyMapping columnObjectName="Union_1" columnName="CalendarDayOfWeek"/>
+    <attribute id="DayOfWeek" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Day of Week"/>
+      <keyMapping columnObjectName="J_TimeTHOC_Fiscal" columnName="DayOfWeek"/>
     </attribute>
-    <attribute id="DayOfMonth" order="9" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="DayOfMonth" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Day of Month"/>
-      <keyMapping columnObjectName="Union_1" columnName="DayOfMonth"/>
-    </attribute></attributes>
+      <keyMapping columnObjectName="J_TimeTHOC_Fiscal" columnName="DayOfMonth"/>
+    </attribute>
+    <attribute id="CC_BusinessDay" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Day"/>
+      <keyMapping columnObjectName="J_TimeTHOC_Fiscal" columnName="CC_BusinessDay"/>
+    </attribute>
+    <attribute id="CC_FinYear" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Financial Year"/>
+      <keyMapping columnObjectName="J_TimeTHOC_Fiscal" columnName="CC_FinYear"/>
+    </attribute>
+  </attributes>
   <calculatedAttributes/>
   <baseMeasures/>
   <calculatedMeasures>
-    <measure id="Counter" order="10" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+    <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Counter"/>
       <exceptionAggregation>
         <attribute attributeName="DATE_SQL"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
       
       </measure>
   </calculatedMeasures>
@@ -171,23 +288,47 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="221" y="112"/>
+      <upperLeftCorner x="328" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_TimeDimension" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="356"/>
+      <upperLeftCorner x="92" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_THOC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="356"/>
+      <upperLeftCorner x="302" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="221" y="217"/>
+    <shape expanded="true" modelObjectName="J_TimeDim_THOC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118" y="356"/>
       <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_TimeDimension" modelObjectNameSpace="J_TimeDim_THOC" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_THOC" modelObjectNameSpace="J_TimeDim_THOC" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_FiscalCal" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="395" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_TimeTHOC_Fiscal" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="328" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_TimeDim_THOC" modelObjectNameSpace="J_TimeTHOC_Fiscal" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_FiscalCal" modelObjectNameSpace="J_TimeTHOC_Fiscal" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
     </shape>
   </shapes>
 </layout>
