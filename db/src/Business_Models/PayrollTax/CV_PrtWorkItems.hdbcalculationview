@@ -62,6 +62,13 @@
       <viewAttribute id="CC_Status">
         <descriptions defaultDescription="CC_TI_Status"/>
       </viewAttribute>
+    
+      <viewAttribute id="ACTIVITY_PARTNER">
+        <descriptions defaultDescription="Activity Partner"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FullName">
+        <descriptions defaultDescription="CC_FullName"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_WorkItemGroup" datatype="NVARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
@@ -157,6 +164,9 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief ') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemType" source="CC_PRT_Type"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Status" source="CC_TI_Status"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="ACTIVPART_NAME"/>
     </input>
   
     <input node="P_PRT_WF" emptyUnionBehavior="NO_ROW">
@@ -187,6 +197,12 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief ') , 'Other Whitemail'
     
   
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Status" source="CC_StatusWF"/>
+  
+    
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="TAXPAYER"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
   
     </input>
   </calculationView>
@@ -229,6 +245,13 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief ') , 'Other Whitemail'
       <viewAttribute id="CC_PRT_Type">
         <descriptions defaultDescription="CC_PRT_Type"/>
       </viewAttribute>
+      <viewAttribute id="ACTIVITY_PARTNER">
+        <descriptions defaultDescription="Activity Partner"/>
+      </viewAttribute>
+      <viewAttribute id="ACTIVPART_NAME">
+        <descriptions defaultDescription="Activity Partner Name"/>
+      </viewAttribute>
+    
       <viewAttribute id="CHANGED_BY">
         <descriptions defaultDescription="Changed By (Team Member)"/>
       </viewAttribute>
@@ -295,6 +318,9 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief ') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRT_Type" source="CC_PRT_Type"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVPART_NAME" source="ACTIVPART_NAME"/>
     </input></calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_PRT_WF">
     <viewAttributes>
@@ -334,6 +360,13 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief ') , 'Other Whitemail'
       <viewAttribute id="CC_PRT_WF_Type">
         <descriptions defaultDescription="PRT Workflow Type"/>
       </viewAttribute>
+      <viewAttribute id="TAXPAYER">
+        <descriptions defaultDescription="TAXPAYER"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FullName">
+        <descriptions defaultDescription="CC_FullName"/>
+      </viewAttribute>
+    
     
       <viewAttribute id="WI_TYPE">
         <descriptions defaultDescription="Work Item Type"/>
@@ -349,12 +382,12 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief ') , 'Other Whitemail'
         <formula>1</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Days_Bt_Creation_ModWF" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;WI_STAT&quot;='COMPLETED',daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;),daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;))</formula>
+        <formula>if(&quot;WI_STAT&quot;='COMPLETED' or &quot;WI_STAT&quot;='CANCELLED',daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;),daysbetween(&quot;CC_CreatedDate&quot;, now()))</formula>
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_StatusWF" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>if(&quot;WI_STAT&quot; = 'COMPLETED' OR &quot;WI_STAT&quot; = 'FINALISED', 'Closed Status', 'Open Status')</formula>
+        <formula>if(&quot;WI_STAT&quot; = 'COMPLETED' OR &quot;WI_STAT&quot; = 'FINALISED' OR &quot;WI_STAT&quot; = 'CANCELLED', 'Closed Status', 'Open Status')</formula>
     
       </calculatedViewAttribute>
     </calculatedViewAttributes>
@@ -374,7 +407,10 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief ') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CompletedByName" source="CompletedByName"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRT_WF_Type" source="CC_PRT_WF_Type"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/></input></calculationView>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="TAXPAYER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
+    </input></calculationView>
 </calculationViews>
 <logicalModel id="U_PrtTasksInteractions_Workflow">
   <attributes>
@@ -407,7 +443,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief ') , 'Other Whitemail'
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="SHORT"/>
     </attribute>
     <attribute id="Source" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Source or Work Item"/>
+      <descriptions defaultDescription="Source of Work Item"/>
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="Source"/>
     </attribute>
     <attribute id="WorkItemDescription" order="13" displayAttribute="false" attributeHierarchyActive="false">
@@ -415,7 +451,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief ') , 'Other Whitemail'
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WorkItemDescription"/>
     </attribute>
     <attribute id="Status" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Original Status"/>
+      <descriptions defaultDescription="Status - Original"/>
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="Status"/>
     </attribute>
     <attribute id="WorkItemID" order="15" displayAttribute="false" attributeHierarchyActive="false">
@@ -423,19 +459,30 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief ') , 'Other Whitemail'
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WorkItemID"/>
     </attribute>
     <attribute id="WorkItemType" order="16" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Work Item Group"/>
+      <descriptions defaultDescription="Work Item Type"/>
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WorkItemType"/>
     </attribute>
   
     <attribute id="CC_Status" order="17" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Open or Closed Status"/>
+      <descriptions defaultDescription="Status - Open or Closed "/>
   
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_Status"/>
   
     </attribute>
     <attribute id="CC_WorkItemGroup" order="18" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_WorkItemGroup"/>
+      <descriptions defaultDescription="Work Item Group"/>
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_WorkItemGroup"/>
+    </attribute>
+  
+    <attribute id="BP" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner"/>
+  
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="ACTIVITY_PARTNER"/>
+  
+    </attribute>
+    <attribute id="BPName" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Name"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_FullName"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -474,11 +521,19 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief ') , 'Other Whitemail'
       
       
       
+      
+      
+      
+      
       </measure>
   
     <measure id="CC_WorkItemDurationAvg" order="10" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Workflow Item (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
+      
+      
+      
       
       
       
