@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CV_PeriodsDueDate" applyPrivilegeType="NONE" dataCategory="DIMENSION" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_PeriodsDueDate"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.synonyms::TFMCA_INCORR_PER">
+    <resourceUri>osr.business.semantic.db.synonyms::TFMCA_INCORR_PER</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Periods">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="INCOTYP">
+        <descriptions defaultDescription="INCOTYP"/>
+      </viewAttribute>
+      <viewAttribute id="PERSL">
+        <descriptions defaultDescription="PERSL"/>
+      </viewAttribute>
+      <viewAttribute id="INCORR_FAEDN">
+        <descriptions defaultDescription="INCORR_FAEDN"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_Usage" datatype="VARCHAR" length="25" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(leftstr(&quot;INCOTYP&quot;,2)='PT','Payroll Tax',
+    if(leftstr(&quot;INCOTYP&quot;,2)='RY','Royalty Tax','Other'
+    )
+)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_PeriodCycle" datatype="VARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(rightstr(&quot;PERSL&quot;,1)='M','Month',
+    if(rightstr(&quot;PERSL&quot;,1)='Q','Quarter',
+        if(rightstr(&quot;PERSL&quot;,1)='H','Half-Year',
+            if(rightstr(&quot;PERSL&quot;,1)='A','Annual','Other'
+            )
+        )
+    )
+)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_DueDate" datatype="DATE" expressionLanguage="SQL">
+        <formula>TO_DATE(&quot;INCORR_FAEDN&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::TFMCA_INCORR_PER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INCOTYP" source="INCOTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INCORR_FAEDN" source="INCORR_FAEDN"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="P_Periods">
+  <attributes>
+    <attribute id="CLIENT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SAP Client"/>
+      <keyMapping columnObjectName="P_Periods" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="INCOTYP" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Cycle Category"/>
+      <keyMapping columnObjectName="P_Periods" columnName="INCOTYP"/>
+    </attribute>
+    <attribute id="PERSL" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Period Key"/>
+      <keyMapping columnObjectName="P_Periods" columnName="PERSL"/>
+    </attribute>
+    <attribute id="CC_Usage" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Usage Area"/>
+      <keyMapping columnObjectName="P_Periods" columnName="CC_Usage"/>
+    </attribute>
+    <attribute id="CC_PeriodCycle" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Period Cycle"/>
+      <keyMapping columnObjectName="P_Periods" columnName="CC_PeriodCycle"/>
+    </attribute>
+    <attribute id="CC_DueDate" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Period Due Date"/>
+      <keyMapping columnObjectName="P_Periods" columnName="CC_DueDate"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/></logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_Periods" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="95" y="200"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
