@@ -492,7 +492,7 @@ AND
     )
 )</formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute id="Age" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="AgeMonths" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND date('$$IP_KeyDate$$')&lt;date(&quot;AUGDT&quot;)),
     if(&quot;STUDT&quot;='00000000',
         if(date(&quot;DFKKOP_FAEDN&quot;)&lt;date('$$IP_KeyDate$$'),
@@ -518,15 +518,39 @@ AND
 </formula>
       </calculatedViewAttribute>
     
-      <calculatedViewAttribute id="AgeStatus" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="AgeMonthsStatus" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>if(in(&quot;Age&quot;,'0','1','2'),'&lt; 3 Months',
-if(in(&quot;Age&quot;,'3','4','5'),'3 to 6 Months',
-if(in(&quot;Age&quot;,'6','7','8','9','10','11'),'6 to 12 Months',
-if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23'),'12 to 24 Months',
-'&gt; 24 Months'
-))))</formula>
+        <formula>if(&quot;AgeMonths&quot; &gt;= 0 AND &quot;AgeMonths&quot; &lt;= 2,'&lt; 3 Months',
+if(&quot;AgeMonths&quot; &gt;= 3 AND &quot;AgeMonths&quot; &lt;= 6,'3 to 6 Months',
+if(&quot;AgeMonths&quot; &gt;= 7 AND &quot;AgeMonths&quot; &lt;= 12,'7 to 12 Months',
+if(&quot;AgeMonths&quot; &gt;= 13 AND &quot;AgeMonths&quot; &lt;= 24,'13 to 24 Months',
+if(&quot;AgeMonths&quot; &gt; 24,'&gt; 24 Months',
+'Err/Neg Months'
+)))))</formula>
     
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="AgeDays" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;AUGDT&quot;='00000000',
+    if(&quot;STUDT&quot;='00000000',
+        daysbetween(date(&quot;DFKKOP_FAEDN&quot;),date('$$IP_KeyDate$$')),
+        daysbetween(date(&quot;STUDT&quot;),date('$$IP_KeyDate$$'))
+    ),
+    if(&quot;STUDT&quot;='00000000',
+        daysbetween(date(&quot;DFKKOP_FAEDN&quot;),date(&quot;AUGDT&quot;)),
+        daysbetween(date(&quot;STUDT&quot;),date(&quot;AUGDT&quot;))
+    )
+)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="AgeDaysStatus" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;AgeDays&quot; &gt;= 0 AND &quot;AgeDays&quot; &lt;= 13,'&lt; 14 Days',
+if(&quot;AgeDays&quot; &gt;= 14 AND &quot;AgeDays&quot; &lt;= 20,'14 to 20 Days',
+if(&quot;AgeDays&quot; &gt;= 21 AND &quot;AgeDays&quot; &lt;= 29,'21 to 29 Days',
+if(&quot;AgeDays&quot; &gt;= 30 AND &quot;AgeDays&quot; &lt;= 59,'30 to 59 Days',
+if(&quot;AgeDays&quot; &gt;= 60 AND &quot;AgeDays&quot; &lt;= 90,'60 to 90 Days',
+if(&quot;AgeDays&quot; &gt; 90, '&gt; 90 Days',
+'Err/Neg Days'
+))))))</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -1104,6 +1128,13 @@ if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23
       <viewAttribute id="AgeStatus">
         <descriptions defaultDescription="AgeStatus"/>
       </viewAttribute>
+    
+      <viewAttribute id="AgeDays">
+        <descriptions defaultDescription="AgeDays"/>
+      </viewAttribute>
+      <viewAttribute id="AgeDaysStatus">
+        <descriptions defaultDescription="AgeDaysStatus"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1251,8 +1282,11 @@ if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23
     
       <mapping xsi:type="Calculation:AttributeMapping" target="Doubtful" source="Doubtful"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OverdueStatus" source="OverdueStatus"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Age" source="Age"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AgeStatus" source="AgeStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Age" source="AgeMonths"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeStatus" source="AgeMonthsStatus"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
     </input>
     <input node="P_TFKHVOT">
       <mapping xsi:type="Calculation:AttributeMapping" target="TFKHVOT_TXT30" source="TFKHVOT_TXT30"/>
@@ -1716,6 +1750,13 @@ if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23
       <viewAttribute id="AgeStatus">
         <descriptions defaultDescription="AgeStatus"/>
       </viewAttribute>
+    
+      <viewAttribute id="AgeDays">
+        <descriptions defaultDescription="AgeDays"/>
+      </viewAttribute>
+      <viewAttribute id="AgeDaysStatus">
+        <descriptions defaultDescription="AgeDaysStatus"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1866,6 +1907,9 @@ if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23
       <mapping xsi:type="Calculation:AttributeMapping" target="OverdueStatus" source="OverdueStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Age" source="Age"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeStatus" source="AgeStatus"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
     </input>
     <input node="P_TFKTVOT">
       <mapping xsi:type="Calculation:AttributeMapping" target="TFKTVOT_TXT30" source="TFKTVOT_TXT30"/>
@@ -2339,6 +2383,13 @@ if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23
       <viewAttribute id="AgeStatus">
         <descriptions defaultDescription="AgeStatus"/>
       </viewAttribute>
+    
+      <viewAttribute id="AgeDays">
+        <descriptions defaultDescription="AgeDays"/>
+      </viewAttribute>
+      <viewAttribute id="AgeDaysStatus">
+        <descriptions defaultDescription="AgeDaysStatus"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -2490,6 +2541,9 @@ if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23
       <mapping xsi:type="Calculation:AttributeMapping" target="OverdueStatus" source="OverdueStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Age" source="Age"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeStatus" source="AgeStatus"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
     </input>
     <input node="P_TFK003T">
       <mapping xsi:type="Calculation:AttributeMapping" target="TFK003T_LTEXT" source="TFK003T_LTEXT"/>
@@ -2966,6 +3020,13 @@ if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23
       <viewAttribute id="AgeStatus">
         <descriptions defaultDescription="AgeStatus"/>
       </viewAttribute>
+    
+      <viewAttribute id="AgeDays">
+        <descriptions defaultDescription="AgeDays"/>
+      </viewAttribute>
+      <viewAttribute id="AgeDaysStatus">
+        <descriptions defaultDescription="AgeDaysStatus"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -3119,6 +3180,9 @@ if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23
       <mapping xsi:type="Calculation:AttributeMapping" target="OverdueStatus" source="OverdueStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Age" source="Age"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeStatus" source="AgeStatus"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
     </input>
     <input node="P_TFK001AT">
       <mapping xsi:type="Calculation:AttributeMapping" target="TFK001AT_TXT50" source="TXT50"/>
@@ -3667,6 +3731,15 @@ if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23
       <descriptions defaultDescription="Age Status"/>
       <keyMapping columnObjectName="J_FINANCIALS_FISCAL_TFKHVOT_TFKTVOT_TFK003T_TFK001AT" columnName="AgeStatus"/>
     </attribute>
+  
+    <attribute id="AgeDays" order="148" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AgeDays"/>
+      <keyMapping columnObjectName="J_FINANCIALS_FISCAL_TFKHVOT_TFKTVOT_TFK003T_TFK001AT" columnName="AgeDays"/>
+    </attribute>
+    <attribute id="AgeDaysStatus" order="149" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AgeDaysStatus"/>
+      <keyMapping columnObjectName="J_FINANCIALS_FISCAL_TFKHVOT_TFKTVOT_TFK003T_TFK001AT" columnName="AgeDaysStatus"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -3772,6 +3845,7 @@ if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23
       
       
       
+      
       </measure>
   
     <measure id="DocumentCounter" order="147" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -3780,6 +3854,7 @@ if(in(&quot;Age&quot;,'12','13','14','15','16','17','18','19','20','21','22','23
         <attribute attributeName="OPBEL"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       </measure>
