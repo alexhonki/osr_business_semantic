@@ -514,8 +514,7 @@ AND
             null
         )
     )
-)
-</formula>
+)</formula>
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="AgeMonthsStatus" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
@@ -534,12 +533,24 @@ if(&quot;AgeMonths&quot; &gt; 24,'&gt; 24 Months',
     
         <formula>if(&quot;AUGDT&quot;='00000000',
     if(&quot;STUDT&quot;='00000000',
-        daysbetween(date(&quot;DFKKOP_FAEDN&quot;),date('$$IP_KeyDate$$')),
-        daysbetween(date(&quot;STUDT&quot;),date('$$IP_KeyDate$$'))
+        if(date(&quot;DFKKOP_FAEDN&quot;)&lt;date('$$IP_KeyDate$$'),
+            daysbetween(date(&quot;DFKKOP_FAEDN&quot;),date('$$IP_KeyDate$$')),
+            null
+        ),
+        if(date(&quot;STUDT&quot;)&lt;date('$$IP_KeyDate$$'),
+            daysbetween(date(&quot;STUDT&quot;),date('$$IP_KeyDate$$')),
+            null
+        )
     ),
     if(&quot;STUDT&quot;='00000000',
-        daysbetween(date(&quot;DFKKOP_FAEDN&quot;),date(&quot;AUGDT&quot;)),
-        daysbetween(date(&quot;STUDT&quot;),date(&quot;AUGDT&quot;))
+        if(date(&quot;DFKKOP_FAEDN&quot;)&lt;date(&quot;AUGDT&quot;),
+            daysbetween(date(&quot;DFKKOP_FAEDN&quot;),date(&quot;AUGDT&quot;)),
+            null
+        ),
+        if(date(&quot;STUDT&quot;)&lt;date(&quot;AUGDT&quot;),
+            daysbetween(date(&quot;STUDT&quot;),date(&quot;AUGDT&quot;)),
+            null
+        )
     )
 )</formula>
     

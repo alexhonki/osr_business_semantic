@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_FnFinancials"/>
 <localVariables>
   <variable id="IP_KeyDate" parameter="true">
@@ -1335,7 +1335,7 @@
     </input>
     <filter>date(&quot;ZZTFLD2WCKOA&quot;) &lt;= date('$$IP_KeyDate$$') AND date(&quot;ZZTFLD2ACBOA&quot;) &gt;= date('$$IP_KeyDate$$')</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_FIN_SOLVENCY" cardinality="CN_N" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_FIN_SOLVENCY" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
@@ -1953,6 +1953,31 @@
     <joinAttribute name="MANDT"/>
     <joinAttribute name="DFKK_H_GPART"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_CONTRACTBALANCE" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="DFKKOP_VKONT">
+        <descriptions defaultDescription="DFKKOP_VKONT"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
+      </viewAttribute>
+      <viewAttribute id="OpenItemFlag">
+        <descriptions defaultDescription="OpenItemFlag"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_Financials">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_VKONT" source="DFKKOP_VKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
+    </input>
+    <filter>&quot;OpenItemFlag&quot;='X'</filter>
+  </calculationView>
 </calculationViews>
 <logicalModel id="J_FIN_SOLVENCY">
   <attributes>
@@ -2457,7 +2482,9 @@
   
     <attribute id="AgeMonths" order="148" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Age Months"/>
+  
       <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AgeMonths"/>
+  
     </attribute>
     <attribute id="AgeMonthsStatus" order="149" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Age Months Status"/>
@@ -2480,7 +2507,18 @@
       <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="ZZTFLDPVC3OA"/>
     </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="AccountBalanceStatus" order="155" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Account Balance Status"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
+        <formula>if(&quot;OpenItemBalance&quot; &gt; 0,'Debit Balance',
+if(&quot;OpenItemBalance&quot; = 0,'Nil Balance',
+if(&quot;OpenItemBalance&quot; &lt; 0,'Credit Balance',
+string(null)
+)))</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures>
     <measure id="KURSF" order="22" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Exchange rate"/>
@@ -2581,6 +2619,7 @@
       
       
       
+      
       </measure>
   
     <measure id="FBNCounter" order="147" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -2590,9 +2629,26 @@
       </exceptionAggregation>
       <formula>1</formula>
       
+      
       </measure>
   </calculatedMeasures>
-  <restrictedMeasures/>
+  <restrictedMeasures>
+    <measure id="OpenItemBalance" order="154" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      <descriptions defaultDescription="Open Item Balance"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="OpenItemFlag">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="X"/>
+        </filter>
+        <attributeName>OpenItemFlag</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="B1"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      </measure>
+  </restrictedMeasures>
   <localDimensions/>
 </logicalModel>
 <layout>
@@ -2602,7 +2658,7 @@
     </shape>
   
     <shape expanded="true" modelObjectName="P_CV_Financials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="532"/>
+      <upperLeftCorner x="100" y="772"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
@@ -2638,6 +2694,11 @@
     <shape modelObjectName="P_CV_BpSolvency" modelObjectNameSpace="J_FIN_SOLVENCY" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="AGG_CONTRACTBALANCE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-106" y="603"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
 </layout>
