@@ -58,8 +58,8 @@
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_BK_VALID_FROM" datatype="VARCHAR" length="13" expressionLanguage="SQL">
-        <formula>TO_DATE(left(&quot;BK_VALID_FROM&quot;,8))</formula>
+      <calculatedViewAttribute id="CC_BK_VALID_FROM" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+        <formula>DATE(&quot;BK_VALID_FROM&quot;)</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -80,7 +80,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="BK_VALID_TO" source="BK_VALID_TO"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_WORKFLOW" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_WORKFLOW" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="Counter">
         <descriptions defaultDescription="Workflow ID Counter"/>
@@ -150,8 +150,8 @@
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_BP_NO_10" datatype="VARCHAR" length="10" expressionLanguage="SQL">
-        <formula>concat('000',left(substr_after(&quot;WI_TEXT&quot;,'BP '),7))</formula>
+      <calculatedViewAttribute id="CC_BP_NO_10" datatype="VARCHAR" length="10" expressionLanguage="COLUMN_ENGINE">
+        <formula>'000'+midstr(&quot;WI_TEXT&quot;,instr(&quot;WI_TEXT&quot;,'BP ')+3,7)</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -506,7 +506,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_Mod"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_NO_10" source="CC_BP_NO_10"/>
     </input>
-    <windowFunction>
+    <windowFunction dynamicPartitionAttributes="null">
       <partitionViewAttributeName>MANDT</partitionViewAttributeName>
       <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
       <partitionViewAttributeName>BANKL</partitionViewAttributeName>
@@ -652,11 +652,11 @@
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="Counter" order="17" aggregationType="sum" engineAggregation="sum" measureType="simple">
+    <measure id="Counter" order="17" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Workflow ID Counter"/>
       <measureMapping columnObjectName="LATEST_WORKFLOW" columnName="Counter"/>
     </measure>
-    <measure id="CC_WorkflowDurationAvg" order="18" aggregationType="sum" engineAggregation="sum" measureType="simple">
+    <measure id="CC_WorkflowDurationAvg" order="18" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Workflow Duration (Aggr. Avg.)"/>
       <measureMapping columnObjectName="LATEST_WORKFLOW" columnName="CC_WorkflowDurationAvg"/>
     </measure>
@@ -687,6 +687,7 @@
       </exceptionAggregation>
       <formula>1</formula>
       
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -695,22 +696,22 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="241.21650018073555" y="112"/>
+      <upperLeftCorner x="241" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BUT0BK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92.00000000000007" y="501.9999976158142"/>
+      <upperLeftCorner x="92" y="501"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_WORKFLOW" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302.0000000000001" y="501.9999976158142"/>
+      <upperLeftCorner x="302" y="501"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BUT0BK_WORKFLOW" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="222.93631278293594" y="341.9999988079071"/>
+      <upperLeftCorner x="222" y="341"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BUT0BK" modelObjectNameSpace="J_BUT0BK_WORKFLOW" modelObjectType="JoinNodeInput">
@@ -722,7 +723,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="LATEST_WORKFLOW" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="222.93631278293594" y="236.9999988079071"/>
+      <upperLeftCorner x="222" y="236"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
