@@ -7,6 +7,9 @@
   <DataSource id="osr.business.semantic.db.synonyms::BUT0BK">
     <resourceUri>osr.business.semantic.db.synonyms::BUT0BK</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Workflow">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Workflow</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_BUT0BK" ignoreMultipleOutputsForFilter="false">
@@ -54,7 +57,11 @@
         <descriptions defaultDescription="BK_VALID_TO"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_BK_VALID_FROM" datatype="VARCHAR" length="13" expressionLanguage="SQL">
+        <formula>TO_DATE(left(&quot;BK_VALID_FROM&quot;,8))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::BUT0BK">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -73,70 +80,605 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="BK_VALID_TO" source="BK_VALID_TO"/>
     </input>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_WORKFLOW" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="Counter">
+        <descriptions defaultDescription="Workflow ID Counter"/>
+      </viewAttribute>
+      <viewAttribute id="CC_WorkflowDurationAvg">
+        <descriptions defaultDescription="Workflow Duration (Aggr. Avg.)"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="WI_ID">
+        <descriptions defaultDescription="Work Flow ID"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TYPE">
+        <descriptions defaultDescription="Workflow Type"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TEXT">
+        <descriptions defaultDescription="Workflow Desc"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RHTEXT">
+        <descriptions defaultDescription="Workflow Task Short Text"/>
+      </viewAttribute>
+      <viewAttribute id="WI_STAT">
+        <descriptions defaultDescription="Workflow Status"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CHCKWI">
+        <descriptions defaultDescription="Workflow Superordinate"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RH_TASK">
+        <descriptions defaultDescription="Workflow Task ID"/>
+      </viewAttribute>
+      <viewAttribute id="TOP_WI_ID">
+        <descriptions defaultDescription="Top Level ID"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedDate">
+        <descriptions defaultDescription="Created Date"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedDate">
+        <descriptions defaultDescription="Completed Date"/>
+      </viewAttribute>
+      <viewAttribute id="CreatedByName">
+        <descriptions defaultDescription="Created By Name"/>
+      </viewAttribute>
+      <viewAttribute id="LastForwardedByName">
+        <descriptions defaultDescription="Forwarded By Name"/>
+      </viewAttribute>
+      <viewAttribute id="CC_RowCount">
+        <descriptions defaultDescription="Row Count"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedAtTime">
+        <descriptions defaultDescription="Created Time"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedTime">
+        <descriptions defaultDescription="Completed Time"/>
+      </viewAttribute>
+      <viewAttribute id="CompletedByName">
+        <descriptions defaultDescription="Completed By Name"/>
+      </viewAttribute>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="Org. Unit (Team)"/>
+      </viewAttribute>
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Days_Bt_Creation_Mod">
+        <descriptions defaultDescription="Days_Bt_Creation_Mod"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_BP_NO_10" datatype="VARCHAR" length="10" expressionLanguage="SQL">
+        <formula>concat('000',left(substr_after(&quot;WI_TEXT&quot;,'BP '),7))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Workflow">
+      <mapping xsi:type="Calculation:AttributeMapping" target="Counter" source="Counter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WorkflowDurationAvg" source="CC_WorkflowDurationAvg"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_ID" source="WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TYPE" source="WI_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TEXT" source="WI_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RHTEXT" source="WI_RHTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_STAT" source="WI_STAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CHCKWI" source="WI_CHCKWI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RH_TASK" source="WI_RH_TASK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOP_WI_ID" source="TOP_WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedDate" source="CC_CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedDate" source="CC_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LastForwardedByName" source="LastForwardedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedAtTime" source="CC_CreatedAtTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedTime" source="CC_CompletedTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CompletedByName" source="CompletedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_Mod"/>
+    </input>
+    <filter>UPPER(&quot;WI_RHTEXT&quot;) = 'VERIFY BANK DETAILS' and &quot;WI_STAT&quot;='COMPLETED'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BUT0BK_WORKFLOW" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="BKVID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKS">
+        <descriptions defaultDescription="BANKS"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="BANKL"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="BANKN"/>
+      </viewAttribute>
+      <viewAttribute id="BKONT">
+        <descriptions defaultDescription="BKONT"/>
+      </viewAttribute>
+      <viewAttribute id="BKREF">
+        <descriptions defaultDescription="BKREF"/>
+      </viewAttribute>
+      <viewAttribute id="KOINH">
+        <descriptions defaultDescription="KOINH"/>
+      </viewAttribute>
+      <viewAttribute id="BKEXT">
+        <descriptions defaultDescription="BKEXT"/>
+      </viewAttribute>
+      <viewAttribute id="XEZER">
+        <descriptions defaultDescription="XEZER"/>
+      </viewAttribute>
+      <viewAttribute id="ACCNAME">
+        <descriptions defaultDescription="ACCNAME"/>
+      </viewAttribute>
+      <viewAttribute id="BK_VALID_FROM" aggregationType="sum">
+        <descriptions defaultDescription="BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="BK_VALID_TO" aggregationType="sum">
+        <descriptions defaultDescription="BK_VALID_TO"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="CC_BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="Counter" aggregationType="sum">
+        <descriptions defaultDescription="Workflow ID Counter"/>
+      </viewAttribute>
+      <viewAttribute id="CC_WorkflowDurationAvg" aggregationType="sum">
+        <descriptions defaultDescription="Workflow Duration (Aggr. Avg.)"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="WI_ID">
+        <descriptions defaultDescription="Work Flow ID"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TYPE">
+        <descriptions defaultDescription="Workflow Type"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TEXT">
+        <descriptions defaultDescription="Workflow Desc"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RHTEXT">
+        <descriptions defaultDescription="Workflow Task Short Text"/>
+      </viewAttribute>
+      <viewAttribute id="WI_STAT">
+        <descriptions defaultDescription="Workflow Status"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CHCKWI">
+        <descriptions defaultDescription="Workflow Superordinate"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RH_TASK">
+        <descriptions defaultDescription="Workflow Task ID"/>
+      </viewAttribute>
+      <viewAttribute id="TOP_WI_ID">
+        <descriptions defaultDescription="Top Level ID"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedDate">
+        <descriptions defaultDescription="Created Date"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedDate">
+        <descriptions defaultDescription="Completed Date"/>
+      </viewAttribute>
+      <viewAttribute id="CreatedByName">
+        <descriptions defaultDescription="Created By Name"/>
+      </viewAttribute>
+      <viewAttribute id="LastForwardedByName">
+        <descriptions defaultDescription="Forwarded By Name"/>
+      </viewAttribute>
+      <viewAttribute id="CC_RowCount" aggregationType="sum">
+        <descriptions defaultDescription="Row Count"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedAtTime" aggregationType="min">
+        <descriptions defaultDescription="Created Time"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedTime" aggregationType="min">
+        <descriptions defaultDescription="Completed Time"/>
+      </viewAttribute>
+      <viewAttribute id="CompletedByName">
+        <descriptions defaultDescription="Completed By Name"/>
+      </viewAttribute>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="Org. Unit (Team)"/>
+      </viewAttribute>
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Days_Bt_Creation_Mod" aggregationType="sum">
+        <descriptions defaultDescription="Days_Bt_Creation_Mod"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_NO_10">
+        <descriptions defaultDescription="CC_BP_NO_10"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BUT0BK">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKS" source="BANKS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKONT" source="BKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKREF" source="BKREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOINH" source="KOINH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKEXT" source="BKEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XEZER" source="XEZER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACCNAME" source="ACCNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BK_VALID_FROM" source="BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BK_VALID_TO" source="BK_VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+    </input>
+    <input node="P_WORKFLOW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="Counter" source="Counter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WorkflowDurationAvg" source="CC_WorkflowDurationAvg"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_ID" source="WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TYPE" source="WI_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TEXT" source="WI_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RHTEXT" source="WI_RHTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_STAT" source="WI_STAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CHCKWI" source="WI_CHCKWI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RH_TASK" source="WI_RH_TASK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOP_WI_ID" source="TOP_WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedDate" source="CC_CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedDate" source="CC_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LastForwardedByName" source="LastForwardedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedAtTime" source="CC_CreatedAtTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedTime" source="CC_CompletedTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CompletedByName" source="CompletedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_Mod"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_NO_10" source="CC_BP_NO_10"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="CC_BP_NO_10"/>
+    </input>
+    <joinAttribute name="CC_BK_VALID_FROM"/>
+    <joinAttribute name="PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="LATEST_WORKFLOW">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="BKVID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKS">
+        <descriptions defaultDescription="BANKS"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="BANKL"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="BANKN"/>
+      </viewAttribute>
+      <viewAttribute id="BKONT">
+        <descriptions defaultDescription="BKONT"/>
+      </viewAttribute>
+      <viewAttribute id="BKREF">
+        <descriptions defaultDescription="BKREF"/>
+      </viewAttribute>
+      <viewAttribute id="KOINH">
+        <descriptions defaultDescription="KOINH"/>
+      </viewAttribute>
+      <viewAttribute id="BKEXT">
+        <descriptions defaultDescription="BKEXT"/>
+      </viewAttribute>
+      <viewAttribute id="XEZER">
+        <descriptions defaultDescription="XEZER"/>
+      </viewAttribute>
+      <viewAttribute id="ACCNAME">
+        <descriptions defaultDescription="ACCNAME"/>
+      </viewAttribute>
+      <viewAttribute id="BK_VALID_FROM" aggregationType="sum">
+        <descriptions defaultDescription="BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="BK_VALID_TO" aggregationType="sum">
+        <descriptions defaultDescription="BK_VALID_TO"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="CC_BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="Counter" aggregationType="sum">
+        <descriptions defaultDescription="Workflow ID Counter"/>
+      </viewAttribute>
+      <viewAttribute id="CC_WorkflowDurationAvg" aggregationType="sum">
+        <descriptions defaultDescription="Workflow Duration (Aggr. Avg.)"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="WI_ID">
+        <descriptions defaultDescription="Work Flow ID"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TYPE">
+        <descriptions defaultDescription="Workflow Type"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TEXT">
+        <descriptions defaultDescription="Workflow Desc"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RHTEXT">
+        <descriptions defaultDescription="Workflow Task Short Text"/>
+      </viewAttribute>
+      <viewAttribute id="WI_STAT">
+        <descriptions defaultDescription="Workflow Status"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CHCKWI">
+        <descriptions defaultDescription="Workflow Superordinate"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RH_TASK">
+        <descriptions defaultDescription="Workflow Task ID"/>
+      </viewAttribute>
+      <viewAttribute id="TOP_WI_ID">
+        <descriptions defaultDescription="Top Level ID"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedDate">
+        <descriptions defaultDescription="Created Date"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedDate">
+        <descriptions defaultDescription="Completed Date"/>
+      </viewAttribute>
+      <viewAttribute id="CreatedByName">
+        <descriptions defaultDescription="Created By Name"/>
+      </viewAttribute>
+      <viewAttribute id="LastForwardedByName">
+        <descriptions defaultDescription="Forwarded By Name"/>
+      </viewAttribute>
+      <viewAttribute id="CC_RowCount" aggregationType="sum">
+        <descriptions defaultDescription="Row Count"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedAtTime" aggregationType="min">
+        <descriptions defaultDescription="Created Time"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedTime" aggregationType="min">
+        <descriptions defaultDescription="Completed Time"/>
+      </viewAttribute>
+      <viewAttribute id="CompletedByName">
+        <descriptions defaultDescription="Completed By Name"/>
+      </viewAttribute>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="Org. Unit (Team)"/>
+      </viewAttribute>
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Days_Bt_Creation_Mod" aggregationType="sum">
+        <descriptions defaultDescription="Days_Bt_Creation_Mod"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_NO_10">
+        <descriptions defaultDescription="CC_BP_NO_10"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BUT0BK_WORKFLOW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKS" source="BANKS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKONT" source="BKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKREF" source="BKREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOINH" source="KOINH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKEXT" source="BKEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XEZER" source="XEZER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACCNAME" source="ACCNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BK_VALID_FROM" source="BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BK_VALID_TO" source="BK_VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Counter" source="Counter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WorkflowDurationAvg" source="CC_WorkflowDurationAvg"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_ID" source="WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TYPE" source="WI_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TEXT" source="WI_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RHTEXT" source="WI_RHTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_STAT" source="WI_STAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CHCKWI" source="WI_CHCKWI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RH_TASK" source="WI_RH_TASK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOP_WI_ID" source="TOP_WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedDate" source="CC_CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedDate" source="CC_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LastForwardedByName" source="LastForwardedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedAtTime" source="CC_CreatedAtTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedTime" source="CC_CompletedTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CompletedByName" source="CompletedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_Mod"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_NO_10" source="CC_BP_NO_10"/>
+    </input>
+    <windowFunction>
+      <partitionViewAttributeName>MANDT</partitionViewAttributeName>
+      <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <partitionViewAttributeName>BANKL</partitionViewAttributeName>
+      <partitionViewAttributeName>BANKN</partitionViewAttributeName>
+      <partitionViewAttributeName>CC_BK_VALID_FROM</partitionViewAttributeName>
+      <order byViewAttributeName="WI_ID" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
 </calculationViews>
-<logicalModel id="P_BUT0BK">
+<logicalModel id="LATEST_WORKFLOW">
   <attributes>
-    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MANDT"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="MANDT"/>
+    <attribute id="MANDT" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="MANDT"/>
     </attribute>
-    <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="PARTNER"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="PARTNER"/>
+    <attribute id="PARTNER" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Number"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="PARTNER"/>
     </attribute>
-    <attribute id="BKVID" order="3" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BKVID"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="BKVID"/>
+    <attribute id="BKVID" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Details ID"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="BKVID"/>
     </attribute>
-    <attribute id="BANKS" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BANKS"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="BANKS"/>
+    <attribute id="BANKS" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Country Key"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="BANKS"/>
     </attribute>
-    <attribute id="BANKL" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BANKL"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="BANKL"/>
+    <attribute id="BANKL" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Key"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="BANKL"/>
     </attribute>
-    <attribute id="BANKN" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BANKN"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="BANKN"/>
+    <attribute id="BANKN" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Account Number"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="BANKN"/>
     </attribute>
-    <attribute id="BKONT" order="7" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BKONT"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="BKONT"/>
+    <attribute id="BKONT" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Control Key"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="BKONT"/>
     </attribute>
-    <attribute id="BKREF" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BKREF"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="BKREF"/>
+    <attribute id="BKREF" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Reference Details for Bank Details"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="BKREF"/>
     </attribute>
-    <attribute id="KOINH" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="KOINH"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="KOINH"/>
+    <attribute id="KOINH" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Account Holder Name"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="KOINH"/>
     </attribute>
-    <attribute id="BKEXT" order="10" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BKEXT"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="BKEXT"/>
+    <attribute id="BKEXT" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Details ID in External System"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="BKEXT"/>
     </attribute>
-    <attribute id="XEZER" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="XEZER"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="XEZER"/>
+    <attribute id="XEZER" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Indicator: Collection Authorisation"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="XEZER"/>
     </attribute>
-    <attribute id="ACCNAME" order="12" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ACCNAME"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="ACCNAME"/>
+    <attribute id="ACCNAME" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Name of Bank Account"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="ACCNAME"/>
     </attribute>
-    <attribute id="BK_VALID_FROM" order="13" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BK_VALID_FROM"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="BK_VALID_FROM"/>
+    <attribute id="BK_VALID_FROM" order="14" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Details Valid From"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="BK_VALID_FROM"/>
     </attribute>
-    <attribute id="BK_VALID_TO" order="14" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BK_VALID_TO"/>
-      <keyMapping columnObjectName="P_BUT0BK" columnName="BK_VALID_TO"/>
+    <attribute id="BK_VALID_TO" order="15" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Details Valid To"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="BK_VALID_TO"/>
+    </attribute>
+    <attribute id="CC_BK_VALID_FROM" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Details Valid From (Date)"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="CC_BK_VALID_FROM"/>
+    </attribute>
+    <attribute id="CLIENT" order="19" semanticType="empty" descriptionColumnName="CLIENT" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SAP Client"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="WI_ID" order="20" semanticType="empty" descriptionColumnName="WI_ID" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Work Flow ID"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="WI_ID"/>
+    </attribute>
+    <attribute id="WI_TYPE" order="21" semanticType="empty" descriptionColumnName="WI_TYPE" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Workflow Type"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="WI_TYPE"/>
+    </attribute>
+    <attribute id="WI_TEXT" order="22" semanticType="empty" descriptionColumnName="WI_TEXT" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Workflow Desc"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="WI_TEXT"/>
+    </attribute>
+    <attribute id="WI_RHTEXT" order="23" semanticType="empty" descriptionColumnName="WI_RHTEXT" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Workflow Task Short Text"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="WI_RHTEXT"/>
+    </attribute>
+    <attribute id="WI_STAT" order="24" semanticType="empty" descriptionColumnName="WI_STAT" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Workflow Status"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="WI_STAT"/>
+    </attribute>
+    <attribute id="WI_CHCKWI" order="25" semanticType="empty" descriptionColumnName="WI_CHCKWI" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Workflow Superordinate"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="WI_CHCKWI"/>
+    </attribute>
+    <attribute id="WI_RH_TASK" order="26" semanticType="empty" descriptionColumnName="WI_RH_TASK" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Workflow Task ID"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="WI_RH_TASK"/>
+    </attribute>
+    <attribute id="TOP_WI_ID" order="27" semanticType="empty" descriptionColumnName="TOP_WI_ID" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Top Level ID"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="TOP_WI_ID"/>
+    </attribute>
+    <attribute id="CC_CreatedDate" order="28" semanticType="empty" descriptionColumnName="CC_CreatedDate" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Created Date"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="CC_CreatedDate"/>
+    </attribute>
+    <attribute id="CC_CompletedDate" order="29" semanticType="empty" descriptionColumnName="CC_CompletedDate" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Completed Date"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="CC_CompletedDate"/>
+    </attribute>
+    <attribute id="CreatedByName" order="30" semanticType="empty" descriptionColumnName="CreatedByName" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Created By Name"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="CreatedByName"/>
+    </attribute>
+    <attribute id="LastForwardedByName" order="31" semanticType="empty" descriptionColumnName="LastForwardedByName" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Forwarded By Name"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="LastForwardedByName"/>
+    </attribute>
+    <attribute id="CompletedByName" order="35" semanticType="empty" descriptionColumnName="CompletedByName" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Completed By Name"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="CompletedByName"/>
+    </attribute>
+    <attribute id="ORGEH" order="36" semanticType="empty" descriptionColumnName="ORGEH" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Org. Unit (Team)"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="ORGEH"/>
+    </attribute>
+    <attribute id="SHORT" order="37" semanticType="empty" descriptionColumnName="SHORT" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="SHORT"/>
+    </attribute>
+    <attribute id="CC_BP_NO_10" order="39" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_BP_NO_10"/>
+      <keyMapping columnObjectName="LATEST_WORKFLOW" columnName="CC_BP_NO_10"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
-  <baseMeasures/>
+  <baseMeasures>
+    <measure id="Counter" order="17" aggregationType="sum" engineAggregation="sum" measureType="simple">
+      <descriptions defaultDescription="Workflow ID Counter"/>
+      <measureMapping columnObjectName="LATEST_WORKFLOW" columnName="Counter"/>
+    </measure>
+    <measure id="CC_WorkflowDurationAvg" order="18" aggregationType="sum" engineAggregation="sum" measureType="simple">
+      <descriptions defaultDescription="Workflow Duration (Aggr. Avg.)"/>
+      <measureMapping columnObjectName="LATEST_WORKFLOW" columnName="CC_WorkflowDurationAvg"/>
+    </measure>
+    <measure id="CC_RowCount" order="32" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Row Count"/>
+      <measureMapping columnObjectName="LATEST_WORKFLOW" columnName="CC_RowCount"/>
+    </measure>
+    <measure id="CC_CreatedAtTime" order="33" aggregationType="min" measureType="simple">
+      <descriptions defaultDescription="Created Time"/>
+      <measureMapping columnObjectName="LATEST_WORKFLOW" columnName="CC_CreatedAtTime"/>
+    </measure>
+    <measure id="CC_CompletedTime" order="34" aggregationType="min" measureType="simple">
+      <descriptions defaultDescription="Completed Time"/>
+      <measureMapping columnObjectName="LATEST_WORKFLOW" columnName="CC_CompletedTime"/>
+    </measure>
+    <measure id="CC_Days_Bt_Creation_Mod" order="38" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Days_Bt_Creation_Mod"/>
+      <measureMapping columnObjectName="LATEST_WORKFLOW" columnName="CC_Days_Bt_Creation_Mod"/>
+    </measure>
+  </baseMeasures>
   <calculatedMeasures>
-    <measure id="BP_BANK_DETAILS_COUNTER" order="15" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+    <measure id="BP_BANK_DETAILS_COUNTER" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="BP Bank Details Counter"/>
       <exceptionAggregation>
         <attribute attributeName="MANDT"/>
@@ -144,6 +686,7 @@
         <attribute attributeName="BKVID"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -152,13 +695,34 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="92" y="112"/>
+      <upperLeftCorner x="241.21650018073555" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BUT0BK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="217"/>
+      <upperLeftCorner x="92.00000000000007" y="501.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_WORKFLOW" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302.0000000000001" y="501.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BUT0BK_WORKFLOW" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="222.93631278293594" y="341.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_BUT0BK" modelObjectNameSpace="J_BUT0BK_WORKFLOW" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_WORKFLOW" modelObjectNameSpace="J_BUT0BK_WORKFLOW" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="LATEST_WORKFLOW" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="222.93631278293594" y="236.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
