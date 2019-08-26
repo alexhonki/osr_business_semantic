@@ -114,8 +114,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="WI_CT" source="WI_CT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WI_AED_TIMESTAMP" source="WI_AED_TIMESTAMP"/>
     </input>
-  
-    <filter>&quot;WI_TYPE&quot;='W'</filter>
+    <filter>&quot;WI_RH_TASK&quot; != 'TS90000210' AND &quot;WI_TYPE&quot;='W'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_USERINFO">
     <viewAttributes>
@@ -334,6 +333,13 @@
       <viewAttribute id="CC_CompletedTime" aggregationType="min">
         <descriptions defaultDescription="CC_CompletedTime"/>
       </viewAttribute>
+    
+      <viewAttribute id="WI_CD">
+        <descriptions defaultDescription="WI_CD"/>
+      </viewAttribute>
+      <viewAttribute id="WI_AED">
+        <descriptions defaultDescription="WI_AED"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -359,6 +365,9 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedAtTime" source="CC_CreatedAtTime"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedTime" source="CC_CompletedTime"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CD" source="WI_CD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AED" source="WI_AED"/>
     </input>
     <input node="P_USERINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
@@ -370,7 +379,7 @@
     <joinAttribute name="CLIENT"/>
     <joinAttribute name="WI_FORW_BY"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_USERS" cardinality="CN_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_AAGENT" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="CLIENT">
         <descriptions defaultDescription="CLIENT"/>
@@ -438,6 +447,19 @@
       <viewAttribute id="SHORT">
         <descriptions defaultDescription="Org. Unit (Team) Name"/>
       </viewAttribute>
+    
+      <viewAttribute id="ENDDA">
+        <descriptions defaultDescription="End of Validity"/>
+      </viewAttribute>
+      <viewAttribute id="BEGDA">
+        <descriptions defaultDescription="Beginning of Validity"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CD">
+        <descriptions defaultDescription="WI_CD"/>
+      </viewAttribute>
+      <viewAttribute id="WI_AED">
+        <descriptions defaultDescription="WI_AED"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -461,16 +483,22 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedAtTime" source="CC_CreatedAtTime"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedTime" source="CC_CompletedTime"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CD" source="WI_CD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AED" source="WI_AED"/>
     </input>
     <input node="P_USERINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="CompletedByName" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ENDDA" source="ENDDA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BEGDA" source="BEGDA"/>
     </input>
-    <joinAttribute leftColumn="CC_CompletedDate" rightColumn="ENDDA" operator="LE"/>
-    <joinAttribute leftColumn="CC_CompletedDate" rightColumn="BEGDA" operator="GE"/>
     <joinAttribute leftColumn="WI_AAGENT" rightColumn="BNAME" operator="EQ"/>
     <joinAttribute leftColumn="CLIENT" rightColumn="MANDT" operator="EQ"/>
+    <joinAttribute leftColumn="WI_AED" rightColumn="ENDDA" operator="LE"/>
+    <joinAttribute leftColumn="WI_AED" rightColumn="BEGDA" operator="GE"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_USERS">
     <viewAttributes>
@@ -531,15 +559,18 @@
       <viewAttribute id="SHORT">
         <descriptions defaultDescription="SHORT"/>
       </viewAttribute>
+    
+      <viewAttribute id="WI_AAGENT">
+        <descriptions defaultDescription="WI_AAGENT"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Days_Bt_Creation_Mod" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;WI_STAT&quot;='COMPLETED',daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;),daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;)) OR
-if(&quot;WI_STAT&quot;='CANCELLED',daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;),daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;))</formula>
+        <formula>if(&quot;WI_STAT&quot;='COMPLETED' or &quot;WI_STAT&quot;='CANCELLED',daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;),daysbetween(&quot;CC_CreatedDate&quot;, now()))</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="NEJ_USERS">
+    <input node="NEJ_AAGENT">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WI_ID" source="WI_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WI_TYPE" source="WI_TYPE"/>
@@ -559,6 +590,8 @@ if(&quot;WI_STAT&quot;='CANCELLED',daysbetween(&quot;CC_CreatedDate&quot;, &quot
       <mapping xsi:type="Calculation:AttributeMapping" target="CompletedByName" source="CompletedByName"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AAGENT" source="WI_AAGENT"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -628,6 +661,13 @@ if(&quot;WI_STAT&quot;='CANCELLED',daysbetween(&quot;CC_CreatedDate&quot;, &quot
       <descriptions defaultDescription="Org. Unit (Team) Name"/>
       <keyMapping columnObjectName="P_USERS" columnName="SHORT"/>
     </attribute>
+  
+    <attribute id="WI_AAGENT" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Processing User"/>
+  
+      <keyMapping columnObjectName="P_USERS" columnName="WI_AAGENT"/>
+  
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -669,11 +709,13 @@ if(&quot;WI_STAT&quot;='CANCELLED',daysbetween(&quot;CC_CreatedDate&quot;, &quot
       
       
       
+      
       </measure>
   
     <measure id="CC_WorkflowDurationAvg" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Workflow Duration (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
       
       
       
@@ -727,16 +769,16 @@ if(&quot;WI_STAT&quot;='CANCELLED',daysbetween(&quot;CC_CreatedDate&quot;, &quot
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="NEJ_USERS" modelObjectNameSpace="CalculationView">
+    <shape expanded="true" modelObjectName="NEJ_AAGENT" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="191" y="341"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_FWDUSER" modelObjectNameSpace="NEJ_USERS" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_FWDUSER" modelObjectNameSpace="NEJ_AAGENT" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_USERINFO" modelObjectNameSpace="NEJ_USERS" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
+    <shape modelObjectName="P_USERINFO" modelObjectNameSpace="NEJ_AAGENT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="375" y="88"/>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_USERS" modelObjectNameSpace="CalculationView">

@@ -232,11 +232,11 @@
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_ERSTP" datatype="TIMESTAMP" expressionLanguage="SQL">
-        <formula>TO_TIMESTAMP(TO_NVARCHAR(&quot;ERTSP&quot;))</formula>
+      <calculatedViewAttribute id="CC_CREATE_DATE" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+        <formula>date(if(leftstr(string(&quot;ERTSP&quot;),1) = '2',leftstr(string(&quot;ERTSP&quot;),8),''))</formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_AETSP" datatype="TIMESTAMP" expressionLanguage="SQL">
-        <formula>TO_TIMESTAMP(TO_NVARCHAR(&quot;AETSP&quot;))</formula>
+      <calculatedViewAttribute id="CC_UPDATE_DATE" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+        <formula>date(if(leftstr(string(&quot;AETSP&quot;),1) = '2',leftstr(string(&quot;AETSP&quot;),8),''))</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_VALIDATION" datatype="TIMESTAMP" expressionLanguage="SQL">
         <formula>TO_TIMESTAMP(TO_NVARCHAR(&quot;VALIDATION&quot;))</formula>
@@ -551,23 +551,15 @@
       <viewAttribute id="VALIDATION" aggregationType="sum">
         <descriptions defaultDescription="VALIDATION"/>
       </viewAttribute>
-      <viewAttribute id="CC_ERSTP" aggregationType="min">
-        <descriptions defaultDescription="CC_ERSTP"/>
-      </viewAttribute>
-      <viewAttribute id="CC_AETSP" aggregationType="min">
-        <descriptions defaultDescription="CC_AETSP"/>
-      </viewAttribute>
-      <viewAttribute id="CC_VALIDATION" aggregationType="min">
-        <descriptions defaultDescription="CC_VALIDATION"/>
-      </viewAttribute>
-      <viewAttribute id="CC_POSTMARK" aggregationType="min">
-        <descriptions defaultDescription="CC_POSTMARK"/>
-      </viewAttribute>
-      <viewAttribute id="CC_RECEIPT" aggregationType="min">
-        <descriptions defaultDescription="CC_RECEIPT"/>
-      </viewAttribute>
       <viewAttribute id="FBSTA_TEXT">
         <descriptions defaultDescription="TXT30"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_CREATE_DATE">
+        <descriptions defaultDescription="CC_CREATE_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_UPDATE_DATE">
+        <descriptions defaultDescription="CC_UPDATE_DATE"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -642,11 +634,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_ROW_NO" source="Z_RUN_ROW_NO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_SOURCE_SYS" source="Z_SOURCE_SYS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VALIDATION" source="VALIDATION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ERSTP" source="CC_ERSTP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AETSP" source="CC_AETSP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALIDATION" source="CC_VALIDATION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_POSTMARK" source="CC_POSTMARK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RECEIPT" source="CC_RECEIPT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CREATE_DATE" source="CC_CREATE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPDATE_DATE" source="CC_UPDATE_DATE"/>
     </input>
     <input node="P_TJ02T">
       <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA_TEXT" source="TXT30"/>
@@ -863,26 +852,18 @@
       <viewAttribute id="VALIDATION" aggregationType="sum">
         <descriptions defaultDescription="VALIDATION"/>
       </viewAttribute>
-      <viewAttribute id="CC_ERSTP" aggregationType="min">
-        <descriptions defaultDescription="CC_ERSTP"/>
-      </viewAttribute>
-      <viewAttribute id="CC_AETSP" aggregationType="min">
-        <descriptions defaultDescription="CC_AETSP"/>
-      </viewAttribute>
-      <viewAttribute id="CC_VALIDATION" aggregationType="min">
-        <descriptions defaultDescription="CC_VALIDATION"/>
-      </viewAttribute>
-      <viewAttribute id="CC_POSTMARK" aggregationType="min">
-        <descriptions defaultDescription="CC_POSTMARK"/>
-      </viewAttribute>
-      <viewAttribute id="CC_RECEIPT" aggregationType="min">
-        <descriptions defaultDescription="CC_RECEIPT"/>
-      </viewAttribute>
       <viewAttribute id="FBSTA_TEXT">
         <descriptions defaultDescription="FBSTA_TEXT"/>
       </viewAttribute>
       <viewAttribute id="REVENUE_TYPE_TEXT">
         <descriptions defaultDescription="ABTYPT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_CREATE_DATE">
+        <descriptions defaultDescription="CC_CREATE_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_UPDATE_DATE">
+        <descriptions defaultDescription="CC_UPDATE_DATE"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -957,12 +938,10 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_ROW_NO" source="Z_RUN_ROW_NO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_SOURCE_SYS" source="Z_SOURCE_SYS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VALIDATION" source="VALIDATION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ERSTP" source="CC_ERSTP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AETSP" source="CC_AETSP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALIDATION" source="CC_VALIDATION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_POSTMARK" source="CC_POSTMARK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RECEIPT" source="CC_RECEIPT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA_TEXT" source="FBSTA_TEXT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CREATE_DATE" source="CC_CREATE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPDATE_DATE" source="CC_UPDATE_DATE"/>
     </input>
     <input node="P_TFMCA_REVTYPET">
       <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_TYPE_TEXT" source="ABTYPT"/>
@@ -1258,21 +1237,6 @@
       <viewAttribute id="VALIDATION" aggregationType="sum">
         <descriptions defaultDescription="VALIDATION"/>
       </viewAttribute>
-      <viewAttribute id="CC_ERSTP" aggregationType="min">
-        <descriptions defaultDescription="CC_ERSTP"/>
-      </viewAttribute>
-      <viewAttribute id="CC_AETSP" aggregationType="min">
-        <descriptions defaultDescription="CC_AETSP"/>
-      </viewAttribute>
-      <viewAttribute id="CC_VALIDATION" aggregationType="min">
-        <descriptions defaultDescription="CC_VALIDATION"/>
-      </viewAttribute>
-      <viewAttribute id="CC_POSTMARK" aggregationType="min">
-        <descriptions defaultDescription="CC_POSTMARK"/>
-      </viewAttribute>
-      <viewAttribute id="CC_RECEIPT" aggregationType="min">
-        <descriptions defaultDescription="CC_RECEIPT"/>
-      </viewAttribute>
       <viewAttribute id="FBSTA_TEXT">
         <descriptions defaultDescription="FBSTA_TEXT"/>
       </viewAttribute>
@@ -1281,6 +1245,13 @@
       </viewAttribute>
       <viewAttribute id="FBTYP_TEXT">
         <descriptions defaultDescription="FBT_TEXT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_CREATE_DATE">
+        <descriptions defaultDescription="CC_CREATE_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_UPDATE_DATE">
+        <descriptions defaultDescription="CC_UPDATE_DATE"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -1355,13 +1326,11 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_ROW_NO" source="Z_RUN_ROW_NO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_SOURCE_SYS" source="Z_SOURCE_SYS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VALIDATION" source="VALIDATION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ERSTP" source="CC_ERSTP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AETSP" source="CC_AETSP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALIDATION" source="CC_VALIDATION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_POSTMARK" source="CC_POSTMARK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RECEIPT" source="CC_RECEIPT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA_TEXT" source="FBSTA_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_TYPE_TEXT" source="REVENUE_TYPE_TEXT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CREATE_DATE" source="CC_CREATE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPDATE_DATE" source="CC_UPDATE_DATE"/>
     </input>
     <input node="P_TFMCA_FPF_FBT">
       <mapping xsi:type="Calculation:AttributeMapping" target="FBTYP_TEXT" source="FBT_TEXT"/>
@@ -1580,21 +1549,6 @@
       <viewAttribute id="VALIDATION" aggregationType="sum">
         <descriptions defaultDescription="VALIDATION"/>
       </viewAttribute>
-      <viewAttribute id="CC_ERSTP" aggregationType="min">
-        <descriptions defaultDescription="CC_ERSTP"/>
-      </viewAttribute>
-      <viewAttribute id="CC_AETSP" aggregationType="min">
-        <descriptions defaultDescription="CC_AETSP"/>
-      </viewAttribute>
-      <viewAttribute id="CC_VALIDATION" aggregationType="min">
-        <descriptions defaultDescription="CC_VALIDATION"/>
-      </viewAttribute>
-      <viewAttribute id="CC_POSTMARK" aggregationType="min">
-        <descriptions defaultDescription="CC_POSTMARK"/>
-      </viewAttribute>
-      <viewAttribute id="CC_RECEIPT" aggregationType="min">
-        <descriptions defaultDescription="CC_RECEIPT"/>
-      </viewAttribute>
       <viewAttribute id="FBSTA_TEXT">
         <descriptions defaultDescription="FBSTA_TEXT"/>
       </viewAttribute>
@@ -1606,6 +1560,13 @@
       </viewAttribute>
       <viewAttribute id="IN_CHANNEL_TEXT">
         <descriptions defaultDescription="TXT50"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_CREATE_DATE">
+        <descriptions defaultDescription="CC_CREATE_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_UPDATE_DATE">
+        <descriptions defaultDescription="CC_UPDATE_DATE"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -1680,14 +1641,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_ROW_NO" source="Z_RUN_ROW_NO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_SOURCE_SYS" source="Z_SOURCE_SYS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VALIDATION" source="VALIDATION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ERSTP" source="CC_ERSTP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AETSP" source="CC_AETSP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALIDATION" source="CC_VALIDATION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_POSTMARK" source="CC_POSTMARK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RECEIPT" source="CC_RECEIPT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA_TEXT" source="FBSTA_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_TYPE_TEXT" source="REVENUE_TYPE_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBTYP_TEXT" source="FBTYP_TEXT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CREATE_DATE" source="CC_CREATE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPDATE_DATE" source="CC_UPDATE_DATE"/>
     </input>
     <input node="P_TFK068FT">
       <mapping xsi:type="Calculation:AttributeMapping" target="IN_CHANNEL_TEXT" source="TXT50"/>
@@ -1952,44 +1911,35 @@
       <descriptions defaultDescription="Z_SOURCE_SYS"/>
       <keyMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="Z_SOURCE_SYS"/>
     </attribute>
-    <attribute id="CC_ERSTP" order="65" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_ERSTP"/>
-      <keyMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="CC_ERSTP"/>
-    </attribute>
-    <attribute id="CC_AETSP" order="66" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_AETSP"/>
-      <keyMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="CC_AETSP"/>
-    </attribute>
-    <attribute id="CC_VALIDATION" order="67" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_VALIDATION"/>
-      <keyMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="CC_VALIDATION"/>
-    </attribute>
-    <attribute id="CC_POSTMARK" order="68" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_POSTMARK"/>
-      <keyMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="CC_POSTMARK"/>
-    </attribute>
-    <attribute id="CC_RECEIPT" order="69" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_RECEIPT"/>
-      <keyMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="CC_RECEIPT"/>
-    </attribute>
   
-    <attribute id="FBTYP_TEXT" order="70" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FBTYP_TEXT" order="65" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FBTYP_TEXT"/>
   
       <keyMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="FBTYP_TEXT"/>
   
     </attribute>
-    <attribute id="IN_CHANNEL_TEXT" order="71" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="IN_CHANNEL_TEXT" order="66" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="IN_CHANNEL_TEXT"/>
       <keyMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="IN_CHANNEL_TEXT"/>
     </attribute>
-    <attribute id="FBSTA_TEXT" order="72" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FBSTA_TEXT" order="67" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FBSTA_TEXT"/>
       <keyMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="FBSTA_TEXT"/>
     </attribute>
-    <attribute id="REVENUE_TYPE_TEXT" order="73" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="REVENUE_TYPE_TEXT" order="68" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REVENUE_TYPE_TEXT"/>
       <keyMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="REVENUE_TYPE_TEXT"/>
+    </attribute>
+  
+    <attribute id="CC_CREATE_DATE" order="69" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Creation Date"/>
+  
+      <keyMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="CC_CREATE_DATE"/>
+  
+    </attribute>
+    <attribute id="CC_UPDATE_DATE" order="70" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Last Modified/Closed Date"/>
+      <keyMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="CC_UPDATE_DATE"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -1999,7 +1949,15 @@
       <measureMapping columnObjectName="J_DFMCA_COMMCHANT" columnName="BETRW"/>
     </measure>
   </baseMeasures>
-  <calculatedMeasures/>
+  <calculatedMeasures>
+    <measure id="CO_FormBundlesCount" order="71" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="FB Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="FBNUM"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
