@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnBpOverview" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_FnBpOverview"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpBankDetailsCurrent">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpBankDetailsCurrent</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPINFO" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE">
+        <descriptions defaultDescription="BP Type (Person/Company)"/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP Type Description"/>
+      </viewAttribute>
+      <viewAttribute id="STD_FIRM">
+        <descriptions defaultDescription="STD_FIRM"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN">
+        <descriptions defaultDescription="STD_PERSON_GN"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN2">
+        <descriptions defaultDescription="STD_PERSON_GN2"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_FN">
+        <descriptions defaultDescription="STD_PERSON_FN"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+    
+      <viewAttribute id="BUT000_VALID_TO">
+        <descriptions defaultDescription="Validity End BUT000 BP Data"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_Full_Name" datatype="VARCHAR" length="60" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;BP_TYPE_DESC&quot;='Individual',&quot;STD_PERSON_GN&quot;+' '+&quot;STD_PERSON_GN2&quot;+' '+&quot;STD_PERSON_FN&quot;,&quot;STD_FIRM&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE" source="BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_FIRM" source="STD_FIRM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN" source="STD_PERSON_GN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN2" source="STD_PERSON_GN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT000_VALID_TO" source="BUT000_VALID_TO"/>
+    </input>
+    <filter>&quot;BUT000_VALID_TO&quot; ='99991231235959'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPROLE" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="ID_TYPE">
+        <descriptions defaultDescription="Identification Type Code"/>
+      </viewAttribute>
+      <viewAttribute id="IDNUMBER">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="Date of Entry for ID Number"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_VALID_TO">
+        <descriptions defaultDescription="Validity End for ID Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_TYPE" source="ID_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IDNUMBER" source="IDNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_VALID_TO" source="BUT0ID_VALID_TO"/>
+    </input>
+    <filter>(&quot;ID_TYPE&quot; = 'ZABN' OR &quot;ID_TYPE&quot; = 'ZACN') AND &quot;BUT0ID_VALID_TO&quot;='99991231'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BP_ABN" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="ID_TYPE">
+        <descriptions defaultDescription="Identification Type Code"/>
+      </viewAttribute>
+      <viewAttribute id="IDNUMBER">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="Date of Entry for ID Number"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_VALID_TO">
+        <descriptions defaultDescription="Validity End for ID Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPROLE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_TYPE" source="ID_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IDNUMBER" source="IDNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_VALID_TO" source="BUT0ID_VALID_TO"/>
+    </input>
+    <filter>&quot;ID_TYPE&quot;='ZABN'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BP_ACN" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="ID_TYPE">
+        <descriptions defaultDescription="Identification Type Code"/>
+      </viewAttribute>
+      <viewAttribute id="IDNUMBER">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="Date of Entry for ID Number"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_VALID_TO">
+        <descriptions defaultDescription="Validity End for ID Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPROLE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_TYPE" source="ID_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IDNUMBER" source="IDNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_VALID_TO" source="BUT0ID_VALID_TO"/>
+    </input>
+    <filter>&quot;ID_TYPE&quot; = 'ZACN'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_ABN" cardinality="C1_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP Type Description"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPINFO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+    </input>
+    <input node="P_BP_ABN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="IDNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_ABN_ACN" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP Type Description"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_ABN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+    </input>
+    <input node="P_BP_ACN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="IDNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BANKDETAILSCURENT">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="Bank Details ID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="Bank Key"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="Bank Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="Bank Details Valid From (Date)"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_NO_10">
+        <descriptions defaultDescription="CC_BP_NO_10"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpBankDetailsCurrent">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_NO_10" source="CC_BP_NO_10"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_ABN_ACN_BANKDETAILS" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP Type Description"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="Bank Details ID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="Bank Key"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="Bank Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="Bank Details Valid From (Date)"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_ABN_ACN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+    </input>
+    <input node="R_RECENT_BANKDETAILS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_RECENT_BANKDETAILS">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="BKVID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="BANKL"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="BANKN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="CC_BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_NO_10">
+        <descriptions defaultDescription="CC_BP_NO_10"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BANKDETAILSCURENT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_NO_10" source="CC_BP_NO_10"/>
+    </input>
+    <windowFunction>
+      <partitionViewAttributeName>MANDT</partitionViewAttributeName>
+      <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="CC_BK_VALID_FROM" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_BPINFO_ABN_ACN_BANKDETAILS">
+  <attributes>
+    <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BP no."/>
+      <keyMapping columnObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" columnName="PARTNER"/>
+    </attribute>
+    <attribute id="BP_TYPE_DESC" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BP Type Description"/>
+      <keyMapping columnObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" columnName="BP_TYPE_DESC"/>
+    </attribute>
+    <attribute id="CLIENT" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="ABN" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BP: Identification Number"/>
+      <keyMapping columnObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" columnName="ABN"/>
+    </attribute>
+    <attribute id="ACN" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BP: Identification Number"/>
+      <keyMapping columnObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" columnName="ACN"/>
+    </attribute>
+    <attribute id="CC_Full_Name" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_Full_Name"/>
+      <keyMapping columnObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" columnName="CC_Full_Name"/>
+    </attribute>
+    <attribute id="BKVID" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Details ID"/>
+      <keyMapping columnObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" columnName="BKVID"/>
+    </attribute>
+    <attribute id="BANKL" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Key"/>
+      <keyMapping columnObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" columnName="BANKL"/>
+    </attribute>
+    <attribute id="BANKN" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Account Number"/>
+      <keyMapping columnObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" columnName="BANKN"/>
+    </attribute>
+    <attribute id="CC_BK_VALID_FROM" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Details Valid From (Date)"/>
+      <keyMapping columnObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" columnName="CC_BK_VALID_FROM"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures>
+    <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="CLIENT"/>
+        <attribute attributeName="PARTNER"/>
+        <attribute attributeName="BKVID"/>
+        <attribute attributeName="BANKL"/>
+        <attribute attributeName="BANKN"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="425.8857262553778" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_BPINFO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302.00000000000006" y="676.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BPROLE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="485.3333333333334" y="821.9999952316284"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BP_ABN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="512" y="676.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BP_ACN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92.00000000000011" y="676.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="328.66666666666674" y="516.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_BPINFO" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_BP_ABN" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPINFO_ABN_ACN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="205.33308170599912" y="356.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="J_BPINFO_ABN_ACN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_BP_ACN" modelObjectNameSpace="J_BPINFO_ABN_ACN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BANKDETAILSCURENT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="547.439951325706" y="516.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="425.8857262553778" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_ABN_ACN" modelObjectNameSpace="J_BPINFO_ABN_ACN_BANKDETAILS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="R_RECENT_BANKDETAILS" modelObjectNameSpace="J_BPINFO_ABN_ACN_BANKDETAILS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="R_RECENT_BANKDETAILS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="502.80914414969993" y="374.4999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
