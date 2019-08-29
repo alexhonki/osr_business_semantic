@@ -58,6 +58,10 @@
       <viewAttribute id="CLIENT">
         <descriptions defaultDescription="Client"/>
       </viewAttribute>
+    
+      <viewAttribute id="NAME_GRP1">
+        <descriptions defaultDescription="Group Name"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_FullName" datatype="VARCHAR" length="150" expressionLanguage="COLUMN_ENGINE">
@@ -75,6 +79,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
     </input>
     <filter>&quot;BUT000_VALID_TO&quot; ='99991231235959'</filter>
   </calculationView>
@@ -873,6 +879,13 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <viewAttribute id="RELTYP_TEXT">
         <descriptions defaultDescription="RELTYP_TEXT"/>
       </viewAttribute>
+    
+      <viewAttribute id="PARTNER1">
+        <descriptions defaultDescription="PARTNER1"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_GRP1">
+        <descriptions defaultDescription="NAME_GRP1"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -898,6 +911,8 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
     <input node="R_ONLY_ONE_REL">
       <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP" source="RELTYP"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP_TEXT" source="RELTYP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER2"/>
     </input>
@@ -912,20 +927,30 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <viewAttribute id="RELTYP_TEXT">
         <descriptions defaultDescription="RELTYP_TEXT"/>
       </viewAttribute>
+      <viewAttribute id="PARTNER1">
+        <descriptions defaultDescription="PARTNER1"/>
+      </viewAttribute>
       <viewAttribute id="CLIENT">
         <descriptions defaultDescription="CLIENT"/>
       </viewAttribute>
     
       <viewAttribute id="PARTNER2">
         <descriptions defaultDescription="PARTNER2"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="NAME_GRP1">
+        <descriptions defaultDescription="NAME_GRP1"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="P_BUT050">
+    <input node="J_REL_BPINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER2" source="PARTNER2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP" source="RELTYP"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP_TEXT" source="RELTYP_TEXT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
     </input>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>PARTNER2</partitionViewAttributeName>
@@ -934,6 +959,48 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
         <value>1</value>
       </rankThreshold>
     </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_REL_BPINFO" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="PARTNER2">
+        <descriptions defaultDescription="PARTNER2"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="RELTYP">
+        <descriptions defaultDescription="RELTYP"/>
+      </viewAttribute>
+      <viewAttribute id="RELTYP_TEXT">
+        <descriptions defaultDescription="RELTYP_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER1">
+        <descriptions defaultDescription="PARTNER1"/>
+      </viewAttribute>
+      <viewAttribute id="DATE_TO">
+        <descriptions defaultDescription="DATE_TO"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_GRP1">
+        <descriptions defaultDescription="Group Name"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BUT050">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER2" source="PARTNER2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_TO" source="DATE_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP" source="RELTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP_TEXT" source="RELTYP_TEXT"/>
+    </input>
+    <input node="P_BPINFO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="PARTNER1"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_BpFacts" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -1656,6 +1723,13 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="PT_GROUP_STATUS">
         <descriptions defaultDescription="Fact Value"/>
       </viewAttribute>
+    
+      <viewAttribute id="PARTNER1">
+        <descriptions defaultDescription="PARTNER1"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_GRP1">
+        <descriptions defaultDescription="NAME_GRP1"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_ClientStatusTR" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
@@ -1683,6 +1757,9 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP" source="RELTYP"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP_TEXT" source="RELTYP_TEXT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
     </input>
     <input node="J_FACT_PTGRPSTAT">
       <mapping xsi:type="Calculation:AttributeMapping" target="PT_STATUS" source="PT_STATUS"/>
@@ -1794,7 +1871,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       </rankThreshold>
     </windowFunction>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_TAXBRACKET" cardinality="C1_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_TAXBRACKET" cardinality="C1_1" joinType="leftOuter" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="PARTNER">
         <descriptions defaultDescription="PARTNER"/>
@@ -1886,6 +1963,13 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="CC_TaxBracket">
         <descriptions defaultDescription="CC_TaxBracket"/>
       </viewAttribute>
+    
+      <viewAttribute id="PARTNER1">
+        <descriptions defaultDescription="PARTNER1"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_GRP1">
+        <descriptions defaultDescription="NAME_GRP1"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1918,6 +2002,9 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="ONLINE_FILL_COMM" source="ONLINE_FILL_COMM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PT_GROUP_STATUS" source="PT_GROUP_STATUS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ClientStatusTR" source="CC_ClientStatusTR"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
     </input>
     <input node="R_ONE_TR_PER_BP">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_AnnualEstimate" source="CC_AnnualEstimate"/>
@@ -1925,6 +2012,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="TAXPAYER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
     </input>
+    <filter>not isNull(&quot;PT_STATUS&quot;)</filter>
     <joinAttribute name="PARTNER"/>
     <joinAttribute name="CLIENT"/>
   </calculationView>
@@ -2059,6 +2147,17 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <keyMapping columnObjectName="J_BPINFO_TAXBRACKET" columnName="CC_TaxBracket"/>
   
     </attribute>
+  
+    <attribute id="PARTNER1" order="32" descriptionColumnName="NAME_GRP1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRT/Floating Group"/>
+  
+      <keyMapping columnObjectName="J_BPINFO_TAXBRACKET" columnName="PARTNER1"/>
+  
+    </attribute>
+    <attribute id="NAME_GRP1" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Group Name"/>
+      <keyMapping columnObjectName="J_BPINFO_TAXBRACKET" columnName="NAME_GRP1"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -2097,25 +2196,25 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="1221" y="112"/>
+      <upperLeftCorner x="1101" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="1316"/>
+      <upperLeftCorner x="1511" y="1376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPROLE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="328" y="1476"/>
+      <upperLeftCorner x="1748" y="1536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ADR2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="931" y="1316"/>
+      <upperLeftCorner x="2141" y="1376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="301" y="996"/>
+      <upperLeftCorner x="1660" y="1016"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="J_BPINFO_ACN" modelObjectType="JoinNodeInput">
@@ -2127,7 +2226,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="275" y="1156"/>
+      <upperLeftCorner x="1633" y="1196"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BPINFO" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
@@ -2139,16 +2238,16 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BP_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="511" y="1324"/>
+      <upperLeftCorner x="1931" y="1384"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BP_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="301" y="1324"/>
+      <upperLeftCorner x="1721" y="1384"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="328" y="836"/>
+      <upperLeftCorner x="1687" y="856"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="J_BPINFO_RESADDRS" modelObjectType="JoinNodeInput">
@@ -2160,11 +2259,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BUSS_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="658" y="1004"/>
+      <upperLeftCorner x="1870" y="1024"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRS_PHONE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="841" y="1156"/>
+      <upperLeftCorner x="2053" y="1196"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="J_ADDRS_PHONE" modelObjectType="JoinNodeInput">
@@ -2176,7 +2275,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="721" y="1316"/>
+      <upperLeftCorner x="2351" y="1376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="J_ADDRES_EMAIL" modelObjectType="JoinNodeInput">
@@ -2189,25 +2288,25 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     </shape>
   
     <shape expanded="true" modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="820" y="1494"/>
+      <upperLeftCorner x="2204" y="1554"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_ADR6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="610" y="1476"/>
+      <upperLeftCorner x="2420" y="1536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="701" y="1636"/>
+      <upperLeftCorner x="2204" y="1716"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SERVICE_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="868" y="1004"/>
+      <upperLeftCorner x="2080" y="1024"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="717" y="676"/>
+      <upperLeftCorner x="1682" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="J_BPINFO_SERADDRS" modelObjectType="JoinNodeInput">
@@ -2219,11 +2318,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BUT050" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="927" y="836"/>
+      <upperLeftCorner x="1301" y="1376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_GROUPTYP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="744" y="516"/>
+      <upperLeftCorner x="1412" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="J_BPINFO_GROUPTYP" modelObjectType="JoinNodeInput">
@@ -2235,47 +2334,59 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_ONLY_ONE_REL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="927" y="694"/>
+      <upperLeftCorner x="1380" y="1034"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+    <shape expanded="true" modelObjectName="J_REL_BPINFO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1380" y="1210"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_BUT050" modelObjectNameSpace="J_REL_BPINFO" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_BPINFO" modelObjectNameSpace="J_REL_BPINFO" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
     <shape expanded="true" modelObjectName="P_BpFacts" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1661" y="1841"/>
+      <upperLeftCorner x="730" y="1921"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_QLD_Liability" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1350" y="1636"/>
+      <upperLeftCorner x="302" y="1716"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_Payroll_Liability" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2190" y="1636"/>
+      <upperLeftCorner x="932" y="1716"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_Interstate_wapply" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1560" y="1636"/>
+      <upperLeftCorner x="1352" y="1716"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TaxGroupStat" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="930" y="1636"/>
+      <upperLeftCorner x="92" y="1716"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_OnlineFillingComm" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1140" y="1636"/>
+      <upperLeftCorner x="1562" y="1716"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TaxObligationFromDate" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1980" y="1636"/>
+      <upperLeftCorner x="512" y="1716"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_RegistrationStatus" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2400" y="1636"/>
+      <upperLeftCorner x="722" y="1716"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TrCycle" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1770" y="1636"/>
+      <upperLeftCorner x="1142" y="1716"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FACTS_TAXDATEF" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1974" y="1316"/>
+      <upperLeftCorner x="767" y="1376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_STATUS_LIABILITY" modelObjectNameSpace="J_FACTS_TAXDATEF" modelObjectType="JoinNodeInput">
@@ -2287,7 +2398,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_STATUS_LIABILITY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2191" y="1476"/>
+      <upperLeftCorner x="794" y="1536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_RegistrationStatus" modelObjectNameSpace="J_STATUS_LIABILITY" modelObjectType="JoinNodeInput">
@@ -2300,7 +2411,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     </shape>
   
     <shape expanded="true" modelObjectName="J_FACTS_TRPERIOD" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1765" y="1156"/>
+      <upperLeftCorner x="913" y="1196"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FACTS_TAXDATEF" modelObjectNameSpace="J_FACTS_TRPERIOD" modelObjectType="JoinNodeInput">
@@ -2312,7 +2423,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FACTS_INTWAPP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1568" y="996"/>
+      <upperLeftCorner x="939" y="1016"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FACTS_TRPERIOD" modelObjectNameSpace="J_FACTS_INTWAPP" modelObjectType="JoinNodeInput">
@@ -2324,7 +2435,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FACTS_QLDLIABDT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1376" y="836"/>
+      <upperLeftCorner x="913" y="856"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FACTS_INTWAPP" modelObjectNameSpace="J_FACTS_QLDLIABDT" modelObjectType="JoinNodeInput">
@@ -2336,7 +2447,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FACT_ONLINEFILLCOMM" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1193" y="676"/>
+      <upperLeftCorner x="1064" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FACTS_QLDLIABDT" modelObjectNameSpace="J_FACT_ONLINEFILLCOMM" modelObjectType="JoinNodeInput">
@@ -2348,7 +2459,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FACT_PTGRPSTAT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1097" y="516"/>
+      <upperLeftCorner x="1037" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FACT_ONLINEFILLCOMM" modelObjectNameSpace="J_FACT_PTGRPSTAT" modelObjectType="JoinNodeInput">
@@ -2360,7 +2471,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_FACTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1070" y="356"/>
+      <upperLeftCorner x="1386" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_GROUPTYP" modelObjectNameSpace="J_BPINFO_FACTS" modelObjectType="JoinNodeInput">
@@ -2372,16 +2483,16 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TaxReturns" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1310" y="516"/>
+      <upperLeftCorner x="814" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="R_ONE_TR_PER_BP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1310" y="374"/>
+      <upperLeftCorner x="814" y="394"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_TAXBRACKET" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1221" y="217"/>
+      <upperLeftCorner x="1101" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_FACTS" modelObjectNameSpace="J_BPINFO_TAXBRACKET" modelObjectType="JoinNodeInput">
@@ -2391,7 +2502,6 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     <shape modelObjectName="R_ONE_TR_PER_BP" modelObjectNameSpace="J_BPINFO_TAXBRACKET" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="363" y="33"/>
       <rectangleSize width="250"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
