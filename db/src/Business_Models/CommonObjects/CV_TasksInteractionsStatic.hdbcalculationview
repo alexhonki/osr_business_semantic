@@ -80,7 +80,7 @@
       <viewAttribute id="TXT30">
         <descriptions defaultDescription="TXT30"/>
       </viewAttribute>
-      <viewAttribute id="CC_Days_Bt_Creation_Mod">
+      <viewAttribute id="CC_Days_Bt_Creation_Mod" keepFlag="true">
         <descriptions defaultDescription="CC_Days_Bt_Creation_Mod"/>
       </viewAttribute>
     
@@ -101,6 +101,17 @@
       </viewAttribute>
       <viewAttribute id="SHORT">
         <descriptions defaultDescription="SHORT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_Days_to_Process">
+        <descriptions defaultDescription="CC_Days_to_Process"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_Created_Date_Time">
+        <descriptions defaultDescription="CC_Created_Date_Time"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Last_Changed_Time">
+        <descriptions defaultDescription="CC_Last_Changed_Time"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -141,6 +152,11 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="EMP_NAME" source="EMP_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_to_Process" source="CC_Days_to_Process"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Created_Date_Time" source="CC_Created_Date_Time"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Last_Changed_Time" source="CC_Last_Changed_Time"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -159,11 +175,11 @@
       <keyMapping columnObjectName="P_TASKINTER_STATIC" columnName="PROCESS_TYPE"/>
     </attribute>
     <attribute id="CREATED_BY" order="5" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CreatedByName">
-      <descriptions defaultDescription="Created By (Team Member)"/>
+      <descriptions defaultDescription="Created By"/>
       <keyMapping columnObjectName="P_TASKINTER_STATIC" columnName="CREATED_BY"/>
     </attribute>
     <attribute id="CHANGED_BY" order="6" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="ChangedByName">
-      <descriptions defaultDescription="Changed By (Team Member)"/>
+      <descriptions defaultDescription="Changed By"/>
       <keyMapping columnObjectName="P_TASKINTER_STATIC" columnName="CHANGED_BY"/>
     </attribute>
     <attribute id="ARCHIVING_FLAG" order="7" displayAttribute="false" attributeHierarchyActive="false">
@@ -271,11 +287,18 @@
       <descriptions defaultDescription="Org. Unit (Team) Name"/>
       <keyMapping columnObjectName="P_TASKINTER_STATIC" columnName="SHORT"/>
     </attribute>
+  
+    <attribute id="CC_Days_to_Process" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Age Range"/>
+  
+      <keyMapping columnObjectName="P_TASKINTER_STATIC" columnName="CC_Days_to_Process"/>
+  
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="CC_Days_Bt_Creation_Mod" order="22" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Day of Process (Age)"/>
+      <descriptions defaultDescription="Day of Process"/>
       <measureMapping columnObjectName="P_TASKINTER_STATIC" columnName="CC_Days_Bt_Creation_Mod"/>
     </measure>
     <measure id="CC_Days_Bt_Creation_Mod_Avg" order="23" aggregationType="avg" measureType="simple">
@@ -284,13 +307,22 @@
     </measure>
   
     <measure id="CC_RowCount" order="34" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="CC_RowCount"/>
+      <descriptions defaultDescription="Row Count"/>
       <measureMapping columnObjectName="P_TASKINTER_STATIC" columnName="CC_RowCount"/>
+    </measure>
+  
+    <measure id="CC_Created_Date_Time" order="36" aggregationType="min" measureType="simple">
+      <descriptions defaultDescription="CC_Created_Date_Time"/>
+      <measureMapping columnObjectName="P_TASKINTER_STATIC" columnName="CC_Created_Date_Time"/>
+    </measure>
+    <measure id="CC_Last_Changed_Time" order="37" aggregationType="min" measureType="simple">
+      <descriptions defaultDescription="CC_Last_Changed_Time"/>
+      <measureMapping columnObjectName="P_TASKINTER_STATIC" columnName="CC_Last_Changed_Time"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
     <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
-      <descriptions defaultDescription="Task/Interactions Count"/>
+      <descriptions defaultDescription="Count"/>
       <exceptionAggregation>
         <attribute attributeName="GUID"/>
       </exceptionAggregation>
@@ -307,10 +339,12 @@
       
       
       
+      
       </measure>
     <measure id="CC_TaskIntDurationAvg" order="33" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="SQL">
       <descriptions defaultDescription="Task Duration (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
       
       </measure>
   </calculatedMeasures>

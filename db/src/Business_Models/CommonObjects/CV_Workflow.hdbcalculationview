@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Workflow" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_WorkFlow"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.synonyms::SWWWIHEAD">
+    <resourceUri>osr.business.semantic.db.synonyms::SWWWIHEAD</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_SWWWIHEAD" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_ID">
+        <descriptions defaultDescription="WI_ID"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TYPE">
+        <descriptions defaultDescription="WI_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TEXT">
+        <descriptions defaultDescription="WI_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RHTEXT">
+        <descriptions defaultDescription="WI_RHTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_STAT">
+        <descriptions defaultDescription="WI_STAT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CD">
+        <descriptions defaultDescription="WI_CD"/>
+      </viewAttribute>
+      <viewAttribute id="WI_AED">
+        <descriptions defaultDescription="WI_AED"/>
+      </viewAttribute>
+      <viewAttribute id="WI_AAGENT">
+        <descriptions defaultDescription="WI_AAGENT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CRUSER">
+        <descriptions defaultDescription="WI_CRUSER"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CHCKWI">
+        <descriptions defaultDescription="WI_CHCKWI"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RH_TASK">
+        <descriptions defaultDescription="WI_RH_TASK"/>
+      </viewAttribute>
+      <viewAttribute id="TOP_WI_ID">
+        <descriptions defaultDescription="TOP_WI_ID"/>
+      </viewAttribute>
+      <viewAttribute id="PARENT_WI">
+        <descriptions defaultDescription="PARENT_WI"/>
+      </viewAttribute>
+      <viewAttribute id="WI_FORW_BY">
+        <descriptions defaultDescription="WI_FORW_BY"/>
+      </viewAttribute>
+    
+      <viewAttribute id="WI_CT">
+        <descriptions defaultDescription="WI_CT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_AED_TIMESTAMP">
+        <descriptions defaultDescription="WI_AED_TIMESTAMP"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_CreatedDate" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+        <formula>leftstr(string(&quot;WI_CD&quot;),8)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_CompletedDate" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+        <formula>leftstr(string(&quot;WI_AED&quot;),8)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_RowCount" datatype="INTEGER" expressionLanguage="SQL">
+    
+        <formula>1</formula>
+    
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_CreatedTime" datatype="TIME" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>&quot;WI_CT&quot;</formula>
+    
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_CompletedTime" datatype="TIME" expressionLanguage="SQL">
+    
+        <formula>TO_TIME(REPLACE(SUBSTR(&quot;WI_AED_TIMESTAMP&quot;,9,6),'.',''))</formula>
+    
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::SWWWIHEAD">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_ID" source="WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TYPE" source="WI_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TEXT" source="WI_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RHTEXT" source="WI_RHTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_STAT" source="WI_STAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CD" source="WI_CD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AED" source="WI_AED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AAGENT" source="WI_AAGENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="WI_CRUSER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CHCKWI" source="WI_CHCKWI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RH_TASK" source="WI_RH_TASK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOP_WI_ID" source="TOP_WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_WI" source="PARENT_WI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_FORW_BY" source="WI_FORW_BY"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CT" source="WI_CT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AED_TIMESTAMP" source="WI_AED_TIMESTAMP"/>
+    </input>
+    <filter>&quot;WI_RH_TASK&quot; != 'TS90000210' AND &quot;WI_TYPE&quot;='W'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_USERINFO">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="BNAME">
+        <descriptions defaultDescription="User Name"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_TEXT">
+        <descriptions defaultDescription="Full Name of Person"/>
+      </viewAttribute>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="Org. Unit (Team)"/>
+      </viewAttribute>
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      </viewAttribute>
+    
+      <viewAttribute id="ENDDA">
+        <descriptions defaultDescription="End of Validity"/>
+      </viewAttribute>
+      <viewAttribute id="BEGDA">
+        <descriptions defaultDescription="Beginning of Validity"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BNAME" source="BNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_TEXT" source="NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ENDDA" source="ENDDA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BEGDA" source="BEGDA"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CRUSER" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_ID">
+        <descriptions defaultDescription="WI_ID"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TYPE">
+        <descriptions defaultDescription="WI_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TEXT">
+        <descriptions defaultDescription="WI_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RHTEXT">
+        <descriptions defaultDescription="WI_RHTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_STAT">
+        <descriptions defaultDescription="WI_STAT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CD">
+        <descriptions defaultDescription="WI_CD"/>
+      </viewAttribute>
+      <viewAttribute id="WI_AED">
+        <descriptions defaultDescription="WI_AED"/>
+      </viewAttribute>
+      <viewAttribute id="WI_AAGENT">
+        <descriptions defaultDescription="WI_AAGENT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CRUSER">
+        <descriptions defaultDescription="WI_CRUSER"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CHCKWI">
+        <descriptions defaultDescription="WI_CHCKWI"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RH_TASK">
+        <descriptions defaultDescription="WI_RH_TASK"/>
+      </viewAttribute>
+      <viewAttribute id="TOP_WI_ID">
+        <descriptions defaultDescription="TOP_WI_ID"/>
+      </viewAttribute>
+      <viewAttribute id="PARENT_WI">
+        <descriptions defaultDescription="PARENT_WI"/>
+      </viewAttribute>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="Org. Unit (Team)"/>
+      </viewAttribute>
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedDate">
+        <descriptions defaultDescription="CC_CreatedDate"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedDate">
+        <descriptions defaultDescription="CC_CompletedDate"/>
+      </viewAttribute>
+      <viewAttribute id="WI_FORW_BY">
+        <descriptions defaultDescription="WI_FORW_BY"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CreatedByName">
+        <descriptions defaultDescription="Full Name of Person"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_RowCount" aggregationType="sum">
+        <descriptions defaultDescription="CC_RowCount"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_CreatedAtTime" aggregationType="min">
+        <descriptions defaultDescription="CC_CreatedAtTime"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedTime" aggregationType="min">
+        <descriptions defaultDescription="CC_CompletedTime"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_SWWWIHEAD">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_ID" source="WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TYPE" source="WI_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TEXT" source="WI_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RHTEXT" source="WI_RHTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_STAT" source="WI_STAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CD" source="WI_CD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AED" source="WI_AED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AAGENT" source="WI_AAGENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="WI_CRUSER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CHCKWI" source="WI_CHCKWI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RH_TASK" source="WI_RH_TASK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOP_WI_ID" source="TOP_WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_WI" source="PARENT_WI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedDate" source="CC_CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedDate" source="CC_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_FORW_BY" source="WI_FORW_BY"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCount"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedAtTime" source="CC_CreatedTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedTime" source="CC_CompletedTime"/>
+    </input>
+    <input node="P_USERINFO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="NAME_TEXT"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="WI_CRUSER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_FWDUSER" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_ID">
+        <descriptions defaultDescription="WI_ID"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TYPE">
+        <descriptions defaultDescription="WI_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TEXT">
+        <descriptions defaultDescription="WI_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RHTEXT">
+        <descriptions defaultDescription="WI_RHTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_STAT">
+        <descriptions defaultDescription="WI_STAT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_AAGENT">
+        <descriptions defaultDescription="WI_AAGENT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CRUSER">
+        <descriptions defaultDescription="WI_CRUSER"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CHCKWI">
+        <descriptions defaultDescription="WI_CHCKWI"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RH_TASK">
+        <descriptions defaultDescription="WI_RH_TASK"/>
+      </viewAttribute>
+      <viewAttribute id="TOP_WI_ID">
+        <descriptions defaultDescription="TOP_WI_ID"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedDate">
+        <descriptions defaultDescription="CC_CreatedDate"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedDate">
+        <descriptions defaultDescription="CC_CompletedDate"/>
+      </viewAttribute>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="Org. Unit (Team)"/>
+      </viewAttribute>
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      </viewAttribute>
+      <viewAttribute id="WI_FORW_BY">
+        <descriptions defaultDescription="WI_FORW_BY"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CreatedByName">
+        <descriptions defaultDescription="Full Name of Person"/>
+      </viewAttribute>
+      <viewAttribute id="ForwardedByName">
+        <descriptions defaultDescription="Full Name of Person"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_RowCount" aggregationType="sum">
+        <descriptions defaultDescription="CC_RowCount"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_CreatedAtTime" aggregationType="min">
+        <descriptions defaultDescription="CC_CreatedAtTime"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedTime" aggregationType="min">
+        <descriptions defaultDescription="CC_CompletedTime"/>
+      </viewAttribute>
+    
+      <viewAttribute id="WI_CD">
+        <descriptions defaultDescription="WI_CD"/>
+      </viewAttribute>
+      <viewAttribute id="WI_AED">
+        <descriptions defaultDescription="WI_AED"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_CRUSER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_ID" source="WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TYPE" source="WI_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TEXT" source="WI_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RHTEXT" source="WI_RHTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_STAT" source="WI_STAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AAGENT" source="WI_AAGENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="WI_CRUSER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CHCKWI" source="WI_CHCKWI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RH_TASK" source="WI_RH_TASK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOP_WI_ID" source="TOP_WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedDate" source="CC_CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedDate" source="CC_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_FORW_BY" source="WI_FORW_BY"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCount"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedAtTime" source="CC_CreatedAtTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedTime" source="CC_CompletedTime"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CD" source="WI_CD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AED" source="WI_AED"/>
+    </input>
+    <input node="P_USERINFO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ForwardedByName" source="NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_FORW_BY" source="BNAME"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="WI_FORW_BY"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_AAGENT" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_ID">
+        <descriptions defaultDescription="WI_ID"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TYPE">
+        <descriptions defaultDescription="WI_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TEXT">
+        <descriptions defaultDescription="WI_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RHTEXT">
+        <descriptions defaultDescription="WI_RHTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_STAT">
+        <descriptions defaultDescription="WI_STAT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_AAGENT">
+        <descriptions defaultDescription="WI_AAGENT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CRUSER">
+        <descriptions defaultDescription="WI_CRUSER"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CHCKWI">
+        <descriptions defaultDescription="WI_CHCKWI"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RH_TASK">
+        <descriptions defaultDescription="WI_RH_TASK"/>
+      </viewAttribute>
+      <viewAttribute id="TOP_WI_ID">
+        <descriptions defaultDescription="TOP_WI_ID"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedDate">
+        <descriptions defaultDescription="CC_CreatedDate"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedDate">
+        <descriptions defaultDescription="CC_CompletedDate"/>
+      </viewAttribute>
+      <viewAttribute id="WI_FORW_BY">
+        <descriptions defaultDescription="WI_FORW_BY"/>
+      </viewAttribute>
+      <viewAttribute id="CreatedByName">
+        <descriptions defaultDescription="Full Name of Person"/>
+      </viewAttribute>
+      <viewAttribute id="ForwardedByName">
+        <descriptions defaultDescription="Full Name of Person"/>
+      </viewAttribute>
+      <viewAttribute id="CC_RowCount" aggregationType="sum">
+        <descriptions defaultDescription="CC_RowCount"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedAtTime" aggregationType="min">
+        <descriptions defaultDescription="CC_CreatedAtTime"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedTime" aggregationType="min">
+        <descriptions defaultDescription="CC_CompletedTime"/>
+      </viewAttribute>
+      <viewAttribute id="CompletedByName">
+        <descriptions defaultDescription="Full Name of Person"/>
+      </viewAttribute>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="Org. Unit (Team)"/>
+      </viewAttribute>
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      </viewAttribute>
+    
+      <viewAttribute id="ENDDA">
+        <descriptions defaultDescription="End of Validity"/>
+      </viewAttribute>
+      <viewAttribute id="BEGDA">
+        <descriptions defaultDescription="Beginning of Validity"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CD">
+        <descriptions defaultDescription="WI_CD"/>
+      </viewAttribute>
+      <viewAttribute id="WI_AED">
+        <descriptions defaultDescription="WI_AED"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_FWDUSER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_ID" source="WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TYPE" source="WI_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TEXT" source="WI_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RHTEXT" source="WI_RHTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_STAT" source="WI_STAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AAGENT" source="WI_AAGENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="WI_CRUSER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CHCKWI" source="WI_CHCKWI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RH_TASK" source="WI_RH_TASK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOP_WI_ID" source="TOP_WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedDate" source="CC_CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedDate" source="CC_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_FORW_BY" source="WI_FORW_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ForwardedByName" source="ForwardedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedAtTime" source="CC_CreatedAtTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedTime" source="CC_CompletedTime"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CD" source="WI_CD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AED" source="WI_AED"/>
+    </input>
+    <input node="P_USERINFO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CompletedByName" source="NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ENDDA" source="ENDDA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BEGDA" source="BEGDA"/>
+    </input>
+    <joinAttribute leftColumn="WI_AAGENT" rightColumn="BNAME" operator="EQ"/>
+    <joinAttribute leftColumn="CLIENT" rightColumn="MANDT" operator="EQ"/>
+    <joinAttribute leftColumn="WI_AED" rightColumn="ENDDA" operator="LE"/>
+    <joinAttribute leftColumn="WI_AED" rightColumn="BEGDA" operator="GE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_USERS">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_ID">
+        <descriptions defaultDescription="WI_ID"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TYPE">
+        <descriptions defaultDescription="WI_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TEXT">
+        <descriptions defaultDescription="WI_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RHTEXT">
+        <descriptions defaultDescription="WI_RHTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_STAT">
+        <descriptions defaultDescription="WI_STAT"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CHCKWI">
+        <descriptions defaultDescription="WI_CHCKWI"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RH_TASK">
+        <descriptions defaultDescription="WI_RH_TASK"/>
+      </viewAttribute>
+      <viewAttribute id="TOP_WI_ID">
+        <descriptions defaultDescription="TOP_WI_ID"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedDate">
+        <descriptions defaultDescription="CC_CreatedDate"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedDate">
+        <descriptions defaultDescription="CC_CompletedDate"/>
+      </viewAttribute>
+      <viewAttribute id="CreatedByName">
+        <descriptions defaultDescription="CreatedByName"/>
+      </viewAttribute>
+      <viewAttribute id="LastForwardedByName">
+        <descriptions defaultDescription="CompletedByName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_RowCount">
+        <descriptions defaultDescription="CC_RowCount"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedAtTime">
+        <descriptions defaultDescription="CC_CreatedAtTime"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedTime">
+        <descriptions defaultDescription="CC_CompletedTime"/>
+      </viewAttribute>
+      <viewAttribute id="CompletedByName">
+        <descriptions defaultDescription="NAME_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="ORGEH"/>
+      </viewAttribute>
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="SHORT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="WI_AAGENT">
+        <descriptions defaultDescription="WI_AAGENT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_Days_Bt_Creation_Mod" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;WI_STAT&quot;='COMPLETED' or &quot;WI_STAT&quot;='CANCELLED',daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;),daysbetween(&quot;CC_CreatedDate&quot;, now()))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="NEJ_AAGENT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_ID" source="WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TYPE" source="WI_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TEXT" source="WI_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RHTEXT" source="WI_RHTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_STAT" source="WI_STAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CHCKWI" source="WI_CHCKWI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RH_TASK" source="WI_RH_TASK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOP_WI_ID" source="TOP_WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedDate" source="CC_CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedDate" source="CC_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LastForwardedByName" source="ForwardedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedAtTime" source="CC_CreatedAtTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedTime" source="CC_CompletedTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CompletedByName" source="CompletedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AAGENT" source="WI_AAGENT"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="P_USERS">
+  <attributes>
+    <attribute id="CLIENT" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SAP Client"/>
+      <keyMapping columnObjectName="P_USERS" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="WI_ID" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Work Flow ID"/>
+      <keyMapping columnObjectName="P_USERS" columnName="WI_ID"/>
+    </attribute>
+    <attribute id="WI_TYPE" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Workflow Type"/>
+      <keyMapping columnObjectName="P_USERS" columnName="WI_TYPE"/>
+    </attribute>
+    <attribute id="WI_TEXT" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Workflow Desc"/>
+      <keyMapping columnObjectName="P_USERS" columnName="WI_TEXT"/>
+    </attribute>
+    <attribute id="WI_RHTEXT" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Workflow Task Short Text"/>
+      <keyMapping columnObjectName="P_USERS" columnName="WI_RHTEXT"/>
+    </attribute>
+    <attribute id="WI_STAT" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Workflow Status"/>
+      <keyMapping columnObjectName="P_USERS" columnName="WI_STAT"/>
+    </attribute>
+    <attribute id="WI_CHCKWI" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Workflow Superordinate"/>
+      <keyMapping columnObjectName="P_USERS" columnName="WI_CHCKWI"/>
+    </attribute>
+    <attribute id="WI_RH_TASK" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Workflow Task ID"/>
+      <keyMapping columnObjectName="P_USERS" columnName="WI_RH_TASK"/>
+    </attribute>
+    <attribute id="TOP_WI_ID" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Top Level ID"/>
+      <keyMapping columnObjectName="P_USERS" columnName="TOP_WI_ID"/>
+    </attribute>
+    <attribute id="CC_CreatedDate" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Created Date"/>
+      <keyMapping columnObjectName="P_USERS" columnName="CC_CreatedDate"/>
+    </attribute>
+    <attribute id="CC_CompletedDate" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Completed Date"/>
+      <keyMapping columnObjectName="P_USERS" columnName="CC_CompletedDate"/>
+    </attribute>
+    <attribute id="CreatedByName" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Created By Name"/>
+      <keyMapping columnObjectName="P_USERS" columnName="CreatedByName"/>
+    </attribute>
+    <attribute id="LastForwardedByName" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Forwarded By Name"/>
+      <keyMapping columnObjectName="P_USERS" columnName="LastForwardedByName"/>
+    </attribute>
+    <attribute id="CompletedByName" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Completed By Name"/>
+      <keyMapping columnObjectName="P_USERS" columnName="CompletedByName"/>
+    </attribute>
+    <attribute id="ORGEH" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Org. Unit (Team)"/>
+      <keyMapping columnObjectName="P_USERS" columnName="ORGEH"/>
+    </attribute>
+    <attribute id="SHORT" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      <keyMapping columnObjectName="P_USERS" columnName="SHORT"/>
+    </attribute>
+  
+    <attribute id="WI_AAGENT" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Processing User"/>
+  
+      <keyMapping columnObjectName="P_USERS" columnName="WI_AAGENT"/>
+  
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="CC_RowCount" order="16" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Row Count"/>
+      <measureMapping columnObjectName="P_USERS" columnName="CC_RowCount"/>
+    </measure>
+    <measure id="CC_CreatedAtTime" order="17" aggregationType="min" measureType="simple">
+      <descriptions defaultDescription="Created Time"/>
+      <measureMapping columnObjectName="P_USERS" columnName="CC_CreatedAtTime"/>
+    </measure>
+    <measure id="CC_CompletedTime" order="18" aggregationType="min" measureType="simple">
+      <descriptions defaultDescription="Completed Time"/>
+      <measureMapping columnObjectName="P_USERS" columnName="CC_CompletedTime"/>
+    </measure>
+    <measure id="CC_Days_Bt_Creation_Mod" order="22" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Days_Bt_Creation_Mod"/>
+      <measureMapping columnObjectName="P_USERS" columnName="CC_Days_Bt_Creation_Mod"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures>
+    <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="Workflow ID Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="WI_ID"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </measure>
+  
+    <measure id="CC_WorkflowDurationAvg" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
+      <descriptions defaultDescription="Workflow Duration (Aggr. Avg.)"/>
+      <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="238" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_SWWWIHEAD" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="357" y="838"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_USERINFO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="821"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_CRUSER" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="357" y="658"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_SWWWIHEAD" modelObjectNameSpace="J_CRUSER" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_USERINFO" modelObjectNameSpace="J_CRUSER" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_FWDUSER" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="357" y="484"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_CRUSER" modelObjectNameSpace="J_FWDUSER" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_USERINFO" modelObjectNameSpace="J_FWDUSER" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="NEJ_AAGENT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="191" y="341"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_FWDUSER" modelObjectNameSpace="NEJ_AAGENT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_USERINFO" modelObjectNameSpace="NEJ_AAGENT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="375" y="88"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_USERS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="238" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

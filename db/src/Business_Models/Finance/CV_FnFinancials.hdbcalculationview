@@ -1,0 +1,2676 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_FnFinancials"/>
+<localVariables>
+  <variable id="IP_KeyDate" parameter="true">
+    <descriptions defaultDescription="Key Date"/>
+    <variableProperties datatype="NVARCHAR" length="8" mandatory="false">
+      <valueDomain type="Date"/>
+      <selection multiLine="false" type="Single"/>
+      <defaultRange lowValue="date(leftstr(string(now()),10))" lowExpression="true"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings>
+  <mapping xsi:type="Variable:VariableMapping" dataSource="osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials">
+    <targetVariable name="IP_KeyDate" resourceUri="osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials"/>
+    <localVariable>IP_KeyDate</localVariable>
+  </mapping>
+</variableMappings>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_DunningHistory">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_DunningHistory</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpSolvency">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpSolvency</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_Financials">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="OPUPZ">
+        <descriptions defaultDescription="Subitem for a Partial Clearing in Document"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="Profit Center"/>
+      </viewAttribute>
+      <viewAttribute id="AUGST">
+        <descriptions defaultDescription="Clearing status"/>
+      </viewAttribute>
+      <viewAttribute id="VTREF">
+        <descriptions defaultDescription="Reference Specifications from Contract"/>
+      </viewAttribute>
+      <viewAttribute id="VTPOS">
+        <descriptions defaultDescription="Contract: Item Number"/>
+      </viewAttribute>
+      <viewAttribute id="ABWBL">
+        <descriptions defaultDescription="Number of the substitute FI-CA document"/>
+      </viewAttribute>
+      <viewAttribute id="ABWTP">
+        <descriptions defaultDescription="Category of substitute document in FI-CA"/>
+      </viewAttribute>
+      <viewAttribute id="HVORG">
+        <descriptions defaultDescription="Main Transaction for Line Item"/>
+      </viewAttribute>
+      <viewAttribute id="TVORG">
+        <descriptions defaultDescription="Subtransaction for Document Item"/>
+      </viewAttribute>
+      <viewAttribute id="KOFIZ">
+        <descriptions defaultDescription="Account Determination ID"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="General ledger account"/>
+      </viewAttribute>
+      <viewAttribute id="MWSKZ">
+        <descriptions defaultDescription="Tax on Sales/Purchases Code"/>
+      </viewAttribute>
+      <viewAttribute id="MWSZKZ">
+        <descriptions defaultDescription="Supplementary Tax"/>
+      </viewAttribute>
+      <viewAttribute id="XANZA">
+        <descriptions defaultDescription="Item is a Down Payment/Down Payment Request"/>
+      </viewAttribute>
+      <viewAttribute id="STAKZ">
+        <descriptions defaultDescription="Type of Statistical Line Item"/>
+      </viewAttribute>
+      <viewAttribute id="OPTXT">
+        <descriptions defaultDescription="Item text"/>
+      </viewAttribute>
+      <viewAttribute id="WAERS">
+        <descriptions defaultDescription="Transaction Currency"/>
+      </viewAttribute>
+      <viewAttribute id="VERKZ">
+        <descriptions defaultDescription="Item Can Only Be Cleared"/>
+      </viewAttribute>
+      <viewAttribute id="STUDT">
+        <descriptions defaultDescription="Deferral to"/>
+      </viewAttribute>
+      <viewAttribute id="XMANL">
+        <descriptions defaultDescription="Exclude Item from Dunning Run"/>
+      </viewAttribute>
+      <viewAttribute id="KURSF">
+        <descriptions defaultDescription="Exchange rate"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH">
+        <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
+      </viewAttribute>
+      <viewAttribute id="BETRW">
+        <descriptions defaultDescription="Amount in Transaction Currency with +/- Sign"/>
+      </viewAttribute>
+      <viewAttribute id="BETR2">
+        <descriptions defaultDescription="Amount in second parallel currency with +/- sign"/>
+      </viewAttribute>
+      <viewAttribute id="BETR3">
+        <descriptions defaultDescription="Amount in third parallel currency with +/- sign"/>
+      </viewAttribute>
+      <viewAttribute id="SKFBT">
+        <descriptions defaultDescription="Amount eligible for cash discount in document currency"/>
+      </viewAttribute>
+      <viewAttribute id="SBETH">
+        <descriptions defaultDescription="Tax Amount in Local Currency With +/- Sign"/>
+      </viewAttribute>
+      <viewAttribute id="SBETW">
+        <descriptions defaultDescription="Tax Amount in Transaction Currency with +/- Sign"/>
+      </viewAttribute>
+      <viewAttribute id="SBET2">
+        <descriptions defaultDescription="Tax amount in second parallel currency"/>
+      </viewAttribute>
+      <viewAttribute id="SBET3">
+        <descriptions defaultDescription="Tax amount in third parallel currency"/>
+      </viewAttribute>
+      <viewAttribute id="MWSKO">
+        <descriptions defaultDescription="Account for posting taxes for down payments"/>
+      </viewAttribute>
+      <viewAttribute id="MWVKO">
+        <descriptions defaultDescription="Account for offsetting tax posting in down payments"/>
+      </viewAttribute>
+      <viewAttribute id="TXRUL">
+        <descriptions defaultDescription="Update Rule for Tax and Tax Clearing"/>
+      </viewAttribute>
+      <viewAttribute id="PYMET">
+        <descriptions defaultDescription="Payment Method"/>
+      </viewAttribute>
+      <viewAttribute id="PERNR">
+        <descriptions defaultDescription="Personnel Number"/>
+      </viewAttribute>
+      <viewAttribute id="GRKEY">
+        <descriptions defaultDescription="Grouping Key for Displaying Open Items"/>
+      </viewAttribute>
+      <viewAttribute id="PERSL">
+        <descriptions defaultDescription="Key for Period Assignment"/>
+      </viewAttribute>
+      <viewAttribute id="AUGDT">
+        <descriptions defaultDescription="Clearing date"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBL">
+        <descriptions defaultDescription="Clearing Document or Printed Document"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBD">
+        <descriptions defaultDescription="Clearing document posting date"/>
+      </viewAttribute>
+      <viewAttribute id="AUGRD">
+        <descriptions defaultDescription="Clearing Reason"/>
+      </viewAttribute>
+      <viewAttribute id="AUGWA">
+        <descriptions defaultDescription="Clearing currency"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBT">
+        <descriptions defaultDescription="Clearing amount in clearing currency"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBS">
+        <descriptions defaultDescription="Tax amount in clearing currency"/>
+      </viewAttribute>
+      <viewAttribute id="AUGSK">
+        <descriptions defaultDescription="Cash Discount Granted/Surcharge Levied in Clearing Currency"/>
+      </viewAttribute>
+      <viewAttribute id="AUGVD">
+        <descriptions defaultDescription="Value date for clearing"/>
+      </viewAttribute>
+      <viewAttribute id="AUGOB">
+        <descriptions defaultDescription="Item Canceled"/>
+      </viewAttribute>
+      <viewAttribute id="WHANG">
+        <descriptions defaultDescription="Number of repetition items"/>
+      </viewAttribute>
+      <viewAttribute id="WHGRP">
+        <descriptions defaultDescription="Repetition group"/>
+      </viewAttribute>
+      <viewAttribute id="XAUGP">
+        <descriptions defaultDescription="Check Sample Record Clearing"/>
+      </viewAttribute>
+      <viewAttribute id="ABRZU">
+        <descriptions defaultDescription="Lower Limit of Settlement Period"/>
+      </viewAttribute>
+      <viewAttribute id="ABRZO">
+        <descriptions defaultDescription="Upper Limit of the Billing Period"/>
+      </viewAttribute>
+      <viewAttribute id="FDZTG">
+        <descriptions defaultDescription="Additional Days for Cash Management"/>
+      </viewAttribute>
+      <viewAttribute id="FDWBT">
+        <descriptions defaultDescription="Planned Amount in Document or G/L Account Currency"/>
+      </viewAttribute>
+      <viewAttribute id="XTAUS">
+        <descriptions defaultDescription="Item Split"/>
+      </viewAttribute>
+      <viewAttribute id="AUGRS">
+        <descriptions defaultDescription="Clearing restriction"/>
+      </viewAttribute>
+      <viewAttribute id="PYGRP">
+        <descriptions defaultDescription="Grouping field for automatic payments"/>
+      </viewAttribute>
+      <viewAttribute id="PDTYP">
+        <descriptions defaultDescription="Category of Payment Specification"/>
+      </viewAttribute>
+      <viewAttribute id="SPERZ">
+        <descriptions defaultDescription="Interest Lock Reason"/>
+      </viewAttribute>
+      <viewAttribute id="INFOZ">
+        <descriptions defaultDescription="Doubtful Item Entry/Individual Value Adjustment"/>
+      </viewAttribute>
+      <viewAttribute id="TXDAT">
+        <descriptions defaultDescription="Decisive Date for Calculating Taxes"/>
+      </viewAttribute>
+      <viewAttribute id="VBUND">
+        <descriptions defaultDescription="Company ID of trading partner"/>
+      </viewAttribute>
+      <viewAttribute id="KONTT">
+        <descriptions defaultDescription="Account Assignment Category"/>
+      </viewAttribute>
+      <viewAttribute id="KONTL">
+        <descriptions defaultDescription="Acct assnmnt string for industry-specific account assngments"/>
+      </viewAttribute>
+      <viewAttribute id="OPSTA">
+        <descriptions defaultDescription="Dunning indicator"/>
+      </viewAttribute>
+      <viewAttribute id="BLART">
+        <descriptions defaultDescription="Document Type"/>
+      </viewAttribute>
+      <viewAttribute id="EMGPA">
+        <descriptions defaultDescription="Alternative Business Partner for Payments"/>
+      </viewAttribute>
+      <viewAttribute id="EMBVT">
+        <descriptions defaultDescription="Bank Details ID of Payee"/>
+      </viewAttribute>
+      <viewAttribute id="EMADR">
+        <descriptions defaultDescription="Address number"/>
+      </viewAttribute>
+      <viewAttribute id="IKEY">
+        <descriptions defaultDescription="Interest Key"/>
+      </viewAttribute>
+      <viewAttribute id="XRAGL">
+        <descriptions defaultDescription="Clearing posting reversed"/>
+      </viewAttribute>
+      <viewAttribute id="ASTKZ">
+        <descriptions defaultDescription="Statistical Key of the Initiating Item"/>
+      </viewAttribute>
+      <viewAttribute id="ASBLG">
+        <descriptions defaultDescription="Number of Triggering Document"/>
+      </viewAttribute>
+      <viewAttribute id="XBLNR">
+        <descriptions defaultDescription="Reference document number"/>
+      </viewAttribute>
+      <viewAttribute id="INKPS">
+        <descriptions defaultDescription="Collection Item"/>
+      </viewAttribute>
+      <viewAttribute id="QSSHB">
+        <descriptions defaultDescription="Tax Base Amount"/>
+      </viewAttribute>
+      <viewAttribute id="QBSHB">
+        <descriptions defaultDescription="Withholding Tax Amount (in Document Currency)"/>
+      </viewAttribute>
+      <viewAttribute id="RFUPK">
+        <descriptions defaultDescription="Reference Item In FI-CA Document"/>
+      </viewAttribute>
+      <viewAttribute id="INTBU">
+        <descriptions defaultDescription="Reason for Automatic Creation of Posting"/>
+      </viewAttribute>
+      <viewAttribute id="C4EYE">
+        <descriptions defaultDescription="Check Reason for Workflows Acc. to Dual Control Principle"/>
+      </viewAttribute>
+      <viewAttribute id="C4EYP">
+        <descriptions defaultDescription="Editing Process To Be Confirmed"/>
+      </viewAttribute>
+      <viewAttribute id="SCTAX">
+        <descriptions defaultDescription="Tax Portion in FI-CA Local Currency"/>
+      </viewAttribute>
+      <viewAttribute id="STTAX">
+        <descriptions defaultDescription="Tax Amount as Statistical Information in Document Currency"/>
+      </viewAttribute>
+      <viewAttribute id="ORUPZ">
+        <descriptions defaultDescription="Subitem Number before Item Split"/>
+      </viewAttribute>
+      <viewAttribute id="NEGBU">
+        <descriptions defaultDescription="Control Field for Negative Posting"/>
+      </viewAttribute>
+      <viewAttribute id="SUBAP">
+        <descriptions defaultDescription="Subapplication in Contract Accounts Receivable and Payable"/>
+      </viewAttribute>
+      <viewAttribute id="PSWSL">
+        <descriptions defaultDescription="Update Currency for General Ledger Transaction Figures"/>
+      </viewAttribute>
+      <viewAttribute id="PSWBT">
+        <descriptions defaultDescription="Amount for Updating in General Ledger"/>
+      </viewAttribute>
+      <viewAttribute id="PSWTX">
+        <descriptions defaultDescription="Tax Amount for Update in General Ledger"/>
+      </viewAttribute>
+      <viewAttribute id="PSGRP">
+        <descriptions defaultDescription="Grouping Key for Document Items"/>
+      </viewAttribute>
+      <viewAttribute id="XCOLC">
+        <descriptions defaultDescription="Item Is Included in Collection Case"/>
+      </viewAttribute>
+      <viewAttribute id="AASTA">
+        <descriptions defaultDescription="Control Field for Account Assignment Distributions"/>
+      </viewAttribute>
+      <viewAttribute id="EMMND">
+        <descriptions defaultDescription="SEPA Mandate Identifier"/>
+      </viewAttribute>
+      <viewAttribute id="PNEXD">
+        <descriptions defaultDescription="SEPA: Date of Execution of Direct Debit Pre-Notifcation"/>
+      </viewAttribute>
+      <viewAttribute id="FINRE">
+        <descriptions defaultDescription="Contract Account of Final Recipient"/>
+      </viewAttribute>
+      <viewAttribute id="RDSTA">
+        <descriptions defaultDescription="Current Distribution Status"/>
+      </viewAttribute>
+      <viewAttribute id="RDSTB">
+        <descriptions defaultDescription="Last Distribution Status Reported"/>
+      </viewAttribute>
+      <viewAttribute id="PSOBTYP">
+        <descriptions defaultDescription="Contract Object Type"/>
+      </viewAttribute>
+      <viewAttribute id="VKTYP_PS">
+        <descriptions defaultDescription="Contract Account Category"/>
+      </viewAttribute>
+      <viewAttribute id="ABTYP_PS">
+        <descriptions defaultDescription="Revenue Type"/>
+      </viewAttribute>
+      <viewAttribute id="REFDOC_ID">
+        <descriptions defaultDescription="Transaction"/>
+      </viewAttribute>
+      <viewAttribute id="REFDOC_OBJTYPE">
+        <descriptions defaultDescription="Object Type for CRM Transaction Type/Item Category"/>
+      </viewAttribute>
+      <viewAttribute id="CRMOBJ">
+        <descriptions defaultDescription="GUID of a CRM Order Object"/>
+      </viewAttribute>
+      <viewAttribute id="BRI_GUID">
+        <descriptions defaultDescription="GUID of a CRM Order Object"/>
+      </viewAttribute>
+      <viewAttribute id="REFDOC_GUID">
+        <descriptions defaultDescription="Unique UUID (Technical Key)"/>
+      </viewAttribute>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="Form Bundle Number"/>
+      </viewAttribute>
+      <viewAttribute id="ZEXCL_AMT">
+        <descriptions defaultDescription="Tax Amount that is excluded from Interest Calculations"/>
+      </viewAttribute>
+      <viewAttribute id="ZZSRCDOCNO">
+        <descriptions defaultDescription="Number of Source Document to Be Invoiced"/>
+      </viewAttribute>
+      <viewAttribute id="FMTYP">
+        <descriptions defaultDescription="Update Method for FM - FI-CA Integration"/>
+      </viewAttribute>
+      <viewAttribute id="ORIGFIKRS">
+        <descriptions defaultDescription="Original FM Area for FM Account Assignment"/>
+      </viewAttribute>
+      <viewAttribute id="FIPEX">
+        <descriptions defaultDescription="Commitment item"/>
+      </viewAttribute>
+      <viewAttribute id="FISTL">
+        <descriptions defaultDescription="Funds Center"/>
+      </viewAttribute>
+      <viewAttribute id="FONDS">
+        <descriptions defaultDescription="Fund"/>
+      </viewAttribute>
+      <viewAttribute id="MEASURE">
+        <descriptions defaultDescription="Funded Program"/>
+      </viewAttribute>
+      <viewAttribute id="GRANT_NBR">
+        <descriptions defaultDescription="Grant"/>
+      </viewAttribute>
+      <viewAttribute id="BUDGETYEAR">
+        <descriptions defaultDescription="Original Year for FM Account Assignment"/>
+      </viewAttribute>
+      <viewAttribute id="BUDGET_PD">
+        <descriptions defaultDescription="FM: Budget Period"/>
+      </viewAttribute>
+      <viewAttribute id="QSPRZ">
+        <descriptions defaultDescription="Withholding Tax Percentage"/>
+      </viewAttribute>
+      <viewAttribute id="TXGRP">
+        <descriptions defaultDescription="Grouping Key for Tax Items"/>
+      </viewAttribute>
+      <viewAttribute id="PALIX">
+        <descriptions defaultDescription="Item Is Part of a Collaborative Liability"/>
+      </viewAttribute>
+      <viewAttribute id="OPUPF">
+        <descriptions defaultDescription="Subitems in Factoring"/>
+      </viewAttribute>
+      <viewAttribute id="DEBT_SET">
+        <descriptions defaultDescription="Debt Set"/>
+      </viewAttribute>
+      <viewAttribute id="TFKHVOT_TXT30">
+        <descriptions defaultDescription="Main Transaction Desc"/>
+      </viewAttribute>
+      <viewAttribute id="TFKTVOT_TXT30">
+        <descriptions defaultDescription="Sub Transaction Desc"/>
+      </viewAttribute>
+      <viewAttribute id="TFK003T_LTEXT">
+        <descriptions defaultDescription="Document Type Desc"/>
+      </viewAttribute>
+      <viewAttribute id="TFK001AT_TXT50">
+        <descriptions defaultDescription="Clearing Reason Desc"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_GPART">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="Document Number in Contract Accounts Receivable and Payable"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+      </viewAttribute>
+      <viewAttribute id="OpenItemFlag">
+        <descriptions defaultDescription="OpenItemFlag"/>
+      </viewAttribute>
+      <viewAttribute id="CreditDebitFlag">
+        <descriptions defaultDescription="CreditDebitFlag"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_OPUPW">
+        <descriptions defaultDescription="DFKKOP_OPUPW"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_OPUPK">
+        <descriptions defaultDescription="DFKKOP_OPUPK"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_BUKRS">
+        <descriptions defaultDescription="DFKKOP_BUKRS"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_VKONT">
+        <descriptions defaultDescription="DFKKOP_VKONT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_APPLK">
+        <descriptions defaultDescription="DFKKOP_APPLK"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_BLDAT">
+        <descriptions defaultDescription="DFKKOP_BLDAT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_FAEDN">
+        <descriptions defaultDescription="DFKKOP_FAEDN"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_FAEDS">
+        <descriptions defaultDescription="DFKKOP_FAEDS"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_SKTPZ">
+        <descriptions defaultDescription="DFKKOP_SKTPZ"/>
+      </viewAttribute>
+      <viewAttribute id="Doubtful">
+        <descriptions defaultDescription="Doubtful"/>
+      </viewAttribute>
+      <viewAttribute id="OverdueStatus">
+        <descriptions defaultDescription="OverdueStatus"/>
+      </viewAttribute>
+      <viewAttribute id="AgeMonths">
+        <descriptions defaultDescription="Age Months"/>
+      </viewAttribute>
+      <viewAttribute id="AgeMonthsStatus">
+        <descriptions defaultDescription="Age Months Status"/>
+      </viewAttribute>
+      <viewAttribute id="AgeDays">
+        <descriptions defaultDescription="Age Days"/>
+      </viewAttribute>
+      <viewAttribute id="AgeDaysStatus">
+        <descriptions defaultDescription="Age Days Status"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGST" source="AUGST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTPOS" source="VTPOS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABWBL" source="ABWBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABWTP" source="ABWTP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWSZKZ" source="MWSZKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XANZA" source="XANZA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAKZ" source="STAKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPTXT" source="OPTXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERKZ" source="VERKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STUDT" source="STUDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XMANL" source="XMANL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KURSF" source="KURSF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETR2" source="BETR2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETR3" source="BETR3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SKFBT" source="SKFBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBETH" source="SBETH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBETW" source="SBETW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBET2" source="SBET2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBET3" source="SBET3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWSKO" source="MWSKO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWVKO" source="MWVKO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXRUL" source="TXRUL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PYMET" source="PYMET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRKEY" source="GRKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBD" source="AUGBD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGWA" source="AUGWA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBS" source="AUGBS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGSK" source="AUGSK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGVD" source="AUGVD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGOB" source="AUGOB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WHANG" source="WHANG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WHGRP" source="WHGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XAUGP" source="XAUGP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABRZU" source="ABRZU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABRZO" source="ABRZO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FDZTG" source="FDZTG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FDWBT" source="FDWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XTAUS" source="XTAUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRS" source="AUGRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PYGRP" source="PYGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PDTYP" source="PDTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPERZ" source="SPERZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INFOZ" source="INFOZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXDAT" source="TXDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VBUND" source="VBUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KONTT" source="KONTT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KONTL" source="KONTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPSTA" source="OPSTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMGPA" source="EMGPA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMBVT" source="EMBVT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMADR" source="EMADR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IKEY" source="IKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XRAGL" source="XRAGL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASTKZ" source="ASTKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASBLG" source="ASBLG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INKPS" source="INKPS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QSSHB" source="QSSHB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QBSHB" source="QBSHB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RFUPK" source="RFUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTBU" source="INTBU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C4EYE" source="C4EYE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C4EYP" source="C4EYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCTAX" source="SCTAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STTAX" source="STTAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORUPZ" source="ORUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NEGBU" source="NEGBU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBAP" source="SUBAP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWSL" source="PSWSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWBT" source="PSWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWTX" source="PSWTX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSGRP" source="PSGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XCOLC" source="XCOLC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AASTA" source="AASTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMMND" source="EMMND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PNEXD" source="PNEXD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINRE" source="FINRE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RDSTA" source="RDSTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RDSTB" source="RDSTB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBTYP" source="PSOBTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_PS" source="VKTYP_PS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABTYP_PS" source="ABTYP_PS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_ID" source="REFDOC_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_OBJTYPE" source="REFDOC_OBJTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CRMOBJ" source="CRMOBJ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BRI_GUID" source="BRI_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_GUID" source="REFDOC_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZEXCL_AMT" source="ZEXCL_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSRCDOCNO" source="ZZSRCDOCNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FMTYP" source="FMTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORIGFIKRS" source="ORIGFIKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FIPEX" source="FIPEX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISTL" source="FISTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FONDS" source="FONDS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MEASURE" source="MEASURE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDGETYEAR" source="BUDGETYEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDGET_PD" source="BUDGET_PD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QSPRZ" source="QSPRZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXGRP" source="TXGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PALIX" source="PALIX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPF" source="OPUPF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEBT_SET" source="DEBT_SET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFKHVOT_TXT30" source="TFKHVOT_TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFKTVOT_TXT30" source="TFKTVOT_TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFK003T_LTEXT" source="TFK003T_LTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFK001AT_TXT50" source="TFK001AT_TXT50"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BUKRS" source="DFKKOP_BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_VKONT" source="DFKKOP_VKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_APPLK" source="DFKKOP_APPLK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BLDAT" source="DFKKOP_BLDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_FAEDN" source="DFKKOP_FAEDN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_FAEDS" source="DFKKOP_FAEDS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_SKTPZ" source="DFKKOP_SKTPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Doubtful" source="Doubtful"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OverdueStatus" source="OverdueStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonths" source="AgeMonths"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonthsStatus" source="AgeMonthsStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_LATESTDUNNING" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="STEP">
+        <descriptions defaultDescription="STEP"/>
+      </viewAttribute>
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute>
+      <viewAttribute id="OPUPW">
+        <descriptions defaultDescription="OPUPW"/>
+      </viewAttribute>
+      <viewAttribute id="OPUPK">
+        <descriptions defaultDescription="OPUPK"/>
+      </viewAttribute>
+      <viewAttribute id="OPUPZ">
+        <descriptions defaultDescription="OPUPZ"/>
+      </viewAttribute>
+    
+      <viewAttribute id="AUSDT">
+        <descriptions defaultDescription="AUSDT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="STEP_DESC">
+        <descriptions defaultDescription="STEPT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_DunningHistory">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STEP" source="STEP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUSDT" source="AUSDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="STEP_DESC" source="STEP_DESC"/>
+    </input>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>OPBEL</partitionViewAttributeName>
+      <partitionViewAttributeName>OPUPW</partitionViewAttributeName>
+      <partitionViewAttributeName>OPUPK</partitionViewAttributeName>
+      <partitionViewAttributeName>OPUPZ</partitionViewAttributeName>
+      <order byViewAttributeName="AUSDT" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+    <filter>date(&quot;AUSDT&quot;)&lt;=date('$$IP_KeyDate$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_FIN_LATESTDUNNING" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="OPUPZ">
+        <descriptions defaultDescription="OPUPZ"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="AUGST">
+        <descriptions defaultDescription="AUGST"/>
+      </viewAttribute>
+      <viewAttribute id="VTREF">
+        <descriptions defaultDescription="VTREF"/>
+      </viewAttribute>
+      <viewAttribute id="VTPOS">
+        <descriptions defaultDescription="VTPOS"/>
+      </viewAttribute>
+      <viewAttribute id="ABWBL">
+        <descriptions defaultDescription="ABWBL"/>
+      </viewAttribute>
+      <viewAttribute id="ABWTP">
+        <descriptions defaultDescription="ABWTP"/>
+      </viewAttribute>
+      <viewAttribute id="HVORG">
+        <descriptions defaultDescription="HVORG"/>
+      </viewAttribute>
+      <viewAttribute id="TVORG">
+        <descriptions defaultDescription="TVORG"/>
+      </viewAttribute>
+      <viewAttribute id="KOFIZ">
+        <descriptions defaultDescription="KOFIZ"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="MWSKZ">
+        <descriptions defaultDescription="MWSKZ"/>
+      </viewAttribute>
+      <viewAttribute id="MWSZKZ">
+        <descriptions defaultDescription="MWSZKZ"/>
+      </viewAttribute>
+      <viewAttribute id="XANZA">
+        <descriptions defaultDescription="XANZA"/>
+      </viewAttribute>
+      <viewAttribute id="STAKZ">
+        <descriptions defaultDescription="STAKZ"/>
+      </viewAttribute>
+      <viewAttribute id="OPTXT">
+        <descriptions defaultDescription="OPTXT"/>
+      </viewAttribute>
+      <viewAttribute id="WAERS">
+        <descriptions defaultDescription="WAERS"/>
+      </viewAttribute>
+      <viewAttribute id="VERKZ">
+        <descriptions defaultDescription="VERKZ"/>
+      </viewAttribute>
+      <viewAttribute id="STUDT">
+        <descriptions defaultDescription="STUDT"/>
+      </viewAttribute>
+      <viewAttribute id="XMANL">
+        <descriptions defaultDescription="XMANL"/>
+      </viewAttribute>
+      <viewAttribute id="KURSF" aggregationType="sum">
+        <descriptions defaultDescription="KURSF"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="BETRW" aggregationType="sum">
+        <descriptions defaultDescription="BETRW"/>
+      </viewAttribute>
+      <viewAttribute id="BETR2" aggregationType="sum">
+        <descriptions defaultDescription="BETR2"/>
+      </viewAttribute>
+      <viewAttribute id="BETR3" aggregationType="sum">
+        <descriptions defaultDescription="BETR3"/>
+      </viewAttribute>
+      <viewAttribute id="SKFBT" aggregationType="sum">
+        <descriptions defaultDescription="SKFBT"/>
+      </viewAttribute>
+      <viewAttribute id="SBETH" aggregationType="sum">
+        <descriptions defaultDescription="SBETH"/>
+      </viewAttribute>
+      <viewAttribute id="SBETW" aggregationType="sum">
+        <descriptions defaultDescription="SBETW"/>
+      </viewAttribute>
+      <viewAttribute id="SBET2" aggregationType="sum">
+        <descriptions defaultDescription="SBET2"/>
+      </viewAttribute>
+      <viewAttribute id="SBET3" aggregationType="sum">
+        <descriptions defaultDescription="SBET3"/>
+      </viewAttribute>
+      <viewAttribute id="MWSKO">
+        <descriptions defaultDescription="MWSKO"/>
+      </viewAttribute>
+      <viewAttribute id="MWVKO">
+        <descriptions defaultDescription="MWVKO"/>
+      </viewAttribute>
+      <viewAttribute id="TXRUL">
+        <descriptions defaultDescription="TXRUL"/>
+      </viewAttribute>
+      <viewAttribute id="PYMET">
+        <descriptions defaultDescription="PYMET"/>
+      </viewAttribute>
+      <viewAttribute id="PERNR">
+        <descriptions defaultDescription="PERNR"/>
+      </viewAttribute>
+      <viewAttribute id="GRKEY">
+        <descriptions defaultDescription="GRKEY"/>
+      </viewAttribute>
+      <viewAttribute id="PERSL">
+        <descriptions defaultDescription="PERSL"/>
+      </viewAttribute>
+      <viewAttribute id="AUGDT">
+        <descriptions defaultDescription="AUGDT"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBL">
+        <descriptions defaultDescription="AUGBL"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBD">
+        <descriptions defaultDescription="AUGBD"/>
+      </viewAttribute>
+      <viewAttribute id="AUGRD">
+        <descriptions defaultDescription="AUGRD"/>
+      </viewAttribute>
+      <viewAttribute id="AUGWA">
+        <descriptions defaultDescription="AUGWA"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBT" aggregationType="sum">
+        <descriptions defaultDescription="AUGBT"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBS" aggregationType="sum">
+        <descriptions defaultDescription="AUGBS"/>
+      </viewAttribute>
+      <viewAttribute id="AUGSK" aggregationType="sum">
+        <descriptions defaultDescription="AUGSK"/>
+      </viewAttribute>
+      <viewAttribute id="AUGVD">
+        <descriptions defaultDescription="AUGVD"/>
+      </viewAttribute>
+      <viewAttribute id="AUGOB">
+        <descriptions defaultDescription="AUGOB"/>
+      </viewAttribute>
+      <viewAttribute id="WHANG">
+        <descriptions defaultDescription="WHANG"/>
+      </viewAttribute>
+      <viewAttribute id="WHGRP">
+        <descriptions defaultDescription="WHGRP"/>
+      </viewAttribute>
+      <viewAttribute id="XAUGP">
+        <descriptions defaultDescription="XAUGP"/>
+      </viewAttribute>
+      <viewAttribute id="ABRZU">
+        <descriptions defaultDescription="ABRZU"/>
+      </viewAttribute>
+      <viewAttribute id="ABRZO">
+        <descriptions defaultDescription="ABRZO"/>
+      </viewAttribute>
+      <viewAttribute id="FDZTG">
+        <descriptions defaultDescription="FDZTG"/>
+      </viewAttribute>
+      <viewAttribute id="FDWBT" aggregationType="sum">
+        <descriptions defaultDescription="FDWBT"/>
+      </viewAttribute>
+      <viewAttribute id="XTAUS">
+        <descriptions defaultDescription="XTAUS"/>
+      </viewAttribute>
+      <viewAttribute id="AUGRS">
+        <descriptions defaultDescription="AUGRS"/>
+      </viewAttribute>
+      <viewAttribute id="PYGRP">
+        <descriptions defaultDescription="PYGRP"/>
+      </viewAttribute>
+      <viewAttribute id="PDTYP">
+        <descriptions defaultDescription="PDTYP"/>
+      </viewAttribute>
+      <viewAttribute id="SPERZ">
+        <descriptions defaultDescription="SPERZ"/>
+      </viewAttribute>
+      <viewAttribute id="INFOZ">
+        <descriptions defaultDescription="INFOZ"/>
+      </viewAttribute>
+      <viewAttribute id="TXDAT">
+        <descriptions defaultDescription="TXDAT"/>
+      </viewAttribute>
+      <viewAttribute id="VBUND">
+        <descriptions defaultDescription="VBUND"/>
+      </viewAttribute>
+      <viewAttribute id="KONTT">
+        <descriptions defaultDescription="KONTT"/>
+      </viewAttribute>
+      <viewAttribute id="KONTL">
+        <descriptions defaultDescription="KONTL"/>
+      </viewAttribute>
+      <viewAttribute id="OPSTA">
+        <descriptions defaultDescription="OPSTA"/>
+      </viewAttribute>
+      <viewAttribute id="BLART">
+        <descriptions defaultDescription="BLART"/>
+      </viewAttribute>
+      <viewAttribute id="EMGPA">
+        <descriptions defaultDescription="EMGPA"/>
+      </viewAttribute>
+      <viewAttribute id="EMBVT">
+        <descriptions defaultDescription="EMBVT"/>
+      </viewAttribute>
+      <viewAttribute id="EMADR">
+        <descriptions defaultDescription="EMADR"/>
+      </viewAttribute>
+      <viewAttribute id="IKEY">
+        <descriptions defaultDescription="IKEY"/>
+      </viewAttribute>
+      <viewAttribute id="XRAGL">
+        <descriptions defaultDescription="XRAGL"/>
+      </viewAttribute>
+      <viewAttribute id="ASTKZ">
+        <descriptions defaultDescription="ASTKZ"/>
+      </viewAttribute>
+      <viewAttribute id="ASBLG">
+        <descriptions defaultDescription="ASBLG"/>
+      </viewAttribute>
+      <viewAttribute id="XBLNR">
+        <descriptions defaultDescription="XBLNR"/>
+      </viewAttribute>
+      <viewAttribute id="INKPS">
+        <descriptions defaultDescription="INKPS"/>
+      </viewAttribute>
+      <viewAttribute id="QSSHB" aggregationType="sum">
+        <descriptions defaultDescription="QSSHB"/>
+      </viewAttribute>
+      <viewAttribute id="QBSHB" aggregationType="sum">
+        <descriptions defaultDescription="QBSHB"/>
+      </viewAttribute>
+      <viewAttribute id="RFUPK">
+        <descriptions defaultDescription="RFUPK"/>
+      </viewAttribute>
+      <viewAttribute id="INTBU">
+        <descriptions defaultDescription="INTBU"/>
+      </viewAttribute>
+      <viewAttribute id="C4EYE">
+        <descriptions defaultDescription="C4EYE"/>
+      </viewAttribute>
+      <viewAttribute id="C4EYP">
+        <descriptions defaultDescription="C4EYP"/>
+      </viewAttribute>
+      <viewAttribute id="SCTAX" aggregationType="sum">
+        <descriptions defaultDescription="SCTAX"/>
+      </viewAttribute>
+      <viewAttribute id="STTAX" aggregationType="sum">
+        <descriptions defaultDescription="STTAX"/>
+      </viewAttribute>
+      <viewAttribute id="ORUPZ">
+        <descriptions defaultDescription="ORUPZ"/>
+      </viewAttribute>
+      <viewAttribute id="NEGBU">
+        <descriptions defaultDescription="NEGBU"/>
+      </viewAttribute>
+      <viewAttribute id="SUBAP">
+        <descriptions defaultDescription="SUBAP"/>
+      </viewAttribute>
+      <viewAttribute id="PSWSL">
+        <descriptions defaultDescription="PSWSL"/>
+      </viewAttribute>
+      <viewAttribute id="PSWBT" aggregationType="sum">
+        <descriptions defaultDescription="PSWBT"/>
+      </viewAttribute>
+      <viewAttribute id="PSWTX" aggregationType="sum">
+        <descriptions defaultDescription="PSWTX"/>
+      </viewAttribute>
+      <viewAttribute id="PSGRP">
+        <descriptions defaultDescription="PSGRP"/>
+      </viewAttribute>
+      <viewAttribute id="XCOLC">
+        <descriptions defaultDescription="XCOLC"/>
+      </viewAttribute>
+      <viewAttribute id="AASTA">
+        <descriptions defaultDescription="AASTA"/>
+      </viewAttribute>
+      <viewAttribute id="EMMND">
+        <descriptions defaultDescription="EMMND"/>
+      </viewAttribute>
+      <viewAttribute id="PNEXD">
+        <descriptions defaultDescription="PNEXD"/>
+      </viewAttribute>
+      <viewAttribute id="FINRE">
+        <descriptions defaultDescription="FINRE"/>
+      </viewAttribute>
+      <viewAttribute id="RDSTA">
+        <descriptions defaultDescription="RDSTA"/>
+      </viewAttribute>
+      <viewAttribute id="RDSTB">
+        <descriptions defaultDescription="RDSTB"/>
+      </viewAttribute>
+      <viewAttribute id="PSOBTYP">
+        <descriptions defaultDescription="PSOBTYP"/>
+      </viewAttribute>
+      <viewAttribute id="VKTYP_PS">
+        <descriptions defaultDescription="VKTYP_PS"/>
+      </viewAttribute>
+      <viewAttribute id="ABTYP_PS">
+        <descriptions defaultDescription="ABTYP_PS"/>
+      </viewAttribute>
+      <viewAttribute id="REFDOC_ID">
+        <descriptions defaultDescription="REFDOC_ID"/>
+      </viewAttribute>
+      <viewAttribute id="REFDOC_OBJTYPE">
+        <descriptions defaultDescription="REFDOC_OBJTYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CRMOBJ">
+        <descriptions defaultDescription="CRMOBJ"/>
+      </viewAttribute>
+      <viewAttribute id="BRI_GUID">
+        <descriptions defaultDescription="BRI_GUID"/>
+      </viewAttribute>
+      <viewAttribute id="REFDOC_GUID">
+        <descriptions defaultDescription="REFDOC_GUID"/>
+      </viewAttribute>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="FBNUM"/>
+      </viewAttribute>
+      <viewAttribute id="ZEXCL_AMT" aggregationType="sum">
+        <descriptions defaultDescription="ZEXCL_AMT"/>
+      </viewAttribute>
+      <viewAttribute id="ZZSRCDOCNO">
+        <descriptions defaultDescription="ZZSRCDOCNO"/>
+      </viewAttribute>
+      <viewAttribute id="FMTYP">
+        <descriptions defaultDescription="FMTYP"/>
+      </viewAttribute>
+      <viewAttribute id="ORIGFIKRS">
+        <descriptions defaultDescription="ORIGFIKRS"/>
+      </viewAttribute>
+      <viewAttribute id="FIPEX">
+        <descriptions defaultDescription="FIPEX"/>
+      </viewAttribute>
+      <viewAttribute id="FISTL">
+        <descriptions defaultDescription="FISTL"/>
+      </viewAttribute>
+      <viewAttribute id="FONDS">
+        <descriptions defaultDescription="FONDS"/>
+      </viewAttribute>
+      <viewAttribute id="MEASURE">
+        <descriptions defaultDescription="MEASURE"/>
+      </viewAttribute>
+      <viewAttribute id="GRANT_NBR">
+        <descriptions defaultDescription="GRANT_NBR"/>
+      </viewAttribute>
+      <viewAttribute id="BUDGETYEAR">
+        <descriptions defaultDescription="BUDGETYEAR"/>
+      </viewAttribute>
+      <viewAttribute id="BUDGET_PD">
+        <descriptions defaultDescription="BUDGET_PD"/>
+      </viewAttribute>
+      <viewAttribute id="QSPRZ">
+        <descriptions defaultDescription="QSPRZ"/>
+      </viewAttribute>
+      <viewAttribute id="TXGRP">
+        <descriptions defaultDescription="TXGRP"/>
+      </viewAttribute>
+      <viewAttribute id="PALIX">
+        <descriptions defaultDescription="PALIX"/>
+      </viewAttribute>
+      <viewAttribute id="OPUPF">
+        <descriptions defaultDescription="OPUPF"/>
+      </viewAttribute>
+      <viewAttribute id="DEBT_SET">
+        <descriptions defaultDescription="DEBT_SET"/>
+      </viewAttribute>
+      <viewAttribute id="TFKHVOT_TXT30">
+        <descriptions defaultDescription="TFKHVOT_TXT30"/>
+      </viewAttribute>
+      <viewAttribute id="TFKTVOT_TXT30">
+        <descriptions defaultDescription="TFKTVOT_TXT30"/>
+      </viewAttribute>
+      <viewAttribute id="TFK003T_LTEXT">
+        <descriptions defaultDescription="TFK003T_LTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="TFK001AT_TXT50">
+        <descriptions defaultDescription="TFK001AT_TXT50"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_GPART">
+        <descriptions defaultDescription="DFKK_H_GPART"/>
+      </viewAttribute>
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT">
+        <descriptions defaultDescription="DFKK_H_BUDAT"/>
+      </viewAttribute>
+      <viewAttribute id="OpenItemFlag">
+        <descriptions defaultDescription="OpenItemFlag"/>
+      </viewAttribute>
+      <viewAttribute id="CreditDebitFlag">
+        <descriptions defaultDescription="CreditDebitFlag"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_OPUPW">
+        <descriptions defaultDescription="DFKKOP_OPUPW"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_OPUPK">
+        <descriptions defaultDescription="DFKKOP_OPUPK"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_BUKRS">
+        <descriptions defaultDescription="DFKKOP_BUKRS"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_VKONT">
+        <descriptions defaultDescription="DFKKOP_VKONT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_APPLK">
+        <descriptions defaultDescription="DFKKOP_APPLK"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_BLDAT">
+        <descriptions defaultDescription="DFKKOP_BLDAT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_FAEDN">
+        <descriptions defaultDescription="DFKKOP_FAEDN"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_FAEDS">
+        <descriptions defaultDescription="DFKKOP_FAEDS"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_SKTPZ" aggregationType="sum">
+        <descriptions defaultDescription="DFKKOP_SKTPZ"/>
+      </viewAttribute>
+      <viewAttribute id="Doubtful">
+        <descriptions defaultDescription="Doubtful"/>
+      </viewAttribute>
+      <viewAttribute id="OverdueStatus">
+        <descriptions defaultDescription="OverdueStatus"/>
+      </viewAttribute>
+      <viewAttribute id="STEP">
+        <descriptions defaultDescription="STEP"/>
+      </viewAttribute>
+    
+      <viewAttribute id="STEP_DESC">
+        <descriptions defaultDescription="STEP_DESC"/>
+      </viewAttribute>
+    
+      <viewAttribute id="AgeMonths">
+        <descriptions defaultDescription="AgeMonths"/>
+      </viewAttribute>
+      <viewAttribute id="AgeMonthsStatus">
+        <descriptions defaultDescription="AgeMonthsStatus"/>
+      </viewAttribute>
+      <viewAttribute id="AgeDays">
+        <descriptions defaultDescription="AgeDays"/>
+      </viewAttribute>
+      <viewAttribute id="AgeDaysStatus">
+        <descriptions defaultDescription="AgeDaysStatus"/>
+      </viewAttribute>
+      <viewAttribute id="AUSDT">
+        <descriptions defaultDescription="AUSDT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_Financials">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGST" source="AUGST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTPOS" source="VTPOS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABWBL" source="ABWBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABWTP" source="ABWTP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWSZKZ" source="MWSZKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XANZA" source="XANZA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAKZ" source="STAKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPTXT" source="OPTXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERKZ" source="VERKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STUDT" source="STUDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XMANL" source="XMANL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KURSF" source="KURSF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETR2" source="BETR2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETR3" source="BETR3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SKFBT" source="SKFBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBETH" source="SBETH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBETW" source="SBETW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBET2" source="SBET2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBET3" source="SBET3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWSKO" source="MWSKO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWVKO" source="MWVKO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXRUL" source="TXRUL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PYMET" source="PYMET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRKEY" source="GRKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBD" source="AUGBD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGWA" source="AUGWA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBS" source="AUGBS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGSK" source="AUGSK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGVD" source="AUGVD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGOB" source="AUGOB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WHANG" source="WHANG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WHGRP" source="WHGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XAUGP" source="XAUGP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABRZU" source="ABRZU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABRZO" source="ABRZO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FDZTG" source="FDZTG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FDWBT" source="FDWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XTAUS" source="XTAUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRS" source="AUGRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PYGRP" source="PYGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PDTYP" source="PDTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPERZ" source="SPERZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INFOZ" source="INFOZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXDAT" source="TXDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VBUND" source="VBUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KONTT" source="KONTT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KONTL" source="KONTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPSTA" source="OPSTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMGPA" source="EMGPA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMBVT" source="EMBVT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMADR" source="EMADR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IKEY" source="IKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XRAGL" source="XRAGL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASTKZ" source="ASTKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASBLG" source="ASBLG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INKPS" source="INKPS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QSSHB" source="QSSHB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QBSHB" source="QBSHB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RFUPK" source="RFUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTBU" source="INTBU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C4EYE" source="C4EYE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C4EYP" source="C4EYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCTAX" source="SCTAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STTAX" source="STTAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORUPZ" source="ORUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NEGBU" source="NEGBU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBAP" source="SUBAP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWSL" source="PSWSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWBT" source="PSWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWTX" source="PSWTX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSGRP" source="PSGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XCOLC" source="XCOLC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AASTA" source="AASTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMMND" source="EMMND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PNEXD" source="PNEXD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINRE" source="FINRE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RDSTA" source="RDSTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RDSTB" source="RDSTB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBTYP" source="PSOBTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_PS" source="VKTYP_PS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABTYP_PS" source="ABTYP_PS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_ID" source="REFDOC_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_OBJTYPE" source="REFDOC_OBJTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CRMOBJ" source="CRMOBJ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BRI_GUID" source="BRI_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_GUID" source="REFDOC_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZEXCL_AMT" source="ZEXCL_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSRCDOCNO" source="ZZSRCDOCNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FMTYP" source="FMTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORIGFIKRS" source="ORIGFIKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FIPEX" source="FIPEX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISTL" source="FISTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FONDS" source="FONDS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MEASURE" source="MEASURE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDGETYEAR" source="BUDGETYEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDGET_PD" source="BUDGET_PD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QSPRZ" source="QSPRZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXGRP" source="TXGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PALIX" source="PALIX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPF" source="OPUPF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEBT_SET" source="DEBT_SET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFKHVOT_TXT30" source="TFKHVOT_TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFKTVOT_TXT30" source="TFKTVOT_TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFK003T_LTEXT" source="TFK003T_LTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFK001AT_TXT50" source="TFK001AT_TXT50"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BUKRS" source="DFKKOP_BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_VKONT" source="DFKKOP_VKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_APPLK" source="DFKKOP_APPLK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BLDAT" source="DFKKOP_BLDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_FAEDN" source="DFKKOP_FAEDN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_FAEDS" source="DFKKOP_FAEDS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_SKTPZ" source="DFKKOP_SKTPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Doubtful" source="Doubtful"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OverdueStatus" source="OverdueStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonths" source="AgeMonths"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonthsStatus" source="AgeMonthsStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
+    </input>
+    <input node="R_LATESTDUNNING">
+      <mapping xsi:type="Calculation:AttributeMapping" target="STEP" source="STEP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STEP_DESC" source="STEP_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUSDT" source="AUSDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="OPUPK"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="OPUPZ"/>
+    <joinAttribute name="OPBEL"/>
+    <joinAttribute name="DFKKOP_OPUPW"/>
+    <joinAttribute name="DFKKOP_OPUPK"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_BpSolvency" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="BPCounter">
+        <descriptions defaultDescription="BP Counter"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="ZZTFLD2WCKOA">
+        <descriptions defaultDescription="Date From"/>
+      </viewAttribute>
+      <viewAttribute id="ZZTFLD2ACBOA">
+        <descriptions defaultDescription="Date To"/>
+      </viewAttribute>
+      <viewAttribute id="ZZTFLDPVC3OA">
+        <descriptions defaultDescription="Solvency Status"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpSolvency">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPCounter" source="BPCounter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTFLD2WCKOA" source="ZZTFLD2WCKOA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTFLD2ACBOA" source="ZZTFLD2ACBOA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTFLDPVC3OA" source="ZZTFLDPVC3OA"/>
+    </input>
+    <filter>date(&quot;ZZTFLD2WCKOA&quot;) &lt;= date('$$IP_KeyDate$$') AND date(&quot;ZZTFLD2ACBOA&quot;) &gt;= date('$$IP_KeyDate$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_FIN_SOLVENCY" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="OPUPZ">
+        <descriptions defaultDescription="OPUPZ"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="AUGST">
+        <descriptions defaultDescription="AUGST"/>
+      </viewAttribute>
+      <viewAttribute id="VTREF">
+        <descriptions defaultDescription="VTREF"/>
+      </viewAttribute>
+      <viewAttribute id="VTPOS">
+        <descriptions defaultDescription="VTPOS"/>
+      </viewAttribute>
+      <viewAttribute id="ABWBL">
+        <descriptions defaultDescription="ABWBL"/>
+      </viewAttribute>
+      <viewAttribute id="ABWTP">
+        <descriptions defaultDescription="ABWTP"/>
+      </viewAttribute>
+      <viewAttribute id="HVORG">
+        <descriptions defaultDescription="HVORG"/>
+      </viewAttribute>
+      <viewAttribute id="TVORG">
+        <descriptions defaultDescription="TVORG"/>
+      </viewAttribute>
+      <viewAttribute id="KOFIZ">
+        <descriptions defaultDescription="KOFIZ"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="MWSKZ">
+        <descriptions defaultDescription="MWSKZ"/>
+      </viewAttribute>
+      <viewAttribute id="MWSZKZ">
+        <descriptions defaultDescription="MWSZKZ"/>
+      </viewAttribute>
+      <viewAttribute id="XANZA">
+        <descriptions defaultDescription="XANZA"/>
+      </viewAttribute>
+      <viewAttribute id="STAKZ">
+        <descriptions defaultDescription="STAKZ"/>
+      </viewAttribute>
+      <viewAttribute id="OPTXT">
+        <descriptions defaultDescription="OPTXT"/>
+      </viewAttribute>
+      <viewAttribute id="WAERS">
+        <descriptions defaultDescription="WAERS"/>
+      </viewAttribute>
+      <viewAttribute id="VERKZ">
+        <descriptions defaultDescription="VERKZ"/>
+      </viewAttribute>
+      <viewAttribute id="STUDT">
+        <descriptions defaultDescription="STUDT"/>
+      </viewAttribute>
+      <viewAttribute id="XMANL">
+        <descriptions defaultDescription="XMANL"/>
+      </viewAttribute>
+      <viewAttribute id="KURSF" aggregationType="sum">
+        <descriptions defaultDescription="KURSF"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="BETRW" aggregationType="sum">
+        <descriptions defaultDescription="BETRW"/>
+      </viewAttribute>
+      <viewAttribute id="BETR2" aggregationType="sum">
+        <descriptions defaultDescription="BETR2"/>
+      </viewAttribute>
+      <viewAttribute id="BETR3" aggregationType="sum">
+        <descriptions defaultDescription="BETR3"/>
+      </viewAttribute>
+      <viewAttribute id="SKFBT" aggregationType="sum">
+        <descriptions defaultDescription="SKFBT"/>
+      </viewAttribute>
+      <viewAttribute id="SBETH" aggregationType="sum">
+        <descriptions defaultDescription="SBETH"/>
+      </viewAttribute>
+      <viewAttribute id="SBETW" aggregationType="sum">
+        <descriptions defaultDescription="SBETW"/>
+      </viewAttribute>
+      <viewAttribute id="SBET2" aggregationType="sum">
+        <descriptions defaultDescription="SBET2"/>
+      </viewAttribute>
+      <viewAttribute id="SBET3" aggregationType="sum">
+        <descriptions defaultDescription="SBET3"/>
+      </viewAttribute>
+      <viewAttribute id="MWSKO">
+        <descriptions defaultDescription="MWSKO"/>
+      </viewAttribute>
+      <viewAttribute id="MWVKO">
+        <descriptions defaultDescription="MWVKO"/>
+      </viewAttribute>
+      <viewAttribute id="TXRUL">
+        <descriptions defaultDescription="TXRUL"/>
+      </viewAttribute>
+      <viewAttribute id="PYMET">
+        <descriptions defaultDescription="PYMET"/>
+      </viewAttribute>
+      <viewAttribute id="PERNR">
+        <descriptions defaultDescription="PERNR"/>
+      </viewAttribute>
+      <viewAttribute id="GRKEY">
+        <descriptions defaultDescription="GRKEY"/>
+      </viewAttribute>
+      <viewAttribute id="PERSL">
+        <descriptions defaultDescription="PERSL"/>
+      </viewAttribute>
+      <viewAttribute id="AUGDT">
+        <descriptions defaultDescription="AUGDT"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBL">
+        <descriptions defaultDescription="AUGBL"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBD">
+        <descriptions defaultDescription="AUGBD"/>
+      </viewAttribute>
+      <viewAttribute id="AUGRD">
+        <descriptions defaultDescription="AUGRD"/>
+      </viewAttribute>
+      <viewAttribute id="AUGWA">
+        <descriptions defaultDescription="AUGWA"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBT" aggregationType="sum">
+        <descriptions defaultDescription="AUGBT"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBS" aggregationType="sum">
+        <descriptions defaultDescription="AUGBS"/>
+      </viewAttribute>
+      <viewAttribute id="AUGSK" aggregationType="sum">
+        <descriptions defaultDescription="AUGSK"/>
+      </viewAttribute>
+      <viewAttribute id="AUGVD">
+        <descriptions defaultDescription="AUGVD"/>
+      </viewAttribute>
+      <viewAttribute id="AUGOB">
+        <descriptions defaultDescription="AUGOB"/>
+      </viewAttribute>
+      <viewAttribute id="WHANG">
+        <descriptions defaultDescription="WHANG"/>
+      </viewAttribute>
+      <viewAttribute id="WHGRP">
+        <descriptions defaultDescription="WHGRP"/>
+      </viewAttribute>
+      <viewAttribute id="XAUGP">
+        <descriptions defaultDescription="XAUGP"/>
+      </viewAttribute>
+      <viewAttribute id="ABRZU">
+        <descriptions defaultDescription="ABRZU"/>
+      </viewAttribute>
+      <viewAttribute id="ABRZO">
+        <descriptions defaultDescription="ABRZO"/>
+      </viewAttribute>
+      <viewAttribute id="FDZTG">
+        <descriptions defaultDescription="FDZTG"/>
+      </viewAttribute>
+      <viewAttribute id="FDWBT" aggregationType="sum">
+        <descriptions defaultDescription="FDWBT"/>
+      </viewAttribute>
+      <viewAttribute id="XTAUS">
+        <descriptions defaultDescription="XTAUS"/>
+      </viewAttribute>
+      <viewAttribute id="AUGRS">
+        <descriptions defaultDescription="AUGRS"/>
+      </viewAttribute>
+      <viewAttribute id="PYGRP">
+        <descriptions defaultDescription="PYGRP"/>
+      </viewAttribute>
+      <viewAttribute id="PDTYP">
+        <descriptions defaultDescription="PDTYP"/>
+      </viewAttribute>
+      <viewAttribute id="SPERZ">
+        <descriptions defaultDescription="SPERZ"/>
+      </viewAttribute>
+      <viewAttribute id="INFOZ">
+        <descriptions defaultDescription="INFOZ"/>
+      </viewAttribute>
+      <viewAttribute id="TXDAT">
+        <descriptions defaultDescription="TXDAT"/>
+      </viewAttribute>
+      <viewAttribute id="VBUND">
+        <descriptions defaultDescription="VBUND"/>
+      </viewAttribute>
+      <viewAttribute id="KONTT">
+        <descriptions defaultDescription="KONTT"/>
+      </viewAttribute>
+      <viewAttribute id="KONTL">
+        <descriptions defaultDescription="KONTL"/>
+      </viewAttribute>
+      <viewAttribute id="OPSTA">
+        <descriptions defaultDescription="OPSTA"/>
+      </viewAttribute>
+      <viewAttribute id="BLART">
+        <descriptions defaultDescription="BLART"/>
+      </viewAttribute>
+      <viewAttribute id="EMGPA">
+        <descriptions defaultDescription="EMGPA"/>
+      </viewAttribute>
+      <viewAttribute id="EMBVT">
+        <descriptions defaultDescription="EMBVT"/>
+      </viewAttribute>
+      <viewAttribute id="EMADR">
+        <descriptions defaultDescription="EMADR"/>
+      </viewAttribute>
+      <viewAttribute id="IKEY">
+        <descriptions defaultDescription="IKEY"/>
+      </viewAttribute>
+      <viewAttribute id="XRAGL">
+        <descriptions defaultDescription="XRAGL"/>
+      </viewAttribute>
+      <viewAttribute id="ASTKZ">
+        <descriptions defaultDescription="ASTKZ"/>
+      </viewAttribute>
+      <viewAttribute id="ASBLG">
+        <descriptions defaultDescription="ASBLG"/>
+      </viewAttribute>
+      <viewAttribute id="XBLNR">
+        <descriptions defaultDescription="XBLNR"/>
+      </viewAttribute>
+      <viewAttribute id="INKPS">
+        <descriptions defaultDescription="INKPS"/>
+      </viewAttribute>
+      <viewAttribute id="QSSHB" aggregationType="sum">
+        <descriptions defaultDescription="QSSHB"/>
+      </viewAttribute>
+      <viewAttribute id="QBSHB" aggregationType="sum">
+        <descriptions defaultDescription="QBSHB"/>
+      </viewAttribute>
+      <viewAttribute id="RFUPK">
+        <descriptions defaultDescription="RFUPK"/>
+      </viewAttribute>
+      <viewAttribute id="INTBU">
+        <descriptions defaultDescription="INTBU"/>
+      </viewAttribute>
+      <viewAttribute id="C4EYE">
+        <descriptions defaultDescription="C4EYE"/>
+      </viewAttribute>
+      <viewAttribute id="C4EYP">
+        <descriptions defaultDescription="C4EYP"/>
+      </viewAttribute>
+      <viewAttribute id="SCTAX" aggregationType="sum">
+        <descriptions defaultDescription="SCTAX"/>
+      </viewAttribute>
+      <viewAttribute id="STTAX" aggregationType="sum">
+        <descriptions defaultDescription="STTAX"/>
+      </viewAttribute>
+      <viewAttribute id="ORUPZ">
+        <descriptions defaultDescription="ORUPZ"/>
+      </viewAttribute>
+      <viewAttribute id="NEGBU">
+        <descriptions defaultDescription="NEGBU"/>
+      </viewAttribute>
+      <viewAttribute id="SUBAP">
+        <descriptions defaultDescription="SUBAP"/>
+      </viewAttribute>
+      <viewAttribute id="PSWSL">
+        <descriptions defaultDescription="PSWSL"/>
+      </viewAttribute>
+      <viewAttribute id="PSWBT" aggregationType="sum">
+        <descriptions defaultDescription="PSWBT"/>
+      </viewAttribute>
+      <viewAttribute id="PSWTX" aggregationType="sum">
+        <descriptions defaultDescription="PSWTX"/>
+      </viewAttribute>
+      <viewAttribute id="PSGRP">
+        <descriptions defaultDescription="PSGRP"/>
+      </viewAttribute>
+      <viewAttribute id="XCOLC">
+        <descriptions defaultDescription="XCOLC"/>
+      </viewAttribute>
+      <viewAttribute id="AASTA">
+        <descriptions defaultDescription="AASTA"/>
+      </viewAttribute>
+      <viewAttribute id="EMMND">
+        <descriptions defaultDescription="EMMND"/>
+      </viewAttribute>
+      <viewAttribute id="PNEXD">
+        <descriptions defaultDescription="PNEXD"/>
+      </viewAttribute>
+      <viewAttribute id="FINRE">
+        <descriptions defaultDescription="FINRE"/>
+      </viewAttribute>
+      <viewAttribute id="RDSTA">
+        <descriptions defaultDescription="RDSTA"/>
+      </viewAttribute>
+      <viewAttribute id="RDSTB">
+        <descriptions defaultDescription="RDSTB"/>
+      </viewAttribute>
+      <viewAttribute id="PSOBTYP">
+        <descriptions defaultDescription="PSOBTYP"/>
+      </viewAttribute>
+      <viewAttribute id="VKTYP_PS">
+        <descriptions defaultDescription="VKTYP_PS"/>
+      </viewAttribute>
+      <viewAttribute id="ABTYP_PS">
+        <descriptions defaultDescription="ABTYP_PS"/>
+      </viewAttribute>
+      <viewAttribute id="REFDOC_ID">
+        <descriptions defaultDescription="REFDOC_ID"/>
+      </viewAttribute>
+      <viewAttribute id="REFDOC_OBJTYPE">
+        <descriptions defaultDescription="REFDOC_OBJTYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CRMOBJ">
+        <descriptions defaultDescription="CRMOBJ"/>
+      </viewAttribute>
+      <viewAttribute id="BRI_GUID">
+        <descriptions defaultDescription="BRI_GUID"/>
+      </viewAttribute>
+      <viewAttribute id="REFDOC_GUID">
+        <descriptions defaultDescription="REFDOC_GUID"/>
+      </viewAttribute>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="FBNUM"/>
+      </viewAttribute>
+      <viewAttribute id="ZEXCL_AMT" aggregationType="sum">
+        <descriptions defaultDescription="ZEXCL_AMT"/>
+      </viewAttribute>
+      <viewAttribute id="ZZSRCDOCNO">
+        <descriptions defaultDescription="ZZSRCDOCNO"/>
+      </viewAttribute>
+      <viewAttribute id="FMTYP">
+        <descriptions defaultDescription="FMTYP"/>
+      </viewAttribute>
+      <viewAttribute id="ORIGFIKRS">
+        <descriptions defaultDescription="ORIGFIKRS"/>
+      </viewAttribute>
+      <viewAttribute id="FIPEX">
+        <descriptions defaultDescription="FIPEX"/>
+      </viewAttribute>
+      <viewAttribute id="FISTL">
+        <descriptions defaultDescription="FISTL"/>
+      </viewAttribute>
+      <viewAttribute id="FONDS">
+        <descriptions defaultDescription="FONDS"/>
+      </viewAttribute>
+      <viewAttribute id="MEASURE">
+        <descriptions defaultDescription="MEASURE"/>
+      </viewAttribute>
+      <viewAttribute id="GRANT_NBR">
+        <descriptions defaultDescription="GRANT_NBR"/>
+      </viewAttribute>
+      <viewAttribute id="BUDGETYEAR">
+        <descriptions defaultDescription="BUDGETYEAR"/>
+      </viewAttribute>
+      <viewAttribute id="BUDGET_PD">
+        <descriptions defaultDescription="BUDGET_PD"/>
+      </viewAttribute>
+      <viewAttribute id="QSPRZ">
+        <descriptions defaultDescription="QSPRZ"/>
+      </viewAttribute>
+      <viewAttribute id="TXGRP">
+        <descriptions defaultDescription="TXGRP"/>
+      </viewAttribute>
+      <viewAttribute id="PALIX">
+        <descriptions defaultDescription="PALIX"/>
+      </viewAttribute>
+      <viewAttribute id="OPUPF">
+        <descriptions defaultDescription="OPUPF"/>
+      </viewAttribute>
+      <viewAttribute id="DEBT_SET">
+        <descriptions defaultDescription="DEBT_SET"/>
+      </viewAttribute>
+      <viewAttribute id="TFKHVOT_TXT30">
+        <descriptions defaultDescription="TFKHVOT_TXT30"/>
+      </viewAttribute>
+      <viewAttribute id="TFKTVOT_TXT30">
+        <descriptions defaultDescription="TFKTVOT_TXT30"/>
+      </viewAttribute>
+      <viewAttribute id="TFK003T_LTEXT">
+        <descriptions defaultDescription="TFK003T_LTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="TFK001AT_TXT50">
+        <descriptions defaultDescription="TFK001AT_TXT50"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_GPART">
+        <descriptions defaultDescription="DFKK_H_GPART"/>
+      </viewAttribute>
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT">
+        <descriptions defaultDescription="DFKK_H_BUDAT"/>
+      </viewAttribute>
+      <viewAttribute id="OpenItemFlag">
+        <descriptions defaultDescription="OpenItemFlag"/>
+      </viewAttribute>
+      <viewAttribute id="CreditDebitFlag">
+        <descriptions defaultDescription="CreditDebitFlag"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_OPUPW">
+        <descriptions defaultDescription="DFKKOP_OPUPW"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_OPUPK">
+        <descriptions defaultDescription="DFKKOP_OPUPK"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_BUKRS">
+        <descriptions defaultDescription="DFKKOP_BUKRS"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_VKONT">
+        <descriptions defaultDescription="DFKKOP_VKONT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_APPLK">
+        <descriptions defaultDescription="DFKKOP_APPLK"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_BLDAT">
+        <descriptions defaultDescription="DFKKOP_BLDAT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_FAEDN">
+        <descriptions defaultDescription="DFKKOP_FAEDN"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_FAEDS">
+        <descriptions defaultDescription="DFKKOP_FAEDS"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_SKTPZ" aggregationType="sum">
+        <descriptions defaultDescription="DFKKOP_SKTPZ"/>
+      </viewAttribute>
+      <viewAttribute id="Doubtful">
+        <descriptions defaultDescription="Doubtful"/>
+      </viewAttribute>
+      <viewAttribute id="OverdueStatus">
+        <descriptions defaultDescription="OverdueStatus"/>
+      </viewAttribute>
+      <viewAttribute id="STEP">
+        <descriptions defaultDescription="STEP"/>
+      </viewAttribute>
+      <viewAttribute id="STEP_DESC">
+        <descriptions defaultDescription="STEP_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="AgeMonths" aggregationType="sum">
+        <descriptions defaultDescription="AgeMonths"/>
+      </viewAttribute>
+      <viewAttribute id="AgeMonthsStatus">
+        <descriptions defaultDescription="AgeMonthsStatus"/>
+      </viewAttribute>
+      <viewAttribute id="AgeDays" aggregationType="sum">
+        <descriptions defaultDescription="AgeDays"/>
+      </viewAttribute>
+      <viewAttribute id="AgeDaysStatus">
+        <descriptions defaultDescription="AgeDaysStatus"/>
+      </viewAttribute>
+      <viewAttribute id="AUSDT">
+        <descriptions defaultDescription="AUSDT"/>
+      </viewAttribute>
+      <viewAttribute id="ZZTFLDPVC3OA">
+        <descriptions defaultDescription="Solvency Status"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_FIN_LATESTDUNNING">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGST" source="AUGST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTPOS" source="VTPOS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABWBL" source="ABWBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABWTP" source="ABWTP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWSZKZ" source="MWSZKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XANZA" source="XANZA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAKZ" source="STAKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPTXT" source="OPTXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERKZ" source="VERKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STUDT" source="STUDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XMANL" source="XMANL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KURSF" source="KURSF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETR2" source="BETR2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETR3" source="BETR3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SKFBT" source="SKFBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBETH" source="SBETH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBETW" source="SBETW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBET2" source="SBET2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBET3" source="SBET3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWSKO" source="MWSKO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWVKO" source="MWVKO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXRUL" source="TXRUL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PYMET" source="PYMET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRKEY" source="GRKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBD" source="AUGBD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGWA" source="AUGWA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBS" source="AUGBS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGSK" source="AUGSK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGVD" source="AUGVD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGOB" source="AUGOB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WHANG" source="WHANG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WHGRP" source="WHGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XAUGP" source="XAUGP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABRZU" source="ABRZU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABRZO" source="ABRZO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FDZTG" source="FDZTG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FDWBT" source="FDWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XTAUS" source="XTAUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRS" source="AUGRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PYGRP" source="PYGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PDTYP" source="PDTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPERZ" source="SPERZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INFOZ" source="INFOZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXDAT" source="TXDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VBUND" source="VBUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KONTT" source="KONTT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KONTL" source="KONTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPSTA" source="OPSTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMGPA" source="EMGPA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMBVT" source="EMBVT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMADR" source="EMADR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IKEY" source="IKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XRAGL" source="XRAGL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASTKZ" source="ASTKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASBLG" source="ASBLG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INKPS" source="INKPS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QSSHB" source="QSSHB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QBSHB" source="QBSHB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RFUPK" source="RFUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTBU" source="INTBU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C4EYE" source="C4EYE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C4EYP" source="C4EYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCTAX" source="SCTAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STTAX" source="STTAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORUPZ" source="ORUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NEGBU" source="NEGBU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBAP" source="SUBAP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWSL" source="PSWSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWBT" source="PSWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWTX" source="PSWTX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSGRP" source="PSGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XCOLC" source="XCOLC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AASTA" source="AASTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMMND" source="EMMND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PNEXD" source="PNEXD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINRE" source="FINRE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RDSTA" source="RDSTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RDSTB" source="RDSTB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBTYP" source="PSOBTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_PS" source="VKTYP_PS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABTYP_PS" source="ABTYP_PS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_ID" source="REFDOC_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_OBJTYPE" source="REFDOC_OBJTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CRMOBJ" source="CRMOBJ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BRI_GUID" source="BRI_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_GUID" source="REFDOC_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZEXCL_AMT" source="ZEXCL_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSRCDOCNO" source="ZZSRCDOCNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FMTYP" source="FMTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORIGFIKRS" source="ORIGFIKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FIPEX" source="FIPEX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISTL" source="FISTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FONDS" source="FONDS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MEASURE" source="MEASURE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDGETYEAR" source="BUDGETYEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDGET_PD" source="BUDGET_PD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QSPRZ" source="QSPRZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXGRP" source="TXGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PALIX" source="PALIX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPF" source="OPUPF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEBT_SET" source="DEBT_SET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFKHVOT_TXT30" source="TFKHVOT_TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFKTVOT_TXT30" source="TFKTVOT_TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFK003T_LTEXT" source="TFK003T_LTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFK001AT_TXT50" source="TFK001AT_TXT50"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BUKRS" source="DFKKOP_BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_VKONT" source="DFKKOP_VKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_APPLK" source="DFKKOP_APPLK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BLDAT" source="DFKKOP_BLDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_FAEDN" source="DFKKOP_FAEDN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_FAEDS" source="DFKKOP_FAEDS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_SKTPZ" source="DFKKOP_SKTPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Doubtful" source="Doubtful"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OverdueStatus" source="OverdueStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STEP" source="STEP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STEP_DESC" source="STEP_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonths" source="AgeMonths"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonthsStatus" source="AgeMonthsStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUSDT" source="AUSDT"/>
+    </input>
+    <input node="P_CV_BpSolvency">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTFLDPVC3OA" source="ZZTFLDPVC3OA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="PARTNER"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="DFKK_H_GPART"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_FIN_SOLVENCY">
+  <attributes>
+    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="MANDT"/>
+    </attribute>
+    <attribute id="OPUPZ" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Subitem for a Partial Clearing in Document"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="OPUPZ"/>
+    </attribute>
+    <attribute id="PRCTR" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Profit Center"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="PRCTR"/>
+    </attribute>
+    <attribute id="AUGST" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing status"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUGST"/>
+    </attribute>
+    <attribute id="VTREF" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Reference Specifications from Contract"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="VTREF"/>
+    </attribute>
+    <attribute id="VTPOS" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Contract: Item Number"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="VTPOS"/>
+    </attribute>
+    <attribute id="ABWBL" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Number of the substitute FI-CA document"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="ABWBL"/>
+    </attribute>
+    <attribute id="ABWTP" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Category of substitute document in FI-CA"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="ABWTP"/>
+    </attribute>
+    <attribute id="HVORG" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Main Transaction for Line Item"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="HVORG"/>
+    </attribute>
+    <attribute id="TVORG" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Subtransaction for Document Item"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="TVORG"/>
+    </attribute>
+    <attribute id="KOFIZ" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Account Determination ID"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="KOFIZ"/>
+    </attribute>
+    <attribute id="HKONT" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="General ledger account"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="HKONT"/>
+    </attribute>
+    <attribute id="MWSKZ" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax on Sales/Purchases Code"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="MWSKZ"/>
+    </attribute>
+    <attribute id="MWSZKZ" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Supplementary Tax"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="MWSZKZ"/>
+    </attribute>
+    <attribute id="XANZA" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Item is a Down Payment/Down Payment Request"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="XANZA"/>
+    </attribute>
+    <attribute id="STAKZ" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Type of Statistical Line Item"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="STAKZ"/>
+    </attribute>
+    <attribute id="OPTXT" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Item text"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="OPTXT"/>
+    </attribute>
+    <attribute id="WAERS" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Transaction Currency"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="WAERS"/>
+    </attribute>
+    <attribute id="VERKZ" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Item Can Only Be Cleared"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="VERKZ"/>
+    </attribute>
+    <attribute id="STUDT" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Deferral to"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="STUDT"/>
+    </attribute>
+    <attribute id="XMANL" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Exclude Item from Dunning Run"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="XMANL"/>
+    </attribute>
+    <attribute id="MWSKO" order="32" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Account for posting taxes for down payments"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="MWSKO"/>
+    </attribute>
+    <attribute id="MWVKO" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Account for offsetting tax posting in down payments"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="MWVKO"/>
+    </attribute>
+    <attribute id="TXRUL" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Update Rule for Tax and Tax Clearing"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="TXRUL"/>
+    </attribute>
+    <attribute id="PYMET" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Payment Method"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="PYMET"/>
+    </attribute>
+    <attribute id="PERNR" order="36" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Personnel Number"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="PERNR"/>
+    </attribute>
+    <attribute id="GRKEY" order="37" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Grouping Key for Displaying Open Items"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="GRKEY"/>
+    </attribute>
+    <attribute id="PERSL" order="38" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Key for Period Assignment"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="PERSL"/>
+    </attribute>
+    <attribute id="AUGDT" order="39" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing date"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUGDT"/>
+    </attribute>
+    <attribute id="AUGBL" order="40" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing Document or Printed Document"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUGBL"/>
+    </attribute>
+    <attribute id="AUGBD" order="41" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing document posting date"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUGBD"/>
+    </attribute>
+    <attribute id="AUGRD" order="42" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing Reason"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUGRD"/>
+    </attribute>
+    <attribute id="AUGWA" order="43" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing currency"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUGWA"/>
+    </attribute>
+    <attribute id="AUGVD" order="47" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Value date for clearing"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUGVD"/>
+    </attribute>
+    <attribute id="AUGOB" order="48" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Item Canceled"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUGOB"/>
+    </attribute>
+    <attribute id="WHANG" order="49" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Number of repetition items"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="WHANG"/>
+    </attribute>
+    <attribute id="WHGRP" order="50" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Repetition group"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="WHGRP"/>
+    </attribute>
+    <attribute id="XAUGP" order="51" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Check Sample Record Clearing"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="XAUGP"/>
+    </attribute>
+    <attribute id="ABRZU" order="52" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lower Limit of Settlement Period"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="ABRZU"/>
+    </attribute>
+    <attribute id="ABRZO" order="53" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Upper Limit of the Billing Period"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="ABRZO"/>
+    </attribute>
+    <attribute id="FDZTG" order="54" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Additional Days for Cash Management"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="FDZTG"/>
+    </attribute>
+    <attribute id="XTAUS" order="56" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Item Split"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="XTAUS"/>
+    </attribute>
+    <attribute id="AUGRS" order="57" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing restriction"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUGRS"/>
+    </attribute>
+    <attribute id="PYGRP" order="58" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Grouping field for automatic payments"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="PYGRP"/>
+    </attribute>
+    <attribute id="PDTYP" order="59" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Category of Payment Specification"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="PDTYP"/>
+    </attribute>
+    <attribute id="SPERZ" order="60" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Interest Lock Reason"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="SPERZ"/>
+    </attribute>
+    <attribute id="INFOZ" order="61" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Doubtful Item Entry/Individual Value Adjustment"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="INFOZ"/>
+    </attribute>
+    <attribute id="TXDAT" order="62" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Decisive Date for Calculating Taxes"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="TXDAT"/>
+    </attribute>
+    <attribute id="VBUND" order="63" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Company ID of trading partner"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="VBUND"/>
+    </attribute>
+    <attribute id="KONTT" order="64" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Account Assignment Category"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="KONTT"/>
+    </attribute>
+    <attribute id="KONTL" order="65" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Acct assnmnt string for industry-specific account assngments"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="KONTL"/>
+    </attribute>
+    <attribute id="OPSTA" order="66" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Dunning indicator"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="OPSTA"/>
+    </attribute>
+    <attribute id="BLART" order="67" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Document Type"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="BLART"/>
+    </attribute>
+    <attribute id="EMGPA" order="68" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Alternative Business Partner for Payments"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="EMGPA"/>
+    </attribute>
+    <attribute id="EMBVT" order="69" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Details ID of Payee"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="EMBVT"/>
+    </attribute>
+    <attribute id="EMADR" order="70" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Address number"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="EMADR"/>
+    </attribute>
+    <attribute id="IKEY" order="71" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Interest Key"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="IKEY"/>
+    </attribute>
+    <attribute id="XRAGL" order="72" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing posting reversed"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="XRAGL"/>
+    </attribute>
+    <attribute id="ASTKZ" order="73" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Statistical Key of the Initiating Item"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="ASTKZ"/>
+    </attribute>
+    <attribute id="ASBLG" order="74" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Number of Triggering Document"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="ASBLG"/>
+    </attribute>
+    <attribute id="XBLNR" order="75" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Reference document number"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="XBLNR"/>
+    </attribute>
+    <attribute id="INKPS" order="76" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Collection Item"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="INKPS"/>
+    </attribute>
+    <attribute id="RFUPK" order="79" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Reference Item In FI-CA Document"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="RFUPK"/>
+    </attribute>
+    <attribute id="INTBU" order="80" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Reason for Automatic Creation of Posting"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="INTBU"/>
+    </attribute>
+    <attribute id="C4EYE" order="81" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Check Reason for Workflows Acc. to Dual Control Principle"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="C4EYE"/>
+    </attribute>
+    <attribute id="C4EYP" order="82" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Editing Process To Be Confirmed"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="C4EYP"/>
+    </attribute>
+    <attribute id="ORUPZ" order="85" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Subitem Number before Item Split"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="ORUPZ"/>
+    </attribute>
+    <attribute id="NEGBU" order="86" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Control Field for Negative Posting"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="NEGBU"/>
+    </attribute>
+    <attribute id="SUBAP" order="87" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Subapplication in Contract Accounts Receivable and Payable"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="SUBAP"/>
+    </attribute>
+    <attribute id="PSWSL" order="88" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Update Currency for General Ledger Transaction Figures"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="PSWSL"/>
+    </attribute>
+    <attribute id="PSGRP" order="91" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Grouping Key for Document Items"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="PSGRP"/>
+    </attribute>
+    <attribute id="XCOLC" order="92" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Item Is Included in Collection Case"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="XCOLC"/>
+    </attribute>
+    <attribute id="AASTA" order="93" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Control Field for Account Assignment Distributions"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AASTA"/>
+    </attribute>
+    <attribute id="EMMND" order="94" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SEPA Mandate Identifier"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="EMMND"/>
+    </attribute>
+    <attribute id="PNEXD" order="95" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SEPA: Date of Execution of Direct Debit Pre-Notifcation"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="PNEXD"/>
+    </attribute>
+    <attribute id="FINRE" order="96" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Contract Account of Final Recipient"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="FINRE"/>
+    </attribute>
+    <attribute id="RDSTA" order="97" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Current Distribution Status"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="RDSTA"/>
+    </attribute>
+    <attribute id="RDSTB" order="98" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Last Distribution Status Reported"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="RDSTB"/>
+    </attribute>
+    <attribute id="PSOBTYP" order="99" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Contract Object Type"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="PSOBTYP"/>
+    </attribute>
+    <attribute id="VKTYP_PS" order="100" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Contract Account Category"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="VKTYP_PS"/>
+    </attribute>
+    <attribute id="ABTYP_PS" order="101" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Revenue Type"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="ABTYP_PS"/>
+    </attribute>
+    <attribute id="REFDOC_ID" order="102" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Transaction"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="REFDOC_ID"/>
+    </attribute>
+    <attribute id="REFDOC_OBJTYPE" order="103" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Object Type for CRM Transaction Type/Item Category"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="REFDOC_OBJTYPE"/>
+    </attribute>
+    <attribute id="CRMOBJ" order="104" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GUID of a CRM Order Object"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="CRMOBJ"/>
+    </attribute>
+    <attribute id="BRI_GUID" order="105" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GUID of a CRM Order Object"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="BRI_GUID"/>
+    </attribute>
+    <attribute id="REFDOC_GUID" order="106" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Unique UUID (Technical Key)"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="REFDOC_GUID"/>
+    </attribute>
+    <attribute id="FBNUM" order="107" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Form Bundle Number"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="FBNUM"/>
+    </attribute>
+    <attribute id="ZZSRCDOCNO" order="109" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Number of Source Document to Be Invoiced"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="ZZSRCDOCNO"/>
+    </attribute>
+    <attribute id="FMTYP" order="110" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Update Method for FM - FI-CA Integration"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="FMTYP"/>
+    </attribute>
+    <attribute id="ORIGFIKRS" order="111" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Original FM Area for FM Account Assignment"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="ORIGFIKRS"/>
+    </attribute>
+    <attribute id="FIPEX" order="112" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Commitment item"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="FIPEX"/>
+    </attribute>
+    <attribute id="FISTL" order="113" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Funds Center"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="FISTL"/>
+    </attribute>
+    <attribute id="FONDS" order="114" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fund"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="FONDS"/>
+    </attribute>
+    <attribute id="MEASURE" order="115" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Funded Program"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="MEASURE"/>
+    </attribute>
+    <attribute id="GRANT_NBR" order="116" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Grant"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="GRANT_NBR"/>
+    </attribute>
+    <attribute id="BUDGETYEAR" order="117" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Original Year for FM Account Assignment"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="BUDGETYEAR"/>
+    </attribute>
+    <attribute id="BUDGET_PD" order="118" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FM: Budget Period"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="BUDGET_PD"/>
+    </attribute>
+    <attribute id="QSPRZ" order="119" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Withholding Tax Percentage"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="QSPRZ"/>
+    </attribute>
+    <attribute id="TXGRP" order="120" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Grouping Key for Tax Items"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="TXGRP"/>
+    </attribute>
+    <attribute id="PALIX" order="121" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Item Is Part of a Collaborative Liability"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="PALIX"/>
+    </attribute>
+    <attribute id="OPUPF" order="122" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Subitems in Factoring"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="OPUPF"/>
+    </attribute>
+    <attribute id="DEBT_SET" order="123" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Debt Set"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="DEBT_SET"/>
+    </attribute>
+    <attribute id="TFKHVOT_TXT30" order="124" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Main Transaction Desc"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="TFKHVOT_TXT30"/>
+    </attribute>
+    <attribute id="TFKTVOT_TXT30" order="125" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Sub Transaction Desc"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="TFKTVOT_TXT30"/>
+    </attribute>
+    <attribute id="TFK003T_LTEXT" order="126" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Document Type Desc"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="TFK003T_LTEXT"/>
+    </attribute>
+    <attribute id="TFK001AT_TXT50" order="127" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing Reason Desc"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="TFK001AT_TXT50"/>
+    </attribute>
+    <attribute id="DFKK_H_GPART" order="128" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Number"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="DFKK_H_GPART"/>
+    </attribute>
+    <attribute id="OPBEL" order="129" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Document Number in Contract Accounts Receivable and Payable"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="OPBEL"/>
+    </attribute>
+    <attribute id="DFKK_H_BUDAT" order="130" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Posting Date in the Document"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="DFKK_H_BUDAT"/>
+    </attribute>
+    <attribute id="OpenItemFlag" order="131" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OpenItemFlag"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="OpenItemFlag"/>
+    </attribute>
+    <attribute id="CreditDebitFlag" order="132" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CreditDebitFlag"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="CreditDebitFlag"/>
+    </attribute>
+    <attribute id="DFKKOP_OPUPW" order="133" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Repetition Item in Contract Account Document"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="DFKKOP_OPUPW"/>
+    </attribute>
+    <attribute id="DFKKOP_OPUPK" order="134" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Item number in contract account document"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="DFKKOP_OPUPK"/>
+    </attribute>
+    <attribute id="DFKKOP_BUKRS" order="135" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Company Code"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="DFKKOP_BUKRS"/>
+    </attribute>
+    <attribute id="DFKKOP_VKONT" order="136" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Contract Account Number"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="DFKKOP_VKONT"/>
+    </attribute>
+    <attribute id="DFKKOP_APPLK" order="137" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Application area"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="DFKKOP_APPLK"/>
+    </attribute>
+    <attribute id="DFKKOP_BLDAT" order="138" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Document Date in Document"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="DFKKOP_BLDAT"/>
+    </attribute>
+    <attribute id="DFKKOP_FAEDN" order="139" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Due date for net payment"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="DFKKOP_FAEDN"/>
+    </attribute>
+    <attribute id="DFKKOP_FAEDS" order="140" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Due Date for Cash Discount"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="DFKKOP_FAEDS"/>
+    </attribute>
+    <attribute id="Doubtful" order="142" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Doubtful"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="Doubtful"/>
+    </attribute>
+    <attribute id="OverdueStatus" order="143" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Overdue Status"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="OverdueStatus"/>
+    </attribute>
+  
+    <attribute id="STEP" order="145" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Collection Step"/>
+  
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="STEP"/>
+  
+    </attribute>
+  
+    <attribute id="STEP_DESC" order="146" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Name of Collection Step"/>
+  
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="STEP_DESC"/>
+  
+    </attribute>
+  
+    <attribute id="AgeMonths" order="148" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Age Months"/>
+  
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AgeMonths"/>
+  
+    </attribute>
+    <attribute id="AgeMonthsStatus" order="149" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Age Months Status"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AgeMonthsStatus"/>
+    </attribute>
+    <attribute id="AgeDays" order="150" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Age Days"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AgeDays"/>
+    </attribute>
+    <attribute id="AgeDaysStatus" order="151" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Age Days Status"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AgeDaysStatus"/>
+    </attribute>
+    <attribute id="AUSDT" order="152" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Collection step Date of issue"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUSDT"/>
+    </attribute>
+    <attribute id="ZZTFLDPVC3OA" order="153" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Solvency Status"/>
+      <keyMapping columnObjectName="J_FIN_SOLVENCY" columnName="ZZTFLDPVC3OA"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes>
+    <calculatedAttribute id="AccountBalanceStatus" order="155" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Account Balance Status"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
+        <formula>if(&quot;OpenItemBalance&quot; &gt; 0,'Debit Balance',
+if(&quot;OpenItemBalance&quot; = 0,'Nil Balance',
+if(&quot;OpenItemBalance&quot; &lt; 0,'Credit Balance',
+string(null)
+)))</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
+  <baseMeasures>
+    <measure id="KURSF" order="22" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Exchange rate"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="KURSF"/>
+    </measure>
+    <measure id="BETRH" order="23" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="BETRH"/>
+    </measure>
+    <measure id="BETRW" order="24" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Amount in Transaction Currency with +/- Sign"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="BETRW"/>
+    </measure>
+    <measure id="BETR2" order="25" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Amount in second parallel currency with +/- sign"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="BETR2"/>
+    </measure>
+    <measure id="BETR3" order="26" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Amount in third parallel currency with +/- sign"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="BETR3"/>
+    </measure>
+    <measure id="SKFBT" order="27" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Amount eligible for cash discount in document currency"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="SKFBT"/>
+    </measure>
+    <measure id="SBETH" order="28" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Amount in Local Currency With +/- Sign"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="SBETH"/>
+    </measure>
+    <measure id="SBETW" order="29" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Amount in Transaction Currency with +/- Sign"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="SBETW"/>
+    </measure>
+    <measure id="SBET2" order="30" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax amount in second parallel currency"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="SBET2"/>
+    </measure>
+    <measure id="SBET3" order="31" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax amount in third parallel currency"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="SBET3"/>
+    </measure>
+    <measure id="AUGBT" order="44" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Clearing amount in clearing currency"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUGBT"/>
+    </measure>
+    <measure id="AUGBS" order="45" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax amount in clearing currency"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUGBS"/>
+    </measure>
+    <measure id="AUGSK" order="46" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Cash Discount Granted/Surcharge Levied in Clearing Currency"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="AUGSK"/>
+    </measure>
+    <measure id="FDWBT" order="55" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Planned Amount in Document or G/L Account Currency"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="FDWBT"/>
+    </measure>
+    <measure id="QSSHB" order="77" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Base Amount"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="QSSHB"/>
+    </measure>
+    <measure id="QBSHB" order="78" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Withholding Tax Amount (in Document Currency)"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="QBSHB"/>
+    </measure>
+    <measure id="SCTAX" order="83" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Portion in FI-CA Local Currency"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="SCTAX"/>
+    </measure>
+    <measure id="STTAX" order="84" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Amount as Statistical Information in Document Currency"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="STTAX"/>
+    </measure>
+    <measure id="PSWBT" order="89" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Amount for Updating in General Ledger"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="PSWBT"/>
+    </measure>
+    <measure id="PSWTX" order="90" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Amount for Update in General Ledger"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="PSWTX"/>
+    </measure>
+    <measure id="ZEXCL_AMT" order="108" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Amount that is excluded from Interest Calculations"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="ZEXCL_AMT"/>
+    </measure>
+    <measure id="DFKKOP_SKTPZ" order="141" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Cash discount rate"/>
+      <measureMapping columnObjectName="J_FIN_SOLVENCY" columnName="DFKKOP_SKTPZ"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures>
+    <measure id="DocumentCounter" order="144" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="Document Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="OPBEL"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      
+      
+      
+      
+      
+      </measure>
+  
+    <measure id="FBNCounter" order="147" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="FBN Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="FBNUM"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      
+      
+      
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures>
+    <measure id="OpenItemBalance" order="154" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      <descriptions defaultDescription="Open Item Balance"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="OpenItemFlag">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="X"/>
+        </filter>
+        <attributeName>OpenItemFlag</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="B1"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      </measure>
+  </restrictedMeasures>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_CV_Financials" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="568"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="R_LATESTDUNNING" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="319" y="522"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_FIN_LATESTDUNNING" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="365"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CV_Financials" modelObjectNameSpace="J_FIN_LATESTDUNNING" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="R_LATESTDUNNING" modelObjectNameSpace="J_FIN_LATESTDUNNING" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CV_BpSolvency" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="319" y="365"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_FIN_SOLVENCY" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="225"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_FIN_LATESTDUNNING" modelObjectNameSpace="J_FIN_SOLVENCY" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CV_BpSolvency" modelObjectNameSpace="J_FIN_SOLVENCY" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape></shapes>
+</layout>
+</Calculation:scenario>
