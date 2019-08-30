@@ -16,6 +16,9 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpRelationships">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpRelationships</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_FormBundles" filterExpressionLanguage="SQL">
@@ -1013,8 +1016,10 @@
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_OverdueDays" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>if(&quot;FBSTA&quot; != 'IP014' AND &quot;FBSTA&quot; != 'IP019' AND &quot;FBSTA&quot; != 'IP020' AND now()&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_DueDate&quot;,now()),
 if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_DueDate&quot;,&quot;CC_UPDATE_DATE&quot;),0))</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -1130,6 +1135,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <viewAttribute id="CC_Validto">
         <descriptions defaultDescription="Validity To"/>
       </viewAttribute>
+    
+      <viewAttribute id="PARTNER1">
+        <descriptions defaultDescription="Business Partner 1"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1140,6 +1149,8 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <mapping xsi:type="Calculation:AttributeMapping" target="RTITL" source="RTITL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Validto" source="CC_Validto"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
     </input>
     <filter>&quot;RELTYP&quot; = 'ZDGE' OR &quot;RELTYP&quot; = 'ZGRM' OR &quot;RELTYP&quot; = 'ZIGM'</filter>
   </calculationView>
@@ -1408,10 +1419,17 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <viewAttribute id="CC_OverdueDays" aggregationType="sum">
         <descriptions defaultDescription="CC_OverdueDays"/>
       </viewAttribute>
+    
+      <viewAttribute id="PARTNER1">
+        <descriptions defaultDescription="PARTNER1"/>
+      </viewAttribute>
+      <viewAttribute id="CC_TaxPayerFullName">
+        <descriptions defaultDescription="CC_TaxPayerFullName"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="J_TAXR_PERIOD">
+    <input node="J_TAXR_BPNAME">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
@@ -1499,376 +1517,1174 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Overdue" source="CC_Overdue"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_OverdueDays" source="CC_OverdueDays"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxPayerFullName" source="CC_TaxPayerFullName"/>
     </input>
     <input node="P_BpRelantionship">
       <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP" source="RELTYP"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RTITL" source="RTITL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
     </input>
     <joinAttribute leftColumn="MANDT" rightColumn="CLIENT" operator="EQ"/>
     <joinAttribute leftColumn="CC_DueDate" rightColumn="CC_ValidFrom" operator="GE"/>
     <joinAttribute leftColumn="CC_DueDate" rightColumn="CC_Validto" operator="LE"/>
     <joinAttribute leftColumn="TAXPAYER" rightColumn="PARTNER2" operator="EQ"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BpInfo">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="STD_FIRM">
+        <descriptions defaultDescription="STD_FIRM"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN">
+        <descriptions defaultDescription="STD_PERSON_GN"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN2">
+        <descriptions defaultDescription="STD_PERSON_GN2"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_FN">
+        <descriptions defaultDescription="STD_PERSON_FN"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_GRP1">
+        <descriptions defaultDescription="Group Name"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE">
+        <descriptions defaultDescription="BP Type (Person/Company)"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_FullName" datatype="VARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;BP_TYPE&quot; = '2',&quot;STD_FIRM&quot;,
+    if(&quot;BP_TYPE&quot; = '3',&quot;NAME_GRP1&quot;,&quot;STD_PERSON_GN&quot;+' '+&quot;STD_PERSON_GN2&quot;+' '+&quot;STD_PERSON_FN&quot;
+    )
+)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_FIRM" source="STD_FIRM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN" source="STD_PERSON_GN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN2" source="STD_PERSON_GN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE" source="BP_TYPE"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_TAXR_BPNAME" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="CASE_GUID">
+        <descriptions defaultDescription="CASE_GUID"/>
+      </viewAttribute>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="FBNUM"/>
+      </viewAttribute>
+      <viewAttribute id="TAXPAYER">
+        <descriptions defaultDescription="TAXPAYER"/>
+      </viewAttribute>
+      <viewAttribute id="JOINT_FILER">
+        <descriptions defaultDescription="JOINT_FILER"/>
+      </viewAttribute>
+      <viewAttribute id="BU_ID_TYPE">
+        <descriptions defaultDescription="BU_ID_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="TAXPAYER_ID">
+        <descriptions defaultDescription="TAXPAYER_ID"/>
+      </viewAttribute>
+      <viewAttribute id="ACCOUNT">
+        <descriptions defaultDescription="ACCOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="REG_ID">
+        <descriptions defaultDescription="REG_ID"/>
+      </viewAttribute>
+      <viewAttribute id="REG_TYPE">
+        <descriptions defaultDescription="REG_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="APPLY_FROM">
+        <descriptions defaultDescription="APPLY_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="APPLY_TO">
+        <descriptions defaultDescription="APPLY_TO"/>
+      </viewAttribute>
+      <viewAttribute id="PERIOD_KEY">
+        <descriptions defaultDescription="PERIOD_KEY"/>
+      </viewAttribute>
+      <viewAttribute id="FBTYP">
+        <descriptions defaultDescription="FBTYP"/>
+      </viewAttribute>
+      <viewAttribute id="BETRW" aggregationType="sum">
+        <descriptions defaultDescription="BETRW"/>
+      </viewAttribute>
+      <viewAttribute id="ERNAM">
+        <descriptions defaultDescription="ERNAM"/>
+      </viewAttribute>
+      <viewAttribute id="AENAM">
+        <descriptions defaultDescription="AENAM"/>
+      </viewAttribute>
+      <viewAttribute id="KEYDT">
+        <descriptions defaultDescription="KEYDT"/>
+      </viewAttribute>
+      <viewAttribute id="FBSTA">
+        <descriptions defaultDescription="FBSTA"/>
+      </viewAttribute>
+      <viewAttribute id="FBUST">
+        <descriptions defaultDescription="FBUST"/>
+      </viewAttribute>
+      <viewAttribute id="FBSTZ">
+        <descriptions defaultDescription="FBSTZ"/>
+      </viewAttribute>
+      <viewAttribute id="DUE_DATE">
+        <descriptions defaultDescription="DUE_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="LAST_FILING">
+        <descriptions defaultDescription="LAST_FILING"/>
+      </viewAttribute>
+      <viewAttribute id="BATCH_ID">
+        <descriptions defaultDescription="BATCH_ID"/>
+      </viewAttribute>
+      <viewAttribute id="TRANSACTION_TYPE">
+        <descriptions defaultDescription="TRANSACTION_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="IN_CHANNEL">
+        <descriptions defaultDescription="IN_CHANNEL"/>
+      </viewAttribute>
+      <viewAttribute id="INDPR">
+        <descriptions defaultDescription="INDPR"/>
+      </viewAttribute>
+      <viewAttribute id="KEYPP">
+        <descriptions defaultDescription="KEYPP"/>
+      </viewAttribute>
+      <viewAttribute id="ZZREASSESSED">
+        <descriptions defaultDescription="ZZREASSESSED"/>
+      </viewAttribute>
+      <viewAttribute id="ZZTRANSFERRED">
+        <descriptions defaultDescription="ZZTRANSFERRED"/>
+      </viewAttribute>
+      <viewAttribute id="ZZCLIENTREF">
+        <descriptions defaultDescription="ZZCLIENTREF"/>
+      </viewAttribute>
+      <viewAttribute id="ZZSENDER">
+        <descriptions defaultDescription="ZZSENDER"/>
+      </viewAttribute>
+      <viewAttribute id="ZZELNOID">
+        <descriptions defaultDescription="ZZELNOID"/>
+      </viewAttribute>
+      <viewAttribute id="ZZELNOTXN">
+        <descriptions defaultDescription="ZZELNOTXN"/>
+      </viewAttribute>
+      <viewAttribute id="CURRENT_VERSION">
+        <descriptions defaultDescription="CURRENT_VERSION"/>
+      </viewAttribute>
+      <viewAttribute id="ZZRFR_REQUESTER">
+        <descriptions defaultDescription="ZZRFR_REQUESTER"/>
+      </viewAttribute>
+      <viewAttribute id="FBTYP_TEXT">
+        <descriptions defaultDescription="FBTYP_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="IN_CHANNEL_TEXT">
+        <descriptions defaultDescription="IN_CHANNEL_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="FBSTA_TEXT">
+        <descriptions defaultDescription="FBSTA_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="REVENUE_TYPE_TEXT">
+        <descriptions defaultDescription="REVENUE_TYPE_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="VERSION">
+        <descriptions defaultDescription="VERSION"/>
+      </viewAttribute>
+      <viewAttribute id="A_GROSS_SAL_WAGE" aggregationType="sum">
+        <descriptions defaultDescription="A_GROSS_SAL_WAGE"/>
+      </viewAttribute>
+      <viewAttribute id="A_ALLOWANCE" aggregationType="sum">
+        <descriptions defaultDescription="A_ALLOWANCE"/>
+      </viewAttribute>
+      <viewAttribute id="A_BONUS" aggregationType="sum">
+        <descriptions defaultDescription="A_BONUS"/>
+      </viewAttribute>
+      <viewAttribute id="A_COMMISSION" aggregationType="sum">
+        <descriptions defaultDescription="A_COMMISSION"/>
+      </viewAttribute>
+      <viewAttribute id="A_DIRECTOR_FEE" aggregationType="sum">
+        <descriptions defaultDescription="A_DIRECTOR_FEE"/>
+      </viewAttribute>
+      <viewAttribute id="A_EMPL_SUP_CONTRIB" aggregationType="sum">
+        <descriptions defaultDescription="A_EMPL_SUP_CONTRIB"/>
+      </viewAttribute>
+      <viewAttribute id="A_FRINGE_BENEFIT" aggregationType="sum">
+        <descriptions defaultDescription="A_FRINGE_BENEFIT"/>
+      </viewAttribute>
+      <viewAttribute id="A_ELIG_TERM_PMT" aggregationType="sum">
+        <descriptions defaultDescription="A_ELIG_TERM_PMT"/>
+      </viewAttribute>
+      <viewAttribute id="A_CONTRACTORS" aggregationType="sum">
+        <descriptions defaultDescription="A_CONTRACTORS"/>
+      </viewAttribute>
+      <viewAttribute id="A_SHARE_SCHEMES" aggregationType="sum">
+        <descriptions defaultDescription="A_SHARE_SCHEMES"/>
+      </viewAttribute>
+      <viewAttribute id="A_APPRENT_PMT" aggregationType="sum">
+        <descriptions defaultDescription="A_APPRENT_PMT"/>
+      </viewAttribute>
+      <viewAttribute id="A_TRAINEES_PMT" aggregationType="sum">
+        <descriptions defaultDescription="A_TRAINEES_PMT"/>
+      </viewAttribute>
+      <viewAttribute id="A_OTH_NON_TAX_WAGE" aggregationType="sum">
+        <descriptions defaultDescription="A_OTH_NON_TAX_WAGE"/>
+      </viewAttribute>
+      <viewAttribute id="A_INT_WAGES_Q">
+        <descriptions defaultDescription="A_INT_WAGES_Q"/>
+      </viewAttribute>
+      <viewAttribute id="A_TOT_INT_WAGE" aggregationType="sum">
+        <descriptions defaultDescription="A_TOT_INT_WAGE"/>
+      </viewAttribute>
+      <viewAttribute id="A_TOT_QLD_GM" aggregationType="sum">
+        <descriptions defaultDescription="A_TOT_QLD_GM"/>
+      </viewAttribute>
+      <viewAttribute id="A_TOT_INT_GM" aggregationType="sum">
+        <descriptions defaultDescription="A_TOT_INT_GM"/>
+      </viewAttribute>
+      <viewAttribute id="A_F_P_AND_P_FINAL" aggregationType="sum">
+        <descriptions defaultDescription="A_F_P_AND_P_FINAL"/>
+      </viewAttribute>
+      <viewAttribute id="A_F_P_AND_P_RESID" aggregationType="sum">
+        <descriptions defaultDescription="A_F_P_AND_P_RESID"/>
+      </viewAttribute>
+      <viewAttribute id="A_EXCESS_DEDUCT" aggregationType="sum">
+        <descriptions defaultDescription="A_EXCESS_DEDUCT"/>
+      </viewAttribute>
+      <viewAttribute id="A_EXCESS_REB" aggregationType="sum">
+        <descriptions defaultDescription="A_EXCESS_REB"/>
+      </viewAttribute>
+      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES" aggregationType="sum">
+        <descriptions defaultDescription="C_TOT_QLD_TXBLE_WAGES"/>
+      </viewAttribute>
+      <viewAttribute id="C_TOT_QLD_NON_TAX_WAGE" aggregationType="sum">
+        <descriptions defaultDescription="C_TOT_QLD_NON_TAX_WAGE"/>
+      </viewAttribute>
+      <viewAttribute id="C_REBATE_CALC" aggregationType="sum">
+        <descriptions defaultDescription="C_REBATE_CALC"/>
+      </viewAttribute>
+      <viewAttribute id="C_TOT_GRP_AUST_WAGES" aggregationType="sum">
+        <descriptions defaultDescription="C_TOT_GRP_AUST_WAGES"/>
+      </viewAttribute>
+      <viewAttribute id="C_F_TOTAL_PER_AMNT" aggregationType="sum">
+        <descriptions defaultDescription="C_F_TOTAL_PER_AMNT"/>
+      </viewAttribute>
+      <viewAttribute id="C_F_LAST_PER_AMNT" aggregationType="sum">
+        <descriptions defaultDescription="C_F_LAST_PER_AMNT"/>
+      </viewAttribute>
+      <viewAttribute id="C_F_LAST_PER_START">
+        <descriptions defaultDescription="C_F_LAST_PER_START"/>
+      </viewAttribute>
+      <viewAttribute id="C_F_TOTAL_PER_END">
+        <descriptions defaultDescription="C_F_TOTAL_PER_END"/>
+      </viewAttribute>
+      <viewAttribute id="C_P_AND_P_END_DATE">
+        <descriptions defaultDescription="C_P_AND_P_END_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="C_F_RESID_START">
+        <descriptions defaultDescription="C_F_RESID_START"/>
+      </viewAttribute>
+      <viewAttribute id="C_DEDUCTION_ALLOWED" aggregationType="sum">
+        <descriptions defaultDescription="C_DEDUCTION_ALLOWED"/>
+      </viewAttribute>
+      <viewAttribute id="C_TAX_AMOUNT" aggregationType="sum">
+        <descriptions defaultDescription="C_TAX_AMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="C_BASE_TAX" aggregationType="sum">
+        <descriptions defaultDescription="C_BASE_TAX"/>
+      </viewAttribute>
+      <viewAttribute id="C_REBATE_NETT" aggregationType="sum">
+        <descriptions defaultDescription="C_REBATE_NETT"/>
+      </viewAttribute>
+      <viewAttribute id="C_PAY_TAX_AMOUNT" aggregationType="sum">
+        <descriptions defaultDescription="C_PAY_TAX_AMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="C_TOT_PAID_PAYABLE" aggregationType="sum">
+        <descriptions defaultDescription="C_TOT_PAID_PAYABLE"/>
+      </viewAttribute>
+      <viewAttribute id="C_PAY_TAX_LIAB_CREDIT" aggregationType="sum">
+        <descriptions defaultDescription="C_PAY_TAX_LIAB_CREDIT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_PeriodCycle">
+        <descriptions defaultDescription="CC_PeriodCycle"/>
+      </viewAttribute>
+      <viewAttribute id="CC_DueDate">
+        <descriptions defaultDescription="CC_DueDate"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CREATE_DATE">
+        <descriptions defaultDescription="CC_CREATE_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_UPDATE_DATE">
+        <descriptions defaultDescription="CC_UPDATE_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Overdue">
+        <descriptions defaultDescription="CC_Overdue"/>
+      </viewAttribute>
+      <viewAttribute id="CC_OverdueDays" aggregationType="sum">
+        <descriptions defaultDescription="CC_OverdueDays"/>
+      </viewAttribute>
+      <viewAttribute id="CC_TaxPayerFullName">
+        <descriptions defaultDescription="CC_FullName"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_TAXR_PERIOD">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="TAXPAYER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOINT_FILER" source="JOINT_FILER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_ID_TYPE" source="BU_ID_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER_ID" source="TAXPAYER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT" source="ACCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REG_ID" source="REG_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REG_TYPE" source="REG_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APPLY_FROM" source="APPLY_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APPLY_TO" source="APPLY_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIOD_KEY" source="PERIOD_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBTYP" source="FBTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AENAM" source="AENAM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KEYDT" source="KEYDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA" source="FBSTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBUST" source="FBUST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBSTZ" source="FBSTZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="DUE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAST_FILING" source="LAST_FILING"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_TYPE" source="TRANSACTION_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IN_CHANNEL" source="IN_CHANNEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDPR" source="INDPR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KEYPP" source="KEYPP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZREASSESSED" source="ZZREASSESSED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTRANSFERRED" source="ZZTRANSFERRED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZCLIENTREF" source="ZZCLIENTREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSENDER" source="ZZSENDER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZELNOID" source="ZZELNOID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZELNOTXN" source="ZZELNOTXN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_VERSION" source="CURRENT_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZRFR_REQUESTER" source="ZZRFR_REQUESTER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBTYP_TEXT" source="FBTYP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IN_CHANNEL_TEXT" source="IN_CHANNEL_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA_TEXT" source="FBSTA_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_TYPE_TEXT" source="REVENUE_TYPE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_GROSS_SAL_WAGE" source="A_GROSS_SAL_WAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ALLOWANCE" source="A_ALLOWANCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_BONUS" source="A_BONUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_COMMISSION" source="A_COMMISSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_DIRECTOR_FEE" source="A_DIRECTOR_FEE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_EMPL_SUP_CONTRIB" source="A_EMPL_SUP_CONTRIB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_FRINGE_BENEFIT" source="A_FRINGE_BENEFIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ELIG_TERM_PMT" source="A_ELIG_TERM_PMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_CONTRACTORS" source="A_CONTRACTORS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_SHARE_SCHEMES" source="A_SHARE_SCHEMES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_APPRENT_PMT" source="A_APPRENT_PMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TRAINEES_PMT" source="A_TRAINEES_PMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_OTH_NON_TAX_WAGE" source="A_OTH_NON_TAX_WAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_INT_WAGES_Q" source="A_INT_WAGES_Q"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TOT_INT_WAGE" source="A_TOT_INT_WAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TOT_QLD_GM" source="A_TOT_QLD_GM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TOT_INT_GM" source="A_TOT_INT_GM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_F_P_AND_P_FINAL" source="A_F_P_AND_P_FINAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_F_P_AND_P_RESID" source="A_F_P_AND_P_RESID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_EXCESS_DEDUCT" source="A_EXCESS_DEDUCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_EXCESS_REB" source="A_EXCESS_REB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_QLD_TXBLE_WAGES" source="C_TOT_QLD_TXBLE_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_QLD_NON_TAX_WAGE" source="C_TOT_QLD_NON_TAX_WAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_REBATE_CALC" source="C_REBATE_CALC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_GRP_AUST_WAGES" source="C_TOT_GRP_AUST_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_TOTAL_PER_AMNT" source="C_F_TOTAL_PER_AMNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_LAST_PER_AMNT" source="C_F_LAST_PER_AMNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_LAST_PER_START" source="C_F_LAST_PER_START"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_TOTAL_PER_END" source="C_F_TOTAL_PER_END"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_P_AND_P_END_DATE" source="C_P_AND_P_END_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_RESID_START" source="C_F_RESID_START"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_DEDUCTION_ALLOWED" source="C_DEDUCTION_ALLOWED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TAX_AMOUNT" source="C_TAX_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_BASE_TAX" source="C_BASE_TAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_REBATE_NETT" source="C_REBATE_NETT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_PAY_TAX_AMOUNT" source="C_PAY_TAX_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_PAID_PAYABLE" source="C_TOT_PAID_PAYABLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_PAY_TAX_LIAB_CREDIT" source="C_PAY_TAX_LIAB_CREDIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PeriodCycle" source="CC_PeriodCycle"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DueDate" source="CC_DueDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CREATE_DATE" source="CC_CREATE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPDATE_DATE" source="CC_UPDATE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Overdue" source="CC_Overdue"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OverdueDays" source="CC_OverdueDays"/>
+    </input>
+    <input node="P_BpInfo">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxPayerFullName" source="CC_FullName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="PARTNER"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="TAXPAYER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_TAXR_PRTGROUPNAM" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="CASE_GUID">
+        <descriptions defaultDescription="CASE_GUID"/>
+      </viewAttribute>
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="FBNUM"/>
+      </viewAttribute>
+      <viewAttribute id="TAXPAYER">
+        <descriptions defaultDescription="TAXPAYER"/>
+      </viewAttribute>
+      <viewAttribute id="JOINT_FILER">
+        <descriptions defaultDescription="JOINT_FILER"/>
+      </viewAttribute>
+      <viewAttribute id="BU_ID_TYPE">
+        <descriptions defaultDescription="BU_ID_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="TAXPAYER_ID">
+        <descriptions defaultDescription="TAXPAYER_ID"/>
+      </viewAttribute>
+      <viewAttribute id="ACCOUNT">
+        <descriptions defaultDescription="ACCOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="REG_ID">
+        <descriptions defaultDescription="REG_ID"/>
+      </viewAttribute>
+      <viewAttribute id="REG_TYPE">
+        <descriptions defaultDescription="REG_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="APPLY_FROM">
+        <descriptions defaultDescription="APPLY_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="APPLY_TO">
+        <descriptions defaultDescription="APPLY_TO"/>
+      </viewAttribute>
+      <viewAttribute id="PERIOD_KEY">
+        <descriptions defaultDescription="PERIOD_KEY"/>
+      </viewAttribute>
+      <viewAttribute id="FBTYP">
+        <descriptions defaultDescription="FBTYP"/>
+      </viewAttribute>
+      <viewAttribute id="BETRW" aggregationType="sum">
+        <descriptions defaultDescription="BETRW"/>
+      </viewAttribute>
+      <viewAttribute id="ERNAM">
+        <descriptions defaultDescription="ERNAM"/>
+      </viewAttribute>
+      <viewAttribute id="AENAM">
+        <descriptions defaultDescription="AENAM"/>
+      </viewAttribute>
+      <viewAttribute id="KEYDT">
+        <descriptions defaultDescription="KEYDT"/>
+      </viewAttribute>
+      <viewAttribute id="FBSTA">
+        <descriptions defaultDescription="FBSTA"/>
+      </viewAttribute>
+      <viewAttribute id="FBUST">
+        <descriptions defaultDescription="FBUST"/>
+      </viewAttribute>
+      <viewAttribute id="FBSTZ">
+        <descriptions defaultDescription="FBSTZ"/>
+      </viewAttribute>
+      <viewAttribute id="DUE_DATE">
+        <descriptions defaultDescription="DUE_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="LAST_FILING">
+        <descriptions defaultDescription="LAST_FILING"/>
+      </viewAttribute>
+      <viewAttribute id="BATCH_ID">
+        <descriptions defaultDescription="BATCH_ID"/>
+      </viewAttribute>
+      <viewAttribute id="TRANSACTION_TYPE">
+        <descriptions defaultDescription="TRANSACTION_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="IN_CHANNEL">
+        <descriptions defaultDescription="IN_CHANNEL"/>
+      </viewAttribute>
+      <viewAttribute id="INDPR">
+        <descriptions defaultDescription="INDPR"/>
+      </viewAttribute>
+      <viewAttribute id="KEYPP">
+        <descriptions defaultDescription="KEYPP"/>
+      </viewAttribute>
+      <viewAttribute id="ZZREASSESSED">
+        <descriptions defaultDescription="ZZREASSESSED"/>
+      </viewAttribute>
+      <viewAttribute id="ZZTRANSFERRED">
+        <descriptions defaultDescription="ZZTRANSFERRED"/>
+      </viewAttribute>
+      <viewAttribute id="ZZCLIENTREF">
+        <descriptions defaultDescription="ZZCLIENTREF"/>
+      </viewAttribute>
+      <viewAttribute id="ZZSENDER">
+        <descriptions defaultDescription="ZZSENDER"/>
+      </viewAttribute>
+      <viewAttribute id="ZZELNOID">
+        <descriptions defaultDescription="ZZELNOID"/>
+      </viewAttribute>
+      <viewAttribute id="ZZELNOTXN">
+        <descriptions defaultDescription="ZZELNOTXN"/>
+      </viewAttribute>
+      <viewAttribute id="CURRENT_VERSION">
+        <descriptions defaultDescription="CURRENT_VERSION"/>
+      </viewAttribute>
+      <viewAttribute id="ZZRFR_REQUESTER">
+        <descriptions defaultDescription="ZZRFR_REQUESTER"/>
+      </viewAttribute>
+      <viewAttribute id="FBTYP_TEXT">
+        <descriptions defaultDescription="FBTYP_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="IN_CHANNEL_TEXT">
+        <descriptions defaultDescription="IN_CHANNEL_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="FBSTA_TEXT">
+        <descriptions defaultDescription="FBSTA_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="REVENUE_TYPE_TEXT">
+        <descriptions defaultDescription="REVENUE_TYPE_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="VERSION">
+        <descriptions defaultDescription="VERSION"/>
+      </viewAttribute>
+      <viewAttribute id="A_GROSS_SAL_WAGE" aggregationType="sum">
+        <descriptions defaultDescription="A_GROSS_SAL_WAGE"/>
+      </viewAttribute>
+      <viewAttribute id="A_ALLOWANCE" aggregationType="sum">
+        <descriptions defaultDescription="A_ALLOWANCE"/>
+      </viewAttribute>
+      <viewAttribute id="A_BONUS" aggregationType="sum">
+        <descriptions defaultDescription="A_BONUS"/>
+      </viewAttribute>
+      <viewAttribute id="A_COMMISSION" aggregationType="sum">
+        <descriptions defaultDescription="A_COMMISSION"/>
+      </viewAttribute>
+      <viewAttribute id="A_DIRECTOR_FEE" aggregationType="sum">
+        <descriptions defaultDescription="A_DIRECTOR_FEE"/>
+      </viewAttribute>
+      <viewAttribute id="A_EMPL_SUP_CONTRIB" aggregationType="sum">
+        <descriptions defaultDescription="A_EMPL_SUP_CONTRIB"/>
+      </viewAttribute>
+      <viewAttribute id="A_FRINGE_BENEFIT" aggregationType="sum">
+        <descriptions defaultDescription="A_FRINGE_BENEFIT"/>
+      </viewAttribute>
+      <viewAttribute id="A_ELIG_TERM_PMT" aggregationType="sum">
+        <descriptions defaultDescription="A_ELIG_TERM_PMT"/>
+      </viewAttribute>
+      <viewAttribute id="A_CONTRACTORS" aggregationType="sum">
+        <descriptions defaultDescription="A_CONTRACTORS"/>
+      </viewAttribute>
+      <viewAttribute id="A_SHARE_SCHEMES" aggregationType="sum">
+        <descriptions defaultDescription="A_SHARE_SCHEMES"/>
+      </viewAttribute>
+      <viewAttribute id="A_APPRENT_PMT" aggregationType="sum">
+        <descriptions defaultDescription="A_APPRENT_PMT"/>
+      </viewAttribute>
+      <viewAttribute id="A_TRAINEES_PMT" aggregationType="sum">
+        <descriptions defaultDescription="A_TRAINEES_PMT"/>
+      </viewAttribute>
+      <viewAttribute id="A_OTH_NON_TAX_WAGE" aggregationType="sum">
+        <descriptions defaultDescription="A_OTH_NON_TAX_WAGE"/>
+      </viewAttribute>
+      <viewAttribute id="A_INT_WAGES_Q">
+        <descriptions defaultDescription="A_INT_WAGES_Q"/>
+      </viewAttribute>
+      <viewAttribute id="A_TOT_INT_WAGE" aggregationType="sum">
+        <descriptions defaultDescription="A_TOT_INT_WAGE"/>
+      </viewAttribute>
+      <viewAttribute id="A_TOT_QLD_GM" aggregationType="sum">
+        <descriptions defaultDescription="A_TOT_QLD_GM"/>
+      </viewAttribute>
+      <viewAttribute id="A_TOT_INT_GM" aggregationType="sum">
+        <descriptions defaultDescription="A_TOT_INT_GM"/>
+      </viewAttribute>
+      <viewAttribute id="A_F_P_AND_P_FINAL" aggregationType="sum">
+        <descriptions defaultDescription="A_F_P_AND_P_FINAL"/>
+      </viewAttribute>
+      <viewAttribute id="A_F_P_AND_P_RESID" aggregationType="sum">
+        <descriptions defaultDescription="A_F_P_AND_P_RESID"/>
+      </viewAttribute>
+      <viewAttribute id="A_EXCESS_DEDUCT" aggregationType="sum">
+        <descriptions defaultDescription="A_EXCESS_DEDUCT"/>
+      </viewAttribute>
+      <viewAttribute id="A_EXCESS_REB" aggregationType="sum">
+        <descriptions defaultDescription="A_EXCESS_REB"/>
+      </viewAttribute>
+      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES" aggregationType="sum">
+        <descriptions defaultDescription="C_TOT_QLD_TXBLE_WAGES"/>
+      </viewAttribute>
+      <viewAttribute id="C_TOT_QLD_NON_TAX_WAGE" aggregationType="sum">
+        <descriptions defaultDescription="C_TOT_QLD_NON_TAX_WAGE"/>
+      </viewAttribute>
+      <viewAttribute id="C_REBATE_CALC" aggregationType="sum">
+        <descriptions defaultDescription="C_REBATE_CALC"/>
+      </viewAttribute>
+      <viewAttribute id="C_TOT_GRP_AUST_WAGES" aggregationType="sum">
+        <descriptions defaultDescription="C_TOT_GRP_AUST_WAGES"/>
+      </viewAttribute>
+      <viewAttribute id="C_F_TOTAL_PER_AMNT" aggregationType="sum">
+        <descriptions defaultDescription="C_F_TOTAL_PER_AMNT"/>
+      </viewAttribute>
+      <viewAttribute id="C_F_LAST_PER_AMNT" aggregationType="sum">
+        <descriptions defaultDescription="C_F_LAST_PER_AMNT"/>
+      </viewAttribute>
+      <viewAttribute id="C_F_LAST_PER_START">
+        <descriptions defaultDescription="C_F_LAST_PER_START"/>
+      </viewAttribute>
+      <viewAttribute id="C_F_TOTAL_PER_END">
+        <descriptions defaultDescription="C_F_TOTAL_PER_END"/>
+      </viewAttribute>
+      <viewAttribute id="C_P_AND_P_END_DATE">
+        <descriptions defaultDescription="C_P_AND_P_END_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="C_F_RESID_START">
+        <descriptions defaultDescription="C_F_RESID_START"/>
+      </viewAttribute>
+      <viewAttribute id="C_DEDUCTION_ALLOWED" aggregationType="sum">
+        <descriptions defaultDescription="C_DEDUCTION_ALLOWED"/>
+      </viewAttribute>
+      <viewAttribute id="C_TAX_AMOUNT" aggregationType="sum">
+        <descriptions defaultDescription="C_TAX_AMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="C_BASE_TAX" aggregationType="sum">
+        <descriptions defaultDescription="C_BASE_TAX"/>
+      </viewAttribute>
+      <viewAttribute id="C_REBATE_NETT" aggregationType="sum">
+        <descriptions defaultDescription="C_REBATE_NETT"/>
+      </viewAttribute>
+      <viewAttribute id="C_PAY_TAX_AMOUNT" aggregationType="sum">
+        <descriptions defaultDescription="C_PAY_TAX_AMOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="C_TOT_PAID_PAYABLE" aggregationType="sum">
+        <descriptions defaultDescription="C_TOT_PAID_PAYABLE"/>
+      </viewAttribute>
+      <viewAttribute id="C_PAY_TAX_LIAB_CREDIT" aggregationType="sum">
+        <descriptions defaultDescription="C_PAY_TAX_LIAB_CREDIT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_PeriodCycle">
+        <descriptions defaultDescription="CC_PeriodCycle"/>
+      </viewAttribute>
+      <viewAttribute id="CC_DueDate">
+        <descriptions defaultDescription="CC_DueDate"/>
+      </viewAttribute>
+      <viewAttribute id="RELTYP">
+        <descriptions defaultDescription="RELTYP"/>
+      </viewAttribute>
+      <viewAttribute id="RTITL">
+        <descriptions defaultDescription="RTITL"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CREATE_DATE">
+        <descriptions defaultDescription="CC_CREATE_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_UPDATE_DATE">
+        <descriptions defaultDescription="CC_UPDATE_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Overdue">
+        <descriptions defaultDescription="CC_Overdue"/>
+      </viewAttribute>
+      <viewAttribute id="CC_OverdueDays" aggregationType="sum">
+        <descriptions defaultDescription="CC_OverdueDays"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER1">
+        <descriptions defaultDescription="PARTNER1"/>
+      </viewAttribute>
+      <viewAttribute id="CC_PrtGroupFullName">
+        <descriptions defaultDescription="CC_FullName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_TaxPayerFullName">
+        <descriptions defaultDescription="CC_TaxPayerFullName"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="NEJ_TAXR_BPGROUP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="TAXPAYER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOINT_FILER" source="JOINT_FILER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_ID_TYPE" source="BU_ID_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER_ID" source="TAXPAYER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT" source="ACCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REG_ID" source="REG_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REG_TYPE" source="REG_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APPLY_FROM" source="APPLY_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APPLY_TO" source="APPLY_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIOD_KEY" source="PERIOD_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBTYP" source="FBTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AENAM" source="AENAM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KEYDT" source="KEYDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA" source="FBSTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBUST" source="FBUST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBSTZ" source="FBSTZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="DUE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAST_FILING" source="LAST_FILING"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_TYPE" source="TRANSACTION_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IN_CHANNEL" source="IN_CHANNEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDPR" source="INDPR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KEYPP" source="KEYPP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZREASSESSED" source="ZZREASSESSED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTRANSFERRED" source="ZZTRANSFERRED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZCLIENTREF" source="ZZCLIENTREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSENDER" source="ZZSENDER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZELNOID" source="ZZELNOID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZELNOTXN" source="ZZELNOTXN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_VERSION" source="CURRENT_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZRFR_REQUESTER" source="ZZRFR_REQUESTER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBTYP_TEXT" source="FBTYP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IN_CHANNEL_TEXT" source="IN_CHANNEL_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA_TEXT" source="FBSTA_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_TYPE_TEXT" source="REVENUE_TYPE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_GROSS_SAL_WAGE" source="A_GROSS_SAL_WAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ALLOWANCE" source="A_ALLOWANCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_BONUS" source="A_BONUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_COMMISSION" source="A_COMMISSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_DIRECTOR_FEE" source="A_DIRECTOR_FEE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_EMPL_SUP_CONTRIB" source="A_EMPL_SUP_CONTRIB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_FRINGE_BENEFIT" source="A_FRINGE_BENEFIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ELIG_TERM_PMT" source="A_ELIG_TERM_PMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_CONTRACTORS" source="A_CONTRACTORS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_SHARE_SCHEMES" source="A_SHARE_SCHEMES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_APPRENT_PMT" source="A_APPRENT_PMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TRAINEES_PMT" source="A_TRAINEES_PMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_OTH_NON_TAX_WAGE" source="A_OTH_NON_TAX_WAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_INT_WAGES_Q" source="A_INT_WAGES_Q"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TOT_INT_WAGE" source="A_TOT_INT_WAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TOT_QLD_GM" source="A_TOT_QLD_GM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TOT_INT_GM" source="A_TOT_INT_GM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_F_P_AND_P_FINAL" source="A_F_P_AND_P_FINAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_F_P_AND_P_RESID" source="A_F_P_AND_P_RESID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_EXCESS_DEDUCT" source="A_EXCESS_DEDUCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_EXCESS_REB" source="A_EXCESS_REB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_QLD_TXBLE_WAGES" source="C_TOT_QLD_TXBLE_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_QLD_NON_TAX_WAGE" source="C_TOT_QLD_NON_TAX_WAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_REBATE_CALC" source="C_REBATE_CALC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_GRP_AUST_WAGES" source="C_TOT_GRP_AUST_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_TOTAL_PER_AMNT" source="C_F_TOTAL_PER_AMNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_LAST_PER_AMNT" source="C_F_LAST_PER_AMNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_LAST_PER_START" source="C_F_LAST_PER_START"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_TOTAL_PER_END" source="C_F_TOTAL_PER_END"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_P_AND_P_END_DATE" source="C_P_AND_P_END_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_RESID_START" source="C_F_RESID_START"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_DEDUCTION_ALLOWED" source="C_DEDUCTION_ALLOWED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TAX_AMOUNT" source="C_TAX_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_BASE_TAX" source="C_BASE_TAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_REBATE_NETT" source="C_REBATE_NETT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_PAY_TAX_AMOUNT" source="C_PAY_TAX_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_PAID_PAYABLE" source="C_TOT_PAID_PAYABLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_PAY_TAX_LIAB_CREDIT" source="C_PAY_TAX_LIAB_CREDIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PeriodCycle" source="CC_PeriodCycle"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DueDate" source="CC_DueDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP" source="RELTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RTITL" source="RTITL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CREATE_DATE" source="CC_CREATE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPDATE_DATE" source="CC_UPDATE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Overdue" source="CC_Overdue"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OverdueDays" source="CC_OverdueDays"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxPayerFullName" source="CC_TaxPayerFullName"/>
+    </input>
+    <input node="P_BpInfo">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PrtGroupFullName" source="CC_FullName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="PARTNER1"/>
+  </calculationView>
 </calculationViews>
-<logicalModel id="NEJ_TAXR_BPGROUP">
+<logicalModel id="J_TAXR_PRTGROUPNAM">
   <attributes>
     <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAP Client"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="MANDT"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="MANDT"/>
     </attribute>
     <attribute id="CASE_GUID" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="GUID"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="CASE_GUID"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="CASE_GUID"/>
     </attribute>
     <attribute id="FBNUM" order="3" semanticType="empty" descriptionColumnName="FBNUM" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Form Bundle Number"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="FBNUM"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="FBNUM"/>
     </attribute>
-    <attribute id="TAXPAYER" order="4" semanticType="empty" descriptionColumnName="TAXPAYER" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXPAYER" order="4" semanticType="empty" descriptionColumnName="CC_TaxPayerFullName" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="TAXPAYER"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="TAXPAYER"/>
     </attribute>
     <attribute id="JOINT_FILER" order="5" semanticType="empty" descriptionColumnName="JOINT_FILER" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BP Number Of Joint Filler"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="JOINT_FILER"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="JOINT_FILER"/>
     </attribute>
     <attribute id="BU_ID_TYPE" order="6" semanticType="empty" descriptionColumnName="BU_ID_TYPE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Identification Type"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="BU_ID_TYPE"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="BU_ID_TYPE"/>
     </attribute>
     <attribute id="TAXPAYER_ID" order="7" semanticType="empty" descriptionColumnName="TAXPAYER_ID" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ID Number Of Joint Filler"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="TAXPAYER_ID"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="TAXPAYER_ID"/>
     </attribute>
     <attribute id="ACCOUNT" order="8" semanticType="empty" descriptionColumnName="ACCOUNT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account Number"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="ACCOUNT"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="ACCOUNT"/>
     </attribute>
     <attribute id="REG_ID" order="9" semanticType="empty" descriptionColumnName="REG_ID" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reference Specifications from Contract"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="REG_ID"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="REG_ID"/>
     </attribute>
     <attribute id="REG_TYPE" order="10" semanticType="empty" descriptionColumnName="REG_TYPE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subapplication in Contract Accounts Receivable and Payable"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="REG_TYPE"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="REG_TYPE"/>
     </attribute>
     <attribute id="APPLY_FROM" order="11" semanticType="empty" descriptionColumnName="APPLY_FROM" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Lower Limit of Settlement Period"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="APPLY_FROM"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="APPLY_FROM"/>
     </attribute>
     <attribute id="APPLY_TO" order="12" semanticType="empty" descriptionColumnName="APPLY_TO" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Upper Limit of the Billing Period"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="APPLY_TO"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="APPLY_TO"/>
     </attribute>
     <attribute id="PERIOD_KEY" order="13" semanticType="empty" descriptionColumnName="PERIOD_KEY" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Key for Period Assignment"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="PERIOD_KEY"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="PERIOD_KEY"/>
     </attribute>
     <attribute id="FBTYP" order="14" semanticType="empty" descriptionColumnName="FBTYP_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Form Bundle Type"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="FBTYP"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="FBTYP"/>
     </attribute>
     <attribute id="ERNAM" order="16" semanticType="empty" descriptionColumnName="ERNAM" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Who Created the Object"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="ERNAM"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="ERNAM"/>
     </attribute>
     <attribute id="AENAM" order="17" semanticType="empty" descriptionColumnName="AENAM" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User who changed object"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="AENAM"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="AENAM"/>
     </attribute>
     <attribute id="KEYDT" order="18" semanticType="empty" descriptionColumnName="KEYDT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Key Date for Determination of BRF Events"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="KEYDT"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="KEYDT"/>
     </attribute>
     <attribute id="FBSTA" order="19" semanticType="empty" descriptionColumnName="FBSTA_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Status of a Form Bundle"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="FBSTA"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="FBSTA"/>
     </attribute>
     <attribute id="FBUST" order="20" semanticType="empty" descriptionColumnName="FBUST" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Status of a Form Bundle"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="FBUST"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="FBUST"/>
     </attribute>
     <attribute id="FBSTZ" order="21" semanticType="empty" descriptionColumnName="FBSTZ" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Status Information Replicated Sucessfully"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="FBSTZ"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="FBSTZ"/>
     </attribute>
     <attribute id="DUE_DATE" order="22" semanticType="empty" descriptionColumnName="DUE_DATE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Due Date for Tax Return"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="DUE_DATE"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="DUE_DATE"/>
     </attribute>
     <attribute id="LAST_FILING" order="23" semanticType="empty" descriptionColumnName="LAST_FILING" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Filing Date"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="LAST_FILING"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="LAST_FILING"/>
     </attribute>
     <attribute id="BATCH_ID" order="24" semanticType="empty" descriptionColumnName="BATCH_ID" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Identification Number of Lot"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="BATCH_ID"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="BATCH_ID"/>
     </attribute>
     <attribute id="TRANSACTION_TYPE" order="25" semanticType="empty" descriptionColumnName="TRANSACTION_TYPE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Transaction Type"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="TRANSACTION_TYPE"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="TRANSACTION_TYPE"/>
     </attribute>
     <attribute id="IN_CHANNEL" order="26" semanticType="empty" descriptionColumnName="IN_CHANNEL_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Communication Channel"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="IN_CHANNEL"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="IN_CHANNEL"/>
     </attribute>
     <attribute id="INDPR" order="27" semanticType="empty" descriptionColumnName="INDPR" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Process Indicator"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="INDPR"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="INDPR"/>
     </attribute>
     <attribute id="KEYPP" order="28" semanticType="empty" descriptionColumnName="KEYPP" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subarea for Parallelization in Mass Processing"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="KEYPP"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="KEYPP"/>
     </attribute>
     <attribute id="ZZREASSESSED" order="29" semanticType="empty" descriptionColumnName="ZZREASSESSED" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reassessed"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="ZZREASSESSED"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="ZZREASSESSED"/>
     </attribute>
     <attribute id="ZZTRANSFERRED" order="30" semanticType="empty" descriptionColumnName="ZZTRANSFERRED" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Transferred"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="ZZTRANSFERRED"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="ZZTRANSFERRED"/>
     </attribute>
     <attribute id="ZZCLIENTREF" order="31" semanticType="empty" descriptionColumnName="ZZCLIENTREF" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Client Reference Number"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="ZZCLIENTREF"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="ZZCLIENTREF"/>
     </attribute>
     <attribute id="ZZSENDER" order="32" semanticType="empty" descriptionColumnName="ZZSENDER" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Sender Id"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="ZZSENDER"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="ZZSENDER"/>
     </attribute>
     <attribute id="ZZELNOID" order="33" semanticType="empty" descriptionColumnName="ZZELNOID" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ELN Id"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="ZZELNOID"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="ZZELNOID"/>
     </attribute>
     <attribute id="ZZELNOTXN" order="34" semanticType="empty" descriptionColumnName="ZZELNOTXN" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ELN Transaction Id"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="ZZELNOTXN"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="ZZELNOTXN"/>
     </attribute>
     <attribute id="CURRENT_VERSION" order="35" semanticType="empty" descriptionColumnName="CURRENT_VERSION" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Current version of forms"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="CURRENT_VERSION"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="CURRENT_VERSION"/>
     </attribute>
     <attribute id="ZZRFR_REQUESTER" order="36" semanticType="empty" descriptionColumnName="ZZRFR_REQUESTER" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="RfR Requester"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="ZZRFR_REQUESTER"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="ZZRFR_REQUESTER"/>
     </attribute>
     <attribute id="FBTYP_TEXT" order="37" semanticType="empty" descriptionColumnName="FBTYP_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FBTYP_TEXT"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="FBTYP_TEXT"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="FBTYP_TEXT"/>
     </attribute>
     <attribute id="IN_CHANNEL_TEXT" order="38" semanticType="empty" descriptionColumnName="IN_CHANNEL_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="IN_CHANNEL_TEXT"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="IN_CHANNEL_TEXT"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="IN_CHANNEL_TEXT"/>
     </attribute>
     <attribute id="FBSTA_TEXT" order="39" semanticType="empty" descriptionColumnName="FBSTA_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FBSTA_TEXT"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="FBSTA_TEXT"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="FBSTA_TEXT"/>
     </attribute>
     <attribute id="REVENUE_TYPE_TEXT" order="40" semanticType="empty" descriptionColumnName="REVENUE_TYPE_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REVENUE_TYPE_TEXT"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="REVENUE_TYPE_TEXT"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="REVENUE_TYPE_TEXT"/>
     </attribute>
     <attribute id="VERSION" order="41" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Version"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="VERSION"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="VERSION"/>
     </attribute>
     <attribute id="A_INT_WAGES_Q" order="42" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Interstate Wages Flag"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_INT_WAGES_Q"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_INT_WAGES_Q"/>
     </attribute>
     <attribute id="C_F_LAST_PER_START" order="69" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Period Start"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_F_LAST_PER_START"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_F_LAST_PER_START"/>
     </attribute>
     <attribute id="C_F_TOTAL_PER_END" order="70" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Total Periodic Amount"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_F_TOTAL_PER_END"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_F_TOTAL_PER_END"/>
     </attribute>
     <attribute id="C_P_AND_P_END_DATE" order="71" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Periodic End "/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_P_AND_P_END_DATE"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_P_AND_P_END_DATE"/>
     </attribute>
     <attribute id="C_F_RESID_START" order="72" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Residual Start"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_F_RESID_START"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_F_RESID_START"/>
     </attribute>
   
     <attribute id="CC_PeriodCycle" order="80" semanticType="empty" descriptionColumnName="CC_PeriodCycle" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Cycle"/>
   
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="CC_PeriodCycle"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="CC_PeriodCycle"/>
   
     </attribute>
     <attribute id="CC_DueDate" order="81" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Due Date"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="CC_DueDate"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="CC_DueDate"/>
     </attribute>
     <attribute id="RELTYP" order="82" descriptionColumnName="RTITL" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BP Grouping Type"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="RELTYP"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="RELTYP"/>
     </attribute>
     <attribute id="RTITL" order="83" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BP Grouping Type (Text)"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="RTITL"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="RTITL"/>
     </attribute>
   
     <attribute id="CC_CREATE_DATE" order="85" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Creation Date"/>
   
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="CC_CREATE_DATE"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="CC_CREATE_DATE"/>
   
     </attribute>
     <attribute id="CC_UPDATE_DATE" order="86" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Modified/Closed Date"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="CC_UPDATE_DATE"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="CC_UPDATE_DATE"/>
     </attribute>
     <attribute id="CC_Overdue" order="87" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Overdue"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="CC_Overdue"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="CC_Overdue"/>
     </attribute>
   
     <attribute id="CC_OverdueDays" order="88" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Days Overdue"/>
-      <keyMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="CC_OverdueDays"/>
+  
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="CC_OverdueDays"/>
+  
+    </attribute>
+  
+    <attribute id="PARTNER1" order="89" descriptionColumnName="CC_PrtGroupFullName" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRT/Floating Group"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="PARTNER1"/>
+    </attribute>
+    <attribute id="CC_TaxPayerFullName" order="90" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Name"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="CC_TaxPayerFullName"/>
+    </attribute>
+    <attribute id="CC_PrtGroupFullName" order="91" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRT Group Name"/>
+      <keyMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="CC_PrtGroupFullName"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="BETRW" order="15" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Return Amount"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="BETRW"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="BETRW"/>
     </measure>
     <measure id="A_GROSS_SAL_WAGE" order="43" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Gross S/W"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_GROSS_SAL_WAGE"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_GROSS_SAL_WAGE"/>
     </measure>
     <measure id="A_ALLOWANCE" order="44" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Allowances"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_ALLOWANCE"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_ALLOWANCE"/>
     </measure>
     <measure id="A_BONUS" order="45" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Bonuses"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_BONUS"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_BONUS"/>
     </measure>
     <measure id="A_COMMISSION" order="46" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Commissions"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_COMMISSION"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_COMMISSION"/>
     </measure>
     <measure id="A_DIRECTOR_FEE" order="47" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Director&apos;s Fees"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_DIRECTOR_FEE"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_DIRECTOR_FEE"/>
     </measure>
     <measure id="A_EMPL_SUP_CONTRIB" order="48" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Emp. Super Contributions"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_EMPL_SUP_CONTRIB"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_EMPL_SUP_CONTRIB"/>
     </measure>
     <measure id="A_FRINGE_BENEFIT" order="49" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fringe Benefits"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_FRINGE_BENEFIT"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_FRINGE_BENEFIT"/>
     </measure>
     <measure id="A_ELIG_TERM_PMT" order="50" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Terminations Payments"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_ELIG_TERM_PMT"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_ELIG_TERM_PMT"/>
     </measure>
     <measure id="A_CONTRACTORS" order="51" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Contractors"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_CONTRACTORS"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_CONTRACTORS"/>
     </measure>
     <measure id="A_SHARE_SCHEMES" order="52" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Shares and Options"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_SHARE_SCHEMES"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_SHARE_SCHEMES"/>
     </measure>
     <measure id="A_APPRENT_PMT" order="53" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Apprentices Wages"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_APPRENT_PMT"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_APPRENT_PMT"/>
     </measure>
     <measure id="A_TRAINEES_PMT" order="54" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Trainees Wages"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_TRAINEES_PMT"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_TRAINEES_PMT"/>
     </measure>
     <measure id="A_OTH_NON_TAX_WAGE" order="55" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Other Non-taxable Wages"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_OTH_NON_TAX_WAGE"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_OTH_NON_TAX_WAGE"/>
     </measure>
     <measure id="A_TOT_INT_WAGE" order="56" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Interstate Wages"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_TOT_INT_WAGE"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_TOT_INT_WAGE"/>
     </measure>
     <measure id="A_TOT_QLD_GM" order="57" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total QLD Wages (All GM)"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_TOT_QLD_GM"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_TOT_QLD_GM"/>
     </measure>
     <measure id="A_TOT_INT_GM" order="58" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Interstate Wages (All GM)"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_TOT_INT_GM"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_TOT_INT_GM"/>
     </measure>
     <measure id="A_F_P_AND_P_FINAL" order="59" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Split Period Final"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_F_P_AND_P_FINAL"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_F_P_AND_P_FINAL"/>
     </measure>
     <measure id="A_F_P_AND_P_RESID" order="60" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Split Period Residual"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_F_P_AND_P_RESID"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_F_P_AND_P_RESID"/>
     </measure>
     <measure id="A_EXCESS_DEDUCT" order="61" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Excess Deduction"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_EXCESS_DEDUCT"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_EXCESS_DEDUCT"/>
     </measure>
     <measure id="A_EXCESS_REB" order="62" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Excess Rebate"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="A_EXCESS_REB"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="A_EXCESS_REB"/>
     </measure>
     <measure id="C_TOT_QLD_TXBLE_WAGES" order="63" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total QLD Taxable Wages"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_TOT_QLD_TXBLE_WAGES"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_TOT_QLD_TXBLE_WAGES"/>
     </measure>
     <measure id="C_TOT_QLD_NON_TAX_WAGE" order="64" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total QLD Non-taxable Wages"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_TOT_QLD_NON_TAX_WAGE"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_TOT_QLD_NON_TAX_WAGE"/>
     </measure>
     <measure id="C_REBATE_CALC" order="65" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="App/Trainee Rebate"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_REBATE_CALC"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_REBATE_CALC"/>
     </measure>
     <measure id="C_TOT_GRP_AUST_WAGES" order="66" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Group AU Taxable Wages"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_TOT_GRP_AUST_WAGES"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_TOT_GRP_AUST_WAGES"/>
     </measure>
     <measure id="C_F_TOTAL_PER_AMNT" order="67" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Periodic Amount"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_F_TOTAL_PER_AMNT"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_F_TOTAL_PER_AMNT"/>
     </measure>
     <measure id="C_F_LAST_PER_AMNT" order="68" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Last Period Amount"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_F_LAST_PER_AMNT"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_F_LAST_PER_AMNT"/>
     </measure>
     <measure id="C_DEDUCTION_ALLOWED" order="73" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Deduction Allowed"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_DEDUCTION_ALLOWED"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_DEDUCTION_ALLOWED"/>
     </measure>
     <measure id="C_TAX_AMOUNT" order="74" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Taxable Amount"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_TAX_AMOUNT"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_TAX_AMOUNT"/>
     </measure>
     <measure id="C_BASE_TAX" order="75" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Calculated Tax"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_BASE_TAX"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_BASE_TAX"/>
     </measure>
     <measure id="C_REBATE_NETT" order="76" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Net Rebate"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_REBATE_NETT"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_REBATE_NETT"/>
     </measure>
     <measure id="C_PAY_TAX_AMOUNT" order="77" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Payroll Tax Amount"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_PAY_TAX_AMOUNT"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_PAY_TAX_AMOUNT"/>
     </measure>
     <measure id="C_TOT_PAID_PAYABLE" order="78" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Paid Periodic Amount"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_TOT_PAID_PAYABLE"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_TOT_PAID_PAYABLE"/>
     </measure>
     <measure id="C_PAY_TAX_LIAB_CREDIT" order="79" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Final Tax Liability/Credit"/>
-      <measureMapping columnObjectName="NEJ_TAXR_BPGROUP" columnName="C_PAY_TAX_LIAB_CREDIT"/>
+      <measureMapping columnObjectName="J_TAXR_PRTGROUPNAM" columnName="C_PAY_TAX_LIAB_CREDIT"/>
     </measure></baseMeasures>
   <calculatedMeasures>
     <measure id="CO_TaxReturns" order="84" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -1887,21 +2703,21 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="422" y="112"/>
+      <upperLeftCorner x="437.89467518515335" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_FormBundles" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="676"/>
+      <upperLeftCorner x="91.99999999999996" y="981.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_RETURNS_DETAILS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="676"/>
+      <upperLeftCorner x="302" y="981.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXR_RETURNDETAIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="516"/>
+      <upperLeftCorner x="118.66666666666666" y="821.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_FormBundles" modelObjectNameSpace="J_TAXR_RETURNDETAIL" modelObjectType="JoinNodeInput">
@@ -1914,11 +2730,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
     </shape>
   
     <shape expanded="true" modelObjectName="P_PeriodData" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="384" y="516"/>
+      <upperLeftCorner x="391.5914686896282" y="821.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXR_PERIOD" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="145" y="356"/>
+      <upperLeftCorner x="145.3333333333333" y="661.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_RETURNDETAIL" modelObjectNameSpace="J_TAXR_PERIOD" modelObjectType="JoinNodeInput">
@@ -1930,18 +2746,47 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BpRelantionship" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="489" y="356"/>
+      <upperLeftCorner x="200.69987766231787" y="516.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_TAXR_BPGROUP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="422" y="217"/>
+      <upperLeftCorner x="384.0332109956512" y="356.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_TAXR_PERIOD" modelObjectNameSpace="NEJ_TAXR_BPGROUP" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_TAXR_BPNAME" modelObjectNameSpace="NEJ_TAXR_BPGROUP" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="P_BpRelantionship" modelObjectNameSpace="NEJ_TAXR_BPGROUP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BpInfo" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="513.1489677496069" y="661.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_TAXR_BPNAME" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="410.6998776623178" y="520.3333309491475"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_TAXR_PERIOD" modelObjectNameSpace="J_TAXR_BPNAME" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_BpInfo" modelObjectNameSpace="J_TAXR_BPNAME" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_TAXR_PRTGROUPNAM" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="437.89467518515335" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="NEJ_TAXR_BPGROUP" modelObjectNameSpace="J_TAXR_PRTGROUPNAM" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_BpInfo" modelObjectNameSpace="J_TAXR_PRTGROUPNAM" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
