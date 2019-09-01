@@ -65,7 +65,10 @@
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_FullName" datatype="VARCHAR" length="150" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;BP_TYPE&quot; = '2',&quot;STD_FIRM&quot;,&quot;STD_PERSON_GN&quot;+' '+&quot;STD_PERSON_GN2&quot;+' '+&quot;STD_PERSON_FN&quot;)</formula>
+        <formula>if(&quot;BP_TYPE&quot; = '2',&quot;STD_FIRM&quot;,
+    if(&quot;BP_TYPE&quot; = '3',&quot;NAME_GRP1&quot;,&quot;STD_PERSON_GN&quot;+' '+&quot;STD_PERSON_GN2&quot;+' '+&quot;STD_PERSON_FN&quot;
+    )
+)</formula>
       </calculatedViewAttribute></calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo">
@@ -883,8 +886,8 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <viewAttribute id="PARTNER1">
         <descriptions defaultDescription="PARTNER1"/>
       </viewAttribute>
-      <viewAttribute id="NAME_GRP1">
-        <descriptions defaultDescription="NAME_GRP1"/>
+      <viewAttribute id="CC_GroupName">
+        <descriptions defaultDescription="CC_GroupName"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -912,7 +915,7 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP" source="RELTYP"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP_TEXT" source="RELTYP_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_GroupName" source="CC_GroupName"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER2"/>
     </input>
@@ -930,17 +933,18 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <viewAttribute id="PARTNER1">
         <descriptions defaultDescription="PARTNER1"/>
       </viewAttribute>
+      <viewAttribute id="CC_GroupName">
+        <descriptions defaultDescription="CC_GroupName"/>
+      </viewAttribute>
+    
+    
       <viewAttribute id="CLIENT">
         <descriptions defaultDescription="CLIENT"/>
       </viewAttribute>
     
       <viewAttribute id="PARTNER2">
         <descriptions defaultDescription="PARTNER2"/>
-      </viewAttribute>
-      <viewAttribute id="NAME_GRP1">
-        <descriptions defaultDescription="NAME_GRP1"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_REL_BPINFO">
@@ -950,7 +954,7 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP_TEXT" source="RELTYP_TEXT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_GroupName" source="CC_GroupName"/>
     </input>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>PARTNER2</partitionViewAttributeName>
@@ -977,14 +981,22 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <viewAttribute id="PARTNER1">
         <descriptions defaultDescription="PARTNER1"/>
       </viewAttribute>
-      <viewAttribute id="DATE_TO">
-        <descriptions defaultDescription="DATE_TO"/>
-      </viewAttribute>
       <viewAttribute id="NAME_GRP1">
         <descriptions defaultDescription="Group Name"/>
       </viewAttribute>
+    
+      <viewAttribute id="DATE_TO">
+        <descriptions defaultDescription="DATE_TO"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FullName">
+        <descriptions defaultDescription="CC_FullName"/>
+      </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_GroupName" datatype="VARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
+        <formula>&quot;CC_FullName&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="P_BUT050">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER2" source="PARTNER2"/>
@@ -996,6 +1008,7 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
     </input>
     <input node="P_BPINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER"/>
     </input>
@@ -1031,6 +1044,10 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <viewAttribute id="FACT_CAT_SEQ">
         <descriptions defaultDescription="Fact Category Sequence"/>
       </viewAttribute>
+    
+      <viewAttribute id="XOBSL">
+        <descriptions defaultDescription="Obsolete"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1044,9 +1061,12 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CATEGORY" source="FACT_CATEGORY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CAT_SEQ" source="FACT_CAT_SEQ"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="XOBSL" source="XOBSL"/>
     </input>
     <filter>&quot;PARTNERACCTYP&quot;='PT' 
 AND &quot;FACT_SET&quot; = 'ZPTX' 
+AND &quot;XOBSL&quot; &lt;&gt; 'X'
 AND (&quot;VALID_TO&quot; = '99991231235959' OR &quot;VALID_TO&quot; = '99991231000000')
 AND (&quot;FACT_TYPE&quot; = 'RG01' OR &quot;FACT_TYPE&quot; = 'ZPRE') 
 AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR &quot;FACT_CATEGORY&quot; = '0016' OR &quot;FACT_CATEGORY&quot; = '0005' OR &quot;FACT_CATEGORY&quot; = '0004' OR &quot;FACT_CATEGORY&quot; = '0011'OR &quot;FACT_CATEGORY&quot; = 'Z011')</filter>
@@ -1251,7 +1271,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CAT_SEQ" source="FACT_CAT_SEQ"/>
     </input>
-    <filter>&quot;FACT_TYPE&quot;='RG01' AND &quot;FACT_CATEGORY&quot;='0004'</filter>
+    <filter>&quot;FACT_TYPE&quot;='RG01' AND &quot;FACT_CATEGORY&quot;='0004' AND &quot;FACT_CAT_SEQ&quot; = '81'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_RegistrationStatus" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -1727,8 +1747,8 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="PARTNER1">
         <descriptions defaultDescription="PARTNER1"/>
       </viewAttribute>
-      <viewAttribute id="NAME_GRP1">
-        <descriptions defaultDescription="NAME_GRP1"/>
+      <viewAttribute id="CC_GroupName">
+        <descriptions defaultDescription="CC_GroupName"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -1759,7 +1779,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP_TEXT" source="RELTYP_TEXT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_GroupName" source="CC_GroupName"/>
     </input>
     <input node="J_FACT_PTGRPSTAT">
       <mapping xsi:type="Calculation:AttributeMapping" target="PT_STATUS" source="PT_STATUS"/>
@@ -1967,8 +1987,8 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="PARTNER1">
         <descriptions defaultDescription="PARTNER1"/>
       </viewAttribute>
-      <viewAttribute id="NAME_GRP1">
-        <descriptions defaultDescription="NAME_GRP1"/>
+      <viewAttribute id="CC_GroupName">
+        <descriptions defaultDescription="CC_GroupName"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -2004,7 +2024,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ClientStatusTR" source="CC_ClientStatusTR"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_GroupName" source="CC_GroupName"/>
     </input>
     <input node="R_ONE_TR_PER_BP">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_AnnualEstimate" source="CC_AnnualEstimate"/>
@@ -2148,15 +2168,15 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
   
     </attribute>
   
-    <attribute id="PARTNER1" order="32" descriptionColumnName="NAME_GRP1" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="PARTNER1" order="32" descriptionColumnName="CC_GroupName" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PRT/Floating Group"/>
   
       <keyMapping columnObjectName="J_BPINFO_TAXBRACKET" columnName="PARTNER1"/>
   
     </attribute>
-    <attribute id="NAME_GRP1" order="33" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_GroupName" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Group Name"/>
-      <keyMapping columnObjectName="J_BPINFO_TAXBRACKET" columnName="NAME_GRP1"/>
+      <keyMapping columnObjectName="J_BPINFO_TAXBRACKET" columnName="CC_GroupName"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -2173,6 +2193,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
         <attribute attributeName="PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -2334,11 +2355,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_ONLY_ONE_REL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1380" y="1034"/>
+      <upperLeftCorner x="1386" y="692"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_REL_BPINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1380" y="1210"/>
+      <upperLeftCorner x="1381" y="1099"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BUT050" modelObjectNameSpace="J_REL_BPINFO" modelObjectType="JoinNodeInput">
@@ -2447,7 +2468,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FACT_ONLINEFILLCOMM" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1064" y="696"/>
+      <upperLeftCorner x="1142" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FACTS_QLDLIABDT" modelObjectNameSpace="J_FACT_ONLINEFILLCOMM" modelObjectType="JoinNodeInput">
