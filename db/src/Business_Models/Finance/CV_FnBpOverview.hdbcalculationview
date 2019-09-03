@@ -1,0 +1,1830 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnBpOverview" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_FnBpOverview"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpBankDetailsCurrent">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpBankDetailsCurrent</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPINFO" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE">
+        <descriptions defaultDescription="BP Type (Person/Company)"/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP Type Description"/>
+      </viewAttribute>
+      <viewAttribute id="STD_FIRM">
+        <descriptions defaultDescription="STD_FIRM"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN">
+        <descriptions defaultDescription="STD_PERSON_GN"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN2">
+        <descriptions defaultDescription="STD_PERSON_GN2"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_FN">
+        <descriptions defaultDescription="STD_PERSON_FN"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+    
+      <viewAttribute id="BUT000_VALID_TO">
+        <descriptions defaultDescription="Validity End BUT000 BP Data"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_Full_Name" datatype="VARCHAR" length="60" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;BP_TYPE_DESC&quot;='Individual',&quot;STD_PERSON_GN&quot;+' '+&quot;STD_PERSON_GN2&quot;+' '+&quot;STD_PERSON_FN&quot;,&quot;STD_FIRM&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE" source="BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_FIRM" source="STD_FIRM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN" source="STD_PERSON_GN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN2" source="STD_PERSON_GN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT000_VALID_TO" source="BUT000_VALID_TO"/>
+    </input>
+    <filter>&quot;BUT000_VALID_TO&quot; ='99991231235959'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPROLE" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="ID_TYPE">
+        <descriptions defaultDescription="Identification Type Code"/>
+      </viewAttribute>
+      <viewAttribute id="IDNUMBER">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="Date of Entry for ID Number"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_VALID_TO">
+        <descriptions defaultDescription="Validity End for ID Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_TYPE" source="ID_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IDNUMBER" source="IDNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_VALID_TO" source="BUT0ID_VALID_TO"/>
+    </input>
+    <filter>(&quot;ID_TYPE&quot; = 'ZABN' OR &quot;ID_TYPE&quot; = 'ZACN') AND &quot;BUT0ID_VALID_TO&quot;='99991231'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BP_ABN" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="ID_TYPE">
+        <descriptions defaultDescription="Identification Type Code"/>
+      </viewAttribute>
+      <viewAttribute id="IDNUMBER">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="Date of Entry for ID Number"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_VALID_TO">
+        <descriptions defaultDescription="Validity End for ID Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPROLE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_TYPE" source="ID_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IDNUMBER" source="IDNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_VALID_TO" source="BUT0ID_VALID_TO"/>
+    </input>
+    <filter>&quot;ID_TYPE&quot;='ZABN'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BP_ACN" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="ID_TYPE">
+        <descriptions defaultDescription="Identification Type Code"/>
+      </viewAttribute>
+      <viewAttribute id="IDNUMBER">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="Date of Entry for ID Number"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_VALID_TO">
+        <descriptions defaultDescription="Validity End for ID Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPROLE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_TYPE" source="ID_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IDNUMBER" source="IDNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_VALID_TO" source="BUT0ID_VALID_TO"/>
+    </input>
+    <filter>&quot;ID_TYPE&quot; = 'ZACN'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_ABN" cardinality="C1_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP Type Description"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPINFO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+    </input>
+    <input node="P_BP_ABN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="IDNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_ABN_ACN" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP Type Description"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_ABN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+    </input>
+    <input node="P_BP_ACN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="IDNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BANKDETAILSCURRENT">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="Bank Details ID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="Bank Key"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="Bank Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="Bank Details Valid From (Date)"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpBankDetailsCurrent">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/></input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_RECENT_BANKDETAILS">
+    <viewAttributes>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="BKVID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="BANKL"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="BANKN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="CC_BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BANKDETAILSCURRENT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/></input>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>MANDT</partitionViewAttributeName>
+      <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="CC_BK_VALID_FROM" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="BankDetails_Count">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="BANKDETAILSCOUNT" aggregationType="count">
+        <descriptions defaultDescription="Bank Details ID"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BANKDETAILSCURRENT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKDETAILSCOUNT" source="BKVID"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPFACTS" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PSOBKEY">
+        <descriptions defaultDescription="Contract Object ID"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNERACCTYP">
+        <descriptions defaultDescription="Contract Account Category"/>
+      </viewAttribute>
+      <viewAttribute id="ERNAM">
+        <descriptions defaultDescription="Created By"/>
+      </viewAttribute>
+      <viewAttribute id="ERDAT">
+        <descriptions defaultDescription="Created At"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNERACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="KOFIZ">
+        <descriptions defaultDescription="Account Determination"/>
+      </viewAttribute>
+      <viewAttribute id="AENAM">
+        <descriptions defaultDescription="Changed By"/>
+      </viewAttribute>
+      <viewAttribute id="AEDAT">
+        <descriptions defaultDescription="Changed At"/>
+      </viewAttribute>
+      <viewAttribute id="EBVTY">
+        <descriptions defaultDescription="Bank Details ID (IP)"/>
+      </viewAttribute>
+      <viewAttribute id="ABVTY">
+        <descriptions defaultDescription="Bank Details ID (OP)"/>
+      </viewAttribute>
+      <viewAttribute id="INDIVIDUAL">
+        <descriptions defaultDescription="Is Individual"/>
+      </viewAttribute>
+      <viewAttribute id="OBART">
+        <descriptions defaultDescription="Object Type"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_TYPE_SEQ">
+        <descriptions defaultDescription="Fact Type Sequence"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_TYPE_REP">
+        <descriptions defaultDescription="Fact Type Repetition"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_CAT_SEQ">
+        <descriptions defaultDescription="Fact Category Sequence"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_CAT_REP">
+        <descriptions defaultDescription="Fact Category Repetition"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="Valid To Date"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="Valid From Date"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_SET">
+        <descriptions defaultDescription="Fact Set"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_TYPE">
+        <descriptions defaultDescription="Fact Type"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_CATEGORY">
+        <descriptions defaultDescription="Fact Category"/>
+      </viewAttribute>
+      <viewAttribute id="VALUE_GENERIC">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="QUAL_GENERIC">
+        <descriptions defaultDescription="Fact Qualifier"/>
+      </viewAttribute>
+      <viewAttribute id="OBJNR">
+        <descriptions defaultDescription="Object number"/>
+      </viewAttribute>
+      <viewAttribute id="KOFIZ_TEXT">
+        <descriptions defaultDescription="Account Determination (Text)"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_SET_TEXT">
+        <descriptions defaultDescription="Fact Set (Text)"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_TYPE_TEXT">
+        <descriptions defaultDescription="Fact Type (Text)"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CATEGORY_TEXT">
+        <descriptions defaultDescription="Fact Category (Text)"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNERACCTYPE_TEXT">
+        <descriptions defaultDescription="Contract Account Category (Text)"/>
+      </viewAttribute>
+      <viewAttribute id="CO_RowCounter">
+        <descriptions defaultDescription="Row Counter"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACCTYP" source="PARTNERACCTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AENAM" source="AENAM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EBVTY" source="EBVTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABVTY" source="ABVTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDIVIDUAL" source="INDIVIDUAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBART" source="OBART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_TYPE_SEQ" source="FACT_TYPE_SEQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_TYPE_REP" source="FACT_TYPE_REP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CAT_SEQ" source="FACT_CAT_SEQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CAT_REP" source="FACT_CAT_REP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_TYPE" source="FACT_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CATEGORY" source="FACT_CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QUAL_GENERIC" source="QUAL_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ_TEXT" source="KOFIZ_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET_TEXT" source="FACT_SET_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_TYPE_TEXT" source="FACT_TYPE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CATEGORY_TEXT" source="CC_CATEGORY_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACCTYPE_TEXT" source="PARTNERACCTYPE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CO_RowCounter" source="CO_RowCounter"/>
+    </input>
+    <filter>in(&quot;FACT_SET&quot;,'ZBTX','ZGMGB','ZGMT','ZIND','ZOFTB','ZPTX','ZROY','ZVRD') and &quot;FACT_CATEGORY&quot;='0016' and &quot;VALID_TO&quot;&gt;=now() and &quot;VALID_FROM&quot;&lt;=now()</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BETTING_FREQ" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_SET">
+        <descriptions defaultDescription="Fact Set"/>
+      </viewAttribute>
+    
+      <viewAttribute id="BETTING_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPFACTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_FREQ" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_CONTRACT_ACC" source="PARTNERACC"/>
+    </input>
+    <filter>&quot;FACT_SET&quot;='ZBTX'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_GAMBLE_FREQ" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="GAMBLING_TAX_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_SET">
+        <descriptions defaultDescription="Fact Set"/>
+      </viewAttribute>
+    
+      <viewAttribute id="GAMBLING_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPFACTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_TAX_FREQ" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_TAX_CONTRACT_ACC" source="PARTNERACC"/>
+    </input>
+    <filter>&quot;FACT_SET&quot;='ZGMBG'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_GAMBLE_MACH_FREQ" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="GAMBLING_MACH_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_SET">
+        <descriptions defaultDescription="Fact Set"/>
+      </viewAttribute>
+    
+      <viewAttribute id="GAMBLING_MACH_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPFACTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_MACH_FREQ" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_MACH_CONTRACT_ACC" source="PARTNERACC"/>
+    </input>
+    <filter>&quot;FACT_SET&quot;='ZGMT'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_INSUR_DUT_FREQ" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_SET">
+        <descriptions defaultDescription="Fact Set"/>
+      </viewAttribute>
+    
+      <viewAttribute id="INSURANCE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPFACTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_FREQ" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_CONTRACT_ACC" source="PARTNERACC"/>
+    </input>
+    <filter>&quot;FACT_SET&quot;='ZIND'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_OFT_FREQ" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="OFT_FIN_INST_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_SET">
+        <descriptions defaultDescription="Fact Set"/>
+      </viewAttribute>
+    
+      <viewAttribute id="OFT_FIN_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPFACTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OFT_FIN_INST_FREQ" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OFT_FIN_CONTRACT_ACC" source="PARTNERACC"/>
+    </input>
+    <filter>&quot;FACT_SET&quot;='ZOFTB'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PAYROLL_FREQ" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="PAYROLL_TAX_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_SET">
+        <descriptions defaultDescription="Fact Set"/>
+      </viewAttribute>
+    
+      <viewAttribute id="PAYROLL_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPFACTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PAYROLL_TAX_FREQ" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PAYROLL_TAX_CONTRACT_ACC" source="PARTNERACC"/>
+    </input>
+    <filter>&quot;FACT_SET&quot;='ZPTX'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ROYALTY_FREQ" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="ROYALTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_SET">
+        <descriptions defaultDescription="Fact Set"/>
+      </viewAttribute>
+    
+      <viewAttribute id="ROYALTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPFACTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ROYALTY_FREQ" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ROYALTY_CONTRACT_ACC" source="PARTNERACC"/>
+    </input>
+    <filter>&quot;FACT_SET&quot;='ZROY'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_VEHIC_DUT_FREQ" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_SET">
+        <descriptions defaultDescription="Fact Set"/>
+      </viewAttribute>
+    
+      <viewAttribute id="VEHICLE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input emptyUnionBehavior="undefined" node="P_BPFACTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_FREQ" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_CONTRACT_ACC" source="PARTNERACC"/>
+    </input>
+    <filter>&quot;FACT_SET&quot;='ZVRD'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_FREQ_1" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_BPINFO_FREQ" multiJoinCentralTable="J_BPINFO_ABN_ACN_BANKDETAILS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP_TYPE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="ABN"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="ACN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="BKVID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="BANKL"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="BANKN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="CC_BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="BANKDETAILSCOUNT" aggregationType="count">
+        <descriptions defaultDescription="BANKDETAILSCOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_ABN_ACN_BANKDETAILS_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKDETAILSCOUNT" source="BANKDETAILSCOUNT"/>
+    </input>
+    <input node="P_BETTING_FREQ">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_FREQ" source="BETTING_TAX_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_CONTRACT_ACC" source="BETTING_TAX_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_FREQ_2" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_BPINFO_FREQ" multiJoinCentralTable="J_BPINFO_ABN_ACN_BANKDETAILS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP_TYPE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="ABN"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="ACN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="BKVID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="BANKL"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="BANKN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="CC_BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="BANKDETAILSCOUNT" aggregationType="count">
+        <descriptions defaultDescription="BANKDETAILSCOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_FREQ_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKDETAILSCOUNT" source="BANKDETAILSCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_FREQ" source="BETTING_TAX_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_CONTRACT_ACC" source="BETTING_TAX_CONTRACT_ACC"/>
+    </input>
+    <input node="P_VEHIC_DUT_FREQ">
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_FREQ" source="VEHICLE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_CONTRACT_ACC" source="VEHICLE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_FREQ_3" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_BPINFO_FREQ" multiJoinCentralTable="J_BPINFO_ABN_ACN_BANKDETAILS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP_TYPE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="ABN"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="ACN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="BKVID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="BANKL"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="BANKN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="CC_BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="BANKDETAILSCOUNT" aggregationType="count">
+        <descriptions defaultDescription="BANKDETAILSCOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_FREQ_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKDETAILSCOUNT" source="BANKDETAILSCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_FREQ" source="VEHICLE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_FREQ" source="BETTING_TAX_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_CONTRACT_ACC" source="VEHICLE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_CONTRACT_ACC" source="BETTING_TAX_CONTRACT_ACC"/>
+    </input>
+    <input node="P_INSUR_DUT_FREQ">
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_FREQ" source="INSURANCE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_CONTRACT_ACC" source="INSURANCE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_FREQ_4" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_BPINFO_FREQ" multiJoinCentralTable="J_BPINFO_ABN_ACN_BANKDETAILS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP_TYPE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="ABN"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="ACN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="BKVID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="BANKL"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="BANKN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="CC_BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="BANKDETAILSCOUNT" aggregationType="count">
+        <descriptions defaultDescription="BANKDETAILSCOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="OFT_FIN_INST_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="OFT_FIN_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_FREQ_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKDETAILSCOUNT" source="BANKDETAILSCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_FREQ" source="INSURANCE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_FREQ" source="VEHICLE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_FREQ" source="BETTING_TAX_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_CONTRACT_ACC" source="INSURANCE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_CONTRACT_ACC" source="VEHICLE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_CONTRACT_ACC" source="BETTING_TAX_CONTRACT_ACC"/>
+    </input>
+    <input node="P_OFT_FREQ">
+      <mapping xsi:type="Calculation:AttributeMapping" target="OFT_FIN_INST_FREQ" source="OFT_FIN_INST_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OFT_FIN_CONTRACT_ACC" source="OFT_FIN_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_FREQ_5" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_BPINFO_FREQ" multiJoinCentralTable="J_BPINFO_ABN_ACN_BANKDETAILS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP_TYPE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="ABN"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="ACN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="BKVID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="BANKL"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="BANKN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="CC_BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="BANKDETAILSCOUNT" aggregationType="count">
+        <descriptions defaultDescription="BANKDETAILSCOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="GAMBLING_MACH_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="OFT_FIN_INST_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="GAMBLING_MACH_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="OFT_FIN_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_FREQ_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKDETAILSCOUNT" source="BANKDETAILSCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OFT_FIN_INST_FREQ" source="OFT_FIN_INST_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_FREQ" source="INSURANCE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_FREQ" source="VEHICLE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_FREQ" source="BETTING_TAX_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OFT_FIN_CONTRACT_ACC" source="OFT_FIN_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_CONTRACT_ACC" source="INSURANCE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_CONTRACT_ACC" source="VEHICLE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_CONTRACT_ACC" source="BETTING_TAX_CONTRACT_ACC"/>
+    </input>
+    <input node="P_GAMBLE_MACH_FREQ">
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_MACH_FREQ" source="GAMBLING_MACH_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_MACH_CONTRACT_ACC" source="GAMBLING_MACH_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_FREQ_6" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_BPINFO_FREQ" multiJoinCentralTable="J_BPINFO_ABN_ACN_BANKDETAILS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP_TYPE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="ABN"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="ACN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="BKVID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="BANKL"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="BANKN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="CC_BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="BANKDETAILSCOUNT" aggregationType="count">
+        <descriptions defaultDescription="BANKDETAILSCOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="ROYALTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="GAMBLING_MACH_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="OFT_FIN_INST_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="ROYALTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="GAMBLING_MACH_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="OFT_FIN_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_FREQ_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKDETAILSCOUNT" source="BANKDETAILSCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_MACH_FREQ" source="GAMBLING_MACH_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OFT_FIN_INST_FREQ" source="OFT_FIN_INST_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_FREQ" source="INSURANCE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_FREQ" source="VEHICLE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_FREQ" source="BETTING_TAX_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_MACH_CONTRACT_ACC" source="GAMBLING_MACH_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OFT_FIN_CONTRACT_ACC" source="OFT_FIN_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_CONTRACT_ACC" source="INSURANCE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_CONTRACT_ACC" source="VEHICLE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_CONTRACT_ACC" source="BETTING_TAX_CONTRACT_ACC"/>
+    </input>
+    <input node="P_ROYALTY_FREQ">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ROYALTY_FREQ" source="ROYALTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ROYALTY_CONTRACT_ACC" source="ROYALTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_FREQ_7" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_BPINFO_FREQ" multiJoinCentralTable="J_BPINFO_ABN_ACN_BANKDETAILS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP_TYPE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="ABN"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="ACN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="BKVID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="BANKL"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="BANKN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="CC_BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="BANKDETAILSCOUNT" aggregationType="count">
+        <descriptions defaultDescription="BANKDETAILSCOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="PAYROLL_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="ROYALTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="GAMBLING_MACH_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="OFT_FIN_INST_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="PAYROLL_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="ROYALTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="GAMBLING_MACH_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="OFT_FIN_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_FREQ_6">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKDETAILSCOUNT" source="BANKDETAILSCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ROYALTY_FREQ" source="ROYALTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_MACH_FREQ" source="GAMBLING_MACH_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OFT_FIN_INST_FREQ" source="OFT_FIN_INST_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_FREQ" source="INSURANCE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_FREQ" source="VEHICLE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_FREQ" source="BETTING_TAX_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ROYALTY_CONTRACT_ACC" source="ROYALTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_MACH_CONTRACT_ACC" source="GAMBLING_MACH_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OFT_FIN_CONTRACT_ACC" source="OFT_FIN_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_CONTRACT_ACC" source="INSURANCE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_CONTRACT_ACC" source="VEHICLE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_CONTRACT_ACC" source="BETTING_TAX_CONTRACT_ACC"/>
+    </input>
+    <input node="P_PAYROLL_FREQ">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PAYROLL_FREQ" source="PAYROLL_TAX_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PAYROLL_TAX_CONTRACT_ACC" source="PAYROLL_TAX_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_FREQ_8" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_BPINFO_FREQ" multiJoinCentralTable="J_BPINFO_ABN_ACN_BANKDETAILS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP_TYPE_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="ABN"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="ACN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="BKVID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="BANKL"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="BANKN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="CC_BK_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="BANKDETAILSCOUNT" aggregationType="count">
+        <descriptions defaultDescription="BANKDETAILSCOUNT"/>
+      </viewAttribute>
+      <viewAttribute id="PAYROLL_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="GAMBLING_TAX_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="ROYALTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="GAMBLING_MACH_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="OFT_FIN_INST_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_FREQ">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="GAMBLING_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="PAYROLL_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="ROYALTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="GAMBLING_MACH_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="OFT_FIN_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="INSURANCE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="VEHICLE_DUTY_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="BETTING_TAX_CONTRACT_ACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_FREQ_7">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKDETAILSCOUNT" source="BANKDETAILSCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PAYROLL_FREQ" source="PAYROLL_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ROYALTY_FREQ" source="ROYALTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_MACH_FREQ" source="GAMBLING_MACH_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OFT_FIN_INST_FREQ" source="OFT_FIN_INST_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_FREQ" source="INSURANCE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_FREQ" source="VEHICLE_DUTY_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_FREQ" source="BETTING_TAX_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PAYROLL_TAX_CONTRACT_ACC" source="PAYROLL_TAX_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ROYALTY_CONTRACT_ACC" source="ROYALTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_MACH_CONTRACT_ACC" source="GAMBLING_MACH_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OFT_FIN_CONTRACT_ACC" source="OFT_FIN_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INSURANCE_DUTY_CONTRACT_ACC" source="INSURANCE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VEHICLE_DUTY_CONTRACT_ACC" source="VEHICLE_DUTY_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETTING_TAX_CONTRACT_ACC" source="BETTING_TAX_CONTRACT_ACC"/>
+    </input>
+    <input node="P_GAMBLE_FREQ">
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_TAX_FREQ" source="GAMBLING_TAX_FREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GAMBLING_TAX_CONTRACT_ACC" source="GAMBLING_TAX_CONTRACT_ACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_ABN_ACN_BANKDETAILS_1" cardinality="C1_1" joinType="inner" multiJoinNode="J_BPINFO_ABN_ACN_BANKDETAILS" multiJoinCentralTable="J_BPINFO_ABN_ACN" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP Type Description"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+      <viewAttribute id="BANKDETAILSCOUNT" aggregationType="count">
+        <descriptions defaultDescription="Bank Details ID"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_ABN_ACN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+    </input>
+    <input node="BankDetails_Count">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKDETAILSCOUNT" source="BANKDETAILSCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_ABN_ACN_BANKDETAILS_2" cardinality="C1_1" joinType="inner" multiJoinNode="J_BPINFO_ABN_ACN_BANKDETAILS" multiJoinCentralTable="J_BPINFO_ABN_ACN" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE_DESC">
+        <descriptions defaultDescription="BP Type Description"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="ABN">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="ACN">
+        <descriptions defaultDescription="BP: Identification Number"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Full_Name">
+        <descriptions defaultDescription="CC_Full_Name"/>
+      </viewAttribute>
+      <viewAttribute id="BKVID">
+        <descriptions defaultDescription="Bank Details ID"/>
+      </viewAttribute>
+      <viewAttribute id="BANKL">
+        <descriptions defaultDescription="Bank Key"/>
+      </viewAttribute>
+      <viewAttribute id="BANKN">
+        <descriptions defaultDescription="Bank Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BK_VALID_FROM">
+        <descriptions defaultDescription="Bank Details Valid From (Date)"/>
+      </viewAttribute>
+      <viewAttribute id="BANKDETAILSCOUNT" aggregationType="count">
+        <descriptions defaultDescription="Bank Details ID"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_ABN_ACN_BANKDETAILS_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Full_Name" source="CC_Full_Name"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKDETAILSCOUNT" source="BANKDETAILSCOUNT"/>
+    </input>
+    <input node="R_RECENT_BANKDETAILS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKVID" source="BKVID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKL" source="BANKL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANKN" source="BANKN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BK_VALID_FROM" source="CC_BK_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_BPINFO_FREQ_8">
+  <attributes>
+    <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BP no."/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="PARTNER"/>
+    </attribute>
+    <attribute id="BP_TYPE_DESC" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BP Type Description"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="BP_TYPE_DESC"/>
+    </attribute>
+    <attribute id="CLIENT" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="ABN" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BP: Identification Number"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="ABN"/>
+    </attribute>
+    <attribute id="ACN" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BP: Identification Number"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="ACN"/>
+    </attribute>
+    <attribute id="CC_Full_Name" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_Full_Name"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="CC_Full_Name"/>
+    </attribute>
+    <attribute id="BKVID" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Details ID"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="BKVID"/>
+    </attribute>
+    <attribute id="BANKL" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Key"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="BANKL"/>
+    </attribute>
+    <attribute id="BANKN" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Account Number"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="BANKN"/>
+    </attribute>
+    <attribute id="CC_BK_VALID_FROM" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Bank Details Valid From (Date)"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="CC_BK_VALID_FROM"/>
+    </attribute>
+  
+    <attribute id="PAYROLL_FREQ" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fact Value"/>
+  
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="PAYROLL_FREQ"/>
+  
+    </attribute>
+  
+    <attribute id="GAMBLING_TAX_FREQ" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fact Value"/>
+  
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="GAMBLING_TAX_FREQ"/>
+  
+    </attribute>
+    <attribute id="ROYALTY_FREQ" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fact Value"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="ROYALTY_FREQ"/>
+    </attribute>
+    <attribute id="GAMBLING_MACH_FREQ" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fact Value"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="GAMBLING_MACH_FREQ"/>
+    </attribute>
+    <attribute id="OFT_FIN_INST_FREQ" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fact Value"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="OFT_FIN_INST_FREQ"/>
+    </attribute>
+    <attribute id="INSURANCE_DUTY_FREQ" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fact Value"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="INSURANCE_DUTY_FREQ"/>
+    </attribute>
+    <attribute id="VEHICLE_DUTY_FREQ" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fact Value"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="VEHICLE_DUTY_FREQ"/>
+    </attribute>
+    <attribute id="BETTING_TAX_FREQ" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fact Value"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ_8" columnName="BETTING_TAX_FREQ"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="BANKDETAILSCOUNT" order="20" aggregationType="count" measureType="simple">
+      <descriptions defaultDescription="BANKDETAILSCOUNT"/>
+      <measureMapping columnObjectName="J_BPINFO_FREQ_8" columnName="BANKDETAILSCOUNT"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures>
+    <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="CLIENT"/>
+        <attribute attributeName="PARTNER"/>
+        <attribute attributeName="BKVID"/>
+        <attribute attributeName="BANKL"/>
+        <attribute attributeName="BANKN"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      
+      
+      
+      
+      
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="1021" y="105"/>
+    
+      <rectangleSize width="159"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_BPINFO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1046" y="1116"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BPROLE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="809" y="1261"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BP_ABN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="836" y="1116"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BP_ACN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="626" y="1116"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="862" y="956"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_BPINFO" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_BP_ABN" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPINFO_ABN_ACN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="292" y="806"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="J_BPINFO_ABN_ACN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_BP_ACN" modelObjectNameSpace="J_BPINFO_ABN_ACN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BANKDETAILSCURRENT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-164" y="956"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="R_RECENT_BANKDETAILS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-164" y="806"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="BankDetails_Count" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="57" y="806"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BPFACTS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1224" y="796"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BETTING_FREQ" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="603" y="546"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_GAMBLE_FREQ" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="813" y="546"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_GAMBLE_MACH_FREQ" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1233" y="546"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_INSUR_DUT_FREQ" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1653" y="546"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_OFT_FREQ" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="393" y="546"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_PAYROLL_FREQ" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1443" y="546"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_ROYALTY_FREQ" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1023" y="546"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_VEHIC_DUT_FREQ" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1863" y="546"/>
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPINFO_FREQ" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1023" y="237"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_GAMBLE_FREQ" modelObjectNameSpace="J_BPINFO_FREQ" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_BPINFO_FREQ">
+      <upperLeftCorner x="2109" y="-213"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_PAYROLL_FREQ" modelObjectNameSpace="J_BPINFO_FREQ" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_BPINFO_FREQ">
+      <upperLeftCorner x="2100" y="-543"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_ROYALTY_FREQ" modelObjectNameSpace="J_BPINFO_FREQ" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_BPINFO_FREQ">
+      <upperLeftCorner x="1460" y="-546"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_GAMBLE_MACH_FREQ" modelObjectNameSpace="J_BPINFO_FREQ" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_BPINFO_FREQ">
+      <upperLeftCorner x="1453" y="-393"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_OFT_FREQ" modelObjectNameSpace="J_BPINFO_FREQ" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_BPINFO_FREQ">
+      <upperLeftCorner x="1460" y="-241"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_INSUR_DUT_FREQ" modelObjectNameSpace="J_BPINFO_FREQ" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_BPINFO_FREQ">
+      <upperLeftCorner x="1460" y="-80"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_VEHIC_DUT_FREQ" modelObjectNameSpace="J_BPINFO_FREQ" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_BPINFO_FREQ">
+      <upperLeftCorner x="2100" y="-384"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" modelObjectNameSpace="J_BPINFO_FREQ" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_BPINFO_FREQ">
+      <upperLeftCorner x="1789" y="-423"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_BETTING_FREQ" modelObjectNameSpace="J_BPINFO_FREQ" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_BPINFO_FREQ">
+      <upperLeftCorner x="2109" y="-58"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_BPINFO_ABN_ACN_BANKDETAILS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="132" y="541"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_ABN_ACN" modelObjectNameSpace="J_BPINFO_ABN_ACN_BANKDETAILS" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_BPINFO_ABN_ACN_BANKDETAILS">
+      <upperLeftCorner x="56" y="188"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="R_RECENT_BANKDETAILS" modelObjectNameSpace="J_BPINFO_ABN_ACN_BANKDETAILS" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_BPINFO_ABN_ACN_BANKDETAILS">
+      <upperLeftCorner x="488" y="99"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="BankDetails_Count" modelObjectNameSpace="J_BPINFO_ABN_ACN_BANKDETAILS" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_BPINFO_ABN_ACN_BANKDETAILS">
+      <upperLeftCorner x="458" y="331"/>
+      <rectangleSize width="250"/>
+    </shape></shapes>
+</layout>
+</Calculation:scenario>
