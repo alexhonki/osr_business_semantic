@@ -35,9 +35,6 @@
       <viewAttribute id="AccountBalanceStatus">
         <descriptions defaultDescription="Account Balance Status"/>
       </viewAttribute>
-      <viewAttribute id="OpenItemBalance">
-        <descriptions defaultDescription="OpenItemBalance"/>
-      </viewAttribute>
       <viewAttribute id="DFKKOP_FAEDN">
         <descriptions defaultDescription="Due date for net payment"/>
       </viewAttribute>
@@ -46,7 +43,11 @@
       </viewAttribute>
       <viewAttribute id="OpenItemFlag">
         <descriptions defaultDescription="OpenItemFlag"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="CreditDebitFlag">
+        <descriptions defaultDescription="CreditDebitFlag"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="DueDate" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;STUDT&quot;='00000000',&quot;DFKKOP_FAEDN&quot;,&quot;STUDT&quot;)</formula>
@@ -58,63 +59,41 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceStatus" source="AccountBalanceStatus"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemBalance" source="OpenItemBalance"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_FAEDN" source="DFKKOP_FAEDN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STUDT" source="STUDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/></input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
+    </input>
     <filter>&quot;AccountBalanceStatus&quot; = 'Debit Balance' AND &quot;OpenItemFlag&quot; = 'X' AND date('$$IP_KeyDate$$') &gt; date(&quot;DueDate&quot;)</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
-    <viewAttributes>
-      <viewAttribute id="VTREF">
-        <descriptions defaultDescription="VTREF"/>
-      </viewAttribute>
-      <viewAttribute id="FirstDueDate" aggregationType="min">
-        <descriptions defaultDescription="DueDate"/>
-      </viewAttribute>
-      <viewAttribute id="OpenItemBalance" aggregationType="sum">
-        <descriptions defaultDescription="OpenItemBalance"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="AccountStatus" datatype="NVARCHAR" length="7" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(date(&quot;FirstDueDate&quot;)&lt;date('$$IP_KeyDate$$'),
-    'WIP', //Work in Progress
-    'WIP'
-)</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
-    <restrictedViewAttributes/>
-    <input node="P_FNFINANCIALS">
-      <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FirstDueDate" source="DueDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemBalance" source="OpenItemBalance"/>
-    </input>
-  </calculationView>
 </calculationViews>
-<logicalModel id="Aggregation_1">
+<logicalModel id="P_FNFINANCIALS">
   <attributes>
     <attribute id="VTREF" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="VTREF"/>
-      <keyMapping columnObjectName="Aggregation_1" columnName="VTREF"/>
+      <descriptions defaultDescription="Reference Specifications from Contract"/>
+      <keyMapping columnObjectName="P_FNFINANCIALS" columnName="VTREF"/>
     </attribute>
-    <attribute id="AccountStatus" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="AccountStatus"/>
-      <keyMapping columnObjectName="Aggregation_1" columnName="AccountStatus"/>
+    <attribute id="CreditDebitFlag" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CreditDebitFlag"/>
+      <keyMapping columnObjectName="P_FNFINANCIALS" columnName="CreditDebitFlag"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="FirstDueDate" order="2" aggregationType="min" measureType="simple">
-      <descriptions defaultDescription="DueDate"/>
-      <measureMapping columnObjectName="Aggregation_1" columnName="FirstDueDate"/>
-    </measure>
-    <measure id="OpenItemBalance" order="3" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="OpenItemBalance"/>
-      <measureMapping columnObjectName="Aggregation_1" columnName="OpenItemBalance"/>
+    <measure id="BETRH" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
+      <measureMapping columnObjectName="P_FNFINANCIALS" columnName="BETRH"/>
     </measure>
   </baseMeasures>
-  <calculatedMeasures/>
+  <calculatedMeasures>
+    <measure id="ContractCounter" order="4" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="Contract Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="VTREF"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
@@ -124,14 +103,8 @@
       <upperLeftCorner x="40" y="85"/>
     </shape>
     <shape expanded="true" modelObjectName="P_FNFINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="107" y="453"/>
+      <upperLeftCorner x="107" y="258"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="107" y="308"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
