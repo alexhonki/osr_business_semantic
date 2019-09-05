@@ -228,43 +228,46 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="STAT_DELETED" source="STAT_DELETED"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_BUT000CRM">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMBUT000">
     <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
       <viewAttribute id="MC_NAME1">
-        <descriptions defaultDescription="MC_NAME1"/>
+        <descriptions defaultDescription="Search Help Field 1 (Name 1/Last Name)"/>
       </viewAttribute>
       <viewAttribute id="MC_NAME2">
-        <descriptions defaultDescription="MC_NAME2"/>
-      </viewAttribute>
-    
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="PARTNER">
-        <descriptions defaultDescription="PARTNER"/>
+        <descriptions defaultDescription="Search Help Field 2 (Name 2/First Name)"/>
       </viewAttribute>
       <viewAttribute id="NAME_LAST">
-        <descriptions defaultDescription="NAME_LAST"/>
+        <descriptions defaultDescription="Surname"/>
       </viewAttribute>
       <viewAttribute id="NAME_FIRST">
-        <descriptions defaultDescription="NAME_FIRST"/>
+        <descriptions defaultDescription="First Name"/>
       </viewAttribute>
       <viewAttribute id="TYPE">
         <descriptions defaultDescription="TYPE"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_CasePartner" datatype="NVARCHAR" length="76" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;TYPE&quot;='1',&quot;NAME_FIRST&quot;+' '+ &quot;NAME_LAST&quot;,&quot;MC_NAME1&quot;)</formula>
+      <calculatedViewAttribute id="CC_CasePartner" datatype="NVARCHAR" length="152" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;TYPE&quot;='1',&quot;NAME_FIRST&quot;+' '+ &quot;NAME_LAST&quot;,&quot;MC_NAME1&quot;+' '+ &quot;MC_NAME2&quot;)
+
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_BP_Type" datatype="NVARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;TYPE&quot; = '1', 'Individual', if(&quot;TYPE&quot;='2', 'Organisation','Group'))</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::BUT000_CRM">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MC_NAME1" source="MC_NAME1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MC_NAME2" source="MC_NAME2"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="NAME_LAST" source="NAME_LAST"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="NAME_FIRST" source="NAME_FIRST"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
@@ -1150,7 +1153,7 @@
     <joinAttribute name="MANDT"/>
     <joinAttribute name="CASE_GUID"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_INDEX_PARTNERNAMES" cardinality="C1_N" joinType="rightOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_INDEX_PARTNERNAMES" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="CRM_SCH_REF_TIME" aggregationType="sum">
         <descriptions defaultDescription="CRM_SCH_REF_TIME"/>
@@ -1413,8 +1416,26 @@
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
-      <viewAttribute hidden="true" id="JOIN$CLIENT$MANDT"/>
-      <viewAttribute hidden="true" id="JOIN$PARTNER$PARTNER_NO"/>
+      <viewAttribute id="MC_NAME1">
+        <descriptions defaultDescription="MC_NAME1"/>
+      </viewAttribute>
+      <viewAttribute id="MC_NAME2">
+        <descriptions defaultDescription="MC_NAME2"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_LAST">
+        <descriptions defaultDescription="NAME_LAST"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_FIRST">
+        <descriptions defaultDescription="NAME_FIRST"/>
+      </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$MANDT$CLIENT"/>
+      <viewAttribute hidden="true" id="JOIN$PARTNER_NO$PARTNER"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_DateChanged" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
@@ -1429,7 +1450,7 @@
     
       <calculatedViewAttribute id="CC_DatePlanClose" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>&quot;ZZ_PLNCLS_DATE&quot;</formula>
+        <formula>&quot;PLAN_END_DATE&quot;</formula>
     
       </calculatedViewAttribute>
     
@@ -1487,11 +1508,6 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="P_BUT000CRM">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CasePartner" source="CC_CasePartner"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CLIENT$MANDT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER$PARTNER_NO" source="PARTNER"/>
-    </input>
     <input node="J_ATTRIBUTES_INDEX">
       <mapping xsi:type="Calculation:AttributeMapping" target="CRM_SCH_REF_TIME" source="CRM_SCH_REF_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CRM_BUS_REF_TIME" source="CRM_BUS_REF_TIME"/>
@@ -1535,7 +1551,6 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZCURRENT_ACTION" source="ZZCURRENT_ACTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZSUCCESS_EST" source="ZZSUCCESS_EST"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZFLD00008I" source="ZZFLD00008I"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CRM_CASE_TITLE" source="CRM_CASE_TITLE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
@@ -1562,7 +1577,6 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="STAT_LINE" source="STAT_LINE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STAT_USER_LINE" source="STAT_USER_LINE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE" source="REASON_CODE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO" source="PARTNER_NO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_FCT" source="PARTNER_FCT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CRM_MAIN_PARTNER" source="CRM_MAIN_PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STAT_OPEN" source="STAT_OPEN"/>
@@ -1579,11 +1593,24 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CLIENT$MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER$PARTNER_NO" source="PARTNER_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$CLIENT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER_NO$PARTNER" source="PARTNER_NO"/>
     </input>
-    <joinAttribute name="JOIN$CLIENT$MANDT"/>
-    <joinAttribute name="JOIN$PARTNER$PARTNER_NO"/>
+    <input node="P_CRMBUT000">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CasePartner" source="CC_CasePartner"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MC_NAME1" source="MC_NAME1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MC_NAME2" source="MC_NAME2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_LAST" source="NAME_LAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_FIRST" source="NAME_FIRST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER_NO$PARTNER" source="PARTNER"/>
+    </input>
+    <joinAttribute name="JOIN$MANDT$CLIENT"/>
+    <joinAttribute name="JOIN$PARTNER_NO$PARTNER"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_CREATEDUSER_CASE" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
@@ -1936,6 +1963,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -2058,6 +2091,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_USER_INFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="UserCreatedBy" source="NAME_TEXT"/>
@@ -2412,6 +2447,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -2448,7 +2489,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTPRIMTAX" source="ZZTOTPRIMTAX"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTUTI" source="ZZTOTUTI"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTPENALTY" source="ZZTOTPENALTY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZCOURTCOSTS" source="ZZCOURTCOSTS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZCOURTCOSTS" source="COLL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTCASEDEPT" source="ZZTOTCASEDEPT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTCASEDEPT2" source="ZZTOTCASEDEPT2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTCOLL" source="ZZTOTCOLL"/>
@@ -2530,6 +2571,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_SUCCESS_EST">
       <mapping xsi:type="Calculation:AttributeMapping" target="SuccessEst" source="DDTEXT"/>
@@ -2671,7 +2714,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="ZZTOTPENALTY">
         <descriptions defaultDescription="ZZTOTPENALTY"/>
       </viewAttribute>
-      <viewAttribute id="ZZCOURTCOSTS">
+      <viewAttribute id="COLL">
         <descriptions defaultDescription="ZZCOURTCOSTS"/>
       </viewAttribute>
       <viewAttribute id="ZZTOTCASEDEPT">
@@ -2916,6 +2959,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -2952,7 +3001,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTPRIMTAX" source="ZZTOTPRIMTAX"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTUTI" source="ZZTOTUTI"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTPENALTY" source="ZZTOTPENALTY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZCOURTCOSTS" source="ZZCOURTCOSTS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLL" source="ZZCOURTCOSTS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTCASEDEPT" source="ZZTOTCASEDEPT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTCASEDEPT2" source="ZZTOTCASEDEPT2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTCOLL" source="ZZTOTCOLL"/>
@@ -3034,6 +3083,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_CAMPAIGN_DESC">
       <mapping xsi:type="Calculation:AttributeMapping" target="CAMP_TYPETX" source="CAMP_TYPETX"/>
@@ -3405,6 +3456,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -3523,6 +3580,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_PARTNER_FUNCT">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERFUNC_DESC" source="DESCRIPTION"/>
@@ -3896,6 +3955,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -4014,6 +4079,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_SECURITY">
       <mapping xsi:type="Calculation:AttributeMapping" target="SECURITYLVL_DESC" source="DESCRIPTION"/>
@@ -4384,6 +4451,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -4501,6 +4574,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_PRIORITY">
       <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESC" source="DESCRIPTION"/>
@@ -4868,6 +4943,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -4984,6 +5065,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_ESCALATION">
       <mapping xsi:type="Calculation:AttributeMapping" target="ESCALATION_DESC" source="DESCRIPTION"/>
@@ -5348,6 +5431,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -5463,6 +5552,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_REASONS">
       <mapping xsi:type="Calculation:AttributeMapping" target="REASON_DESC" source="DESCRIPTION"/>
@@ -5826,6 +5917,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -5940,6 +6037,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_CASESTATUS_DESC">
       <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_DESC" source="STAT_ORDNO_DESCR"/>
@@ -6306,6 +6405,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -6420,6 +6525,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_CATEGORY">
       <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY_DESC" source="DESCRIPTION"/>
@@ -6781,6 +6888,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -6893,6 +7006,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_CASETYPE_DESC">
       <mapping xsi:type="Calculation:AttributeMapping" target="CASETYPE_DESC" source="DESCRIPTION"/>
@@ -7309,6 +7424,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -7431,6 +7552,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_USER_INFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="UserChangedBy" source="NAME_TEXT"/>
@@ -7796,6 +7919,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -7919,6 +8048,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_USER_INFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="UserClosedBy" source="NAME_TEXT"/>
@@ -8287,6 +8418,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -8411,6 +8548,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_USER_INFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="UserProcessor" source="NAME_TEXT"/>
@@ -8788,6 +8927,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum">
         <descriptions defaultDescription="_OSRQLD_REFUND"/>
       </viewAttribute>
+      <viewAttribute id="TYPE">
+        <descriptions defaultDescription="TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Type">
+        <descriptions defaultDescription="CC_BP_Type"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -8913,6 +9058,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
     </input>
     <input node="P_USER_INFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="UserResponsible" source="NAME_TEXT"/>
@@ -8957,7 +9104,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     </attribute>
   
     <attribute id="PARTNERFUNC_DESC" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Partner Function Desc"/>
+      <descriptions defaultDescription="Parties Involved Functions"/>
   
       <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNERFUNC_DESC"/>
   
@@ -9050,42 +9197,6 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <descriptions defaultDescription="Campaign Type"/>
       <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZCAMPTYPE"/>
     </attribute>
-    <attribute id="ZZTOTPRIMTAX" order="35" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Total primary tax"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTPRIMTAX"/>
-    </attribute>
-    <attribute id="ZZTOTUTI" order="36" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Total UTI"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTUTI"/>
-    </attribute>
-    <attribute id="ZZTOTPENALTY" order="37" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Total Penalties"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTPENALTY"/>
-    </attribute>
-    <attribute id="ZZCOURTCOSTS" order="38" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Total court costs"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZCOURTCOSTS"/>
-    </attribute>
-    <attribute id="ZZTOTCASEDEPT" order="39" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Total Case Debt"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTCASEDEPT"/>
-    </attribute>
-    <attribute id="ZZTOTCASEDEPT2" order="40" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Case Debt"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTCASEDEPT2"/>
-    </attribute>
-    <attribute id="ZZTOTCOLL" order="41" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Total collected"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTCOLL"/>
-    </attribute>
-    <attribute id="ZZTOTWO" order="42" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Total written off value"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTWO"/>
-    </attribute>
-    <attribute id="ZZTOTREC" order="43" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Total of open receivables"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTREC"/>
-    </attribute>
     <attribute id="ZZFLD00003I" order="45" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case outcome"/>
       <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZFLD00003I"/>
@@ -9130,13 +9241,25 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <descriptions defaultDescription="CREATED_BY"/>
       <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CREATED_BY"/>
     </attribute>
+    <attribute id="CREATE_TIME" order="56" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CREATE_TIME"/>
+      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CREATE_TIME"/>
+    </attribute>
     <attribute id="CHANGED_BY" order="57" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="UserChangedBy">
       <descriptions defaultDescription="CHANGED_BY"/>
       <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CHANGED_BY"/>
     </attribute>
+    <attribute id="CHANGE_TIME" order="58" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHANGE_TIME"/>
+      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CHANGE_TIME"/>
+    </attribute>
     <attribute id="CLOSED_BY" order="59" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="UserClosedBy">
       <descriptions defaultDescription="CLOSED_BY"/>
       <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CLOSED_BY"/>
+    </attribute>
+    <attribute id="CLOSING_TIME" order="60" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CLOSING_TIME"/>
+      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CLOSING_TIME"/>
     </attribute>
     <attribute id="PLAN_END_DATE" order="61" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PLAN_END_DATE"/>
@@ -9195,7 +9318,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_USER_LINE"/>
     </attribute>
     <attribute id="REASON_CODE" order="75" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="REASON_DESC">
-      <descriptions defaultDescription="Case Reason ID"/>
+      <descriptions defaultDescription="Result ID"/>
       <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="REASON_CODE"/>
     </attribute>
     <attribute id="PARTNER_NO" order="76" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_CasePartner">
@@ -9267,7 +9390,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STATUS_DESC"/>
     </attribute>
     <attribute id="REASON_DESC" order="93" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Reason Desc"/>
+      <descriptions defaultDescription="Result Desc"/>
       <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="REASON_DESC"/>
     </attribute>
     <attribute id="SECURITYLVL_DESC" order="94" displayAttribute="false" attributeHierarchyActive="false">
@@ -9372,6 +9495,14 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <descriptions defaultDescription="Case Outcome Reason"/>
       <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="_OSRQLD_F009L"/>
     </attribute>
+    <attribute id="TYPE" order="119" descriptionColumnName="CC_BP_Type" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TYPE"/>
+      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="TYPE"/>
+    </attribute>
+    <attribute id="CC_BP_Type" order="120" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_BP_Type"/>
+      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_BP_Type"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -9387,21 +9518,45 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <descriptions defaultDescription="Total Assessments"/>
       <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTASSMT"/>
     </measure>
+    <measure id="ZZTOTPRIMTAX" order="35" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total primary tax"/>
+      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTPRIMTAX"/>
+    </measure>
+    <measure id="ZZTOTUTI" order="36" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total UTI"/>
+      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTUTI"/>
+    </measure>
+    <measure id="ZZTOTPENALTY" order="37" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total Penalties"/>
+      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTPENALTY"/>
+    </measure>
+    <measure id="ZZCOURTCOSTS" order="38" aggregationType="count" measureType="simple">
+      <descriptions defaultDescription="Total court costs"/>
+      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZCOURTCOSTS"/>
+    </measure>
+    <measure id="ZZTOTCASEDEPT" order="39" aggregationType="count" measureType="simple">
+      <descriptions defaultDescription="Total Case Debt"/>
+      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTCASEDEPT"/>
+    </measure>
+    <measure id="ZZTOTCASEDEPT2" order="40" aggregationType="count" measureType="simple">
+      <descriptions defaultDescription="Case Debt"/>
+      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTCASEDEPT2"/>
+    </measure>
+    <measure id="ZZTOTCOLL" order="41" aggregationType="count" measureType="simple">
+      <descriptions defaultDescription="Total collected"/>
+      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTCOLL"/>
+    </measure>
+    <measure id="ZZTOTWO" order="42" aggregationType="count" measureType="simple">
+      <descriptions defaultDescription="Total written off value"/>
+      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTWO"/>
+    </measure>
+    <measure id="ZZTOTREC" order="43" aggregationType="count" measureType="simple">
+      <descriptions defaultDescription="Total of open receivables"/>
+      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTREC"/>
+    </measure>
     <measure id="ZZJUDGEAMT" order="44" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Judgement Amount"/>
       <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZJUDGEAMT"/>
-    </measure>
-    <measure id="CREATE_TIME" order="56" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="CREATE_TIME"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CREATE_TIME"/>
-    </measure>
-    <measure id="CHANGE_TIME" order="58" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="CHANGE_TIME"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CHANGE_TIME"/>
-    </measure>
-    <measure id="CLOSING_TIME" order="60" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="CLOSING_TIME"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CLOSING_TIME"/>
     </measure>
   
     <measure id="_OSRQLD_REFUND" order="118" aggregationType="sum" measureType="simple">
@@ -9449,8 +9604,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize height="30" width="160"/>
     </shape>
   
-    <shape expanded="true" modelObjectName="P_BUT000CRM" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="217" y="2776"/>
+    <shape expanded="true" modelObjectName="P_CRMBUT000" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="204" y="2776"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CRMD_CMGCASE_AT" modelObjectNameSpace="CalculationView">
@@ -9486,11 +9641,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <upperLeftCorner x="244" y="2616"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="P_BUT000CRM" modelObjectNameSpace="J_INDEX_PARTNERNAMES" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
+    <shape modelObjectName="J_ATTRIBUTES_INDEX" modelObjectNameSpace="J_INDEX_PARTNERNAMES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="650" y="-38"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="J_ATTRIBUTES_INDEX" modelObjectNameSpace="J_INDEX_PARTNERNAMES" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_CRMBUT000" modelObjectNameSpace="J_INDEX_PARTNERNAMES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
