@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_SnapshotCalendar"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Calendar">
+    <viewAttributes>
+      <viewAttribute id="DATE_SQL">
+        <descriptions defaultDescription="Date"/>
+      </viewAttribute>
+      <viewAttribute id="CalendarYear">
+        <descriptions defaultDescription="Year"/>
+      </viewAttribute>
+      <viewAttribute id="CalendarQuarter">
+        <descriptions defaultDescription="Calendar Quarter"/>
+      </viewAttribute>
+      <viewAttribute id="CalendarMonth">
+        <descriptions defaultDescription="Calendar Month"/>
+      </viewAttribute>
+      <viewAttribute id="CalendarWeek">
+        <descriptions defaultDescription="Calendar Week"/>
+      </viewAttribute>
+      <viewAttribute id="DayOfWeek">
+        <descriptions defaultDescription="Day of Week"/>
+      </viewAttribute>
+      <viewAttribute id="DayOfMonth">
+        <descriptions defaultDescription="Day of Month"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BusinessDay">
+        <descriptions defaultDescription="Business Day"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FinYear">
+        <descriptions defaultDescription="Financial Year"/>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="Monthly" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(date(&quot;DATE_SQL&quot;)=date(&quot;EndOfMonth&quot;),'X','')</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="Weekly" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;DayOfWeek&quot;='06','X','')</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="Quarterly" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CalendarMonth&quot;='03' AND &quot;DayOfMonth&quot;='31','X',
+    if(&quot;CalendarMonth&quot;='06' AND &quot;DayOfMonth&quot;='30','X',
+        if(&quot;CalendarMonth&quot;='09' AND &quot;DayOfMonth&quot;='30','X',
+            if(&quot;CalendarMonth&quot;='12' AND &quot;DayOfMonth&quot;='31','X',
+                ''
+            )
+        )
+    )
+)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="Yearly" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CalendarMonth&quot;='12' AND &quot;DayOfMonth&quot;='31','X','')</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CalendarYear" source="CalendarYear"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CalendarQuarter" source="CalendarQuarter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CalendarMonth" source="CalendarMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CalendarWeek" source="CalendarWeek"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DayOfWeek" source="DayOfWeek"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DayOfMonth" source="DayOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BusinessDay" source="CC_BusinessDay"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FinYear" source="CC_FinYear"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="P_Calendar">
+  <attributes>
+    <attribute id="DATE_SQL" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Date"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="DATE_SQL"/>
+    </attribute>
+    <attribute id="CalendarYear" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Year"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="CalendarYear"/>
+    </attribute>
+    <attribute id="CalendarQuarter" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Calendar Quarter"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="CalendarQuarter"/>
+    </attribute>
+    <attribute id="CalendarMonth" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Calendar Month"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="CalendarMonth"/>
+    </attribute>
+    <attribute id="CalendarWeek" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Calendar Week"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="CalendarWeek"/>
+    </attribute>
+    <attribute id="DayOfWeek" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Day of Week"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="DayOfWeek"/>
+    </attribute>
+    <attribute id="DayOfMonth" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Day of Month"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="DayOfMonth"/>
+    </attribute>
+    <attribute id="CC_BusinessDay" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Day"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="CC_BusinessDay"/>
+    </attribute>
+    <attribute id="CC_FinYear" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Financial Year"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="CC_FinYear"/>
+    </attribute>
+    <attribute id="EndOfMonth" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EndOfMonth"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="EndOfMonth"/>
+    </attribute>
+    <attribute id="FiscalMonth" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FiscalMonth"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="FiscalMonth"/>
+    </attribute>
+    <attribute id="Monthly" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Monthly"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="Monthly"/>
+    </attribute>
+    <attribute id="Weekly" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Weekly"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="Weekly"/>
+    </attribute>
+    <attribute id="Quarterly" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Quarterly"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="Quarterly"/>
+    </attribute>
+    <attribute id="Yearly" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Yearly"/>
+      <keyMapping columnObjectName="P_Calendar" columnName="Yearly"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures>
+    <measure id="Counter" order="16" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="DATE_SQL"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_Calendar" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="375"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
