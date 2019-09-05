@@ -16,6 +16,9 @@
   <DataSource id="osr.business.semantic.db.synonyms::CEPCT">
     <resourceUri>osr.business.semantic.db.synonyms::CEPCT</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_Financials">
@@ -635,11 +638,20 @@
       <viewAttribute id="BLART">
         <descriptions defaultDescription="Document Type"/>
       </viewAttribute>
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_GPART">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
       <viewAttribute hidden="true" id="JOIN$OPUPK$DFKKOP_OPUPK"/>
-      <viewAttribute hidden="true" id="JOIN$OPBEL$OPBEL"/>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_BUDAT" datatype="DATE" expressionLanguage="SQL">
+        <formula>&quot;DFKK_H_BUDAT&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="P_DFKKOPK">
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_BETRH" source="BETRH"/>
@@ -647,9 +659,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_PRCTR" source="PRCTR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_KONTL" source="KONTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OPUPK$DFKKOP_OPUPK" source="OPUPK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OPBEL$OPBEL" source="OPBEL"/>
     </input>
     <input node="P_CV_Financials">
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BETRH" source="BETRH"/>
@@ -662,13 +674,14 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="XANZA" source="XANZA"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OPUPK$DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OPBEL$OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
     </input>
     <joinAttribute name="JOIN$MANDT$MANDT"/>
     <joinAttribute name="JOIN$OPUPK$DFKKOP_OPUPK"/>
-    <joinAttribute name="JOIN$OPBEL$OPBEL"/>
+    <joinAttribute name="OPBEL"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKOPK">
     <viewAttributes>
@@ -687,14 +700,14 @@
       <viewAttribute id="KONTL">
         <descriptions defaultDescription="KONTL"/>
       </viewAttribute>
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute>
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
       </viewAttribute>
       <viewAttribute id="OPUPK">
         <descriptions defaultDescription="OPUPK"/>
-      </viewAttribute>
-      <viewAttribute id="OPBEL">
-        <descriptions defaultDescription="OPBEL"/>
       </viewAttribute>
       <viewAttribute id="BUKRS">
         <descriptions defaultDescription="BUKRS"/>
@@ -1034,100 +1047,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_COSTCENTRE" cardinality="CN_1" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="DFKKOPK_BETRH" aggregationType="sum">
-        <descriptions defaultDescription="DFKKOPK_BETRH"/>
-      </viewAttribute>
-      <viewAttribute id="DFKKOP_BETRH" aggregationType="sum">
-        <descriptions defaultDescription="DFKKOP_BETRH"/>
-      </viewAttribute>
-      <viewAttribute id="PRCTR">
-        <descriptions defaultDescription="PRCTR"/>
-      </viewAttribute>
-      <viewAttribute id="HKONT">
-        <descriptions defaultDescription="HKONT"/>
-      </viewAttribute>
-      <viewAttribute id="DFKKOP_OPUPK">
-        <descriptions defaultDescription="DFKKOP_OPUPK"/>
-      </viewAttribute>
-      <viewAttribute id="KOSTL">
-        <descriptions defaultDescription="KOSTL"/>
-      </viewAttribute>
-    
-      <viewAttribute id="KTEXT">
-        <descriptions defaultDescription="KTEXT"/>
-      </viewAttribute>
-      <viewAttribute id="LTEXT">
-        <descriptions defaultDescription="LTEXT"/>
-      </viewAttribute>
-      <viewAttribute id="MCTXT">
-        <descriptions defaultDescription="MCTXT"/>
-      </viewAttribute>
-      <viewAttribute id="DFKKOPK_HKONT">
-        <descriptions defaultDescription="DFKKOPK_HKONT"/>
-      </viewAttribute>
-      <viewAttribute id="DFKKOPK_PRCTR">
-        <descriptions defaultDescription="DFKKOPK_PRCTR"/>
-      </viewAttribute>
-    
-      <viewAttribute id="DFKKOPK_KONTL">
-        <descriptions defaultDescription="DFKKOPK_KONTL"/>
-      </viewAttribute>
-      <viewAttribute id="DFKKOP_KONTL">
-        <descriptions defaultDescription="DFKKOP_KONTL"/>
-      </viewAttribute>
-    
-      <viewAttribute id="DFKK_H_BUDAT">
-        <descriptions defaultDescription="Posting Date in the Document"/>
-      </viewAttribute>
-      <viewAttribute id="VTPOS">
-        <descriptions defaultDescription="VTPOS"/>
-      </viewAttribute>
-    
-      <viewAttribute id="XANZA">
-        <descriptions defaultDescription="XANZA"/>
-      </viewAttribute>
-      <viewAttribute id="OpenItemFlag">
-        <descriptions defaultDescription="OpenItemFlag"/>
-      </viewAttribute>
-    
-      <viewAttribute id="BLART">
-        <descriptions defaultDescription="Document Type"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="J_DFKKOP_DFKKOPK">
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_BETRH" source="DFKKOPK_BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BETRH" source="DFKKOP_BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="DFKKOP_PRCTR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="DFKKOP_HKONT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_HKONT" source="DFKKOPK_HKONT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_PRCTR" source="DFKKOPK_PRCTR"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_KONTL" source="DFKKOPK_KONTL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_KONTL" source="DFKKOP_KONTL"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VTPOS" source="VTPOS"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="XANZA" source="XANZA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
-    </input>
-    <input node="P_CSKT">
-      <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MCTXT" source="MCTXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
-    </input>
-    <joinAttribute name="KOSTL"/>
-  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CSKT" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="KTEXT">
@@ -1235,6 +1154,22 @@
       <viewAttribute id="BLART">
         <descriptions defaultDescription="BLART"/>
       </viewAttribute>
+    
+      <viewAttribute id="CC_FinYear">
+        <descriptions defaultDescription="CC_FinYear"/>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_GPART">
+        <descriptions defaultDescription="DFKK_H_GPART"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1258,6 +1193,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FinYear" source="CC_FinYear"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
     </input>
     <input node="P_CEPCT">
       <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT_1" source="KTEXT"/>
@@ -1266,6 +1207,162 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
     </input>
     <joinAttribute name="PRCTR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_COSTCENTRE" cardinality="CN_1" joinType="leftOuter" multiJoinNode="J_COSTCENTRE" multiJoinCentralTable="Join_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="DFKKOPK_BETRH" aggregationType="sum">
+        <descriptions defaultDescription="DFKKOPK_BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_BETRH" aggregationType="sum">
+        <descriptions defaultDescription="DFKKOP_BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_OPUPK">
+        <descriptions defaultDescription="DFKKOP_OPUPK"/>
+      </viewAttribute>
+      <viewAttribute id="KOSTL">
+        <descriptions defaultDescription="KOSTL"/>
+      </viewAttribute>
+      <viewAttribute id="KTEXT">
+        <descriptions defaultDescription="KTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="LTEXT">
+        <descriptions defaultDescription="LTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="MCTXT">
+        <descriptions defaultDescription="MCTXT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOPK_HKONT">
+        <descriptions defaultDescription="DFKKOPK_HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOPK_PRCTR">
+        <descriptions defaultDescription="DFKKOPK_PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOPK_KONTL">
+        <descriptions defaultDescription="DFKKOPK_KONTL"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_KONTL">
+        <descriptions defaultDescription="DFKKOP_KONTL"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+      </viewAttribute>
+      <viewAttribute id="VTPOS">
+        <descriptions defaultDescription="VTPOS"/>
+      </viewAttribute>
+      <viewAttribute id="XANZA">
+        <descriptions defaultDescription="XANZA"/>
+      </viewAttribute>
+      <viewAttribute id="OpenItemFlag">
+        <descriptions defaultDescription="OpenItemFlag"/>
+      </viewAttribute>
+      <viewAttribute id="BLART">
+        <descriptions defaultDescription="Document Type"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FinYear">
+        <descriptions defaultDescription="Financial Year"/>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_GPART">
+        <descriptions defaultDescription="DFKK_H_GPART"/>
+      </viewAttribute>
+    
+      <viewAttribute id="DFKKOPK_BETRH_1" aggregationType="sum">
+        <descriptions defaultDescription="DFKKOPK_BETRH_1"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_BETRH_1" aggregationType="sum">
+        <descriptions defaultDescription="DFKKOP_BETRH_1"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_OPUPK_1">
+        <descriptions defaultDescription="DFKKOP_OPUPK_1"/>
+      </viewAttribute>
+      <viewAttribute id="KOSTL_1">
+        <descriptions defaultDescription="KOSTL_1"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOPK_HKONT_1">
+        <descriptions defaultDescription="DFKKOPK_HKONT_1"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOPK_PRCTR_1">
+        <descriptions defaultDescription="DFKKOPK_PRCTR_1"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOPK_KONTL_1">
+        <descriptions defaultDescription="DFKKOPK_KONTL_1"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_KONTL_1">
+        <descriptions defaultDescription="DFKKOP_KONTL_1"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT_1">
+        <descriptions defaultDescription="DFKK_H_BUDAT_1"/>
+      </viewAttribute>
+      <viewAttribute id="VTPOS_1">
+        <descriptions defaultDescription="VTPOS_1"/>
+      </viewAttribute>
+      <viewAttribute id="XANZA_1">
+        <descriptions defaultDescription="XANZA_1"/>
+      </viewAttribute>
+      <viewAttribute id="OpenItemFlag_1">
+        <descriptions defaultDescription="OpenItemFlag_1"/>
+      </viewAttribute>
+      <viewAttribute id="BLART_1">
+        <descriptions defaultDescription="BLART_1"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_BETRH" source="DFKKOPK_BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BETRH" source="DFKKOP_BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="DFKKOP_PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="DFKKOP_HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_HKONT" source="DFKKOPK_HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_PRCTR" source="DFKKOPK_PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_KONTL" source="DFKKOPK_KONTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_KONTL" source="DFKKOP_KONTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTPOS" source="VTPOS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XANZA" source="XANZA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_BETRH_1" source="DFKKOPK_BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BETRH_1" source="DFKKOP_BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK_1" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL_1" source="KOSTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_HKONT_1" source="DFKKOPK_HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_PRCTR_1" source="DFKKOPK_PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_KONTL_1" source="DFKKOPK_KONTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_KONTL_1" source="DFKKOP_KONTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT_1" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTPOS_1" source="VTPOS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XANZA_1" source="XANZA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag_1" source="OpenItemFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BLART_1" source="BLART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FinYear" source="CC_FinYear"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
+    </input>
+    <input node="P_CSKT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MCTXT" source="MCTXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+    </input>
+    <joinAttribute name="KOSTL"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CEPCT">
     <viewAttributes>
@@ -1293,6 +1390,126 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MCTXT" source="MCTXT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="DFKKOPK_BETRH" aggregationType="sum">
+        <descriptions defaultDescription="DFKKOPK_BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_BETRH" aggregationType="sum">
+        <descriptions defaultDescription="DFKKOP_BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_PRCTR">
+        <descriptions defaultDescription="DFKKOP_PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_HKONT">
+        <descriptions defaultDescription="DFKKOP_HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_OPUPK">
+        <descriptions defaultDescription="DFKKOP_OPUPK"/>
+      </viewAttribute>
+      <viewAttribute id="KOSTL">
+        <descriptions defaultDescription="KOSTL"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOPK_HKONT">
+        <descriptions defaultDescription="DFKKOPK_HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOPK_PRCTR">
+        <descriptions defaultDescription="DFKKOPK_PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOPK_KONTL">
+        <descriptions defaultDescription="DFKKOPK_KONTL"/>
+      </viewAttribute>
+      <viewAttribute id="DFKKOP_KONTL">
+        <descriptions defaultDescription="DFKKOP_KONTL"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT">
+        <descriptions defaultDescription="DFKK_H_BUDAT"/>
+      </viewAttribute>
+      <viewAttribute id="VTPOS">
+        <descriptions defaultDescription="VTPOS"/>
+      </viewAttribute>
+      <viewAttribute id="XANZA">
+        <descriptions defaultDescription="XANZA"/>
+      </viewAttribute>
+      <viewAttribute id="OpenItemFlag">
+        <descriptions defaultDescription="OpenItemFlag"/>
+      </viewAttribute>
+      <viewAttribute id="BLART">
+        <descriptions defaultDescription="BLART"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FinYear">
+        <descriptions defaultDescription="Financial Year"/>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+    
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_GPART">
+        <descriptions defaultDescription="DFKK_H_GPART"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$CC_BUDAT$DATE_SQL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_DFKKOP_DFKKOPK">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_BETRH" source="DFKKOPK_BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BETRH" source="DFKKOP_BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_PRCTR" source="DFKKOP_PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_HKONT" source="DFKKOP_HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_HKONT" source="DFKKOPK_HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_PRCTR" source="DFKKOPK_PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOPK_KONTL" source="DFKKOPK_KONTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_KONTL" source="DFKKOP_KONTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTPOS" source="VTPOS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XANZA" source="XANZA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_BUDAT$DATE_SQL" source="CC_BUDAT"/>
+    </input>
+    <input node="P_CV_Calendar">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FinYear" source="CC_FinYear"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_BUDAT$DATE_SQL" source="DATE_SQL"/>
+    </input>
+    <joinAttribute name="JOIN$CC_BUDAT$DATE_SQL"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_Calendar">
+    <viewAttributes>
+      <viewAttribute id="CC_FinYear">
+        <descriptions defaultDescription="Financial Year"/>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+    
+      <viewAttribute id="DATE_SQL">
+        <descriptions defaultDescription="Date"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FinYear" source="CC_FinYear"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -1389,6 +1606,29 @@
       <keyMapping columnObjectName="J_COSTCENTRE_CEPCT" columnName="BLART"/>
   
     </attribute>
+  
+    <attribute id="CC_FinYear" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_FinYear"/>
+  
+      <keyMapping columnObjectName="J_COSTCENTRE_CEPCT" columnName="CC_FinYear"/>
+  
+    </attribute>
+    <attribute id="EndOfMonth" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EndOfMonth"/>
+      <keyMapping columnObjectName="J_COSTCENTRE_CEPCT" columnName="EndOfMonth"/>
+    </attribute>
+    <attribute id="FiscalMonth" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FiscalMonth"/>
+      <keyMapping columnObjectName="J_COSTCENTRE_CEPCT" columnName="FiscalMonth"/>
+    </attribute>
+    <attribute id="OPBEL" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OPBEL"/>
+      <keyMapping columnObjectName="J_COSTCENTRE_CEPCT" columnName="OPBEL"/>
+    </attribute>
+    <attribute id="DFKK_H_GPART" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DFKK_H_GPART"/>
+      <keyMapping columnObjectName="J_COSTCENTRE_CEPCT" columnName="DFKK_H_GPART"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -1408,17 +1648,17 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="422" y="112"/>
+      <upperLeftCorner x="534" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CV_Financials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="696"/>
+      <upperLeftCorner x="91" y="836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_DFKKOP_DFKKOPK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="536"/>
+      <upperLeftCorner x="118" y="676"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_DFKKOPK" modelObjectNameSpace="J_DFKKOP_DFKKOPK" modelObjectType="JoinNodeInput">
@@ -1430,28 +1670,16 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_DFKKOPK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="696"/>
+      <upperLeftCorner x="302" y="836"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="J_COSTCENTRE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="145" y="376"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="J_DFKKOP_DFKKOPK" modelObjectNameSpace="J_COSTCENTRE" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="P_CSKT" modelObjectNameSpace="J_COSTCENTRE" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
+    </shape><shape><upperLeftCorner/><rectangleSize/></shape>
     <shape expanded="true" modelObjectName="P_CSKT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="384" y="536"/>
+      <upperLeftCorner x="477" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_COSTCENTRE_CEPCT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="422" y="217"/>
+      <upperLeftCorner x="534" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_COSTCENTRE" modelObjectNameSpace="J_COSTCENTRE_CEPCT" modelObjectType="JoinNodeInput">
@@ -1459,11 +1687,40 @@
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="P_CEPCT" modelObjectNameSpace="J_COSTCENTRE_CEPCT" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
+      <upperLeftCorner x="307" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_COSTCENTRE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="172" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="J_COSTCENTRE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CSKT" modelObjectNameSpace="J_COSTCENTRE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CEPCT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="489" y="376"/>
+      <upperLeftCorner x="592" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="145" y="516"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_DFKKOP_DFKKOPK" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CV_Calendar" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CV_Calendar" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="380" y="676"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
