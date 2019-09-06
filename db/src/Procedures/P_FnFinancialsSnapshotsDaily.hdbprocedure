@@ -1,20 +1,20 @@
-PROCEDURE "osr.business.semantic.db.Procedures::FnFinancialsSnapshotsDaily"( )
+PROCEDURE "osr.business.semantic.db.Procedures::P_FnFinancialsSnapshotsDaily"( )
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
    --DEFAULT SCHEMA <default_schema_name>
-   READS SQL DATA AS
+   AS
 BEGIN
-	DELETE FROM "osr.business.semantic.db.Tables::FnFinancials"
-	WHERE "KeyDate" NOT IN (
-		SELECT "DATE_SQL" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar"
-		WHERE "DATE_SQL" >= '2018-07-01' AND (
-			("DATE_SQL" BETWEEN ADD_DAYS(LAST_DAY(ADD_MONTHS(CURRENT_DATE,-2)),1) AND LAST_DAY(NOW()))
-			OR
-			("CC_FinYear" IN (SELECT "CC_FinYear" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar" WHERE "DATE_SQL" = ADD_DAYS(CURRENT_DATE,-1)) AND "DATE_SQL" < ADD_DAYS(LAST_DAY(ADD_MONTHS(CURRENT_DATE,-2)),1) AND "Weekly" = 'X')
-			OR
-			("CC_FinYear" NOT IN (SELECT "CC_FinYear" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar" WHERE "DATE_SQL" = ADD_DAYS(CURRENT_DATE,-1)) AND "Monthly" = 'X')
-		)
-	);
+--	DELETE FROM "osr.business.semantic.db.Tables::FnFinancials"
+--	WHERE "KeyDate" NOT IN (
+--		SELECT "DATE_SQL" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar"
+--		WHERE "DATE_SQL" >= '2018-07-01' AND (
+--			("DATE_SQL" BETWEEN ADD_DAYS(LAST_DAY(ADD_MONTHS(CURRENT_DATE,-2)),1) AND LAST_DAY(NOW()))
+--			OR
+--			("CC_FinYear" IN (SELECT "CC_FinYear" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar" WHERE "DATE_SQL" = ADD_DAYS(CURRENT_DATE,-1)) AND "DATE_SQL" < ADD_DAYS(LAST_DAY(ADD_MONTHS(CURRENT_DATE,-2)),1) AND "Weekly" = 'X')
+--			OR
+--			("CC_FinYear" NOT IN (SELECT "CC_FinYear" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar" WHERE "DATE_SQL" = ADD_DAYS(CURRENT_DATE,-1)) AND "Monthly" = 'X')
+--		)
+--	);
 	
 	DECLARE v_arb VARCHAR(1) = '';
 	DECLARE CURSOR c_dates (v_arb VARCHAR(1)) FOR
