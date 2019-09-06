@@ -46,7 +46,7 @@
       </viewAttribute></viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_UPPER_TAX_YEAR" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
-        <formula>string(component(date(&quot;TAXYRSTARTDT&quot;),1) + 5) + '0701'</formula>
+        <formula>string(component(date(&quot;TAXYRSTARTDT&quot;),1) + 100) + '0701'</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="HE_Counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;CONCESSCODE&quot;='R',1,0)</formula>
@@ -293,11 +293,7 @@
       </viewAttribute>
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
-      </viewAttribute>
-      <viewAttribute id="UPPER_TAXYRSTARTDT">
-        <descriptions defaultDescription="TAXYRSTARTDT"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_HE_NONLIABLE">
@@ -305,12 +301,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
     </input>
-    <input node="J_NOHE_LIABLE">
-      <mapping xsi:type="Calculation:AttributeMapping" target="UPPER_TAXYRSTARTDT" source="TAXYRSTARTDT"/>
-    </input>
+    <input node="J_NOHE_LIABLE"/>
     <joinAttribute leftColumn="INTRENOCN" rightColumn="INTRENO" operator="EQ"/>
     <joinAttribute leftColumn="MANDT" rightColumn="MANDT" operator="EQ"/>
-    <joinAttribute leftColumn="CC_UPPER_TAX_YEAR" rightColumn="TAXYRSTARTDT" operator="GE"/>
     <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="TAXYRSTARTDT" operator="LT"/>
   </calculationView>
 </calculationViews>
@@ -332,7 +325,14 @@
       <keyMapping columnObjectName="NEJ_NEXT_FIVE_YEARS" columnName="MANDT"/>
     </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_Reengagement_Flag" order="5" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Reengagement Flag"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="13">
+        <formula>'Reengagement with Client'</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures/>
   <calculatedMeasures>
     <measure id="ContractCounter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -341,6 +341,7 @@
         <attribute attributeName="INTRENOCN"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
