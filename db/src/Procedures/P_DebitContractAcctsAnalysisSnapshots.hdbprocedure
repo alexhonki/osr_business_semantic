@@ -4,13 +4,12 @@ PROCEDURE "osr.business.semantic.db.Procedures::P_DebitContractAcctsAnalysisSnap
    --DEFAULT SCHEMA <default_schema_name>
    AS
 BEGIN
-	DECLARE dt_limitdate1 DATE = '2018-06-01';
-	DECLARE dt_limitdate2 DATE = '2018-06-30';
-	DECLARE CURSOR c_dates (dt_limitdate1 DATE, dt_limitdate2 DATE) FOR
-			SELECT DATE_SQL FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar"
-			WHERE DATE_SQL BETWEEN :dt_limitdate1 AND :dt_limitdate2;
-	
-	FOR curr_row AS c_dates(dt_limitdate1, dt_limitdate2)
+	DECLARE v_arb VARCHAR(1) = '';
+	DECLARE CURSOR c_dates (v_arb VARCHAR(1)) FOR
+			SELECT "DATE_SQL", "DayOfWeek"  FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar"
+			WHERE "DATE_SQL" >= '2010-07-01' AND "Monthly" = 'X';
+
+	FOR curr_row AS c_dates(v_arb)
 		DO
 		DECLARE dt_keydate DATE = curr_row.DATE_SQL;
 		
