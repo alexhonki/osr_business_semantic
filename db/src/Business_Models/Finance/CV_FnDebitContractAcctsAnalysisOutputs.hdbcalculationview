@@ -32,6 +32,10 @@
       <calculatedViewAttribute id="PrevKeyDate" datatype="DATE" expressionLanguage="SQL">
         <formula>LAST_DAY(ADD_MONTHS(&quot;KeyDate&quot;, -1))</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="KeyDateString" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
+        <formula>replace(string(&quot;KeyDate&quot;),'-','')</formula>
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Tables::FnDebitContractAcctsAnalysis">
@@ -64,6 +68,9 @@
       <viewAttribute id="AccountBalanceRange">
         <descriptions defaultDescription="AccountBalanceRange"/>
       </viewAttribute>
+      <viewAttribute id="KeyDateString">
+        <descriptions defaultDescription="KeyDateString"/>
+      </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$PrevKeyDate$KeyDate"/>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -81,6 +88,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KeyDateString" source="KeyDateString"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PrevKeyDate$KeyDate" source="PrevKeyDate"/>
     </input>
   
@@ -119,7 +127,11 @@
     
       <viewAttribute id="PrevKeyDate">
         <descriptions defaultDescription="PrevKeyDate"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="KeyDateString">
+        <descriptions defaultDescription="KeyDateString"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_T_FnDebitContractAcctsAnalysis">
@@ -130,6 +142,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PrevKeyDate" source="PrevKeyDate"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="KeyDateString" source="KeyDateString"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_PREV">
@@ -182,6 +196,11 @@
       <descriptions defaultDescription="Account Balance Range"/>
       <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="AccountBalanceRange"/>
     </attribute>
+  
+    <attribute id="KeyDateString" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="KeyDateString"/>
+      <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="KeyDateString"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -190,7 +209,15 @@
       <measureMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="BETRH"/>
     </measure>
   </baseMeasures>
-  <calculatedMeasures/>
+  <calculatedMeasures>
+    <measure id="ContractCounter" order="7" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="Contract Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="VTREF"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
