@@ -138,6 +138,21 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Objection') , 'Other Whitemail',
 if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail',
 'Unspecified'))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_SixtyDays" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(&quot;CC_Status&quot; = 'Open Status' and &quot;CC_Days_Bt_Creation_Mod_ROW&quot; &gt; 60,'X','')</formula>
+    
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_Days_Bt_Creation_Mod_ROW" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>&quot;CC_Days_Bt_Creation_Mod&quot;</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_ThirtyDays" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(&quot;CC_Status&quot; = 'Open Status' and &quot;CC_Days_Bt_Creation_Mod_ROW&quot; &gt; 30,'X','')</formula>
+    
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="P_PRT_TI" emptyUnionBehavior="NO_ROW">
@@ -449,7 +464,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <descriptions defaultDescription="Status - Original"/>
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="Status"/>
     </attribute>
-    <attribute id="WorkItemID" order="15" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="WorkItemID" order="15" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="WorkItemDescription">
       <descriptions defaultDescription="Work Item ID"/>
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WorkItemID"/>
     </attribute>
@@ -469,7 +484,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_WorkItemGroup"/>
     </attribute>
   
-    <attribute id="BP" order="19" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BP" order="19" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="BPName">
       <descriptions defaultDescription="Business Partner"/>
   
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="ACTIVITY_PARTNER"/>
@@ -478,6 +493,24 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     <attribute id="BPName" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Name"/>
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_FullName"/>
+    </attribute>
+  
+    <attribute id="CC_SixtyDays" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Open for 60 Days +"/>
+  
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_SixtyDays"/>
+  
+    </attribute>
+    <attribute id="CC_Days_Bt_Creation_Mod_ROW" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Days Between Creation (non aggregrated)"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_Days_Bt_Creation_Mod_ROW"/>
+    </attribute>
+  
+    <attribute id="CC_ThirtyDays" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Open for 30 Days +"/>
+  
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_ThirtyDays"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -520,11 +553,17 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       
       
       
+      
+      
+      
       </measure>
   
     <measure id="CC_WorkItemDurationAvg" order="10" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Workflow Item (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
+      
+      
       
       
       
@@ -555,7 +594,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PRT_TI" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-10" y="306"/>
+      <upperLeftCorner x="-120" y="306"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
@@ -565,4 +604,4 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </shape>
   </shapes>
 </layout>
-</Calculation:scenario>
+</Calculation:scenario> 
