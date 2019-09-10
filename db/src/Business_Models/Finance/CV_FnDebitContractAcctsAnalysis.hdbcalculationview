@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_DebitContractAcctsAnalysis" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnDebitContractAcctsAnalysis" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_DebitContractAcctsAnalysis"/>
 <localVariables>
   <variable id="IP_KeyDate" parameter="true">
@@ -47,6 +47,10 @@
       <viewAttribute id="CreditDebitFlag">
         <descriptions defaultDescription="CreditDebitFlag"/>
       </viewAttribute>
+    
+      <viewAttribute id="AccountBalanceRange">
+        <descriptions defaultDescription="AccountBalanceRange"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="DueDate" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
@@ -63,6 +67,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="STUDT" source="STUDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
     </input>
     <filter>&quot;AccountBalanceStatus&quot; = 'Debit Balance' AND &quot;OpenItemFlag&quot; = 'X' AND date('$$IP_KeyDate$$') &gt; date(&quot;DueDate&quot;)</filter>
   </calculationView>
@@ -76,6 +82,13 @@
     <attribute id="CreditDebitFlag" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CreditDebitFlag"/>
       <keyMapping columnObjectName="P_FNFINANCIALS" columnName="CreditDebitFlag"/>
+    </attribute>
+  
+    <attribute id="AccountBalanceRange" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AccountBalanceRange"/>
+  
+      <keyMapping columnObjectName="P_FNFINANCIALS" columnName="AccountBalanceRange"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>

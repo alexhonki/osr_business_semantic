@@ -23,10 +23,133 @@
       <viewAttribute id="BETRH">
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
+    
+      <viewAttribute id="AccountBalanceRange">
+        <descriptions defaultDescription="AccountBalanceRange"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="PrevKeyDate" datatype="DATE" expressionLanguage="SQL">
+        <formula>LAST_DAY(ADD_MONTHS(&quot;KeyDate&quot;, -1))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Tables::FnDebitContractAcctsAnalysis">
+      <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_COMPARE_PREV_DATE" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_COMPARE_PREV_DATE" multiJoinCentralTable="Projection_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="KeyDate">
+        <descriptions defaultDescription="KeyDate"/>
+      </viewAttribute>
+      <viewAttribute id="VTREF">
+        <descriptions defaultDescription="VTREF"/>
+      </viewAttribute>
+      <viewAttribute id="CreditDebitFlag">
+        <descriptions defaultDescription="CreditDebitFlag"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+    
+      <viewAttribute id="PrevKeyDate">
+        <descriptions defaultDescription="KeyDate"/>
+      </viewAttribute>
+      <viewAttribute id="AccountBalanceRange">
+        <descriptions defaultDescription="AccountBalanceRange"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$PrevKeyDate$KeyDate"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="NewOngoingStatus" datatype="NVARCHAR" length="7" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(isNull(&quot;PrevKeyDate&quot;),
+    'New',
+    'Ongoing'
+)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="P_CURR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PrevKeyDate$KeyDate" source="PrevKeyDate"/>
+    </input>
+  
+    <input node="P_PREV">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PrevKeyDate" source="KeyDate"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PrevKeyDate$KeyDate" source="KeyDate"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
+  
+    </input>
+    <joinAttribute name="JOIN$PrevKeyDate$KeyDate"/>
+    <joinAttribute name="VTREF"/>
+    <joinAttribute name="CreditDebitFlag"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CURR">
+    <viewAttributes>
+      <viewAttribute id="KeyDate">
+        <descriptions defaultDescription="KeyDate"/>
+      </viewAttribute>
+      <viewAttribute id="VTREF">
+        <descriptions defaultDescription="VTREF"/>
+      </viewAttribute>
+      <viewAttribute id="CreditDebitFlag">
+        <descriptions defaultDescription="CreditDebitFlag"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="PrevKeyDate">
+        <descriptions defaultDescription="PrevKeyDate"/>
+      </viewAttribute>
+    
+      <viewAttribute id="AccountBalanceRange">
+        <descriptions defaultDescription="AccountBalanceRange"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.Tables::FnDebitContractAcctsAnalysis">
+    <input node="P_T_FnDebitContractAcctsAnalysis">
+      <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PrevKeyDate" source="PrevKeyDate"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PREV">
+    <viewAttributes>
+      <viewAttribute id="KeyDate">
+        <descriptions defaultDescription="KeyDate"/>
+      </viewAttribute>
+      <viewAttribute id="VTREF">
+        <descriptions defaultDescription="VTREF"/>
+      </viewAttribute>
+      <viewAttribute id="CreditDebitFlag">
+        <descriptions defaultDescription="CreditDebitFlag"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_T_FnDebitContractAcctsAnalysis">
       <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
@@ -34,26 +157,37 @@
     </input>
   </calculationView>
 </calculationViews>
-<logicalModel id="P_T_FnDebitContractAcctsAnalysis">
+<logicalModel id="J_COMPARE_PREV_DATE">
   <attributes>
     <attribute id="KeyDate" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="KeyDate"/>
-      <keyMapping columnObjectName="P_T_FnDebitContractAcctsAnalysis" columnName="KeyDate"/>
+      <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="KeyDate"/>
     </attribute>
     <attribute id="VTREF" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="VTREF"/>
-      <keyMapping columnObjectName="P_T_FnDebitContractAcctsAnalysis" columnName="VTREF"/>
+      <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="VTREF"/>
     </attribute>
     <attribute id="CreditDebitFlag" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CreditDebitFlag"/>
-      <keyMapping columnObjectName="P_T_FnDebitContractAcctsAnalysis" columnName="CreditDebitFlag"/>
+      <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="CreditDebitFlag"/>
+    </attribute>
+  
+    <attribute id="NewOngoingStatus" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NewOngoingStatus"/>
+  
+      <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="NewOngoingStatus"/>
+  
+    </attribute>
+    <attribute id="AccountBalanceRange" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AccountBalanceRange"/>
+      <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="AccountBalanceRange"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="BETRH" order="4" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BETRH"/>
-      <measureMapping columnObjectName="P_T_FnDebitContractAcctsAnalysis" columnName="BETRH"/>
+      <measureMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="BETRH"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures/>
@@ -67,9 +201,29 @@
     </shape>
   
     <shape expanded="true" modelObjectName="P_T_FnDebitContractAcctsAnalysis" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="500"/>
+      <upperLeftCorner x="100" y="688"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-  </shapes>
+  
+    <shape expanded="true" modelObjectName="J_COMPARE_PREV_DATE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="374"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CURR" modelObjectNameSpace="J_COMPARE_PREV_DATE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="466" y="147"/>
+      <rectangleSize width="346"/>
+    </shape>
+    <shape modelObjectName="P_PREV" modelObjectNameSpace="J_COMPARE_PREV_DATE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="884" y="147"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CURR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-27" y="566"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_PREV" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="180" y="566"/>
+      <rectangleSize height="30" width="160"/>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>

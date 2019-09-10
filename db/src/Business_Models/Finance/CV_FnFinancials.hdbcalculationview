@@ -32,7 +32,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_Financials">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_Financials" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="Client"/>
@@ -627,6 +627,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
     </input>
+    <filter>&quot;STAKZ&quot; != 'R'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_LATESTDUNNING" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
@@ -2443,6 +2444,14 @@
       <viewAttribute id="OpenItemBalance" aggregationType="sum">
         <descriptions defaultDescription="OpenItemBalance"/>
       </viewAttribute>
+    
+      <viewAttribute id="AccountBalanceStatus">
+        <descriptions defaultDescription="AccountBalanceStatus"/>
+      </viewAttribute>
+    
+      <viewAttribute id="AccountBalanceRange">
+        <descriptions defaultDescription="AccountBalanceRange"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -2601,6 +2610,8 @@
     </input>
     <input node="AGG_CONTACCTBAL">
       <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemBalance" source="OpenItemBalance"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceStatus" source="AccountBalanceStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
     </input>
@@ -2619,7 +2630,25 @@
       <viewAttribute id="VTREF">
         <descriptions defaultDescription="VTREF"/>
       </viewAttribute></viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="AccountBalanceStatus" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;OpenItemBalance&quot; &gt; 0,'Debit Balance',
+if(&quot;OpenItemBalance&quot; = 0,'Nil Balance',
+if(&quot;OpenItemBalance&quot; &lt; 0,'Credit Balance',
+string(null)
+)))</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="AccountBalanceRange" datatype="NVARCHAR" length="25" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;OpenItemBalance&quot; &lt; 100.00,'Less than $100',
+if(&quot;OpenItemBalance&quot; &gt;= 100.00 AND &quot;OpenItemBalance&quot; &lt; 1000.00,'$100 to $999.99',
+if(&quot;OpenItemBalance&quot; &gt;= 1000.00 AND &quot;OpenItemBalance&quot; &lt; 10000.00,'$1,000 to $9,999.99',
+if(&quot;OpenItemBalance&quot; &gt;= 10000.00 AND &quot;OpenItemBalance&quot; &lt; 1000000.00,'$10,000 to $999,999.99',
+if(&quot;OpenItemBalance&quot; &gt;= 1000000.00,'$1,000,000 and greater',
+'Err'
+)))))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="P_CONTACCTBAL">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -2629,25 +2658,27 @@
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CALENDAR">
     <viewAttributes>
-      <viewAttribute id="DATE_SQL">
-        <descriptions defaultDescription="Date"/>
-      </viewAttribute>
       <viewAttribute id="FiscalMonth">
         <descriptions defaultDescription="FiscalMonth"/>
       </viewAttribute>
       <viewAttribute id="FISCAL_YEAR">
         <descriptions defaultDescription="FISCAL_YEAR"/>
       </viewAttribute>
+    
+      <viewAttribute id="DATE">
+        <descriptions defaultDescription="DATE"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
-      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE" source="DATE"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_FIN_CALENDAR">
+  <calculationView xsi:type="Calculation:JoinView" id="J_FIN_CALENDAR" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
@@ -3105,6 +3136,21 @@
       <viewAttribute id="OpenItemBalance" aggregationType="sum">
         <descriptions defaultDescription="OpenItemBalance"/>
       </viewAttribute>
+    
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+    
+      <viewAttribute id="AccountBalanceStatus">
+        <descriptions defaultDescription="AccountBalanceStatus"/>
+      </viewAttribute>
+    
+      <viewAttribute id="AccountBalanceRange">
+        <descriptions defaultDescription="AccountBalanceRange"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -3261,8 +3307,17 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="AUSDT" source="AUSDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTFLDPVC3OA" source="ZZTFLDPVC3OA"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemBalance" source="OpenItemBalance"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceStatus" source="AccountBalanceStatus"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
     </input>
-    <input node="P_CALENDAR"/>
+    <input node="P_CALENDAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DATE"/>
+    </input>
+    <joinAttribute name="DFKK_H_BUDAT"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_FIN_CALENDAR">
@@ -3792,19 +3847,31 @@
       <descriptions defaultDescription="Solvency Status"/>
       <keyMapping columnObjectName="J_FIN_CALENDAR" columnName="ZZTFLDPVC3OA"/>
     </attribute>
+  
+    <attribute id="FiscalMonth" order="155" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FiscalMonth"/>
+  
+      <keyMapping columnObjectName="J_FIN_CALENDAR" columnName="FiscalMonth"/>
+  
+    </attribute>
+    <attribute id="FISCAL_YEAR" order="156" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FISCAL_YEAR"/>
+      <keyMapping columnObjectName="J_FIN_CALENDAR" columnName="FISCAL_YEAR"/>
+    </attribute>
+  
+    <attribute id="AccountBalanceStatus" order="157" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AccountBalanceStatus"/>
+  
+      <keyMapping columnObjectName="J_FIN_CALENDAR" columnName="AccountBalanceStatus"/>
+  
+    </attribute>
+  
+    <attribute id="AccountBalanceRange" order="158" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AccountBalanceRange"/>
+      <keyMapping columnObjectName="J_FIN_CALENDAR" columnName="AccountBalanceRange"/>
+    </attribute>
   </attributes>
-  <calculatedAttributes>
-    <calculatedAttribute id="AccountBalanceStatus" order="154" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Account Balance Status"/>
-      <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
-        <formula>if(&quot;OpenItemBalance&quot; &gt; 0,'Debit Balance',
-if(&quot;OpenItemBalance&quot; = 0,'Nil Balance',
-if(&quot;OpenItemBalance&quot; &lt; 0,'Credit Balance',
-string(null)
-)))</formula>
-      </keyCalculation>
-    </calculatedAttribute>
-  </calculatedAttributes>
+  <calculatedAttributes/>
   <baseMeasures>
     <measure id="KURSF" order="22" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Exchange rate"/>
@@ -3895,7 +3962,7 @@ string(null)
       <measureMapping columnObjectName="J_FIN_CALENDAR" columnName="DFKKOP_SKTPZ"/>
     </measure>
   
-    <measure id="OpenItemBalance" order="155" aggregationType="sum" measureType="simple">
+    <measure id="OpenItemBalance" order="154" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="OpenItemBalance"/>
       <measureMapping columnObjectName="J_FIN_CALENDAR" columnName="OpenItemBalance"/>
     </measure>
@@ -3916,6 +3983,7 @@ string(null)
       
       
       
+      
       </measure>
   
     <measure id="FBNCounter" order="147" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -3924,6 +3992,7 @@ string(null)
         <attribute attributeName="FBNUM"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       

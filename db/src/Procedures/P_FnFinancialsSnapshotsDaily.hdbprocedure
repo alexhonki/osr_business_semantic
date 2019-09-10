@@ -53,10 +53,10 @@ BEGIN
 			(DAYOFMONTH(CURRENT_DATE) = 31 AND MONTH(CURRENT_DATE) = 12) -- Yearly refresh of all snapshots
 		THEN
 			output_table = 
-			SELECT :dt_keydate AS "KeyDate", "PRCTR", "HKONT", SUM("BETRH") AS "BETRH", CURRENT_DATE
+			SELECT :dt_keydate AS "KeyDate", "PRCTR", "HKONT", "FiscalMonth", "FISCAL_YEAR", SUM("BETRH") AS "BETRH", CURRENT_DATE
 			FROM "osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials"
 				(placeholder."$$IP_KeyDate$$"=>:dt_keydate)
-			GROUP BY "PRCTR", "HKONT";
+			GROUP BY "PRCTR", "HKONT", "FiscalMonth", "FISCAL_YEAR";
 			
 			DELETE FROM "osr.business.semantic.db.Tables::FnFinancials"
 			WHERE "KeyDate" = :dt_keydate;
