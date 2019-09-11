@@ -111,6 +111,10 @@
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
       </viewAttribute>
+    
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -119,6 +123,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPPER_TAX_YEAR" source="CC_UPPER_TAX_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
     </input>
     <input node="P_CNRES_NONLIABLE">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -146,6 +152,10 @@
       <viewAttribute id="HE_Counter" aggregationType="sum">
         <descriptions defaultDescription="HE_Counter"/>
       </viewAttribute>
+    
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -155,6 +165,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPPER_TAX_YEAR" source="CC_UPPER_TAX_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HE_Counter" source="HE_Counter"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
     </input>
     <filter>&quot;HE_Counter&quot;&gt;0</filter>
   </calculationView>
@@ -202,6 +214,9 @@
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
       </viewAttribute>
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
       <viewAttribute hidden="true" id="JOIN$INTRENOCN$INTRENO"/>
       <viewAttribute hidden="true" id="JOIN$TAXYRSTARTDT$TAXYRSTARTDT"/>
@@ -209,6 +224,7 @@
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="AGG_BP_NOHE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENOCN$INTRENO" source="INTRENOCN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TAXYRSTARTDT$TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -239,6 +255,10 @@
       <viewAttribute id="HE_Counter" aggregationType="sum">
         <descriptions defaultDescription="HE_Counter_1"/>
       </viewAttribute>
+    
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -247,6 +267,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HE_Counter" source="HE_Counter"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
     </input>
     <filter>&quot;HE_Counter&quot;=0</filter>
   </calculationView>
@@ -293,18 +315,25 @@
       </viewAttribute>
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_HE_NONLIABLE">
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
     </input>
     <input node="J_NOHE_LIABLE"/>
     <joinAttribute leftColumn="INTRENOCN" rightColumn="INTRENO" operator="EQ"/>
     <joinAttribute leftColumn="MANDT" rightColumn="MANDT" operator="EQ"/>
     <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="TAXYRSTARTDT" operator="LT"/>
+    <joinAttribute leftColumn="ZZ_PARTNER" rightColumn="ZZ_PARTNER" operator="EQ"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="NEJ_NEXT_FIVE_YEARS">
@@ -324,11 +353,16 @@
       <descriptions defaultDescription="Client"/>
       <keyMapping columnObjectName="NEJ_NEXT_FIVE_YEARS" columnName="MANDT"/>
     </attribute>
+  
+    <attribute id="ZZ_PARTNER" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Number"/>
+      <keyMapping columnObjectName="NEJ_NEXT_FIVE_YEARS" columnName="ZZ_PARTNER"/>
+    </attribute>
   </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="CC_Reengagement_Flag" order="5" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reengagement Flag"/>
-      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="13">
+      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="30">
         <formula>'Reengagement with Client'</formula>
       </keyCalculation>
       </calculatedAttribute>
@@ -341,6 +375,7 @@
         <attribute attributeName="INTRENOCN"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
