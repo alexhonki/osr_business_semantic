@@ -1843,6 +1843,13 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="CC_Reengagement_Flag">
         <descriptions defaultDescription="CC_Reengagement_Flag"/>
       </viewAttribute>
+    
+      <viewAttribute id="CC_Individual">
+        <descriptions defaultDescription="CC_Individual"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Non-Individual">
+        <descriptions defaultDescription="CC_Non-Individual"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1883,6 +1890,9 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Count" source="CC_BP_Count"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Flag" source="CC_Reengagement_Flag"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Individual" source="CC_Individual"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Non-Individual" source="CC_Non-Individual"/>
     </input>
     <input node="P_ContractValues"/>
     <joinAttribute leftColumn="PARTNER" rightColumn="ZZ_PARTNER" operator="EQ"/>
@@ -1997,7 +2007,14 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
         <descriptions defaultDescription="Reengagement Flag"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_Individual" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CC_FirstName&quot;!='','Individual','')</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_Non-Individual" datatype="VARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CC_FirstName&quot;='','Non-Individual','')</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="J_BPINFO_LTIRISK">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
@@ -2193,6 +2210,17 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     <attribute id="CC_Reengagement_Flag" order="38" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reengagement Flag"/>
       <keyMapping columnObjectName="NonEquiJoin_1" columnName="CC_Reengagement_Flag"/>
+    </attribute>
+  
+    <attribute id="CC_Individual" order="39" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_Individual"/>
+  
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="CC_Individual"/>
+  
+    </attribute>
+    <attribute id="CC_Non-Individual" order="40" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_Non-Individual"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="CC_Non-Individual"/>
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -2474,7 +2502,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
     <shape modelObjectName="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectNameSpace="J_BPINFO_LTIRISK" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="293.646484375"/>
+      <rectangleSize width="293"/>
     </shape>
     <shape modelObjectName="P_LITRisk" modelObjectNameSpace="J_BPINFO_LTIRISK" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="366" y="30"/>
