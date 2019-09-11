@@ -69,6 +69,13 @@
       <viewAttribute id="CC_FullName">
         <descriptions defaultDescription="CC_FullName"/>
       </viewAttribute>
+    
+      <viewAttribute id="CHANGED_BY">
+        <descriptions defaultDescription="Changed By (Team Member)"/>
+      </viewAttribute>
+      <viewAttribute id="CREATED_BY">
+        <descriptions defaultDescription="Created By (Team Member)"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_WorkItemGroup" datatype="NVARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
@@ -177,6 +184,9 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="ACTIVPART_NAME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGED_BY" source="CHANGED_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="CREATED_BY"/>
     </input>
   
     <input node="P_PRT_WF" emptyUnionBehavior="NO_ROW">
@@ -213,6 +223,12 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="TAXPAYER"/>
   
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
+  
+    
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGED_BY" source="WI_AAGENT"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="WI_CRUSER"/>
   
     </input>
   </calculationView>
@@ -289,7 +305,11 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       </viewAttribute>
       <viewAttribute id="EMP_NAME">
         <descriptions defaultDescription="Employee Responsible Name"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="CREATED_BY">
+        <descriptions defaultDescription="Created By (Team Member)"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_RowCountTI" datatype="INTEGER" expressionLanguage="SQL">
         <formula>1</formula>
@@ -331,6 +351,8 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVPART_NAME" source="ACTIVPART_NAME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="CREATED_BY"/>
     </input></calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_PRT_WF">
     <viewAttributes>
@@ -386,7 +408,14 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       </viewAttribute>
       <viewAttribute id="WI_RH_TASK">
         <descriptions defaultDescription="Task ID"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="WI_AAGENT">
+        <descriptions defaultDescription="User Processed"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CRUSER">
+        <descriptions defaultDescription="User Created"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_RowCountWF" datatype="INTEGER" expressionLanguage="SQL">
         <formula>1</formula>
@@ -420,6 +449,9 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="TAXPAYER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AAGENT" source="WI_AAGENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="WI_CRUSER"/>
     </input></calculationView>
 </calculationViews>
 <logicalModel id="U_PrtTasksInteractions_Workflow">
@@ -512,6 +544,15 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_ThirtyDays"/>
   
     </attribute>
+  
+    <attribute id="CHANGED_BY" order="24" descriptionColumnName="Changed_CompletedName" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Changed By (Team Member)"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CHANGED_BY"/>
+    </attribute>
+    <attribute id="CREATED_BY" order="25" descriptionColumnName="CreatedByName" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Created By (Team Member)"/>
+      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CREATED_BY"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -532,6 +573,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
         <attribute attributeName="WorkItemID"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -578,6 +620,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       
       
       
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -604,4 +647,4 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </shape>
   </shapes>
 </layout>
-</Calculation:scenario> 
+</Calculation:scenario>
