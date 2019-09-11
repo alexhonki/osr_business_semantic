@@ -31,6 +31,9 @@
   <DataSource id="osr.business.semantic.db.synonyms::CV_FD_DTP_RISK_CUSTOMER">
     <resourceUri>osr.business.semantic.db.synonyms::CV_FD_DTP_RISK_CUSTOMER</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CV_ContractValuesLocal">
+    <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CV_ContractValuesLocal</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_BPINFO" filterExpressionLanguage="SQL">
@@ -1695,174 +1698,355 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </input>
     <joinAttribute name="PARTNER"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ContractValues" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="AssessmentIssueDate">
+        <descriptions defaultDescription="Assessment Issue Date"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="INTRENO">
+        <descriptions defaultDescription="Internal Key of Real Estate Object"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="BP no."/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="Tax Year Start Date"/>
+      </viewAttribute>
+    
+      <viewAttribute id="ACTIVE">
+        <descriptions defaultDescription="Active Land Tax Payer"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.LandTax::CV_ContractValuesLocal">
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentIssueDate" source="AssessmentIssueDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE" source="ACTIVE"/>
+    </input>
+  
+    <filter>&quot;AssessmentIssueDate&quot; != ''</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NonEquiJoin_1" cardinality="C1_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BIRTHDT">
+        <descriptions defaultDescription="BIRTHDT"/>
+      </viewAttribute>
+      <viewAttribute id="DEATHDT">
+        <descriptions defaultDescription="DEATHDT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ZACN">
+        <descriptions defaultDescription="CC_ZACN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ABN">
+        <descriptions defaultDescription="CC_ABN"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_ADDRESS_DELIVERY">
+        <descriptions defaultDescription="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_LOCALITY">
+        <descriptions defaultDescription="RES_STD_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_REGION">
+        <descriptions defaultDescription="RES_STD_ADDR_REGION"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="RES_STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+      <viewAttribute id="RES_TEL_NUMBER">
+        <descriptions defaultDescription="RES_TEL_NUMBER"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_ADDRESS_DELIVERY">
+        <descriptions defaultDescription="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_LOCALITY">
+        <descriptions defaultDescription="SER_STD_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_REGION">
+        <descriptions defaultDescription="SER_STD_ADDR_REGION"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="SER_STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+      <viewAttribute id="SER_TEL_NUMBER">
+        <descriptions defaultDescription="SER_TEL_NUMBER"/>
+      </viewAttribute>
+      <viewAttribute id="RES_SMTP_ADDR">
+        <descriptions defaultDescription="RES_SMTP_ADDR"/>
+      </viewAttribute>
+      <viewAttribute id="SER_SMTP_ADDR">
+        <descriptions defaultDescription="SER_SMTP_ADDR"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FullName">
+        <descriptions defaultDescription="CC_FullName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FirstName">
+        <descriptions defaultDescription="CC_FirstName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_MiddleName">
+        <descriptions defaultDescription="CC_MiddleName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_LastName">
+        <descriptions defaultDescription="CC_LastName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Age" aggregationType="sum">
+        <descriptions defaultDescription="CC_Age"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="BUT0ID_ENTRY_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Delegate">
+        <descriptions defaultDescription="CC_Delegate"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_E_ASS_OPT">
+        <descriptions defaultDescription="ZZ_E_ASS_OPT"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_OT_CONF">
+        <descriptions defaultDescription="ZZ_OT_CONF"/>
+      </viewAttribute>
+      <viewAttribute id="RISK_CATEGORY">
+        <descriptions defaultDescription="DESCRIPTION"/>
+      </viewAttribute>
+      <viewAttribute id="RISK_SCORE" aggregationType="sum">
+        <descriptions defaultDescription="RISK_SCORE"/>
+      </viewAttribute>
+      <viewAttribute id="CODEID">
+        <descriptions defaultDescription="CODEID"/>
+      </viewAttribute>
+      <viewAttribute id="PERIODBEGIN">
+        <descriptions defaultDescription="PERIODBEGIN"/>
+      </viewAttribute>
+      <viewAttribute id="PERIODEND">
+        <descriptions defaultDescription="PERIODEND"/>
+      </viewAttribute>
+      <viewAttribute id="CUST_ID" aggregationType="sum">
+        <descriptions defaultDescription="CUST_ID"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Count" aggregationType="sum">
+        <descriptions defaultDescription="CC_BP_Count"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentIssueDate">
+        <descriptions defaultDescription="Assessment Issue Date"/>
+      </viewAttribute>
+      <viewAttribute id="ACTIVE">
+        <descriptions defaultDescription="Active Land Tax Payer"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_LTIRISK">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEATHDT" source="DEATHDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZACN" source="CC_ZACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_ADDRESS_DELIVERY" source="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_LOCALITY" source="RES_STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_REGION" source="RES_STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_POSTCODE1" source="RES_STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_TEL_NUMBER" source="RES_TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_ADDRESS_DELIVERY" source="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_LOCALITY" source="SER_STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_REGION" source="SER_STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_POSTCODE1" source="SER_STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_TEL_NUMBER" source="SER_TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_SMTP_ADDR" source="RES_SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_SMTP_ADDR" source="SER_SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FirstName" source="CC_FirstName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_MiddleName" source="CC_MiddleName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LastName" source="CC_LastName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Age" source="CC_Age"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Delegate" source="CC_Delegate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_E_ASS_OPT" source="ZZ_E_ASS_OPT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_OT_CONF" source="ZZ_OT_CONF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RISK_CATEGORY" source="RISK_CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RISK_SCORE" source="RISK_SCORE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODEID" source="CODEID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIODBEGIN" source="PERIODBEGIN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIODEND" source="PERIODEND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Count" source="CC_BP_Count"/>
+    </input>
+    <input node="P_ContractValues">
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentIssueDate" source="AssessmentIssueDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE" source="ACTIVE"/>
+    </input>
+    <joinAttribute leftColumn="PARTNER" rightColumn="ZZ_PARTNER" operator="EQ"/>
+    <joinAttribute leftColumn="CLIENT" rightColumn="MANDT" operator="EQ"/>
+    <joinAttribute leftColumn="PERIODEND" rightColumn="TAXYRSTARTDT" operator="GT"/>
+  </calculationView>
 </calculationViews>
-<logicalModel id="J_BPINFO_LTIRISK">
+<logicalModel id="NonEquiJoin_1">
   <attributes>
-    <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_FullName">
-      <descriptions defaultDescription="Business Partner"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="PARTNER"/>
+    <attribute id="PARTNER" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PARTNER"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="PARTNER"/>
     </attribute>
-    <attribute id="BIRTHDT" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Date of Birth"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="BIRTHDT"/>
+    <attribute id="BIRTHDT" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BIRTHDT"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="BIRTHDT"/>
     </attribute>
-    <attribute id="DEATHDT" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Date of Death"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="DEATHDT"/>
+    <attribute id="DEATHDT" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DEATHDT"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="DEATHDT"/>
     </attribute>
-    <attribute id="CC_ZACN" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ACN"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="CC_ZACN"/>
+    <attribute id="CC_ZACN" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_ZACN"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="CC_ZACN"/>
     </attribute>
-    <attribute id="CC_ABN" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ABN"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="CC_ABN"/>
+    <attribute id="CC_ABN" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_ABN"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="CC_ABN"/>
     </attribute>
-    <attribute id="RES_STD_ADDR_ADDRESS_DELIVERY" order="7" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Residential Address"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+    <attribute id="RES_STD_ADDR_ADDRESS_DELIVERY" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="RES_STD_ADDR_ADDRESS_DELIVERY"/>
     </attribute>
-    <attribute id="RES_STD_ADDR_LOCALITY" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Residential Suburb"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="RES_STD_ADDR_LOCALITY"/>
+    <attribute id="RES_STD_ADDR_LOCALITY" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RES_STD_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="RES_STD_ADDR_LOCALITY"/>
     </attribute>
-    <attribute id="RES_STD_ADDR_REGION" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Residential State"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="RES_STD_ADDR_REGION"/>
+    <attribute id="RES_STD_ADDR_REGION" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RES_STD_ADDR_REGION"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="RES_STD_ADDR_REGION"/>
     </attribute>
-    <attribute id="RES_STD_ADDR_POSTCODE1" order="10" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Residential Post Code"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="RES_STD_ADDR_POSTCODE1"/>
+    <attribute id="RES_STD_ADDR_POSTCODE1" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RES_STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="RES_STD_ADDR_POSTCODE1"/>
     </attribute>
-    <attribute id="RES_TEL_NUMBER" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Residential Tel Number"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="RES_TEL_NUMBER"/>
+    <attribute id="RES_TEL_NUMBER" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RES_TEL_NUMBER"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="RES_TEL_NUMBER"/>
     </attribute>
-    <attribute id="SER_STD_ADDR_ADDRESS_DELIVERY" order="12" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Service Address"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+    <attribute id="SER_STD_ADDR_ADDRESS_DELIVERY" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="SER_STD_ADDR_ADDRESS_DELIVERY"/>
     </attribute>
-    <attribute id="SER_STD_ADDR_LOCALITY" order="13" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Service Suburb"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="SER_STD_ADDR_LOCALITY"/>
+    <attribute id="SER_STD_ADDR_LOCALITY" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SER_STD_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="SER_STD_ADDR_LOCALITY"/>
     </attribute>
-    <attribute id="SER_STD_ADDR_REGION" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Service State"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="SER_STD_ADDR_REGION"/>
+    <attribute id="SER_STD_ADDR_REGION" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SER_STD_ADDR_REGION"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="SER_STD_ADDR_REGION"/>
     </attribute>
-    <attribute id="SER_STD_ADDR_POSTCODE1" order="15" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Service Post Code"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="SER_STD_ADDR_POSTCODE1"/>
+    <attribute id="SER_STD_ADDR_POSTCODE1" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SER_STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="SER_STD_ADDR_POSTCODE1"/>
     </attribute>
-    <attribute id="SER_TEL_NUMBER" order="16" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Service Tel Number"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="SER_TEL_NUMBER"/>
+    <attribute id="SER_TEL_NUMBER" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SER_TEL_NUMBER"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="SER_TEL_NUMBER"/>
     </attribute>
-    <attribute id="RES_SMTP_ADDR" order="17" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Residential Email"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="RES_SMTP_ADDR"/>
+    <attribute id="RES_SMTP_ADDR" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RES_SMTP_ADDR"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="RES_SMTP_ADDR"/>
     </attribute>
-    <attribute id="SER_SMTP_ADDR" order="18" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Service Email"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="SER_SMTP_ADDR"/>
+    <attribute id="SER_SMTP_ADDR" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SER_SMTP_ADDR"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="SER_SMTP_ADDR"/>
     </attribute>
-  
-    <attribute id="CC_FullName" order="19" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Business Partner Name"/>
-  
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="CC_FullName"/>
-  
+    <attribute id="CC_FullName" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_FullName"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="CC_FullName"/>
     </attribute>
-    <attribute id="CC_FirstName" order="20" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="First Name"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="CC_FirstName"/>
+    <attribute id="CC_FirstName" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_FirstName"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="CC_FirstName"/>
     </attribute>
-    <attribute id="CC_MiddleName" order="21" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Middle Name"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="CC_MiddleName"/>
+    <attribute id="CC_MiddleName" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_MiddleName"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="CC_MiddleName"/>
     </attribute>
-    <attribute id="CC_LastName" order="22" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Last Name"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="CC_LastName"/>
+    <attribute id="CC_LastName" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_LastName"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="CC_LastName"/>
     </attribute>
-    <attribute id="CC_Age" order="23" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Age"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="CC_Age"/>
+    <attribute id="CLIENT" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CLIENT"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="CLIENT"/>
     </attribute>
-  
-    <attribute id="CLIENT" order="24" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="SAP Client"/>
-  
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="CLIENT"/>
-  
+    <attribute id="BUT0ID_ENTRY_DATE" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BUT0ID_ENTRY_DATE"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="BUT0ID_ENTRY_DATE"/>
     </attribute>
-  
-    <attribute id="BUT0ID_ENTRY_DATE" order="25" displayAttribute="false" attributeHierarchyActive="false" hidden="true">
-      <descriptions defaultDescription="Portal Account Creation Date"/>
-  
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="BUT0ID_ENTRY_DATE"/>
-  
+    <attribute id="CC_Delegate" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_Delegate"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="CC_Delegate"/>
     </attribute>
-    <attribute id="CC_Delegate" order="26" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Use Delegate for Portal"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="CC_Delegate"/>
+    <attribute id="ZZ_E_ASS_OPT" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ZZ_E_ASS_OPT"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="ZZ_E_ASS_OPT"/>
     </attribute>
-    <attribute id="ZZ_E_ASS_OPT" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Opt. In Electronic Assessment"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="ZZ_E_ASS_OPT"/>
+    <attribute id="ZZ_OT_CONF" order="30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ZZ_OT_CONF"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="ZZ_OT_CONF"/>
     </attribute>
-  
-    <attribute id="ZZ_OT_CONF" order="28" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Owner Type Confirmed"/>
-  
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="ZZ_OT_CONF"/>
-  
+    <attribute id="RISK_CATEGORY" order="31" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="RISK_CATEGORY"/>
     </attribute>
-  
-    <attribute id="RISK_CATEGORY" order="30" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Risk Category"/>
-  
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="RISK_CATEGORY"/>
-  
+    <attribute id="CODEID" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CODEID"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="CODEID"/>
     </attribute>
-  
-    <attribute id="CODEID" order="31" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Code ID"/>
-  
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="CODEID"/>
-  
+    <attribute id="PERIODBEGIN" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PERIODBEGIN"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="PERIODBEGIN"/>
     </attribute>
-    <attribute id="PERIODBEGIN" order="32" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Period Begin"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="PERIODBEGIN"/>
+    <attribute id="PERIODEND" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PERIODEND"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="PERIODEND"/>
     </attribute>
-    <attribute id="PERIODEND" order="33" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Period End"/>
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="PERIODEND"/>
+    <attribute id="AssessmentIssueDate" order="38" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Assessment Issue Date"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="AssessmentIssueDate"/>
     </attribute>
-  
-    <attribute id="CUST_ID" order="34" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Business Partner"/>
-  
-      <keyMapping columnObjectName="J_BPINFO_LTIRISK" columnName="CUST_ID"/>
-  
-    </attribute></attributes>
+    <attribute id="ACTIVE" order="39" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Active Land Tax Payer"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="ACTIVE"/>
+    </attribute>
+  </attributes>
   <calculatedAttributes>
-    <calculatedAttribute id="CC_PortalAccountCreationDate" order="29" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <calculatedAttribute id="CC_PortalAccountCreationDate" order="2" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Portal Account Creation Date"/>
       <keyCalculation datatype="DATE" expressionLanguage="SQL">
         <formula>TO_DATE(&quot;BUT0ID_ENTRY_DATE&quot;)</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
-    <measure id="RISK_SCORE" order="35" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="RISK_SCORE"/>
-      <measureMapping columnObjectName="J_BPINFO_LTIRISK" columnName="RISK_SCORE"/>
+    <measure id="CC_Age" order="25" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_Age"/>
+      <measureMapping columnObjectName="NonEquiJoin_1" columnName="CC_Age"/>
     </measure>
-    <measure id="CC_BP_Count" order="36" aggregationType="sum" measureType="simple">
+    <measure id="RISK_SCORE" order="32" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="RISK_SCORE"/>
+      <measureMapping columnObjectName="NonEquiJoin_1" columnName="RISK_SCORE"/>
+    </measure>
+    <measure id="CUST_ID" order="36" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CUST_ID"/>
+      <measureMapping columnObjectName="NonEquiJoin_1" columnName="CUST_ID"/>
+    </measure>
+    <measure id="CC_BP_Count" order="37" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CC_BP_Count"/>
-      <measureMapping columnObjectName="J_BPINFO_LTIRISK" columnName="CC_BP_Count"/>
+      <measureMapping columnObjectName="NonEquiJoin_1" columnName="CC_BP_Count"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
@@ -1891,9 +2075,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       
       
       
+      
       </measure>
-    <measure id="CC_Risk_Score" order="37" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+    <measure id="CC_Risk_Score" order="3" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
       <formula>IF(&quot;CC_BP_Count&quot;&gt;0 and not isnull(&quot;CC_BP_Count&quot;) or &quot;RISK_SCORE&quot;&gt;0 and not isnull(&quot;RISK_SCORE&quot;),(&quot;RISK_SCORE&quot;/&quot;CC_BP_Count&quot;),0)</formula>
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -1902,25 +2088,25 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="1016" y="112"/>
+      <upperLeftCorner x="1087.0750430056296" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="847" y="1476"/>
+      <upperLeftCorner x="976.8060934885652" y="1656.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPROLE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1057" y="1636"/>
+      <upperLeftCorner x="556.8060934885649" y="1816.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ADR2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="427" y="1476"/>
+      <upperLeftCorner x="1186.8060934885652" y="1656.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="847" y="1156"/>
+      <upperLeftCorner x="811.2522862074701" y="1336.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="J_BPINFO_ACN" modelObjectType="JoinNodeInput">
@@ -1932,7 +2118,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="874" y="1316"/>
+      <upperLeftCorner x="837.9189528741367" y="1496.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BPINFO" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
@@ -1944,16 +2130,16 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BP_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="637" y="1484"/>
+      <upperLeftCorner x="556.8060934885649" y="1664.499989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BP_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1057" y="1484"/>
+      <upperLeftCorner x="766.806093488565" y="1664.499989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="645" y="976"/>
+      <upperLeftCorner x="837.9189528741367" y="1156.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="J_BPINFO_RESADDRS" modelObjectType="JoinNodeInput">
@@ -1965,11 +2151,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="J_RESID_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="618" y="1164"/>
+      <upperLeftCorner x="1031.88956760255" y="1344.4999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRS_PHONE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="410" y="1316"/>
+      <upperLeftCorner x="1210.5308014220273" y="1496.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="J_ADDRS_PHONE" modelObjectType="JoinNodeInput">
@@ -1981,7 +2167,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="1476"/>
+      <upperLeftCorner x="1396.8060934885652" y="1656.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="J_ADDRES_EMAIL" modelObjectType="JoinNodeInput">
@@ -1994,25 +2180,25 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
   
     <shape expanded="true" modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91" y="1646"/>
+      <upperLeftCorner x="1241.7219585538796" y="1826.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_ADR6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="301" y="1636"/>
+      <upperLeftCorner x="1464.7927718577378" y="1816.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="1761"/>
+      <upperLeftCorner x="1241.7219585538796" y="1941.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SERVICE_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="383" y="1164"/>
+      <upperLeftCorner x="1241.8895676025502" y="1344.4999916553497"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="618" y="816"/>
+      <upperLeftCorner x="1042.5833466670583" y="996.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="J_BPINFO_SERADDRS" modelObjectType="JoinNodeInput">
@@ -2024,12 +2210,12 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PORTALID" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1267" y="1481"/>
+      <upperLeftCorner x="346.8060934885649" y="1661.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_PORTALID_RELS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1320" y="1316"/>
+      <upperLeftCorner x="293.47276015523175" y="1496.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PORTALID" modelObjectNameSpace="J_PORTALID_RELS" modelObjectType="JoinNodeInput">
@@ -2041,11 +2227,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BUT050" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1477" y="1476"/>
+      <upperLeftCorner x="92" y="1656.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_PORTALACC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="645" y="656"/>
+      <upperLeftCorner x="1015.9166800003916" y="836.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="J_BPINFO_PORTALACC" modelObjectType="JoinNodeInput">
@@ -2057,7 +2243,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PORTALACC_RELS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="910" y="976"/>
+      <upperLeftCorner x="540.2179555073919" y="1156.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PORTALID" modelObjectNameSpace="J_PORTALACC_RELS" modelObjectType="JoinNodeInput">
@@ -2069,12 +2255,12 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_ONLY_ONE_REL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1272" y="1174"/>
+      <upperLeftCorner x="293.47276015523175" y="1354.4999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_OPTINFLAG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="672" y="496"/>
+      <upperLeftCorner x="805.5411092902875" y="676.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_PORTALACC" modelObjectNameSpace="J_BPINFO_OPTINFLAG" modelObjectType="JoinNodeInput">
@@ -2086,15 +2272,15 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPCONTRACT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="876" y="656"/>
+      <upperLeftCorner x="778.8744426236208" y="836.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPOwnerTypes" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1070" y="496"/>
+      <upperLeftCorner x="1096.1640768257787" y="676.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="698" y="356"/>
+      <upperLeftCorner x="832.207775956954" y="516.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_OPTINFLAG" modelObjectNameSpace="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectType="JoinNodeInput">
@@ -2107,11 +2293,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
   
     <shape expanded="true" modelObjectName="P_LITRisk" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1068" y="356"/>
+      <upperLeftCorner x="1241.8875604681107" y="516.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_LTIRISK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1016" y="217"/>
+      <upperLeftCorner x="1199.2158246261965" y="356.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectNameSpace="J_BPINFO_LTIRISK" modelObjectType="JoinNodeInput">
@@ -2120,6 +2306,23 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
     <shape modelObjectName="P_LITRisk" modelObjectNameSpace="J_BPINFO_LTIRISK" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="366" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_ContractValues" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="989.2158246261964" y="356.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="NonEquiJoin_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1087.0750430056296" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_LTIRISK" modelObjectNameSpace="NonEquiJoin_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_ContractValues" modelObjectNameSpace="NonEquiJoin_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="381" y="30"/>
       <rectangleSize width="250"/>
     </shape>
   </shapes>
