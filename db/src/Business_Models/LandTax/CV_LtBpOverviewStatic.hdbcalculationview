@@ -126,7 +126,14 @@
     
       <viewAttribute id="CC_Reengagement_Flag">
         <descriptions defaultDescription="CC_Reengagement_Flag"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="CC_Individual">
+        <descriptions defaultDescription="CC_Individual"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Non-Individual">
+        <descriptions defaultDescription="CC_Non-Individual"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Tables::LtBpOverview">
@@ -171,7 +178,10 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Risk_Score" source="CC_Risk_Score"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Count" source="CC_BP_Count"/>
     
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Flag" source="CC_Reengagement_Flag"/></input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Flag" source="CC_Reengagement_Flag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Individual" source="CC_Individual"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Non-Individual" source="CC_Non-Individual"/>
+    </input>
   </calculationView>
 </calculationViews>
 <logicalModel id="P_BPOVERVIEW">
@@ -332,7 +342,7 @@
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="40">
         <formula>IF (&quot;RISK_SCORE&quot;&gt;=36, 'LT Insights Exist','')</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="RISK_SCORE" order="30" aggregationType="sum" measureType="simple">
@@ -343,6 +353,15 @@
     <measure id="CC_BP_Count" order="37" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CC_BP_Count"/>
       <measureMapping columnObjectName="P_BPOVERVIEW" columnName="CC_BP_Count"/>
+    </measure>
+  
+    <measure id="CC_Individual" order="41" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_Individual"/>
+      <measureMapping columnObjectName="P_BPOVERVIEW" columnName="CC_Individual"/>
+    </measure>
+    <measure id="CC_Non-Individual" order="42" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_Non-Individual"/>
+      <measureMapping columnObjectName="P_BPOVERVIEW" columnName="CC_Non-Individual"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
@@ -368,12 +387,21 @@
       
       
       
+      
       </measure>
   
     <measure id="CC_Risk_Score" order="36" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
       <formula>IF(&quot;CC_BP_Count&quot;&gt;0 and not isnull(&quot;CC_BP_Count&quot;) or &quot;RISK_SCORE&quot;&gt;0 and not isnull(&quot;RISK_SCORE&quot;),(&quot;RISK_SCORE&quot;/&quot;CC_BP_Count&quot;),0)</formula>
       
       
+      
+      </measure>
+  
+    <measure id="CC_Individual_Count" order="39" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+      <formula>IF(&quot;CC_BP_Count&quot;&gt;0 and not isnull(&quot;CC_BP_Count&quot;) or &quot;CC_Individual&quot;&gt;0 and not isnull(&quot;CC_Individual&quot;),(&quot;CC_Individual&quot;/&quot;CC_BP_Count&quot;),0)</formula>
+      </measure>
+    <measure id="CC_Non-Individual_Count" order="40" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+      <formula>IF(&quot;CC_BP_Count&quot;&gt;0 and not isnull(&quot;CC_BP_Count&quot;) or &quot;CC_Non-Individual&quot;&gt;0 and not isnull(&quot;CC_Non-Individual&quot;),(&quot;CC_Non-Individual&quot;/&quot;CC_BP_Count&quot;),0)</formula>
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
