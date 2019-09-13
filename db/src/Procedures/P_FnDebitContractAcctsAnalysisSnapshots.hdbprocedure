@@ -1,4 +1,4 @@
-PROCEDURE "osr.business.semantic.db.Procedures::P_DebitContractAcctsAnalysisSnapshots"( )
+PROCEDURE "osr.business.semantic.db.Procedures::P_FnDebitContractAcctsAnalysisSnapshots"( )
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
    --DEFAULT SCHEMA <default_schema_name>
@@ -14,10 +14,10 @@ BEGIN
 		DECLARE dt_keydate DATE = curr_row.DATE_SQL;
 		
 		output_table = 
-		SELECT :dt_keydate AS "KeyDate", "VTREF", "CreditDebitFlag", SUM("BETRH") AS "BETRH", SUM("ContractCounter") AS "ContractCounter"
-		FROM "osr.business.semantic.db.Business_Models.Finance::CV_DebitContractAcctsAnalysis"
+		SELECT :dt_keydate AS "KeyDate", "VTREF", "CreditDebitFlag", "AccountBalanceRange", SUM("BETRH") AS "BETRH", SUM("ContractCounter") AS "ContractCounter", CURRENT_DATE
+		FROM "osr.business.semantic.db.Business_Models.Finance::CV_FnDebitContractAcctsAnalysis"
 			(placeholder."$$IP_KeyDate$$"=>:dt_keydate)
-		GROUP BY "VTREF", "CreditDebitFlag";
+		GROUP BY "VTREF", "CreditDebitFlag", "AccountBalanceRange";
 		
 		DELETE FROM "osr.business.semantic.db.Tables::FnDebitContractAcctsAnalysis"
 		WHERE "KeyDate" = :dt_keydate;
