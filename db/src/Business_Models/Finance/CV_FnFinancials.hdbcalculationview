@@ -475,6 +475,10 @@
       <viewAttribute id="AgeDaysStatus">
         <descriptions defaultDescription="Age Days Status"/>
       </viewAttribute>
+    
+      <viewAttribute id="ValueCategory">
+        <descriptions defaultDescription="ValueCategory"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -626,6 +630,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonthsStatus" source="AgeMonthsStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ValueCategory" source="ValueCategory"/>
     </input>
     <filter>&quot;STAKZ&quot; != 'R'</filter>
   </calculationView>
@@ -1138,6 +1144,10 @@
       <viewAttribute id="AUSDT">
         <descriptions defaultDescription="AUSDT"/>
       </viewAttribute>
+    
+      <viewAttribute id="ValueCategory">
+        <descriptions defaultDescription="ValueCategory"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1289,6 +1299,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonthsStatus" source="AgeMonthsStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ValueCategory" source="ValueCategory"/>
     </input>
     <input node="R_LATESTDUNNING">
       <mapping xsi:type="Calculation:AttributeMapping" target="STEP" source="STEP"/>
@@ -1794,6 +1806,10 @@
       <viewAttribute id="ZZTFLDPVC3OA">
         <descriptions defaultDescription="Solvency Status"/>
       </viewAttribute>
+    
+      <viewAttribute id="ValueCategory">
+        <descriptions defaultDescription="ValueCategory"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1948,6 +1964,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUSDT" source="AUSDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ValueCategory" source="ValueCategory"/>
     </input>
     <input node="P_CV_BpSolvency">
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTFLDPVC3OA" source="ZZTFLDPVC3OA"/>
@@ -1973,8 +1991,7 @@
       </viewAttribute>
       <viewAttribute id="BLART">
         <descriptions defaultDescription="Document Type"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_CV_Financials">
@@ -1982,8 +1999,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
-    </input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/></input>
     <filter>&quot;OpenItemFlag&quot; = 'X' AND &quot;BLART&quot; != 'B1' AND &quot;VTREF&quot; != ''</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_FIN_BALANCE" cardinality="CN_1" joinType="leftOuter">
@@ -2452,6 +2468,9 @@
       <viewAttribute id="AccountBalanceRange">
         <descriptions defaultDescription="AccountBalanceRange"/>
       </viewAttribute>
+      <viewAttribute id="ValueCategory">
+        <descriptions defaultDescription="ValueCategory"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -2607,6 +2626,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUSDT" source="AUSDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTFLDPVC3OA" source="ZZTFLDPVC3OA"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ValueCategory" source="ValueCategory"/>
     </input>
     <input node="AGG_CONTACCTBAL">
       <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemBalance" source="OpenItemBalance"/>
@@ -2640,21 +2661,24 @@ string(null)
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="AccountBalanceRange" datatype="NVARCHAR" length="25" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;OpenItemBalance&quot; &lt; 100.00,'Less than $100',
-if(&quot;OpenItemBalance&quot; &gt;= 100.00 AND &quot;OpenItemBalance&quot; &lt; 1000.00,'$100 to $999.99',
-if(&quot;OpenItemBalance&quot; &gt;= 1000.00 AND &quot;OpenItemBalance&quot; &lt; 10000.00,'$1,000 to $9,999.99',
-if(&quot;OpenItemBalance&quot; &gt;= 10000.00 AND &quot;OpenItemBalance&quot; &lt; 1000000.00,'$10,000 to $999,999.99',
-if(&quot;OpenItemBalance&quot; &gt;= 1000000.00,'$1,000,000 and greater',
+    
+        <formula>if(abs(&quot;OpenItemBalance&quot;) &lt; 100.00,'Less than $100.00',
+if(abs(&quot;OpenItemBalance&quot;) &gt;= 100.00 AND abs(&quot;OpenItemBalance&quot;) &lt; 1000.01,'$100.00 to $1000.00',
+if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000.01 AND abs(&quot;OpenItemBalance&quot;) &lt; 10000.01,'$1,000.01 to $10,000.00',
+if(abs(&quot;OpenItemBalance&quot;) &gt;= 10000.01 AND abs(&quot;OpenItemBalance&quot;) &lt; 100000.01,'$10,000.01 to $100,000.00',
+if(abs(&quot;OpenItemBalance&quot;) &gt;= 100000.01 AND abs(&quot;OpenItemBalance&quot;) &lt; 500000.01,'$100,000.01 to $500,000.00',
+if(abs(&quot;OpenItemBalance&quot;) &gt;= 500000.01 AND abs(&quot;OpenItemBalance&quot;) &lt; 1000000.01,'$500,000.01 to $1,000,000',
+if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
 'Err'
-)))))</formula>
+)))))))</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="P_CONTACCTBAL">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemBalance" source="BETRH"/>
-    </input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemBalance" source="BETRH"/></input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CALENDAR">
     <viewAttributes>
@@ -3151,6 +3175,9 @@ if(&quot;OpenItemBalance&quot; &gt;= 1000000.00,'$1,000,000 and greater',
       <viewAttribute id="AccountBalanceRange">
         <descriptions defaultDescription="AccountBalanceRange"/>
       </viewAttribute>
+      <viewAttribute id="ValueCategory">
+        <descriptions defaultDescription="ValueCategory"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -3311,6 +3338,7 @@ if(&quot;OpenItemBalance&quot; &gt;= 1000000.00,'$1,000,000 and greater',
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceStatus" source="AccountBalanceStatus"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ValueCategory" source="ValueCategory"/>
     </input>
     <input node="P_CALENDAR">
       <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
@@ -3868,7 +3896,13 @@ if(&quot;OpenItemBalance&quot; &gt;= 1000000.00,'$1,000,000 and greater',
   
     <attribute id="AccountBalanceRange" order="158" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="AccountBalanceRange"/>
+  
       <keyMapping columnObjectName="J_FIN_CALENDAR" columnName="AccountBalanceRange"/>
+  
+    </attribute>
+    <attribute id="ValueCategory" order="160" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ValueCategory"/>
+      <keyMapping columnObjectName="J_FIN_CALENDAR" columnName="ValueCategory"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -3966,6 +4000,11 @@ if(&quot;OpenItemBalance&quot; &gt;= 1000000.00,'$1,000,000 and greater',
       <descriptions defaultDescription="OpenItemBalance"/>
       <measureMapping columnObjectName="J_FIN_CALENDAR" columnName="OpenItemBalance"/>
     </measure>
+  
+    <measure id="AVG_BETRH" order="159" aggregationType="avg" measureType="simple">
+      <descriptions defaultDescription="BETRH"/>
+      <measureMapping columnObjectName="J_FIN_CALENDAR" columnName="BETRH"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures>
     <measure id="DocumentCounter" order="144" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -3974,6 +4013,8 @@ if(&quot;OpenItemBalance&quot; &gt;= 1000000.00,'$1,000,000 and greater',
         <attribute attributeName="OPBEL"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
       
       
       
@@ -4000,6 +4041,8 @@ if(&quot;OpenItemBalance&quot; &gt;= 1000000.00,'$1,000,000 and greater',
       
       
       
+      
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -4012,17 +4055,17 @@ if(&quot;OpenItemBalance&quot; &gt;= 1000000.00,'$1,000,000 and greater',
     </shape>
   
     <shape expanded="true" modelObjectName="P_CV_Financials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="872"/>
+      <upperLeftCorner x="83" y="1027"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="R_LATESTDUNNING" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="315" y="862"/>
+      <upperLeftCorner x="315" y="1035"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_FIN_LATESTDUNNING" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="104" y="645"/>
+      <upperLeftCorner x="86" y="883"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CV_Financials" modelObjectNameSpace="J_FIN_LATESTDUNNING" modelObjectType="JoinNodeInput">
@@ -4034,11 +4077,11 @@ if(&quot;OpenItemBalance&quot; &gt;= 1000000.00,'$1,000,000 and greater',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_BpSolvency" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="315" y="645"/>
+      <upperLeftCorner x="318" y="883"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_SOLVENCY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="102" y="509"/>
+      <upperLeftCorner x="92" y="745"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FIN_LATESTDUNNING" modelObjectNameSpace="J_FIN_SOLVENCY" modelObjectType="JoinNodeInput">
@@ -4050,11 +4093,11 @@ if(&quot;OpenItemBalance&quot; &gt;= 1000000.00,'$1,000,000 and greater',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CONTACCTBAL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-134" y="758"/>
+      <upperLeftCorner x="-124" y="883"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_BALANCE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="104" y="358"/>
+      <upperLeftCorner x="96" y="599"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FIN_SOLVENCY" modelObjectNameSpace="J_FIN_BALANCE" modelObjectType="JoinNodeInput">
@@ -4066,16 +4109,16 @@ if(&quot;OpenItemBalance&quot; &gt;= 1000000.00,'$1,000,000 and greater',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_CONTACCTBAL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-134" y="515"/>
+      <upperLeftCorner x="-123" y="745"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CALENDAR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="325" y="358"/>
+      <upperLeftCorner x="325" y="605"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_CALENDAR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="104" y="225"/>
+      <upperLeftCorner x="96" y="457"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FIN_BALANCE" modelObjectNameSpace="J_FIN_CALENDAR" modelObjectType="JoinNodeInput">

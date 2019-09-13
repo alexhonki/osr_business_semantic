@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnGeneralLedgerBasic" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_FnGeneralLedgerBasic"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::DFKKOPK">
+    <resourceUri>osr.business.semantic.db.synonyms::DFKKOPK</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::DFKKZK">
+    <resourceUri>osr.business.semantic.db.synonyms::DFKKZK</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::CEPCT">
+    <resourceUri>osr.business.semantic.db.synonyms::CEPCT</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FINANCIALS">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="Profit Center"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="General ledger account"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH">
+        <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+      </viewAttribute>
+    
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="Document Number in Contract Accounts Receivable and Payable"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBL">
+        <descriptions defaultDescription="Clearing Document or Printed Document"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBD">
+        <descriptions defaultDescription="Clearing document posting date"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBD" source="AUGBD"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKOPK">
+    <viewAttributes>
+      <viewAttribute id="VALUT">
+        <descriptions defaultDescription="VALUT"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+    
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::DFKKOPK">
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALUT" source="VALUT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/></input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="U_GENLEDGERS">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="Profit Center"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="General ledger account"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
+      </viewAttribute>
+      <viewAttribute id="POSTINGDATE">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+      </viewAttribute>
+    
+      <viewAttribute datatype="NVARCHAR" length="10" id="Source">
+        <descriptions defaultDescription="Source"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="AGG_FIN" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POSTINGDATE" source="DFKK_H_BUDAT"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Source" null="false" value="DFKKOP"/>
+    </input>
+    <input node="J_DOCDATE" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POSTINGDATE" source="RelevantDate"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Source" null="false" value="DFKKOPK"/>
+    </input>
+  
+    <input node="P_DFKKZK" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="BVRKO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="SUMMS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POSTINGDATE" source="BUDAT"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Source" null="false" value="DFKKZK"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_FIN">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT">
+        <descriptions defaultDescription="DFKK_H_BUDAT"/>
+      </viewAttribute>
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_FINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_DOCDATE" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="VALUT">
+        <descriptions defaultDescription="VALUT"/>
+      </viewAttribute>
+      <viewAttribute id="DOCDATE">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$OPBEL$DOCNUM"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="RelevantDate" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;VALUT&quot; = '00000000',&quot;DOCDATE&quot;,&quot;VALUT&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="P_DFKKOPK">
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALUT" source="VALUT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OPBEL$DOCNUM" source="OPBEL"/>
+    </input>
+    <input node="U_DOCDATES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOCDATE" source="DOCDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OPBEL$DOCNUM" source="DOCNUM"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="JOIN$OPBEL$DOCNUM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKZK">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="BVRKO">
+        <descriptions defaultDescription="BVRKO"/>
+      </viewAttribute>
+      <viewAttribute id="SUMMS">
+        <descriptions defaultDescription="SUMMS"/>
+      </viewAttribute>
+    
+      <viewAttribute id="BUDAT">
+        <descriptions defaultDescription="BUDAT"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::DFKKZK">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BVRKO" source="BVRKO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUMMS" source="SUMMS"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="U_DOCDATES">
+    <viewAttributes>
+      <viewAttribute id="DOCDATE">
+        <descriptions defaultDescription="DFKK_H_BUDAT"/>
+      </viewAttribute>
+      <viewAttribute id="DOCNUM">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute>
+    
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_POSTING" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOCDATE" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOCNUM" source="OPBEL"/>
+    </input>
+    <input node="P_CLEARING" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOCDATE" source="AUGBD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOCNUM" source="AUGBL"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_POSTING">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="DFKK_H_BUDAT">
+        <descriptions defaultDescription="DFKK_H_BUDAT"/>
+      </viewAttribute>
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_FINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CLEARING">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBD">
+        <descriptions defaultDescription="Clearing document posting date"/>
+      </viewAttribute>
+    
+      <viewAttribute id="AUGBL">
+        <descriptions defaultDescription="Clearing Document or Printed Document"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_FINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBD" source="AUGBD"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_GL_PERIODS" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+    
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+    
+      <viewAttribute id="Source">
+        <descriptions defaultDescription="Source"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$POSTINGDATE$DATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="U_GENLEDGERS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$POSTINGDATE$DATE" source="POSTINGDATE"/>
+    </input>
+    <input node="P_CALENDAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$POSTINGDATE$DATE" source="DATE"/>
+    </input>
+    <joinAttribute name="JOIN$POSTINGDATE$DATE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CALENDAR">
+    <viewAttributes>
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+    
+      <viewAttribute id="DATE">
+        <descriptions defaultDescription="DATE"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE" source="DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_GLPER_PRCTRDESC" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+      <viewAttribute id="KTEXT">
+        <descriptions defaultDescription="KTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="LTEXT">
+        <descriptions defaultDescription="LTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="MCTXT">
+        <descriptions defaultDescription="MCTXT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="Source">
+        <descriptions defaultDescription="Source"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_GL_PERIODS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
+    </input>
+    <input node="P_CEPCT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MCTXT" source="MCTXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="PRCTR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CEPCT" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="KTEXT">
+        <descriptions defaultDescription="KTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="LTEXT">
+        <descriptions defaultDescription="LTEXT"/>
+      </viewAttribute>
+      <viewAttribute id="MCTXT">
+        <descriptions defaultDescription="MCTXT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="SPRAS">
+        <descriptions defaultDescription="SPRAS"/>
+      </viewAttribute>
+      <viewAttribute id="KOKRS">
+        <descriptions defaultDescription="KOKRS"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::CEPCT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPRAS" source="SPRAS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MCTXT" source="MCTXT"/>
+    </input>
+    <filter>&quot;SPRAS&quot; = 'E' AND &quot;KOKRS&quot; = '1000'</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_GLPER_PRCTRDESC">
+  <attributes>
+    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="MANDT"/>
+    </attribute>
+    <attribute id="PRCTR" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Profit Center"/>
+      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="PRCTR"/>
+    </attribute>
+    <attribute id="HKONT" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="General ledger account"/>
+      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="HKONT"/>
+    </attribute>
+    <attribute id="FISCAL_YEAR" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FISCAL_YEAR"/>
+      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="FISCAL_YEAR"/>
+    </attribute>
+    <attribute id="FiscalMonth" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FiscalMonth"/>
+      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="FiscalMonth"/>
+    </attribute>
+    <attribute id="KTEXT" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="KTEXT"/>
+      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="KTEXT"/>
+    </attribute>
+    <attribute id="LTEXT" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LTEXT"/>
+      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="LTEXT"/>
+    </attribute>
+    <attribute id="MCTXT" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MCTXT"/>
+      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="MCTXT"/>
+    </attribute>
+  
+    <attribute id="Source" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Source"/>
+  
+      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="Source"/>
+  
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="BETRH" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
+      <measureMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="BETRH"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="337" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_FINANCIALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="464" y="1203"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_DFKKOPK" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="17" y="871"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="U_GENLEDGERS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="131" y="536"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_FIN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="520" y="827"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_DOCDATE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="123" y="703"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_DFKKOPK" modelObjectNameSpace="J_DOCDATE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="U_DOCDATES" modelObjectNameSpace="J_DOCDATE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_DFKKZK" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-142" y="711"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="U_DOCDATES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="194" y="958"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_POSTING" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="98" y="1094"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CLEARING" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="354" y="1094"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_GL_PERIODS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="414" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="U_GENLEDGERS" modelObjectNameSpace="J_GL_PERIODS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CALENDAR" modelObjectNameSpace="J_GL_PERIODS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CALENDAR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="464" y="536"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_GLPER_PRCTRDESC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="337" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_GL_PERIODS" modelObjectNameSpace="J_GLPER_PRCTRDESC" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CEPCT" modelObjectNameSpace="J_GLPER_PRCTRDESC" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CEPCT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="204" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape></shapes>
+</layout>
+</Calculation:scenario>
