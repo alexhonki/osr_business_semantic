@@ -83,6 +83,14 @@
       <viewAttribute id="CREATED_BY">
         <descriptions defaultDescription="CREATED_BY"/>
       </viewAttribute>
+    
+      <viewAttribute id="CC_BusinessDaysCount">
+        <descriptions defaultDescription="CC_BusinessDaysCount"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_OSS">
+        <descriptions defaultDescription="CC_OSS"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -113,6 +121,10 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGED_BY" source="CHANGED_BY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="CREATED_BY"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BusinessDaysCount" source="CC_BusinessDaysCount"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OSS" source="CC_OSS"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -203,11 +215,18 @@
   
     <attribute id="CHANGED_BY" order="24" descriptionColumnName="Changed_CompletedName" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Changed by"/>
+  
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CHANGED_BY"/>
+  
     </attribute>
     <attribute id="CREATED_BY" order="25" descriptionColumnName="CreatedByName" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Created by"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CREATED_BY"/>
+    </attribute>
+  
+    <attribute id="CC_OSS" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Over Service Standard (20 Business Days)"/>
+      <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_OSS"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -219,7 +238,12 @@
     <measure id="CC_RowCount" order="16" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Row Count"/>
       <measureMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_RowCount"/>
-    </measure></baseMeasures>
+    </measure>
+    <measure id="CC_BusinessDaysCount" order="26" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Business Days"/>
+      <measureMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_BusinessDaysCount"/>
+    </measure>
+  </baseMeasures>
   <calculatedMeasures>
     <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Counter"/>
@@ -231,10 +255,14 @@
       
       
       
+      
+      
       </measure>
     <measure id="CC_WorkItemDurationAvg" order="17" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Workflow Item (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
+      
       
       
       
