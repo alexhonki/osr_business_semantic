@@ -674,7 +674,17 @@
         <descriptions defaultDescription="OSR_CASE_CLOSE_REASON_KEY"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_CreationMode" datatype="VARCHAR" length="9" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CREATION_MODE&quot; = 'M', 'Manual', if(&quot;CREATION_MODE&quot; = 'D','Detection', 'Other'))</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_LifecycleStatus" datatype="VARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;LIFECYCLE_STATUS&quot; = '01', 'Not Started', if(&quot;LIFECYCLE_STATUS&quot; = '02', 'In Process', if(&quot;LIFECYCLE_STATUS&quot; = '03', 'Completed', 'Other')))</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_ComplStatus" datatype="VARCHAR" length="30" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;LIFECYCLE_STATUS&quot; = '01', 'Confirmed', if(&quot;LIFECYCLE_STATUS&quot; = '02', 'False Alarm', if(&quot;LIFECYCLE_STATUS&quot; = '03', 'Closed Without Investigation', 'Other')))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="P_ALERT_ROOT">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -770,7 +780,7 @@
       <keyMapping columnObjectName="J_ROOT_ITEM" columnName="INVEST_OBJ_TYPE"/>
     </attribute>
     <attribute id="INVEST_OBJ_ID" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="INVEST_OBJ_ID"/>
+      <descriptions defaultDescription="LT Co Owner GUID or PRT ABN"/>
       <keyMapping columnObjectName="J_ROOT_ITEM" columnName="INVEST_OBJ_ID"/>
     </attribute>
     <attribute id="INVEST_OBJ_ID2" order="6" displayAttribute="false" attributeHierarchyActive="false">
@@ -972,7 +982,9 @@
   
     <attribute id="OSR_ALERT_ROLE" order="62" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OSR_ALERT_ROLE"/>
+  
       <keyMapping columnObjectName="J_ROOT_ITEM" columnName="OSR_ALERT_ROLE"/>
+  
     </attribute>
     <attribute id="OSR_PRT_GRP_DESC" order="63" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OSR_PRT_GRP_DESC"/>
@@ -985,6 +997,19 @@
     <attribute id="OSR_CASE_CLOSE_REASON_KEY" order="65" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OSR_CASE_CLOSE_REASON_KEY"/>
       <keyMapping columnObjectName="J_ROOT_ITEM" columnName="OSR_CASE_CLOSE_REASON_KEY"/>
+    </attribute>
+  
+    <attribute id="CC_CreationMode" order="66" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_CreationMode"/>
+      <keyMapping columnObjectName="J_ROOT_ITEM" columnName="CC_CreationMode"/>
+    </attribute>
+    <attribute id="CC_LifecycleStatus" order="67" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_LifecycleStatus"/>
+      <keyMapping columnObjectName="J_ROOT_ITEM" columnName="CC_LifecycleStatus"/>
+    </attribute>
+    <attribute id="CC_ComplStatus" order="68" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_ComplStatus"/>
+      <keyMapping columnObjectName="J_ROOT_ITEM" columnName="CC_ComplStatus"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -1027,6 +1052,7 @@
       <formula>1</formula>
       
       
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -1052,11 +1078,11 @@
     </shape>
     <shape modelObjectName="P_ALERT_ROOT" modelObjectNameSpace="J_ROOT_ITEM" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
+      <rectangleSize width="270.01904296875"/>
     </shape>
     <shape modelObjectName="P_ALERT_ITEM" modelObjectNameSpace="J_ROOT_ITEM" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
+      <rectangleSize width="259.1962890625"/>
     </shape>
   </shapes>
 </layout>
