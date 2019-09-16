@@ -151,7 +151,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     
       <calculatedViewAttribute id="CC_SixtyDays" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>if(&quot;CC_Status&quot; = 'Open Status' and &quot;CC_Days_Bt_Creation_Mod_ROW&quot; &gt; 60,'X','')</formula>
+        <formula>if(&quot;CC_Days_Bt_Creation_Mod_ROW&quot; &gt; 60,'X','')</formula>
     
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Days_Bt_Creation_Mod_ROW" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
@@ -160,7 +160,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     
       <calculatedViewAttribute id="CC_ThirtyDays" datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>if(&quot;CC_Status&quot; = 'Open Status' and &quot;CC_Days_Bt_Creation_Mod_ROW&quot; &gt; 30,'X','')</formula>
+        <formula>if(&quot;CC_Days_Bt_Creation_Mod_ROW&quot; &gt; 30,'X','')</formula>
     
       </calculatedViewAttribute>
     </calculatedViewAttributes>
@@ -481,7 +481,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_BusinessDay" source="CC_BusinessDay"/>
     </input>
-    <filter>&quot;CC_BusinessDay&quot;='Non Business Day'</filter>
+    <filter>&quot;CC_BusinessDay&quot;='Non Business Day' AND &quot;DATE_SQL&quot; &lt; now()</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_CalendarWorkItems" cardinality="CN_1" joinType="inner">
     <viewAttributes>
@@ -498,6 +498,10 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <viewAttribute id="CC_NonBusDayCount" aggregationType="sum">
         <descriptions defaultDescription="CC_NonBusDayCount"/>
       </viewAttribute>
+    
+      <viewAttribute id="ACTIVITY_PARTNER">
+        <descriptions defaultDescription="Activity Partner"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -505,6 +509,8 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="CreatedDate" source="CreatedDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Change_CompletedDate" source="Change_CompletedDate"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
     </input>
     <input node="P_Calendar">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_NonBusDayCount" source="CC_NonBusDayCount"/>
@@ -521,6 +527,10 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <viewAttribute id="CC_NonBusDayCount" aggregationType="sum">
         <descriptions defaultDescription="CC_NonBusDayCount"/>
       </viewAttribute>
+    
+      <viewAttribute id="ACTIVITY_PARTNER">
+        <descriptions defaultDescription="Activity Partner"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -528,6 +538,8 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_NonBusDayCount" source="CC_NonBusDayCount"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_AGGNonBusDays_WorkItems" cardinality="C1_1" joinType="leftOuter">
@@ -616,6 +628,8 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
         <formula>if(&quot;CC_BusinessDaysCount&quot;&gt;20,'X','')</formula>
     
       </calculatedViewAttribute>
+    
+      
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="U_PrtTasksInteractions_Workflow">
@@ -647,8 +661,10 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_NonBusDayCount" source="CC_NonBusDayCount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WorkItemID$WorkItemID" source="WorkItemID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
     </input>
     <joinAttribute name="JOIN$WorkItemID$WorkItemID"/>
+    <joinAttribute name="ACTIVITY_PARTNER"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_AGGNonBusDays_WorkItems">
@@ -855,7 +871,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </shape>
     <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="NEJ_CalendarWorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
+      <rectangleSize width="257.7890625"/>
     </shape>
     <shape modelObjectName="P_Calendar" modelObjectNameSpace="NEJ_CalendarWorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="413" y="46"/>
