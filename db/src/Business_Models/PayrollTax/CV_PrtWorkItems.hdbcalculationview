@@ -272,9 +272,6 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <viewAttribute id="TXT30">
         <descriptions defaultDescription="Status Text"/>
       </viewAttribute>
-      <viewAttribute id="OBJECT_ID">
-        <descriptions defaultDescription="Object ID"/>
-      </viewAttribute>
       <viewAttribute id="CC_PRT_Type">
         <descriptions defaultDescription="CC_PRT_Type"/>
       </viewAttribute>
@@ -290,6 +287,9 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       </viewAttribute>
       <viewAttribute id="CREATED_BY">
         <descriptions defaultDescription="Created By (Team Member)"/>
+      </viewAttribute>
+      <viewAttribute id="OBJECT_ID">
+        <descriptions defaultDescription="Object ID"/>
       </viewAttribute>
     
       <viewAttribute id="P_DESCRIPTION">
@@ -393,9 +393,6 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <viewAttribute id="WI_STAT">
         <descriptions defaultDescription="Work Item Status"/>
       </viewAttribute>
-      <viewAttribute id="WI_ID">
-        <descriptions defaultDescription="Work Item ID"/>
-      </viewAttribute>
       <viewAttribute id="CC_PRT_WF_Type">
         <descriptions defaultDescription="PRT Workflow Type"/>
       </viewAttribute>
@@ -410,6 +407,9 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       </viewAttribute>
       <viewAttribute id="WI_CRUSER">
         <descriptions defaultDescription="User Created"/>
+      </viewAttribute>
+      <viewAttribute id="WI_ID">
+        <descriptions defaultDescription="Work Item ID"/>
       </viewAttribute>
     
     
@@ -627,7 +627,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_BusinessDaysCount" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;CC_Days_Bt_Creation_Mod&quot; = 0,0,if(&quot;CC_Days_Bt_Creation_Mod&quot; &lt; &quot;CC_NonBusDayCount&quot;,&quot;CC_Days_Bt_Creation_Mod&quot;,
+        <formula>if(&quot;CC_Days_Bt_Creation_Mod&quot; = 0,0,if(&quot;CC_NonBusDayCount&quot;&gt;= 0,0,
 &quot;CC_Days_Bt_Creation_Mod&quot;-&quot;CC_NonBusDayCount&quot;))</formula>
       </calculatedViewAttribute>
     
@@ -668,8 +668,10 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     <input node="AGG_SumNonBusDays">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_NonBusDayCount" source="CC_NonBusDayCount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
     </input>
     <joinAttribute name="ACTIVITY_PARTNER"/>
+    <joinAttribute name="WorkItemID"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_AGGNonBusDays_WorkItems">
@@ -768,7 +770,9 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
   
     <attribute id="WorkItemID" order="27" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="WorkItemID"/>
+  
       <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="WorkItemID"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -879,7 +883,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </shape>
     <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="NEJ_CalendarWorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="257"/>
+      <rectangleSize width="257.7890625"/>
     </shape>
     <shape modelObjectName="P_Calendar" modelObjectNameSpace="NEJ_CalendarWorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="413" y="46"/>
@@ -895,7 +899,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </shape>
     <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="257.7890625"/>
+      <rectangleSize width="257"/>
     </shape>
     <shape modelObjectName="AGG_SumNonBusDays" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
