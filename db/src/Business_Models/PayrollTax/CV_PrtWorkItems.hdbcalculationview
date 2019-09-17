@@ -164,6 +164,10 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
         <formula>if(&quot;CC_Days_Bt_Creation_Mod_ROW&quot; &gt; 30,'X','')</formula>
     
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_PivotBP" datatype="NVARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(IsNull(&quot;ACTIVITY_PARTNER&quot;),'NULL',&quot;ACTIVITY_PARTNER&quot;)</formula>
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="P_PRT_TI" emptyUnionBehavior="NO_ROW">
@@ -500,12 +504,12 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
         <descriptions defaultDescription="CC_NonBusDayCount"/>
       </viewAttribute>
     
-      <viewAttribute id="ACTIVITY_PARTNER">
-        <descriptions defaultDescription="Activity Partner"/>
-      </viewAttribute>
-    
       <viewAttribute id="WorkItemID">
         <descriptions defaultDescription="WorkItemID"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_PivotBP">
+        <descriptions defaultDescription="CC_PivotBP"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -514,9 +518,9 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="CreatedDate" source="CreatedDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Change_CompletedDate" source="Change_CompletedDate"/>
     
-      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PivotBP" source="CC_PivotBP"/>
     </input>
     <input node="P_Calendar">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_NonBusDayCount" source="CC_NonBusDayCount"/>
@@ -531,12 +535,12 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
         <descriptions defaultDescription="CC_NonBusDayCount"/>
       </viewAttribute>
     
-      <viewAttribute id="ACTIVITY_PARTNER">
-        <descriptions defaultDescription="Activity Partner"/>
-      </viewAttribute>
-    
       <viewAttribute id="WorkItemID">
         <descriptions defaultDescription="WorkItemID"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_PivotBP">
+        <descriptions defaultDescription="CC_PivotBP"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -545,9 +549,9 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_NonBusDayCount" source="CC_NonBusDayCount"/>
     
-      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PivotBP" source="CC_PivotBP"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_AGGNonBusDays_WorkItems" cardinality="C1_N" joinType="leftOuter">
@@ -624,11 +628,12 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <viewAttribute id="WorkItemID">
         <descriptions defaultDescription="WorkItemID"/>
       </viewAttribute>
+    
+      <viewAttribute hidden="true" id="JOIN$CC_PivotBP$CC_PivotBP"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_BusinessDaysCount" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;CC_Days_Bt_Creation_Mod&quot; = 0,0,if(&quot;CC_NonBusDayCount&quot;&gt;= 0,0,
-&quot;CC_Days_Bt_Creation_Mod&quot;-&quot;CC_NonBusDayCount&quot;))</formula>
+        <formula>if(&quot;CC_Days_Bt_Creation_Mod&quot; = 0,0,if(&quot;CC_NonBusDayCount&quot;&lt;0,0,&quot;CC_Days_Bt_Creation_Mod&quot;-&quot;CC_NonBusDayCount&quot;))</formula>
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_OSS" datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="1">
@@ -664,14 +669,16 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod_ROW" source="CC_Days_Bt_Creation_Mod_ROW"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ThirtyDays" source="CC_ThirtyDays"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_PivotBP$CC_PivotBP" source="CC_PivotBP"/>
     </input>
     <input node="AGG_SumNonBusDays">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_NonBusDayCount" source="CC_NonBusDayCount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_PivotBP$CC_PivotBP" source="CC_PivotBP"/>
     </input>
     <joinAttribute name="WorkItemID"/>
-    <joinAttribute name="ACTIVITY_PARTNER"/>
+    <joinAttribute name="JOIN$CC_PivotBP$CC_PivotBP"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_AGGNonBusDays_WorkItems">
@@ -784,7 +791,12 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     <measure id="CC_Days_Bt_Creation_Mod" order="12" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Days Between Creation (for Aggregation)"/>
       <measureMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_Days_Bt_Creation_Mod"/>
-    </measure></baseMeasures>
+    </measure>
+    <measure id="CC_NonBusDayCount" order="28" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_NonBusDayCount"/>
+      <measureMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_NonBusDayCount"/>
+    </measure>
+  </baseMeasures>
   <calculatedMeasures>
     <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Counter"/>
@@ -820,11 +832,13 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       
       
       
+      
       </measure>
   
     <measure id="CC_WorkItemDurationAvg" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Workflow Item (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
       
       
       
@@ -883,7 +897,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </shape>
     <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="NEJ_CalendarWorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="257"/>
+      <rectangleSize width="257.7890625"/>
     </shape>
     <shape modelObjectName="P_Calendar" modelObjectNameSpace="NEJ_CalendarWorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="413" y="46"/>
@@ -899,7 +913,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </shape>
     <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="257.7890625"/>
+      <rectangleSize width="257"/>
     </shape>
     <shape modelObjectName="AGG_SumNonBusDays" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
