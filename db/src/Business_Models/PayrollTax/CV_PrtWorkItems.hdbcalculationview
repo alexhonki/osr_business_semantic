@@ -10,6 +10,9 @@
   <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorflow">
     <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorflow</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:UnionView" id="U_PrtTasksInteractions_Workflow">
@@ -52,9 +55,6 @@
       <viewAttribute id="Status">
         <descriptions defaultDescription="Status Text"/>
       </viewAttribute>
-      <viewAttribute id="WorkItemID">
-        <descriptions defaultDescription="Work Item ID"/>
-      </viewAttribute>
       <viewAttribute id="WorkItemType">
         <descriptions defaultDescription="CC_PRT_Type"/>
       </viewAttribute>
@@ -68,6 +68,17 @@
       </viewAttribute>
       <viewAttribute id="CC_FullName">
         <descriptions defaultDescription="CC_FullName"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CHANGED_BY">
+        <descriptions defaultDescription="Changed By (Team Member)"/>
+      </viewAttribute>
+      <viewAttribute id="CREATED_BY">
+        <descriptions defaultDescription="Created By (Team Member)"/>
+      </viewAttribute>
+    
+      <viewAttribute id="WorkItemID">
+        <descriptions defaultDescription="Work Item ID"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -138,6 +149,33 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Objection') , 'Other Whitemail',
 if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail',
 'Unspecified'))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_SixtyDays" datatype="NVARCHAR" length="30" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(&quot;CC_Days_Bt_Creation_Mod_ROW&quot; &gt; 60,'Over 60 Calendar Days','Under 60 Calendar Days')</formula>
+    
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_Days_Bt_Creation_Mod_ROW" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>&quot;CC_Days_Bt_Creation_Mod&quot;</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_ThirtyDays" datatype="NVARCHAR" length="30" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(&quot;CC_Days_Bt_Creation_Mod_ROW&quot; &gt; 30,'Over 30 Calendar Days','Under 30 Calendar Days')</formula>
+    
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_PivotBP" datatype="NVARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(IsNull(&quot;ACTIVITY_PARTNER&quot;),'NULL',&quot;ACTIVITY_PARTNER&quot;)</formula>
+    
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_PivotCloseDate" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(&quot;CC_Status&quot;='Open Status',now(),&quot;Change_CompletedDate&quot;)</formula>
+    
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="P_PRT_TI" emptyUnionBehavior="NO_ROW">
@@ -155,13 +193,17 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_ModTI"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemDescription" source="DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="TXT30"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="OBJECT_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemType" source="CC_PRT_Type"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Status" source="CC_TI_Status"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="ACTIVPART_NAME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGED_BY" source="CHANGED_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="CREATED_BY"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="OBJECT_ID"/>
     </input>
   
     <input node="P_PRT_WF" emptyUnionBehavior="NO_ROW">
@@ -185,8 +227,6 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
   
       <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="WI_STAT"/>
   
-      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WI_ID"/>
-  
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemType" source="CC_PRT_WF_Type"/>
   
     
@@ -198,6 +238,16 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="TAXPAYER"/>
   
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
+  
+    
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGED_BY" source="WI_AAGENT"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="WI_CRUSER"/>
+  
+    
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WI_ID"/>
   
     </input>
   </calculationView>
@@ -234,9 +284,6 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <viewAttribute id="TXT30">
         <descriptions defaultDescription="Status Text"/>
       </viewAttribute>
-      <viewAttribute id="OBJECT_ID">
-        <descriptions defaultDescription="Object ID"/>
-      </viewAttribute>
       <viewAttribute id="CC_PRT_Type">
         <descriptions defaultDescription="CC_PRT_Type"/>
       </viewAttribute>
@@ -250,6 +297,13 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <viewAttribute id="CHANGED_BY">
         <descriptions defaultDescription="Changed By (Team Member)"/>
       </viewAttribute>
+      <viewAttribute id="CREATED_BY">
+        <descriptions defaultDescription="Created By (Team Member)"/>
+      </viewAttribute>
+      <viewAttribute id="OBJECT_ID">
+        <descriptions defaultDescription="Object ID"/>
+      </viewAttribute>
+    
       <viewAttribute id="P_DESCRIPTION">
         <descriptions defaultDescription="Process Type (Desc)"/>
       </viewAttribute>
@@ -316,6 +370,8 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVPART_NAME" source="ACTIVPART_NAME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="CREATED_BY"/>
     </input></calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_PRT_WF">
     <viewAttributes>
@@ -349,9 +405,6 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <viewAttribute id="WI_STAT">
         <descriptions defaultDescription="Work Item Status"/>
       </viewAttribute>
-      <viewAttribute id="WI_ID">
-        <descriptions defaultDescription="Work Item ID"/>
-      </viewAttribute>
       <viewAttribute id="CC_PRT_WF_Type">
         <descriptions defaultDescription="PRT Workflow Type"/>
       </viewAttribute>
@@ -361,6 +414,16 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <viewAttribute id="CC_FullName">
         <descriptions defaultDescription="CC_FullName"/>
       </viewAttribute>
+      <viewAttribute id="WI_AAGENT">
+        <descriptions defaultDescription="User Processed"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CRUSER">
+        <descriptions defaultDescription="User Created"/>
+      </viewAttribute>
+      <viewAttribute id="WI_ID">
+        <descriptions defaultDescription="Work Item ID"/>
+      </viewAttribute>
+    
     
     
       <viewAttribute id="WI_TYPE">
@@ -405,93 +468,354 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="TAXPAYER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AAGENT" source="WI_AAGENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="WI_CRUSER"/>
     </input></calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Calendar" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DATE_SQL">
+        <descriptions defaultDescription="Date"/>
+      </viewAttribute>
+      <viewAttribute id="CalendarYear">
+        <descriptions defaultDescription="Year"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_BusinessDay">
+        <descriptions defaultDescription="Business Day"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_NonBusDayCount" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CC_BusinessDay&quot; = 'Non Business Day',1,0)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CalendarYear" source="CalendarYear"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BusinessDay" source="CC_BusinessDay"/>
+    </input>
+    <filter>&quot;DATE_SQL&quot; BETWEEN '2009-01-01' AND ADD_DAYS(now(),14)</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_CalendarWorkItems" cardinality="CN_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="CreatedDate">
+        <descriptions defaultDescription="Creation Date"/>
+      </viewAttribute>
+      <viewAttribute id="Change_CompletedDate">
+        <descriptions defaultDescription="Last Changed date"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_NonBusDayCount" aggregationType="sum">
+        <descriptions defaultDescription="CC_NonBusDayCount"/>
+      </viewAttribute>
+    
+      <viewAttribute id="WorkItemID">
+        <descriptions defaultDescription="WorkItemID"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_PivotBP">
+        <descriptions defaultDescription="CC_PivotBP"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_PivotCloseDate">
+        <descriptions defaultDescription="CC_PivotCloseDate"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="U_PrtTasksInteractions_Workflow">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedDate" source="CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Change_CompletedDate" source="Change_CompletedDate"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PivotBP" source="CC_PivotBP"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PivotCloseDate" source="CC_PivotCloseDate"/>
+    </input>
+    <input node="P_Calendar">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_NonBusDayCount" source="CC_NonBusDayCount"/>
+    </input>
+    <joinAttribute leftColumn="CreatedDate" rightColumn="DATE_SQL" operator="LE"/>
+    <joinAttribute leftColumn="CC_PivotCloseDate" rightColumn="DATE_SQL" operator="GE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_SumNonBusDays">
+    <viewAttributes>
+    
+      <viewAttribute id="CC_NonBusDayCount" aggregationType="sum">
+        <descriptions defaultDescription="CC_NonBusDayCount"/>
+      </viewAttribute>
+    
+      <viewAttribute id="WorkItemID">
+        <descriptions defaultDescription="WorkItemID"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_PivotBP">
+        <descriptions defaultDescription="CC_PivotBP"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="NEJ_CalendarWorkItems">
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_NonBusDayCount" source="CC_NonBusDayCount"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PivotBP" source="CC_PivotBP"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_AGGNonBusDays_WorkItems" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="CreatedDate">
+        <descriptions defaultDescription="Creation Date"/>
+      </viewAttribute>
+      <viewAttribute id="Change_CompletedDate">
+        <descriptions defaultDescription="Last Changed date"/>
+      </viewAttribute>
+      <viewAttribute id="CreatedByName">
+        <descriptions defaultDescription="CreatedByName"/>
+      </viewAttribute>
+      <viewAttribute id="Changed_CompletedName">
+        <descriptions defaultDescription="ChangedByName"/>
+      </viewAttribute>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="Org. Unit (Team)"/>
+      </viewAttribute>
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      </viewAttribute>
+      <viewAttribute id="Source">
+        <descriptions defaultDescription="Source or Work Item"/>
+      </viewAttribute>
+      <viewAttribute id="CC_RowCount" aggregationType="sum">
+        <descriptions defaultDescription="CC_RowCountTI"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Days_Bt_Creation_Mod" aggregationType="sum">
+        <descriptions defaultDescription="CC_Days_Bt_Creation_ModWF"/>
+      </viewAttribute>
+      <viewAttribute id="WorkItemDescription">
+        <descriptions defaultDescription="Work Item Desc"/>
+      </viewAttribute>
+      <viewAttribute id="Status">
+        <descriptions defaultDescription="Status Text"/>
+      </viewAttribute>
+      <viewAttribute id="WorkItemType">
+        <descriptions defaultDescription="CC_PRT_Type"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Status">
+        <descriptions defaultDescription="CC_TI_Status"/>
+      </viewAttribute>
+      <viewAttribute id="ACTIVITY_PARTNER">
+        <descriptions defaultDescription="Activity Partner"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FullName">
+        <descriptions defaultDescription="CC_FullName"/>
+      </viewAttribute>
+      <viewAttribute id="CHANGED_BY">
+        <descriptions defaultDescription="Changed By (Team Member)"/>
+      </viewAttribute>
+      <viewAttribute id="CREATED_BY">
+        <descriptions defaultDescription="Created By (Team Member)"/>
+      </viewAttribute>
+      <viewAttribute id="CC_WorkItemGroup">
+        <descriptions defaultDescription="CC_WorkItemGroup"/>
+      </viewAttribute>
+      <viewAttribute id="CC_SixtyDays">
+        <descriptions defaultDescription="CC_SixtyDays"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Days_Bt_Creation_Mod_ROW" aggregationType="sum">
+        <descriptions defaultDescription="CC_Days_Bt_Creation_Mod_ROW"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ThirtyDays">
+        <descriptions defaultDescription="CC_ThirtyDays"/>
+      </viewAttribute>
+      <viewAttribute id="CC_NonBusDayCount" aggregationType="sum">
+        <descriptions defaultDescription="CC_NonBusDayCount"/>
+      </viewAttribute>
+      <viewAttribute id="WorkItemID">
+        <descriptions defaultDescription="WorkItemID"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$CC_PivotBP$CC_PivotBP"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_BusinessDaysCount" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CC_Days_Bt_Creation_Mod&quot; = 0,0,if(&quot;CC_NonBusDayCount&quot;&lt;0,0,&quot;CC_Days_Bt_Creation_Mod&quot;-&quot;CC_NonBusDayCount&quot;))</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_OSS" datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="30">
+    
+        <formula>if(&quot;CC_BusinessDaysOpen&quot;&gt;20,'Over 20 Business Days','Under 20 Business Days')</formula>
+    
+      </calculatedViewAttribute>
+    
+      
+    
+      <calculatedViewAttribute id="CC_BusinessDaysOpen" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+    
+      
+    
+        <formula>if(&quot;CC_BusinessDaysCount&quot;&lt;0,0,&quot;CC_BusinessDaysCount&quot;)</formula>
+    
+      
+    
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="U_PrtTasksInteractions_Workflow">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedDate" source="CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Change_CompletedDate" source="Change_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Changed_CompletedName" source="Changed_CompletedName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod" source="CC_Days_Bt_Creation_Mod"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemDescription" source="WorkItemDescription"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="Status"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemType" source="WorkItemType"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Status" source="CC_Status"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="ACTIVITY_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGED_BY" source="CHANGED_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="CREATED_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WorkItemGroup" source="CC_WorkItemGroup"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_SixtyDays" source="CC_SixtyDays"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod_ROW" source="CC_Days_Bt_Creation_Mod_ROW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ThirtyDays" source="CC_ThirtyDays"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_PivotBP$CC_PivotBP" source="CC_PivotBP"/>
+    </input>
+    <input node="AGG_SumNonBusDays">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_NonBusDayCount" source="CC_NonBusDayCount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_PivotBP$CC_PivotBP" source="CC_PivotBP"/>
+    </input>
+    <joinAttribute name="WorkItemID"/>
+    <joinAttribute name="JOIN$CC_PivotBP$CC_PivotBP"/>
+  </calculationView>
 </calculationViews>
-<logicalModel id="U_PrtTasksInteractions_Workflow">
+<logicalModel id="J_AGGNonBusDays_WorkItems">
   <attributes>
-    <attribute id="CLIENT" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CLIENT" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAP Client"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CLIENT"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CLIENT"/>
     </attribute>
-    <attribute id="CreatedDate" order="3" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CreatedDate" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Creation Date"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CreatedDate"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CreatedDate"/>
     </attribute>
-    <attribute id="Change_CompletedDate" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Last Changed Date"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="Change_CompletedDate"/>
+    <attribute id="Change_CompletedDate" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Last Changed date"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="Change_CompletedDate"/>
     </attribute>
-    <attribute id="CreatedByName" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Created By Name"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CreatedByName"/>
+    <attribute id="CreatedByName" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CreatedByName"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CreatedByName"/>
     </attribute>
-    <attribute id="Changed_CompletedName" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Changed By Name"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="Changed_CompletedName"/>
+    <attribute id="Changed_CompletedName" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ChangedByName"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="Changed_CompletedName"/>
     </attribute>
-    <attribute id="ORGEH" order="7" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ORGEH" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team)"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="ORGEH"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="ORGEH"/>
     </attribute>
-    <attribute id="SHORT" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SHORT" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team) Name"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="SHORT"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="SHORT"/>
     </attribute>
-    <attribute id="Source" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Source of Work Item"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="Source"/>
+    <attribute id="Source" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Source or Work Item"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="Source"/>
     </attribute>
     <attribute id="WorkItemDescription" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Work Item Desc"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WorkItemDescription"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="WorkItemDescription"/>
     </attribute>
     <attribute id="Status" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Status - Original"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="Status"/>
+      <descriptions defaultDescription="Original Status"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="Status"/>
     </attribute>
-    <attribute id="WorkItemID" order="15" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Work Item ID"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WorkItemID"/>
-    </attribute>
-    <attribute id="WorkItemType" order="16" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="WorkItemType" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Work Item Type"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="WorkItemType"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="WorkItemType"/>
     </attribute>
-  
-    <attribute id="CC_Status" order="17" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Status - Open or Closed "/>
-  
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_Status"/>
-  
+    <attribute id="CC_Status" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Status - Open or Closed"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_Status"/>
     </attribute>
-    <attribute id="CC_WorkItemGroup" order="18" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Work Item Group"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_WorkItemGroup"/>
-    </attribute>
-  
-    <attribute id="BP" order="19" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BP" order="17" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="BPName">
       <descriptions defaultDescription="Business Partner"/>
-  
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="ACTIVITY_PARTNER"/>
-  
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="ACTIVITY_PARTNER"/>
     </attribute>
-    <attribute id="BPName" order="20" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BPName" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Name"/>
-      <keyMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_FullName"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_FullName"/>
     </attribute>
-  </attributes>
+    <attribute id="CHANGED_BY" order="19" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CreatedByName">
+      <descriptions defaultDescription="Changed By (Team Member)"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CHANGED_BY"/>
+    </attribute>
+    <attribute id="CREATED_BY" order="20" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="Changed_CompletedName">
+      <descriptions defaultDescription="Created By (Team Member)"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CREATED_BY"/>
+    </attribute>
+    <attribute id="CC_WorkItemGroup" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Work Item Group"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_WorkItemGroup"/>
+    </attribute>
+    <attribute id="CC_SixtyDays" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Open for Sixty Calendar Days +"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_SixtyDays"/>
+    </attribute>
+    <attribute id="CC_Days_Bt_Creation_Mod_ROW" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Days Between Creation (not aggregated)"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_Days_Bt_Creation_Mod_ROW"/>
+    </attribute>
+    <attribute id="CC_ThirtyDays" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Open for Thirty Calendar Days +"/>
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_ThirtyDays"/>
+    </attribute>
+  
+    <attribute id="CC_OSS" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Open for Twenty Business Days +"/>
+  
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_OSS"/>
+  
+    </attribute>
+  
+    <attribute id="WorkItemID" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WorkItemID"/>
+  
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="WorkItemID"/>
+  
+    </attribute>
+  
+    <attribute id="CC_BusinessDaysOpen" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Days Open"/>
+  
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_BusinessDaysOpen"/>
+  
+    </attribute></attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="CC_RowCount" order="11" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Row Count"/>
-      <measureMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_RowCount"/>
+      <descriptions defaultDescription="RowCount"/>
+      <measureMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_RowCount"/>
     </measure>
-  
     <measure id="CC_Days_Bt_Creation_Mod" order="12" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Days Between Creation"/>
-      <measureMapping columnObjectName="U_PrtTasksInteractions_Workflow" columnName="CC_Days_Bt_Creation_Mod"/>
-    </measure>
-  </baseMeasures>
+      <descriptions defaultDescription="Days Between Creation (for Aggregation)"/>
+      <measureMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_Days_Bt_Creation_Mod"/>
+    </measure></baseMeasures>
   <calculatedMeasures>
     <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Counter"/>
@@ -520,11 +844,33 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       
       
       
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       </measure>
   
-    <measure id="CC_WorkItemDurationAvg" order="10" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
+    <measure id="CC_WorkItemDurationAvg" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Workflow Item (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       
       
       
@@ -547,21 +893,56 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="40" y="85"/>
+      <upperLeftCorner x="334" y="112"/>
+    
+      <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="40" y="186"/>
+      <upperLeftCorner x="118" y="621"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PRT_TI" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-10" y="306"/>
+      <upperLeftCorner x="92" y="761"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_PRT_WF" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="216" y="306"/>
+      <upperLeftCorner x="302" y="761"/>
       <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_Calendar" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="634" y="639"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="NEJ_CalendarWorkItems" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="663" y="510"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="NEJ_CalendarWorkItems" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="257"/>
+    </shape>
+    <shape modelObjectName="P_Calendar" modelObjectNameSpace="NEJ_CalendarWorkItems" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="348" y="259"/>
+      <rectangleSize width="257"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_SumNonBusDays" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="624" y="361"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_AGGNonBusDays_WorkItems" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="334" y="253"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="257.7890625"/>
+    </shape>
+    <shape modelObjectName="AGG_SumNonBusDays" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="257"/>
     </shape>
   </shapes>
 </layout>

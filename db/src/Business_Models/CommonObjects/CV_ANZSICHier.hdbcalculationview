@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CV_ANZSICHier" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_ANZSICHier"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Tables::T_ANZSIC_Hier_Clss">
+    <resourceUri>osr.business.semantic.db.Tables::T_ANZSIC_Hier_Clss</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Tables::T_ANZSIC_Hier_Grp">
+    <resourceUri>osr.business.semantic.db.Tables::T_ANZSIC_Hier_Grp</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Tables::T_ANZSIC_Hier_Subdiv">
+    <resourceUri>osr.business.semantic.db.Tables::T_ANZSIC_Hier_Subdiv</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Tables::T_ANZSIC_Hier_div">
+    <resourceUri>osr.business.semantic.db.Tables::T_ANZSIC_Hier_div</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ANZSICClass">
+    <viewAttributes>
+      <viewAttribute id="CLASS">
+        <descriptions defaultDescription="CLASS"/>
+      </viewAttribute>
+      <viewAttribute id="GROUP">
+        <descriptions defaultDescription="GROUP"/>
+      </viewAttribute>
+      <viewAttribute id="CLASS_TEXT">
+        <descriptions defaultDescription="CLASS_TEXT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Tables::T_ANZSIC_Hier_Clss">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP" source="GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_TEXT" source="CLASS_TEXT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ANZSICGrp">
+    <viewAttributes>
+      <viewAttribute id="GROUP">
+        <descriptions defaultDescription="GROUP"/>
+      </viewAttribute>
+      <viewAttribute id="SUBDIVISION">
+        <descriptions defaultDescription="SUBDIVISION"/>
+      </viewAttribute>
+      <viewAttribute id="GROUP_TEXT">
+        <descriptions defaultDescription="GROUP_TEXT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Tables::T_ANZSIC_Hier_Grp">
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP" source="GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIVISION" source="SUBDIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_TEXT" source="GROUP_TEXT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ANZSICSubDiv">
+    <viewAttributes>
+      <viewAttribute id="SUBDIVISION">
+        <descriptions defaultDescription="SUBDIVISION"/>
+      </viewAttribute>
+      <viewAttribute id="DIVISION">
+        <descriptions defaultDescription="DIVISION"/>
+      </viewAttribute>
+      <viewAttribute id="SUBDIV_TEXT">
+        <descriptions defaultDescription="SUBDIV_TEXT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Tables::T_ANZSIC_Hier_Subdiv">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIVISION" source="SUBDIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIVISION" source="DIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIV_TEXT" source="SUBDIV_TEXT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ANZSICDiv">
+    <viewAttributes>
+      <viewAttribute id="DIVISION">
+        <descriptions defaultDescription="DIVISION"/>
+      </viewAttribute>
+      <viewAttribute id="DIV_TEXT">
+        <descriptions defaultDescription="DIV_TEXT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Tables::T_ANZSIC_Hier_div">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIVISION" source="DIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIV_TEXT" source="DIV_TEXT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_LVL4_LVL3" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="GROUP">
+        <descriptions defaultDescription="GROUP"/>
+      </viewAttribute>
+      <viewAttribute id="SUBDIVISION">
+        <descriptions defaultDescription="SUBDIVISION"/>
+      </viewAttribute>
+      <viewAttribute id="GROUP_TEXT">
+        <descriptions defaultDescription="GROUP_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="CLASS">
+        <descriptions defaultDescription="CLASS"/>
+      </viewAttribute>
+      <viewAttribute id="CLASS_TEXT">
+        <descriptions defaultDescription="CLASS_TEXT"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$GROUP$GROUP"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_ANZSICGrp">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIVISION" source="SUBDIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_TEXT" source="GROUP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$GROUP$GROUP" source="GROUP"/>
+    </input>
+    <input node="P_ANZSICClass">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_TEXT" source="CLASS_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP" source="GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$GROUP$GROUP" source="GROUP"/>
+    </input>
+    <joinAttribute name="JOIN$GROUP$GROUP"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_LVL2_LVL3" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="SUBDIVISION">
+        <descriptions defaultDescription="SUBDIVISION"/>
+      </viewAttribute>
+      <viewAttribute id="DIVISION">
+        <descriptions defaultDescription="DIVISION"/>
+      </viewAttribute>
+      <viewAttribute id="SUBDIV_TEXT">
+        <descriptions defaultDescription="SUBDIV_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="GROUP">
+        <descriptions defaultDescription="GROUP"/>
+      </viewAttribute>
+      <viewAttribute id="GROUP_TEXT">
+        <descriptions defaultDescription="GROUP_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="CLASS">
+        <descriptions defaultDescription="CLASS"/>
+      </viewAttribute>
+      <viewAttribute id="CLASS_TEXT">
+        <descriptions defaultDescription="CLASS_TEXT"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$SUBDIVISION$SUBDIVISION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_ANZSICSubDiv">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIVISION" source="DIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIV_TEXT" source="SUBDIV_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SUBDIVISION$SUBDIVISION" source="SUBDIVISION"/>
+    </input>
+    <input node="J_LVL4_LVL3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP" source="GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_TEXT" source="GROUP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_TEXT" source="CLASS_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIVISION" source="SUBDIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SUBDIVISION$SUBDIVISION" source="SUBDIVISION"/>
+    </input>
+    <joinAttribute name="JOIN$SUBDIVISION$SUBDIVISION"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_LVL1_LVL2" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="DIVISION">
+        <descriptions defaultDescription="DIVISION"/>
+      </viewAttribute>
+      <viewAttribute id="DIV_TEXT">
+        <descriptions defaultDescription="DIV_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="SUBDIVISION">
+        <descriptions defaultDescription="SUBDIVISION"/>
+      </viewAttribute>
+      <viewAttribute id="SUBDIV_TEXT">
+        <descriptions defaultDescription="SUBDIV_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="GROUP">
+        <descriptions defaultDescription="GROUP"/>
+      </viewAttribute>
+      <viewAttribute id="GROUP_TEXT">
+        <descriptions defaultDescription="GROUP_TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="CLASS">
+        <descriptions defaultDescription="CLASS"/>
+      </viewAttribute>
+      <viewAttribute id="CLASS_TEXT">
+        <descriptions defaultDescription="CLASS_TEXT"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$DIVISION$DIVISION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_ANZSICDiv">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIV_TEXT" source="DIV_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DIVISION$DIVISION" source="DIVISION"/>
+    </input>
+    <input node="J_LVL2_LVL3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIVISION" source="SUBDIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIV_TEXT" source="SUBDIV_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP" source="GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_TEXT" source="GROUP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_TEXT" source="CLASS_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIVISION" source="DIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DIVISION$DIVISION" source="DIVISION"/>
+    </input>
+    <joinAttribute name="JOIN$DIVISION$DIVISION"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_LVL1_LVL2">
+  <attributes>
+    <attribute id="DIVISION" order="1" descriptionColumnName="DIV_TEXT" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Division"/>
+      <keyMapping columnObjectName="J_LVL1_LVL2" columnName="DIVISION"/>
+    </attribute>
+    <attribute id="DIV_TEXT" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Division Text"/>
+      <keyMapping columnObjectName="J_LVL1_LVL2" columnName="DIV_TEXT"/>
+    </attribute>
+    <attribute id="SUBDIVISION" order="3" descriptionColumnName="SUBDIV_TEXT" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Subdivision"/>
+      <keyMapping columnObjectName="J_LVL1_LVL2" columnName="SUBDIVISION"/>
+    </attribute>
+    <attribute id="SUBDIV_TEXT" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Subdivision Text"/>
+      <keyMapping columnObjectName="J_LVL1_LVL2" columnName="SUBDIV_TEXT"/>
+    </attribute>
+    <attribute id="GROUP" order="5" descriptionColumnName="GROUP_TEXT" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Group"/>
+      <keyMapping columnObjectName="J_LVL1_LVL2" columnName="GROUP"/>
+    </attribute>
+    <attribute id="GROUP_TEXT" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Group Text"/>
+      <keyMapping columnObjectName="J_LVL1_LVL2" columnName="GROUP_TEXT"/>
+    </attribute>
+    <attribute id="CLASS" order="7" descriptionColumnName="CLASS_TEXT" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Class"/>
+      <keyMapping columnObjectName="J_LVL1_LVL2" columnName="CLASS"/>
+    </attribute>
+    <attribute id="CLASS_TEXT" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Class Text"/>
+      <keyMapping columnObjectName="J_LVL1_LVL2" columnName="CLASS_TEXT"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="422.15218199852" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_ANZSICClass" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="636.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_ANZSICGrp" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302.00000000000006" y="636.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_ANZSICSubDiv" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="384.11215526044043" y="496.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_ANZSICDiv" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="489.48394766311617" y="356.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_LVL4_LVL3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118.66666666666669" y="496.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_ANZSICGrp" modelObjectNameSpace="J_LVL4_LVL3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_ANZSICClass" modelObjectNameSpace="J_LVL4_LVL3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_LVL2_LVL3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="145.33333333333337" y="356.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_ANZSICSubDiv" modelObjectNameSpace="J_LVL2_LVL3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="J_LVL4_LVL3" modelObjectNameSpace="J_LVL2_LVL3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_LVL1_LVL2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="422.15218199852006" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_ANZSICDiv" modelObjectNameSpace="J_LVL1_LVL2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="J_LVL2_LVL3" modelObjectNameSpace="J_LVL1_LVL2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
