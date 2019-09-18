@@ -651,11 +651,21 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     
       <calculatedViewAttribute id="CC_OSS" datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="1">
     
-        <formula>if(&quot;CC_BusinessDaysCount&quot;&gt;20,'X','')</formula>
+        <formula>if(&quot;CC_BusinessDaysOpen&quot;&gt;20,'X','')</formula>
     
       </calculatedViewAttribute>
     
       
+    
+      <calculatedViewAttribute id="CC_BusinessDaysOpen" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+    
+      
+    
+        <formula>if(&quot;CC_BusinessDaysCount&quot;&lt;0,0,&quot;CC_BusinessDaysCount&quot;)</formula>
+    
+      
+    
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="U_PrtTasksInteractions_Workflow">
@@ -775,25 +785,27 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <descriptions defaultDescription="Open for Thirty Calendar Days +"/>
       <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_ThirtyDays"/>
     </attribute>
-    <attribute id="CC_BusinessDaysCount" order="25" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Count of Business Days"/>
-      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_BusinessDaysCount"/>
-    </attribute>
   
-    <attribute id="CC_OSS" order="26" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_OSS" order="25" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Open for Twenty Business Days +"/>
   
       <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_OSS"/>
   
     </attribute>
   
-    <attribute id="WorkItemID" order="27" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="WorkItemID" order="26" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="WorkItemID"/>
   
       <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="WorkItemID"/>
   
     </attribute>
-  </attributes>
+  
+    <attribute id="CC_BusinessDaysOpen" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Days Open"/>
+  
+      <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_BusinessDaysOpen"/>
+  
+    </attribute></attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="CC_RowCount" order="11" aggregationType="sum" measureType="simple">
@@ -803,12 +815,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     <measure id="CC_Days_Bt_Creation_Mod" order="12" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Days Between Creation (for Aggregation)"/>
       <measureMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_Days_Bt_Creation_Mod"/>
-    </measure>
-    <measure id="CC_NonBusDayCount" order="28" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="CC_NonBusDayCount"/>
-      <measureMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="CC_NonBusDayCount"/>
-    </measure>
-  </baseMeasures>
+    </measure></baseMeasures>
   <calculatedMeasures>
     <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Counter"/>
@@ -846,11 +853,15 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       
       
       
+      
+      
       </measure>
   
     <measure id="CC_WorkItemDurationAvg" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Workflow Item (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
+      
       
       
       
@@ -927,7 +938,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </shape>
     <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="257"/>
+      <rectangleSize width="257.7890625"/>
     </shape>
     <shape modelObjectName="AGG_SumNonBusDays" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
@@ -935,4 +946,4 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </shape>
   </shapes>
 </layout>
-</Calculation:scenario> 
+</Calculation:scenario>
