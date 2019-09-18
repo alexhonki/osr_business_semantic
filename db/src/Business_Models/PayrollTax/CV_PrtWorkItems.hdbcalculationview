@@ -166,7 +166,13 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_PivotBP" datatype="NVARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>if(IsNull(&quot;ACTIVITY_PARTNER&quot;),'NULL',&quot;ACTIVITY_PARTNER&quot;)</formula>
+    
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_PivotCloseDate" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CC_Status&quot;='Open Status',now(),&quot;Change_CompletedDate&quot;)</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -479,7 +485,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_NonBusDayCount" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>1</formula>
+        <formula>if(&quot;CC_BusinessDay&quot; = 'Non Business Day',1,0)</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -489,7 +495,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_BusinessDay" source="CC_BusinessDay"/>
     </input>
-    <filter>&quot;CC_BusinessDay&quot;='Non Business Day' AND &quot;DATE_SQL&quot; &lt;= now()</filter>
+    <filter>&quot;DATE_SQL&quot; BETWEEN '2009-01-01' AND ADD_DAYS(now(),14)</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_CalendarWorkItems" cardinality="CN_1" joinType="inner">
     <viewAttributes>
@@ -511,6 +517,10 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <viewAttribute id="CC_PivotBP">
         <descriptions defaultDescription="CC_PivotBP"/>
       </viewAttribute>
+    
+      <viewAttribute id="CC_PivotCloseDate">
+        <descriptions defaultDescription="CC_PivotCloseDate"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -521,12 +531,14 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PivotBP" source="CC_PivotBP"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PivotCloseDate" source="CC_PivotCloseDate"/>
     </input>
     <input node="P_Calendar">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_NonBusDayCount" source="CC_NonBusDayCount"/>
     </input>
     <joinAttribute leftColumn="CreatedDate" rightColumn="DATE_SQL" operator="LE"/>
-    <joinAttribute leftColumn="Change_CompletedDate" rightColumn="DATE_SQL" operator="GE"/>
+    <joinAttribute leftColumn="CC_PivotCloseDate" rightColumn="DATE_SQL" operator="GE"/>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_SumNonBusDays">
     <viewAttributes>
@@ -628,7 +640,6 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <viewAttribute id="WorkItemID">
         <descriptions defaultDescription="WorkItemID"/>
       </viewAttribute>
-    
       <viewAttribute hidden="true" id="JOIN$CC_PivotBP$CC_PivotBP"/>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -669,7 +680,6 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation_Mod_ROW" source="CC_Days_Bt_Creation_Mod_ROW"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ThirtyDays" source="CC_ThirtyDays"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WorkItemID" source="WorkItemID"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_PivotBP$CC_PivotBP" source="CC_PivotBP"/>
     </input>
     <input node="AGG_SumNonBusDays">
@@ -833,11 +843,13 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       
       
       
+      
       </measure>
   
     <measure id="CC_WorkItemDurationAvg" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Workflow Item (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
       
       
       
@@ -897,10 +909,10 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </shape>
     <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="NEJ_CalendarWorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="257.7890625"/>
+      <rectangleSize width="257"/>
     </shape>
     <shape modelObjectName="P_Calendar" modelObjectNameSpace="NEJ_CalendarWorkItems" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="413" y="46"/>
+      <upperLeftCorner x="348" y="259"/>
       <rectangleSize width="257"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_SumNonBusDays" modelObjectNameSpace="CalculationView">
@@ -913,7 +925,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </shape>
     <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="257"/>
+      <rectangleSize width="257.7890625"/>
     </shape>
     <shape modelObjectName="AGG_SumNonBusDays" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
