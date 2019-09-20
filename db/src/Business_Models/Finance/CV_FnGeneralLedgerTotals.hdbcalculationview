@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnGeneralLedgerTotals" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnGeneralLedgerTotals" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_FnGeneralLedgerTotals"/>
 <localVariables/>
 <variableMappings/>
@@ -9,7 +9,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_FAGLFLEXT" filterExpressionLanguage="COLUMN_ENGINE">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FAGLFLEXT">
     <viewAttributes>
       <viewAttribute id="RCLNT">
         <descriptions defaultDescription="RCLNT"/>
@@ -177,7 +177,11 @@
         <descriptions defaultDescription="TIMESTAMP"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="YTDSum" datatype="DECIMAL" length="23" scale="2" expressionLanguage="COLUMN_ENGINE">
+        <formula>&quot;TSLVT&quot; + &quot;TSL01&quot; + &quot;TSL02&quot; + &quot;TSL03&quot; + &quot;TSL04&quot; + &quot;TSL05&quot; + &quot;TSL06&quot; + &quot;TSL07&quot; + &quot;TSL08&quot; + &quot;TSL09&quot; + &quot;TSL10&quot; + &quot;TSL11&quot; + &quot;TSL12&quot; + &quot;TSL13&quot; + &quot;TSL14&quot; + &quot;TSL15&quot; + &quot;TSL16&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::FAGLFLEXT">
       <mapping xsi:type="Calculation:AttributeMapping" target="RCLNT" source="RCLNT"/>
@@ -235,9 +239,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TSL15" source="TSL15"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TSL16" source="TSL16"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTAMP" source="TIMESTAMP"/>
-    </input>
-    <filter>&quot;ACTIV&quot;='RFBU'</filter>
-  </calculationView>
+    </input></calculationView>
 </calculationViews>
 <logicalModel id="P_FAGLFLEXT">
   <attributes>
@@ -464,14 +466,69 @@
       <descriptions defaultDescription="TSL16"/>
       <measureMapping columnObjectName="P_FAGLFLEXT" columnName="TSL16"/>
     </measure>
+  
+    <measure id="YTDSum" order="57" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="YTDSum"/>
+      <measureMapping columnObjectName="P_FAGLFLEXT" columnName="YTDSum"/>
+    </measure>
   </baseMeasures>
-  <calculatedMeasures>
-    <measure id="YTDSum" order="56" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="23" scale="2" expressionLanguage="COLUMN_ENGINE">
-      <descriptions defaultDescription="YTD Sum"/>
-      <formula>&quot;TSLVT&quot; + &quot;TSL01&quot; + &quot;TSL02&quot; + &quot;TSL03&quot; + &quot;TSL04&quot; + &quot;TSL05&quot; + &quot;TSL06&quot; + &quot;TSL07&quot; + &quot;TSL08&quot; + &quot;TSL09&quot; + &quot;TSL10&quot; + &quot;TSL11&quot; + &quot;TSL12&quot; + &quot;TSL13&quot; + &quot;TSL14&quot; + &quot;TSL15&quot; + &quot;TSL16&quot;</formula>
+  <calculatedMeasures/>
+  <restrictedMeasures>
+    <measure id="GLPlanningV0" order="56" aggregationType="sum" datatype="DECIMAL" length="23" scale="2" baseMeasure="YTDSum">
+      <descriptions defaultDescription="General Ledger Planning (Ver. 0)"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="ACTIV">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="GLPL"/>
+        </filter>
+        <attributeName>ACTIV</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="RVERS">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="000"/>
+        </filter>
+        <attributeName>RVERS</attributeName>
+      </restriction>
       </measure>
-  </calculatedMeasures>
-  <restrictedMeasures/>
+    <measure id="GLActuals" order="58" aggregationType="sum" datatype="DECIMAL" length="23" scale="2" baseMeasure="YTDSum">
+      <descriptions defaultDescription="General Ledger Actuals"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="ACTIV">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="RFBU"/>
+        </filter>
+        <attributeName>ACTIV</attributeName>
+      </restriction>
+      </measure>
+    <measure id="GLPlanningV1" order="59" aggregationType="sum" datatype="DECIMAL" length="23" scale="2" baseMeasure="YTDSum">
+      <descriptions defaultDescription="General Ledger Planning (Ver. 1)"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="ACTIV">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="GLPL"/>
+        </filter>
+        <attributeName>ACTIV</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="RVERS">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="001"/>
+        </filter>
+        <attributeName>RVERS</attributeName>
+      </restriction>
+      </measure>
+    <measure id="GLPlanningV2" order="60" aggregationType="sum" datatype="DECIMAL" length="23" scale="2" baseMeasure="YTDSum">
+      <descriptions defaultDescription="General Ledger Planning (Ver. 2)"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="ACTIV">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="GLPL"/>
+        </filter>
+        <attributeName>ACTIV</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="RVERS">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="002"/>
+        </filter>
+        <attributeName>RVERS</attributeName>
+      </restriction>
+      </measure>
+  </restrictedMeasures>
   <localDimensions/>
 </logicalModel>
 <layout>
@@ -481,9 +538,8 @@
     </shape>
   
     <shape expanded="true" modelObjectName="P_FAGLFLEXT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="367"/>
+      <upperLeftCorner x="100" y="478"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
