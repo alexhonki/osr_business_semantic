@@ -1221,8 +1221,8 @@
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="FTTPStatus" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;FBNUMCount&quot;&gt;0,'EXTP','FTTP')</formula>
+      <calculatedViewAttribute id="All_FTTPs" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;FBNUMCount&quot;&gt;=0,'EXTP','FTTP')</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -1374,10 +1374,6 @@
         <descriptions defaultDescription="SubDividerFlag"/>
       </viewAttribute>
     
-      <viewAttribute id="FTTPStatus">
-        <descriptions defaultDescription="FTTPStatus"/>
-      </viewAttribute>
-    
       <viewAttribute id="REISSUE_DATE">
         <descriptions defaultDescription="REISSUE_DATE"/>
       </viewAttribute>
@@ -1435,6 +1431,14 @@
       <viewAttribute id="CC_TAX_ESTIMATE_LIABLE_COUNT" aggregationType="sum">
         <descriptions defaultDescription="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
       </viewAttribute>
+    
+      <viewAttribute id="All_FTTPs">
+        <descriptions defaultDescription="All_FTTPs"/>
+      </viewAttribute>
+    
+      <viewAttribute id="FBNUMCount" aggregationType="sum">
+        <descriptions defaultDescription="FBNUMCount"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="AssessmentIssueDate" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
@@ -1447,17 +1451,25 @@
     
       </calculatedViewAttribute>
     
-      <calculatedViewAttribute id="CC_New_Clients_Flag" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_Issued_FTTPs" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>IF((&quot;ZZ_NOIA_DATE&quot;&gt;&quot;TAXYRSTARTDT&quot; AND &quot;ZZ_NOIA_DATE&quot;&lt;&quot;TAXYRENDDT&quot;) OR &quot;FTTPStatus&quot;='FTTP','X','')</formula>
+        <formula>IF((&quot;ZZ_NOIA_DATE&quot;&gt;=&quot;TAXYRSTARTDT&quot; AND &quot;ZZ_NOIA_DATE&quot;&lt;=&quot;TAXYRENDDT&quot;) AND (&quot;LandTaxYear&quot;&gt;=&quot;TAXYRSTARTDT&quot; AND &quot;LandTaxYear&quot;&lt;=&quot;TAXYRENDDT&quot;),'X','')</formula>
     
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_Reassessed_Amount_Flag" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>IF(&quot;FN_ReassessmentAmount&quot;&gt;0, 'X','')</formula>
+    
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Unposted_Amount_Flag" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
         <formula>IF(&quot;UnpostedAmount&quot;&gt;0,'X','')</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_UnIssued_FTTPs" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if((&quot;LandTaxYear&quot;&gt;=&quot;TAXYRSTARTDT&quot; AND &quot;LandTaxYear&quot;&lt;=&quot;TAXYRENDDT&quot;) and &quot;FBNUMCount&quot;&gt;0,'EXTP','FTTP')</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -1535,7 +1547,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_ESTIMATE_LIABLE_COUNT" source="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
     </input>
     <input node="AGG_FTTP_V_EXTP">
-      <mapping xsi:type="Calculation:AttributeMapping" target="FTTPStatus" source="FTTPStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="All_FTTPs" source="All_FTTPs"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUMCount" source="FBNUMCount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -1957,75 +1970,81 @@
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="SubDividerFlag"/>
   
     </attribute>
-    <attribute id="FTTPStatus" order="46" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="FTTP Status"/>
-      <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="FTTPStatus"/>
-    </attribute>
-    <attribute id="AssessmentIssueDate" order="47" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AssessmentIssueDate" order="46" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Assessment Issue Date"/>
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="AssessmentIssueDate"/>
     </attribute>
   
-    <attribute id="CC_OwnerTypeDescription" order="48" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_OwnerTypeDescription" order="47" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Owner Type Groups"/>
   
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="CC_OwnerTypeDescription"/>
   
     </attribute>
   
-    <attribute id="LatestReassessment" order="51" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="LatestReassessment" order="50" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Latest Reassessment"/>
   
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="LatestReassessmentIssueDate"/>
   
     </attribute>
   
-    <attribute id="LandTaxYear" order="52" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="LandTaxYear" order="51" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land Owned As At"/>
   
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="LandTaxYear"/>
   
     </attribute>
   
-    <attribute id="TaxBracket" order="56" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TaxBracket" order="55" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TaxBracket"/>
   
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="TaxBracket"/>
   
     </attribute>
   
-    <attribute id="UnissuedAssessmentFlag" order="57" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="UnissuedAssessmentFlag" order="56" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="UnissuedAssessmentFlag"/>
   
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="UnissuedAssessmentFlag"/>
   
     </attribute>
-    <attribute id="UnissuedReassessmentFlag" order="58" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="UnissuedReassessmentFlag" order="57" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="UnissuedReassessmentFlag"/>
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="UnissuedReassessmentFlag"/>
     </attribute>
   
-    <attribute id="Difference_Flag" order="59" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="Difference_Flag" order="58" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Difference_Flag"/>
   
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="Difference_Flag"/>
   
     </attribute>
   
-    <attribute id="CC_New_Clients_Flag" order="61" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_New_Clients_Flag"/>
-  
-      <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="CC_New_Clients_Flag"/>
-  
-    </attribute>
-  
-    <attribute id="CC_Reassessed_Amount_Flag" order="62" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_Reassessed_Amount_Flag" order="60" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reassessment Flag"/>
+  
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="CC_Reassessed_Amount_Flag"/>
+  
     </attribute>
-    <attribute id="CC_Unposted_Amount_Flag" order="63" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_Unposted_Amount_Flag" order="61" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Unposted Flag"/>
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="CC_Unposted_Amount_Flag"/>
+    </attribute>
+  
+    <attribute id="CC_UnIssued_FTTPs" order="62" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Unissued FTTPs"/>
+  
+      <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="CC_UnIssued_FTTPs"/>
+  
+    </attribute>
+    <attribute id="CC_Issued_FTTPs" order="63" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Issued FTTPs"/>
+      <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="CC_Issued_FTTPs"/>
+    </attribute>
+    <attribute id="All_FTTPs" order="64" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="All Unissued FTTPs"/>
+      <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="All_FTTPs"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -2103,31 +2122,36 @@
       <measureMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="CC_TAX_LIABLE_COUNT"/>
     </measure>
   
-    <measure id="OriginalAssessmentAmount" order="49" aggregationType="sum" measureType="simple">
+    <measure id="OriginalAssessmentAmount" order="48" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Original Assessment Amount"/>
       <measureMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="OriginalAssessmentAmount"/>
     </measure>
-    <measure id="FN_ReassessmentAmount" order="50" aggregationType="sum" measureType="simple">
+    <measure id="FN_ReassessmentAmount" order="49" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Act. Reassessment Amount"/>
       <measureMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="FN_ReassessmentAmount"/>
     </measure>
   
-    <measure id="AssessmentAmountCleared" order="53" aggregationType="sum" measureType="simple">
+    <measure id="AssessmentAmountCleared" order="52" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="AssessmentAmountCleared"/>
       <measureMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="AssessmentAmountCleared"/>
     </measure>
-    <measure id="OriginalAssessmentAmountCleared" order="54" aggregationType="sum" measureType="simple">
+    <measure id="OriginalAssessmentAmountCleared" order="53" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="OriginalAssessmentAmountCleared"/>
       <measureMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="OriginalAssessmentAmountCleared"/>
     </measure>
-    <measure id="ReassessmentAmountCleared" order="55" aggregationType="sum" measureType="simple">
+    <measure id="ReassessmentAmountCleared" order="54" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="ReassessmentAmountCleared"/>
       <measureMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="ReassessmentAmountCleared"/>
     </measure>
   
-    <measure id="CC_TAX_ESTIMATE_LIABLE_COUNT" order="60" aggregationType="sum" measureType="simple">
+    <measure id="CC_TAX_ESTIMATE_LIABLE_COUNT" order="59" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Estimate Indicator"/>
       <measureMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
+    </measure>
+  
+    <measure id="FBNUMCount" order="65" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FBNUMCount"/>
+      <measureMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="FBNUMCount"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
@@ -2137,6 +2161,8 @@
         <attribute attributeName="INTRENO"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
       
       
       
@@ -2273,11 +2299,11 @@
     </shape>
     <shape modelObjectName="J_CONTRACTFBNUM_REISSUES" modelObjectNameSpace="J_FTTPSTATUS_OUTPUT" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="277.533203125"/>
+      <rectangleSize width="277"/>
     </shape>
     <shape modelObjectName="AGG_FTTP_V_EXTP" modelObjectNameSpace="J_FTTPSTATUS_OUTPUT" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="277.533203125"/>
+      <rectangleSize width="277"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_CONTRACTFBNUM_REISSUES" modelObjectNameSpace="CalculationView">
