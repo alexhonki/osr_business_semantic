@@ -10,6 +10,9 @@
   <DataSource id="osr.business.semantic.db.synonyms::Z1003PYA00000000">
     <resourceUri>osr.business.semantic.db.synonyms::Z1003PYA00000000</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::Z1003PYP00000000">
+    <resourceUri>osr.business.semantic.db.synonyms::Z1003PYP00000000</resourceUri>
+  </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_PeriodsDueDate">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_PeriodsDueDate</resourceUri>
   </DataSource>
@@ -21,9 +24,6 @@
   </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo</resourceUri>
-  </DataSource>
-  <DataSource id="osr.business.semantic.db.synonyms::Z1003PYP00000000">
-    <resourceUri>osr.business.semantic.db.synonyms::Z1003PYP00000000</resourceUri>
   </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar</resourceUri>
@@ -867,23 +867,11 @@
       <viewAttribute id="C_PAY_TAX_LIAB_CREDIT" aggregationType="sum">
         <descriptions defaultDescription="C_PAY_TAX_LIAB_CREDIT"/>
       </viewAttribute>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="BUNDLE_ID">
-        <descriptions defaultDescription="BUNDLE_ID"/>
-      </viewAttribute>
       <viewAttribute id="A_PT_CALC">
         <descriptions defaultDescription="A_PT_CALC"/>
       </viewAttribute>
       <viewAttribute id="A_ENTERED_PERIODIC_LIAB" aggregationType="sum">
         <descriptions defaultDescription="A_ENTERED_PERIODIC_LIAB"/>
-      </viewAttribute>
-      <viewAttribute id="A_REGIONAL_EMPLOYER">
-        <descriptions defaultDescription="A_REGIONAL_EMPLOYER"/>
-      </viewAttribute>
-      <viewAttribute id="A_GROUP_AUS_WAGES">
-        <descriptions defaultDescription="A_GROUP_AUS_WAGES"/>
       </viewAttribute>
       <viewAttribute id="A_FIXED_DEDUCTION" aggregationType="sum">
         <descriptions defaultDescription="A_FIXED_DEDUCTION"/>
@@ -891,13 +879,25 @@
       <viewAttribute id="C_DEDUCTION_ALLOWED" aggregationType="sum">
         <descriptions defaultDescription="C_DEDUCTION_ALLOWED"/>
       </viewAttribute>
+      <viewAttribute id="A_REGIONAL_EMPLOYER">
+        <descriptions defaultDescription="A_REGIONAL_EMPLOYER"/>
+      </viewAttribute>
+      <viewAttribute id="A_GROUP_AUS_WAGES">
+        <descriptions defaultDescription="A_GROUP_AUS_WAGES"/>
+      </viewAttribute>
       <viewAttribute id="A_DIRECTOR_FEE" aggregationType="sum">
         <descriptions defaultDescription="A_DIRECTOR_FEE"/>
       </viewAttribute>
       <viewAttribute id="A_FRINGE_BENEFIT" aggregationType="sum">
         <descriptions defaultDescription="A_FRINGE_BENEFIT"/>
       </viewAttribute>
-    </viewAttributes>
+    
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="BUNDLE_ID">
+        <descriptions defaultDescription="BUNDLE_ID"/>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="R_RETURN_DETAILS" emptyUnionBehavior="NO_ROW">
@@ -996,6 +996,83 @@
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="A_DIRECTOR_FEE" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="A_FRINGE_BENEFIT" null="true" value=""/>
     </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_RETURN_DETAILS_P">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="BUNDLE_ID">
+        <descriptions defaultDescription="BUNDLE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="VERSION">
+        <descriptions defaultDescription="VERSION"/>
+      </viewAttribute>
+      <viewAttribute id="A_INT_WAGES">
+        <descriptions defaultDescription="A_INT_WAGES"/>
+      </viewAttribute>
+      <viewAttribute id="A_QLD_TXBLE_WAGES">
+        <descriptions defaultDescription="A_QLD_TXBLE_WAGES"/>
+      </viewAttribute>
+      <viewAttribute id="C_REBATE_CALC">
+        <descriptions defaultDescription="C_REBATE_CALC"/>
+      </viewAttribute>
+      <viewAttribute id="C_TAX_AMNT">
+        <descriptions defaultDescription="C_TAX_AMNT"/>
+      </viewAttribute>
+      <viewAttribute id="C_BASE_TAX_AMNT">
+        <descriptions defaultDescription="C_BASE_TAX_AMNT"/>
+      </viewAttribute>
+      <viewAttribute id="A_REBATE_WAGES">
+        <descriptions defaultDescription="A_REBATE_WAGES"/>
+      </viewAttribute>
+      <viewAttribute id="C_PAYROLL_TAX">
+        <descriptions defaultDescription="C_PAYROLL_TAX"/>
+      </viewAttribute>
+      <viewAttribute id="A_PT_CALC">
+        <descriptions defaultDescription="A_PT_CALC"/>
+      </viewAttribute>
+      <viewAttribute id="A_ENTERED_PERIODIC_LIAB">
+        <descriptions defaultDescription="A_ENTERED_PERIODIC_LIAB"/>
+      </viewAttribute>
+      <viewAttribute id="A_REGIONAL_EMPLOYER">
+        <descriptions defaultDescription="A_REGIONAL_EMPLOYER"/>
+      </viewAttribute>
+      <viewAttribute id="A_GROUP_AUS_WAGES">
+        <descriptions defaultDescription="A_GROUP_AUS_WAGES"/>
+      </viewAttribute>
+      <viewAttribute id="A_FIXED_DEDUCTION">
+        <descriptions defaultDescription="A_FIXED_DEDUCTION"/>
+      </viewAttribute>
+      <viewAttribute id="C_DEDUCTION_ALLOWED">
+        <descriptions defaultDescription="C_DEDUCTION_ALLOWED"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::Z1003PYP00000000">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUNDLE_ID" source="BUNDLE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_PT_CALC" source="A_PT_CALC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_INT_WAGES" source="A_INT_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_QLD_TXBLE_WAGES" source="A_QLD_TXBLE_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_FIXED_DEDUCTION" source="A_FIXED_DEDUCTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_REBATE_WAGES" source="A_REBATE_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ENTERED_PERIODIC_LIAB" source="A_ENTERED_PERIODIC_LIAB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_DEDUCTION_ALLOWED" source="C_DEDUCTION_ALLOWED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TAX_AMNT" source="C_TAX_AMNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_BASE_TAX_AMNT" source="C_BASE_TAX_AMNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_REBATE_CALC" source="C_REBATE_CALC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_PAYROLL_TAX" source="C_PAYROLL_TAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_REGIONAL_EMPLOYER" source="A_REGIONAL_EMPLOYER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_GROUP_AUS_WAGES" source="A_GROUP_AUS_WAGES"/></input>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>BUNDLE_ID</partitionViewAttributeName>
+      <order byViewAttributeName="VERSION" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_PeriodData" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -3766,83 +3843,6 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
     <joinAttribute name="MANDT"/>
     <joinAttribute name="PARTNER1"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="R_RETURN_DETAILS_P">
-    <viewAttributes>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="BUNDLE_ID">
-        <descriptions defaultDescription="BUNDLE_ID"/>
-      </viewAttribute>
-      <viewAttribute id="VERSION">
-        <descriptions defaultDescription="VERSION"/>
-      </viewAttribute>
-      <viewAttribute id="A_PT_CALC">
-        <descriptions defaultDescription="A_PT_CALC"/>
-      </viewAttribute>
-      <viewAttribute id="A_INT_WAGES">
-        <descriptions defaultDescription="A_INT_WAGES"/>
-      </viewAttribute>
-      <viewAttribute id="A_QLD_TXBLE_WAGES">
-        <descriptions defaultDescription="A_QLD_TXBLE_WAGES"/>
-      </viewAttribute>
-      <viewAttribute id="A_FIXED_DEDUCTION">
-        <descriptions defaultDescription="A_FIXED_DEDUCTION"/>
-      </viewAttribute>
-      <viewAttribute id="A_REBATE_WAGES">
-        <descriptions defaultDescription="A_REBATE_WAGES"/>
-      </viewAttribute>
-      <viewAttribute id="A_ENTERED_PERIODIC_LIAB">
-        <descriptions defaultDescription="A_ENTERED_PERIODIC_LIAB"/>
-      </viewAttribute>
-      <viewAttribute id="C_DEDUCTION_ALLOWED">
-        <descriptions defaultDescription="C_DEDUCTION_ALLOWED"/>
-      </viewAttribute>
-      <viewAttribute id="C_TAX_AMNT">
-        <descriptions defaultDescription="C_TAX_AMNT"/>
-      </viewAttribute>
-      <viewAttribute id="C_BASE_TAX_AMNT">
-        <descriptions defaultDescription="C_BASE_TAX_AMNT"/>
-      </viewAttribute>
-      <viewAttribute id="C_REBATE_CALC">
-        <descriptions defaultDescription="C_REBATE_CALC"/>
-      </viewAttribute>
-      <viewAttribute id="C_PAYROLL_TAX">
-        <descriptions defaultDescription="C_PAYROLL_TAX"/>
-      </viewAttribute>
-      <viewAttribute id="A_REGIONAL_EMPLOYER">
-        <descriptions defaultDescription="A_REGIONAL_EMPLOYER"/>
-      </viewAttribute>
-      <viewAttribute id="A_GROUP_AUS_WAGES">
-        <descriptions defaultDescription="A_GROUP_AUS_WAGES"/>
-      </viewAttribute></viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::Z1003PYP00000000">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUNDLE_ID" source="BUNDLE_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="A_PT_CALC" source="A_PT_CALC"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="A_INT_WAGES" source="A_INT_WAGES"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="A_QLD_TXBLE_WAGES" source="A_QLD_TXBLE_WAGES"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="A_FIXED_DEDUCTION" source="A_FIXED_DEDUCTION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="A_REBATE_WAGES" source="A_REBATE_WAGES"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="A_ENTERED_PERIODIC_LIAB" source="A_ENTERED_PERIODIC_LIAB"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="C_DEDUCTION_ALLOWED" source="C_DEDUCTION_ALLOWED"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="C_TAX_AMNT" source="C_TAX_AMNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="C_BASE_TAX_AMNT" source="C_BASE_TAX_AMNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="C_REBATE_CALC" source="C_REBATE_CALC"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="C_PAYROLL_TAX" source="C_PAYROLL_TAX"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="A_REGIONAL_EMPLOYER" source="A_REGIONAL_EMPLOYER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="A_GROUP_AUS_WAGES" source="A_GROUP_AUS_WAGES"/></input>
-    <windowFunction dynamicPartitionAttributes="false">
-      <partitionViewAttributeName>BUNDLE_ID</partitionViewAttributeName>
-      <order byViewAttributeName="VERSION" direction="DESC"/>
-      <rankThreshold>
-        <value>1</value>
-      </rankThreshold>
-    </windowFunction>
-  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_FiscalDate">
     <viewAttributes>
       <viewAttribute id="FiscalMonth">
@@ -5016,9 +5016,6 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <viewAttribute id="RC_APT_Raised" aggregationType="sum">
         <descriptions defaultDescription="Fin. - Payroll Assessments Tax Raised"/>
       </viewAttribute>
-      <viewAttribute id="FBNUM">
-        <descriptions defaultDescription="Form Bundle Number"/>
-      </viewAttribute>
       <viewAttribute id="RC_APT_Cleared" aggregationType="sum">
         <descriptions defaultDescription="Fin. - Payroll Assessments Tax Cleared"/>
       </viewAttribute>
@@ -5043,7 +5040,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="Client"/>
       </viewAttribute>
-    </viewAttributes>
+    
+      <viewAttribute id="FBNUM">
+        <descriptions defaultDescription="Form Bundle Number"/>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_PTFinancials">
@@ -5203,11 +5203,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="ZZRFR_REQUESTER"/>
     </attribute>
     <attribute id="FBTYP_TEXT" order="37" semanticType="empty" descriptionColumnName="FBTYP_TEXT" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="FBTYP_TEXT"/>
+      <descriptions defaultDescription="Form Bundle Type Text"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FBTYP_TEXT"/>
     </attribute>
     <attribute id="IN_CHANNEL_TEXT" order="38" semanticType="empty" descriptionColumnName="IN_CHANNEL_TEXT" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="IN_CHANNEL_TEXT"/>
+      <descriptions defaultDescription="Comm Channel Text"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="IN_CHANNEL_TEXT"/>
     </attribute>
     <attribute id="FBSTA_TEXT" order="39" semanticType="empty" descriptionColumnName="FBSTA_TEXT" displayAttribute="false" attributeHierarchyActive="false">
@@ -5215,7 +5215,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FBSTA_TEXT"/>
     </attribute>
     <attribute id="REVENUE_TYPE_TEXT" order="40" semanticType="empty" descriptionColumnName="REVENUE_TYPE_TEXT" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="REVENUE_TYPE_TEXT"/>
+      <descriptions defaultDescription="Revenue Type Text"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="REVENUE_TYPE_TEXT"/>
     </attribute>
     <attribute id="VERSION" order="41" displayAttribute="false" attributeHierarchyActive="false">
@@ -5378,7 +5378,9 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
   
     <attribute id="A_PT_CALC" order="121" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Per. - Needs To Calculate PT Liability"/>
+  
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_PT_CALC"/>
+  
     </attribute>
     <attribute id="A_REGIONAL_EMPLOYER" order="125" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Per. - Claimed Regional Employer Disc"/>
@@ -5652,21 +5654,21 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="668.1056826266623" y="112"/>
+      <upperLeftCorner x="668" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_FormBundles" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="387.2580684455552" y="1476.9999904632568"/>
+      <upperLeftCorner x="387" y="1476"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_RETURN_DETAILS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="1621.999989271164"/>
+      <upperLeftCorner x="92" y="1621"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXR_RETURNDETAIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="145.33333333333326" y="1316.9999916553497"/>
+      <upperLeftCorner x="145" y="1316"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_FormBundles" modelObjectNameSpace="J_TAXR_RETURNDETAIL" modelObjectType="JoinNodeInput">
@@ -5679,16 +5681,21 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
     </shape>
   
     <shape expanded="true" modelObjectName="U_TR_DETAILS_A_P" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118.66666666666663" y="1480.33332379659"/>
+      <upperLeftCorner x="118" y="1480"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="R_RETURN_DETAILS_P" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="301" y="1621"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_PeriodData" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="621.954714498158" y="1156.9999928474426"/>
+      <upperLeftCorner x="621" y="1156"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXR_PERIOD" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="198.66666666666663" y="996.9999940395355"/>
+      <upperLeftCorner x="198" y="996"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXRET_LIABILITY" modelObjectNameSpace="J_TAXR_PERIOD" modelObjectType="JoinNodeInput">
@@ -5700,7 +5707,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRET_LIABILITY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="172" y="1156.9999928474426"/>
+      <upperLeftCorner x="172" y="1156"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_RETURNDETAIL" modelObjectNameSpace="J_TAXRET_LIABILITY" modelObjectType="JoinNodeInput">
@@ -5713,15 +5720,15 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
     </shape>
   
     <shape expanded="true" modelObjectName="R_LIABILITY_LATEST_VER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="495.6012375769256" y="1316.9999916553497"/>
+      <upperLeftCorner x="495" y="1316"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BpRelantionship" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="453.51495156006234" y="836.9999952316284"/>
+      <upperLeftCorner x="453" y="836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_TAXR_BPGROUP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="640.6247629505948" y="676.9999964237213"/>
+      <upperLeftCorner x="640" y="676"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_BPNAME" modelObjectNameSpace="NEJ_TAXR_BPGROUP" modelObjectType="JoinNodeInput">
@@ -5734,7 +5741,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
     </shape>
   
     <shape expanded="true" modelObjectName="J_TAXR_BPNAME" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="667.2914296172614" y="836.9999952316284"/>
+      <upperLeftCorner x="667" y="836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_PERIOD" modelObjectNameSpace="J_TAXR_BPNAME" modelObjectType="JoinNodeInput">
@@ -5746,11 +5753,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BpInfo" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="775.6777632543401" y="996.9999940395355"/>
+      <upperLeftCorner x="775" y="996"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXR_PRTGROUPNAM" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="686.8537633910786" y="516.9999976158142"/>
+      <upperLeftCorner x="686" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="NEJ_TAXR_BPGROUP" modelObjectNameSpace="J_TAXR_PRTGROUPNAM" modelObjectType="JoinNodeInput">
@@ -5761,17 +5768,12 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-  
-    <shape expanded="true" modelObjectName="R_RETURN_DETAILS_P" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="301.9999999999999" y="1621.999989271164"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
     <shape expanded="true" modelObjectName="P_FiscalDate" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="896.8537633910786" y="516.9999976158142"/>
+      <upperLeftCorner x="896" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRETURN_FISCALPERIOD" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="761.2748492021381" y="356.9999988079071"/>
+      <upperLeftCorner x="761" y="356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_PRTGROUPNAM" modelObjectNameSpace="J_TAXRETURN_FISCALPERIOD" modelObjectType="JoinNodeInput">
@@ -5784,11 +5786,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
     </shape>
   
     <shape expanded="true" modelObjectName="P_PTFinancials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="470.74826593179296" y="516.9999976158142"/>
+      <upperLeftCorner x="470" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRETURN_FINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="668.1056826266623" y="217"/>
+      <upperLeftCorner x="668" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXRETURN_FISCALPERIOD" modelObjectNameSpace="J_TAXRETURN_FINANCIALS" modelObjectType="JoinNodeInput">
@@ -5800,7 +5802,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_DueDate&quot;,daysbetween(&quot;CC_Due
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_PTFinancialsFBN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="470.74826593179296" y="374.4999988079071"/>
+      <upperLeftCorner x="470" y="374"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
