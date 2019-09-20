@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtFinancials" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtFinancials" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_PrtFinancials"/>
 <localVariables/>
 <variableMappings/>
@@ -99,6 +99,10 @@
       <viewAttribute id="AgeDaysStatus">
         <descriptions defaultDescription="Age Days Status"/>
       </viewAttribute>
+    
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="General ledger account"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -132,6 +136,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="DocumentCounter" source="DocumentCounter"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
     </input>
     <filter>&quot;KOFIZ&quot;='PT'</filter>
   </calculationView>
@@ -299,11 +305,11 @@
       <descriptions defaultDescription="Client"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="MANDT"/>
     </attribute>
-    <attribute id="HVORG" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="HVORG" order="2" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="TFKHVOT_TXT30">
       <descriptions defaultDescription="Main Transaction for Line Item"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="HVORG"/>
     </attribute>
-    <attribute id="TVORG" order="3" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TVORG" order="3" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="TFKTVOT_TXT30">
       <descriptions defaultDescription="Subtransaction for Document Item"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="TVORG"/>
     </attribute>
@@ -319,7 +325,7 @@
       <descriptions defaultDescription="Sub Transaction Desc"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="TFKTVOT_TXT30"/>
     </attribute>
-    <attribute id="DFKK_H_GPART" order="7" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_FullName">
+    <attribute id="DFKK_H_GPART" order="7" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_FullName" semanticType="empty">
       <descriptions defaultDescription="Business Partner Number"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="DFKK_H_GPART"/>
     </attribute>
@@ -327,8 +333,8 @@
       <descriptions defaultDescription="Doubtful"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="Doubtful"/>
     </attribute>
-    <attribute id="OverdueStatus" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="OverdueStatus"/>
+    <attribute id="OverdueStatus" order="9" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="Overdue Status"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="OverdueStatus"/>
     </attribute>
     <attribute id="OpenItemFlag" order="10" displayAttribute="false" attributeHierarchyActive="false">
@@ -343,11 +349,11 @@
       <descriptions defaultDescription="Posting Date"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="DFKK_H_BUDAT"/>
     </attribute>
-    <attribute id="OPBEL" order="13" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OPBEL" order="13" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
       <descriptions defaultDescription="Document Number in Contract Accounts Receivable and Payable"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="OPBEL"/>
     </attribute>
-    <attribute id="TFK003T_LTEXT" order="14" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TFK003T_LTEXT" order="14" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
       <descriptions defaultDescription="Document Type Desc"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="TFK003T_LTEXT"/>
     </attribute>
@@ -380,28 +386,30 @@
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="OPTXT"/>
     </attribute>
   
-    <attribute id="AgeMonths" order="23" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="AgeMonths"/>
+    <attribute id="AgeMonths" order="23" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="Age Months"/>
   
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="AgeMonths"/>
   
     </attribute>
-    <attribute id="AgeMonthsStatus" order="24" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="AgeMonthsStatus"/>
+    <attribute id="AgeMonthsStatus" order="24" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="Age Months Status"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="AgeMonthsStatus"/>
     </attribute>
-    <attribute id="AgeDays" order="26" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="AgeDays"/>
+    <attribute id="AgeDays" order="26" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="Age Days"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="AgeDays"/>
     </attribute>
-    <attribute id="AgeDaysStatus" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="AgeDaysStatus"/>
+    <attribute id="AgeDaysStatus" order="27" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="Age Days Status"/>
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="AgeDaysStatus"/>
     </attribute>
   
     <attribute id="CC_FullName" order="28" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Name"/>
+  
       <keyMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="CC_FullName"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -412,12 +420,195 @@
     </measure>
   
     <measure id="DocumentCounter" order="25" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="DocumentCounter"/>
+      <descriptions defaultDescription="Document Counter"/>
       <measureMapping columnObjectName="F_FINANCIALS_BPINFO" columnName="DocumentCounter"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures/>
-  <restrictedMeasures/>
+  <restrictedMeasures>
+    <measure id="RC_APT_Raised" order="29" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      <descriptions defaultDescription="Fin. - Payroll Assessments Tax Raised"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="0010"/>
+        </filter>
+        <attributeName>HVORG</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="0060"/>
+        </filter>
+        <attributeName>HVORG</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4000"/>
+        </filter>
+        <attributeName>HVORG</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4010"/>
+        </filter>
+        <attributeName>HVORG</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="TVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="9996"/>
+        </filter>
+        <attributeName>TVORG</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="TVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="0528"/>
+        </filter>
+        <attributeName>TVORG</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="TVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="0518"/>
+        </filter>
+        <attributeName>TVORG</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="TVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="9994"/>
+        </filter>
+        <attributeName>TVORG</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="TVORG">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="0121"/>
+        </filter>
+        <attributeName>TVORG</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
+        </filter>
+        <attributeName>AUGRD</attributeName>
+      </restriction>
+      </measure>
+    <measure id="RC_APT_Cleared" order="30" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Fin. - Payroll Assessments Tax Cleared"/>
+      <restrictionExpression>(
+    &quot;HVORG&quot; = '0010' OR 
+    &quot;HVORG&quot; = '0060' OR 
+    &quot;HVORG&quot; = '4000' OR 
+    &quot;HVORG&quot; = '4010'
+) AND 
+(
+    &quot;TVORG&quot; != '9996' OR 
+    &quot;TVORG&quot; != '0528' OR 
+    &quot;TVORG&quot; != '0518' OR
+    &quot;TVORG&quot; != '9994' OR 
+    &quot;TVORG&quot; != '0121'
+) and
+(
+    &quot;OpenItemFlag&quot; = ''
+) and
+(
+    &quot;AUGRD&quot; != '05'
+)
+</restrictionExpression>
+      </measure>
+    <measure id="RC_LTI_Raised" order="31" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Fin. - LTI Raised"/>
+      <restrictionExpression>(
+    &quot;HVORG&quot; = '0040' 
+) AND 
+(
+    &quot;TVORG&quot; = '0020' OR 
+    &quot;TVORG&quot; = '0030' OR 
+    &quot;TVORG&quot; = '0040' OR
+    &quot;TVORG&quot; = '0120' 
+)and
+(
+    &quot;AUGRD&quot; != '05'
+)
+</restrictionExpression>
+      </measure>
+    <measure id="RC_LTI_Cleared" order="32" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Fin. - LTI Cleared"/>
+      <restrictionExpression>(
+    &quot;HVORG&quot; = '0040' 
+) AND 
+(
+    &quot;TVORG&quot; = '0020' OR 
+    &quot;TVORG&quot; = '0030' OR 
+    &quot;TVORG&quot; = '0040' OR
+    &quot;TVORG&quot; = '0120' 
+) and
+(
+    &quot;OpenItemFlag&quot; = ''
+)and
+(
+    &quot;AUGRD&quot; != '05'
+)
+</restrictionExpression>
+      </measure>
+    <measure id="RC_PTX_Raised" order="33" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Fin. - Penalty Tax Raised"/>
+      <restrictionExpression>(
+    &quot;HVORG&quot; = '0041' OR
+    &quot;HVORG&quot; = '0042' OR
+    &quot;HVORG&quot; = '0047'
+) and
+(
+    &quot;AUGRD&quot; != '05'
+)
+</restrictionExpression>
+      </measure>
+    <measure id="RC_PTX_Cleared" order="34" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Fin. - Penalty Tax Cleared"/>
+      <restrictionExpression>(
+    &quot;HVORG&quot; = '0041' OR
+    &quot;HVORG&quot; = '0042' OR
+    &quot;HVORG&quot; = '0047'
+) and
+(
+    &quot;OpenItemFlag&quot; = ''
+)and
+(
+    &quot;AUGRD&quot; != '05'
+)
+</restrictionExpression>
+      </measure>
+    <measure id="RC_UTI_Raised" order="35" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Fin. - UTI Raised"/>
+      <restrictionExpression>(
+    &quot;HVORG&quot; = '0040' 
+) AND 
+(
+    &quot;TVORG&quot; = '0000' OR 
+    &quot;TVORG&quot; = '0001' OR 
+    &quot;TVORG&quot; = '0005' 
+)and
+(
+    &quot;AUGRD&quot; != '05'
+)
+</restrictionExpression>
+      </measure>
+    <measure id="RC_UTI_Cleared" order="36" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Fin. - UTI Cleared"/>
+      <restrictionExpression>(
+    &quot;HVORG&quot; = '0040' 
+) AND 
+(
+    &quot;TVORG&quot; = '0000' OR 
+    &quot;TVORG&quot; = '0001' OR 
+    &quot;TVORG&quot; = '0005' 
+) and
+(
+    &quot;OpenItemFlag&quot; = ''
+) and
+(
+    &quot;AUGRD&quot; != '05'
+)
+</restrictionExpression>
+      </measure>
+
+  </restrictedMeasures>
   <localDimensions/>
 </logicalModel>
 <layout>
@@ -429,7 +620,7 @@
     </shape>
   
     <shape expanded="true" modelObjectName="P_Financials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="102" y="352"/>
+      <upperLeftCorner x="92" y="357"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
@@ -443,7 +634,7 @@
     </shape>
     <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo" modelObjectNameSpace="F_FINANCIALS_BPINFO" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="263.4501953125"/>
+      <rectangleSize width="263"/>
     </shape>
   </shapes>
 </layout>
