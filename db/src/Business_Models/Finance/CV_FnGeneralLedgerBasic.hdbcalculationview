@@ -10,6 +10,9 @@
   <DataSource id="osr.business.semantic.db.Business_Models.Finance::CV_FnFinancialsSnapshots">
     <resourceUri>osr.business.semantic.db.Business_Models.Finance::CV_FnFinancialsSnapshots</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::DPAYH">
+    <resourceUri>osr.business.semantic.db.synonyms::DPAYH</resourceUri>
+  </DataSource>
   <DataSource id="osr.business.semantic.db.synonyms::DFKKKO">
     <resourceUri>osr.business.semantic.db.synonyms::DFKKKO</resourceUri>
   </DataSource>
@@ -18,9 +21,6 @@
   </DataSource>
   <DataSource id="osr.business.semantic.db.synonyms::CEPCT">
     <resourceUri>osr.business.semantic.db.synonyms::CEPCT</resourceUri>
-  </DataSource>
-  <DataSource id="osr.business.semantic.db.synonyms::DPAYH">
-    <resourceUri>osr.business.semantic.db.synonyms::DPAYH</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -74,6 +74,10 @@
       <viewAttribute id="BETRH" aggregationType="sum">
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
+    
+      <viewAttribute datatype="NVARCHAR" length="1" id="FinancialsSource">
+        <descriptions defaultDescription="FinancialsSource"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -84,6 +88,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="RelevantDate" source="RelevantDate"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="FinancialsSource" null="true" value=""/>
     </input>
   
     <input node="P_FINANCIALS" emptyUnionBehavior="NO_ROW">
@@ -95,14 +101,22 @@
   
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="GLPostingAmount"/>
   
+    
+  
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="FinancialsSource" null="false" value="X"/>
+  
     </input>
   
-    <input node="P_DPAYH">
+    <input node="P_DPAYH" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PRCTR" null="true" value=""/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="UBKNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RelevantDate" source="ZALDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="RBETR"/>
+    
+  
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="FinancialsSource" null="true" value=""/>
+  
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_DOCDATE" cardinality="CN_1" joinType="leftOuter">
@@ -178,6 +192,35 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="GLPostingAmount" source="GLPostingAmount"/>
     </input>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_DPAYH" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="UBKNT">
+        <descriptions defaultDescription="UBKNT"/>
+      </viewAttribute>
+      <viewAttribute id="ZALDT">
+        <descriptions defaultDescription="ZALDT"/>
+      </viewAttribute>
+      <viewAttribute id="RBETR">
+        <descriptions defaultDescription="RBETR"/>
+      </viewAttribute>
+    
+      <viewAttribute id="DOC1R">
+        <descriptions defaultDescription="DOC1R"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::DPAYH">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOC1R" source="DOC1R"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UBKNT" source="UBKNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZALDT" source="ZALDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RBETR" source="RBETR"/>
+    </input>
+    <filter>&quot;DOC1R&quot;!='' AND &quot;DOC1R&quot;!='SIMU'</filter>
+  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKKO">
     <viewAttributes>
       <viewAttribute id="BUDAT">
@@ -222,15 +265,26 @@
       <viewAttribute id="BETRH" aggregationType="sum">
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
+      <viewAttribute id="FinancialsSource">
+        <descriptions defaultDescription="FinancialsSource"/>
+      </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$RelevantDate$DATE"/>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="ComparisonFY" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
+        <formula>if((&quot;FinancialsSource&quot;='X' AND &quot;FiscalMonth&quot; = '12') OR isNull(&quot;FinancialsSource&quot;),
+    &quot;FISCAL_YEAR&quot;,
+    string(null)
+)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="U_GENLEDGERS">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FinancialsSource" source="FinancialsSource"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$RelevantDate$DATE" source="RelevantDate"/>
     </input>
     <input node="P_CALENDAR">
@@ -299,6 +353,10 @@
       <viewAttribute id="BETRH" aggregationType="sum">
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
+    
+      <viewAttribute id="ComparisonFY">
+        <descriptions defaultDescription="ComparisonFY"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -310,6 +368,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ComparisonFY" source="ComparisonFY"/>
     </input>
     <input node="P_CEPCT">
       <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
@@ -358,35 +418,6 @@
     </input>
     <filter>&quot;SPRAS&quot; = 'E' AND &quot;KOKRS&quot; = '1000'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_DPAYH" filterExpressionLanguage="COLUMN_ENGINE">
-    <viewAttributes>
-      <viewAttribute id="MANDT">
-        <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute id="DOC1R">
-        <descriptions defaultDescription="DOC1R"/>
-      </viewAttribute>
-      <viewAttribute id="UBKNT">
-        <descriptions defaultDescription="UBKNT"/>
-      </viewAttribute>
-      <viewAttribute id="ZALDT">
-        <descriptions defaultDescription="ZALDT"/>
-      </viewAttribute>
-      <viewAttribute id="RBETR">
-        <descriptions defaultDescription="RBETR"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::DPAYH">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DOC1R" source="DOC1R"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="UBKNT" source="UBKNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZALDT" source="ZALDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RBETR" source="RBETR"/>
-    </input>
-    <filter>&quot;DOC1R&quot;!='' AND &quot;DOC1R&quot;!='SIMU'</filter>
-  </calculationView>
 </calculationViews>
 <logicalModel id="J_GLPER_PRCTRDESC">
   <attributes>
@@ -425,6 +456,11 @@
     <attribute id="HKONT" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="HKONT"/>
       <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="HKONT"/>
+    </attribute>
+  
+    <attribute id="ComparisonFY" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ComparisonFY"/>
+      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="ComparisonFY"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -471,6 +507,11 @@
       <upperLeftCorner x="474" y="703"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+    <shape expanded="true" modelObjectName="P_DPAYH" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-253" y="709"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
   
     <shape expanded="true" modelObjectName="P_DFKKKO" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="248" y="871"/>
@@ -509,11 +550,6 @@
     <shape expanded="true" modelObjectName="P_CEPCT" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="204" y="376"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_DPAYH" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-253" y="709"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>

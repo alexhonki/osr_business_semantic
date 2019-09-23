@@ -13,11 +13,11 @@
   <DataSource id="osr.business.semantic.db.synonyms::DFKKZA">
     <resourceUri>osr.business.semantic.db.synonyms::DFKKZA</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials">
-    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials</resourceUri>
-  </DataSource>
   <DataSource id="osr.business.semantic.db.synonyms::DFKKKO">
     <resourceUri>osr.business.semantic.db.synonyms::DFKKKO</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -803,15 +803,16 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
       <viewAttribute id="AETIM">
         <descriptions defaultDescription="AETIM"/>
       </viewAttribute>
-      <viewAttribute id="PYBEL">
-        <descriptions defaultDescription="PYBEL"/>
-      </viewAttribute>
       <viewAttribute id="TEXT1">
         <descriptions defaultDescription="TEXT1"/>
       </viewAttribute>
     
       <viewAttribute id="BUDAT">
         <descriptions defaultDescription="BUDAT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="ANFBL">
+        <descriptions defaultDescription="ANFBL"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -933,9 +934,10 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
       <mapping xsi:type="Calculation:AttributeMapping" target="AENAM" source="AENAM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AETIM" source="AETIM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PYBEL" source="PYBEL"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ANFBL" source="ANFBL"/>
     </input>
   
     <input node="P_TFK042ZT">
@@ -1300,13 +1302,18 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
       <viewAttribute id="AETIM">
         <descriptions defaultDescription="AETIM"/>
       </viewAttribute>
-      <viewAttribute id="PYBEL">
-        <descriptions defaultDescription="PYBEL"/>
-      </viewAttribute>
     
       <viewAttribute id="BUDAT">
         <descriptions defaultDescription="BUDAT"/>
       </viewAttribute>
+    
+      <viewAttribute id="Source">
+        <descriptions defaultDescription="Source"/>
+      </viewAttribute>
+      <viewAttribute id="ANFBL">
+        <descriptions defaultDescription="ANFBL"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$DocumentKey$AUGBL"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1425,18 +1432,21 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
       <mapping xsi:type="Calculation:AttributeMapping" target="AENAM" source="AENAM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AETIM" source="AETIM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PYBEL" source="PYBEL"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ANFBL" source="ANFBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DocumentKey$AUGBL" source="DocumentKey"/>
     </input>
     <input node="U_REVENUELINE">
       <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_PS" source="VKTYP_PS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DOC1R" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DocumentKey$AUGBL" source="AUGBL"/>
     </input>
     <joinAttribute name="MANDT"/>
-    <joinAttribute name="DOC1R"/>
+    <joinAttribute name="JOIN$DocumentKey$AUGBL"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_TFK042ZT" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
@@ -1812,15 +1822,20 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
       <viewAttribute id="AETIM">
         <descriptions defaultDescription="AETIM"/>
       </viewAttribute>
-      <viewAttribute id="PYBEL">
-        <descriptions defaultDescription="PYBEL"/>
-      </viewAttribute>
     
       <viewAttribute id="BUDAT">
         <descriptions defaultDescription="BUDAT"/>
       </viewAttribute>
+    
+      <viewAttribute id="ANFBL">
+        <descriptions defaultDescription="ANFBL"/>
+      </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="DocumentKey" datatype="NVARCHAR" length="24" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(isNull(&quot;ANFBL&quot;),&quot;DOC1R&quot;,&quot;ANFBL&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="J_DPAYH_DFKKKO">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -1941,7 +1956,7 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
       <mapping xsi:type="Calculation:AttributeMapping" target="AENAM" source="AENAM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AETIM" source="AETIM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PYBEL" source="PYBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ANFBL" source="ANFBL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DOC1R" source="PYBEL"/>
     </input>
@@ -1962,6 +1977,10 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
       <viewAttribute id="AUGBL">
         <descriptions defaultDescription="AUGBL"/>
       </viewAttribute>
+    
+      <viewAttribute datatype="NVARCHAR" length="1" id="Source">
+        <descriptions defaultDescription="Source"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1970,12 +1989,16 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
       <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_PS" source="VKTYP_PS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Source" null="false" value="C"/>
     </input>
     <input node="AGG_POSTINGDOCS" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_PS" source="VKTYP_PS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="OPBEL"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Source" null="false" value="P"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_DPAYH_DFKKKO" cardinality="C1_1" joinType="leftOuter">
@@ -2475,57 +2498,6 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
     </input>
     <filter>&quot;PYBEL&quot; != ''</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_FINANCIALS">
-    <viewAttributes>
-      <viewAttribute id="KOFIZ">
-        <descriptions defaultDescription="Account Determination ID"/>
-      </viewAttribute>
-      <viewAttribute id="VKTYP_PS">
-        <descriptions defaultDescription="Contract Account Category"/>
-      </viewAttribute>
-    
-      <viewAttribute id="MANDT">
-        <descriptions defaultDescription="Client"/>
-      </viewAttribute>
-      <viewAttribute id="AUGBL">
-        <descriptions defaultDescription="Clearing Document or Printed Document"/>
-      </viewAttribute>
-    
-      <viewAttribute id="OPBEL">
-        <descriptions defaultDescription="Document Number in Contract Accounts Receivable and Payable"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_PS" source="VKTYP_PS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
-    </input>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKKO">
-    <viewAttributes>
-      <viewAttribute id="BUDAT">
-        <descriptions defaultDescription="BUDAT"/>
-      </viewAttribute>
-    
-      <viewAttribute id="MANDT">
-        <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute id="OPBEL">
-        <descriptions defaultDescription="OPBEL"/>
-      </viewAttribute></viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::DFKKKO">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
-    </input>
-  </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_CLEARINGDOCS">
     <viewAttributes>
       <viewAttribute id="KOFIZ">
@@ -2571,6 +2543,57 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
       <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_PS" source="VKTYP_PS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKKO">
+    <viewAttributes>
+      <viewAttribute id="BUDAT">
+        <descriptions defaultDescription="BUDAT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="OPBEL"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::DFKKKO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FINANCIALS">
+    <viewAttributes>
+      <viewAttribute id="KOFIZ">
+        <descriptions defaultDescription="Account Determination ID"/>
+      </viewAttribute>
+      <viewAttribute id="VKTYP_PS">
+        <descriptions defaultDescription="Contract Account Category"/>
+      </viewAttribute>
+    
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="Client"/>
+      </viewAttribute>
+      <viewAttribute id="AUGBL">
+        <descriptions defaultDescription="Clearing Document or Printed Document"/>
+      </viewAttribute>
+    
+      <viewAttribute id="OPBEL">
+        <descriptions defaultDescription="Document Number in Contract Accounts Receivable and Payable"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_PS" source="VKTYP_PS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+    
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
     </input>
   </calculationView>
@@ -3000,18 +3023,21 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
       <descriptions defaultDescription="AETIM"/>
       <keyMapping columnObjectName="J_DPAYH_TFK042ZT" columnName="AETIM"/>
     </attribute>
-    <attribute id="PYBEL" order="118" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="PYBEL"/>
-      <keyMapping columnObjectName="J_DPAYH_TFK042ZT" columnName="PYBEL"/>
-    </attribute>
-    <attribute id="TEXT1" order="119" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TEXT1" order="118" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TEXT1"/>
       <keyMapping columnObjectName="J_DPAYH_TFK042ZT" columnName="TEXT1"/>
     </attribute>
   
-    <attribute id="BUDAT" order="120" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BUDAT" order="119" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BUDAT"/>
+  
       <keyMapping columnObjectName="J_DPAYH_TFK042ZT" columnName="BUDAT"/>
+  
+    </attribute>
+  
+    <attribute id="ANFBL" order="120" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANFBL"/>
+      <keyMapping columnObjectName="J_DPAYH_TFK042ZT" columnName="ANFBL"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -3147,14 +3173,6 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
       <upperLeftCorner x="333" y="846"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="P_FINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="738" y="994"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_DFKKKO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="333" y="994"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
     <shape expanded="true" modelObjectName="AGG_CLEARINGDOCS" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="562" y="846"/>
       <rectangleSize height="30" width="160"/>
@@ -3163,6 +3181,14 @@ if(&quot;GPA1T&quot; = '04','Repayment request in Contract Accounts Receivable/P
       <upperLeftCorner x="802" y="846"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-  </shapes>
+  
+    <shape expanded="true" modelObjectName="P_DFKKKO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="333" y="994"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_FINANCIALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="738" y="994"/>
+      <rectangleSize height="30" width="160"/>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>

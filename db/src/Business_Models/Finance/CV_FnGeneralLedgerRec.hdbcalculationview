@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_GeneralLedgerRec" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnGeneralLedgerRec" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_GeneralLedgerRec"/>
 <localVariables/>
 <variableMappings/>
@@ -12,7 +12,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:AggregationView" id="P_GLTOTALS">
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_GLTOTALS">
     <viewAttributes>
       <viewAttribute id="RYEAR">
         <descriptions defaultDescription="RYEAR"/>
@@ -44,7 +44,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="P_GLBASE" filterExpressionLanguage="COLUMN_ENGINE">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_GLBASE">
     <viewAttributes>
       <viewAttribute id="FISCAL_YEAR">
         <descriptions defaultDescription="FISCAL_YEAR"/>
@@ -52,20 +52,33 @@
       <viewAttribute id="HKONT">
         <descriptions defaultDescription="HKONT"/>
       </viewAttribute>
-      <viewAttribute id="BETRH" aggregationType="sum">
+      <viewAttribute id="BETRH">
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
       <viewAttribute id="FiscalMonth">
         <descriptions defaultDescription="FiscalMonth"/>
       </viewAttribute>
+    
+      <viewAttribute id="ComparisonFY">
+        <descriptions defaultDescription="ComparisonFY"/>
+      </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="GLBase_Per01" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;FiscalMonth&quot;='1',&quot;BETRH&quot;,null)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="GLBase_Per12" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;FiscalMonth&quot;='12',&quot;BETRH&quot;,null)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.Finance::CV_FnGeneralLedgerBasic">
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ComparisonFY" source="ComparisonFY"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_GLREC" cardinality="C1_1" joinType="leftOuter">
@@ -91,10 +104,16 @@
       <viewAttribute id="BETRH" aggregationType="sum">
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
+      <viewAttribute id="GLBase_Per01">
+        <descriptions defaultDescription="GLBase_Per01"/>
+      </viewAttribute>
+      <viewAttribute id="GLBase_Per12">
+        <descriptions defaultDescription="GLBase_Per12"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="P_GLTOTALS">
+    <input node="AGG_GLTOTALS">
       <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV0" source="GLPlanningV0"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GLActuals" source="GLActuals"/>
@@ -102,13 +121,43 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV2" source="GLPlanningV2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
     </input>
-    <input node="P_GLBASE">
+    <input node="AGG_GLBASE">
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLBase_Per01" source="GLBase_Per01"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLBase_Per12" source="GLBase_Per12"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="HKONT"/>
     </input>
     <joinAttribute name="RYEAR"/>
     <joinAttribute name="RACCT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_GLBASE">
+    <viewAttributes>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="GLBase_Per01" aggregationType="sum">
+        <descriptions defaultDescription="GLBase_Per01"/>
+      </viewAttribute>
+      <viewAttribute id="GLBase_Per12" aggregationType="sum">
+        <descriptions defaultDescription="GLBase_Per12"/>
+      </viewAttribute>
+    
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_GLBASE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="ComparisonFY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLBase_Per01" source="GLBase_Per01"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLBase_Per12" source="GLBase_Per12"/>
+    </input>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_GLREC">
@@ -144,6 +193,14 @@
       <descriptions defaultDescription="BETRH"/>
       <measureMapping columnObjectName="J_GLREC" columnName="BETRH"/>
     </measure>
+    <measure id="GLBase_Per01" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="GLBase_Per01"/>
+      <measureMapping columnObjectName="J_GLREC" columnName="GLBase_Per01"/>
+    </measure>
+    <measure id="GLBase_Per12" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="GLBase_Per12"/>
+      <measureMapping columnObjectName="J_GLREC" columnName="GLBase_Per12"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures/>
   <restrictedMeasures/>
@@ -155,25 +212,29 @@
       <upperLeftCorner x="40" y="85"/>
     </shape>
   
-    <shape expanded="true" modelObjectName="P_GLTOTALS" modelObjectNameSpace="CalculationView">
+    <shape expanded="true" modelObjectName="AGG_GLTOTALS" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="-50" y="446"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_GLBASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="250" y="441"/>
+      <upperLeftCorner x="250" y="535"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_GLREC" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="100" y="237"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="P_GLTOTALS" modelObjectNameSpace="J_GLREC" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="AGG_GLTOTALS" modelObjectNameSpace="J_GLREC" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_GLBASE" modelObjectNameSpace="J_GLREC" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="AGG_GLBASE" modelObjectNameSpace="J_GLREC" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_GLBASE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="250" y="446"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
 </layout>
