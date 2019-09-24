@@ -2693,7 +2693,11 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
         <descriptions defaultDescription="DATE"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FiscalMonthInt" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>int(&quot;FiscalMonth&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
       <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
@@ -3177,8 +3181,7 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       </viewAttribute>
       <viewAttribute id="ValueCategory">
         <descriptions defaultDescription="ValueCategory"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_FIN_BALANCE">
@@ -3341,7 +3344,7 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       <mapping xsi:type="Calculation:AttributeMapping" target="ValueCategory" source="ValueCategory"/>
     </input>
     <input node="P_CALENDAR">
-      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonthInt"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DATE"/>
     </input>
@@ -3903,8 +3906,7 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
     <attribute id="ValueCategory" order="160" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ValueCategory"/>
       <keyMapping columnObjectName="J_FIN_CALENDAR" columnName="ValueCategory"/>
-    </attribute>
-  </attributes>
+    </attribute></attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="KURSF" order="22" aggregationType="sum" measureType="simple">
@@ -4025,6 +4027,7 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       
       
       
+      
       </measure>
   
     <measure id="FBNCounter" order="147" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -4043,9 +4046,26 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       
       
       
+      
       </measure>
   </calculatedMeasures>
-  <restrictedMeasures/>
+  <restrictedMeasures>
+    <measure id="GLPostingAmount" order="161" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      <descriptions defaultDescription="General Ledger Posting Amount"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="OpenItemFlag">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="X"/>
+        </filter>
+        <attributeName>OpenItemFlag</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="B1"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+    </measure>
+  </restrictedMeasures>
   <localDimensions/>
 </logicalModel>
 <layout>
