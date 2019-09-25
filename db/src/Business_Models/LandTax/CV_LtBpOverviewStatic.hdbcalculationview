@@ -135,7 +135,29 @@
       </viewAttribute>
       <viewAttribute id="CC_Reengagement_Time">
         <descriptions defaultDescription="CC_Reengagement_Time"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="CC_Individual_Count">
+        <descriptions defaultDescription="CC_Individual_Count"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Non-Individual_Count">
+        <descriptions defaultDescription="CC_Non-Individual_Count"/>
+      </viewAttribute>
+      <viewAttribute id="CC_TaxYearStartDt">
+        <descriptions defaultDescription="CC_TaxYearStartDt"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentAmount">
+        <descriptions defaultDescription="AssessmentAmount"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentAmountCleared">
+        <descriptions defaultDescription="AssessmentAmountCleared"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Todays_Date">
+        <descriptions defaultDescription="CC_Todays_Date"/>
+      </viewAttribute>
+      <viewAttribute id="CC_AssessmentIssueDate">
+        <descriptions defaultDescription="CC_AssessmentIssueDate"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Tables::LtBpOverview">
@@ -183,7 +205,15 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Flag" source="CC_Reengagement_Flag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Individual" source="CC_Individual"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Non-Individual" source="CC_Non-Individual"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/></input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Individual_Count" source="CC_Individual_Count"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Non-Individual_Count" source="CC_Non-Individual_Count"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxYearStartDt" source="CC_TaxYearStartDt"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AssessmentIssueDate" source="CC_AssessmentIssueDate"/>
+    </input>
   </calculationView>
 </calculationViews>
 <logicalModel id="P_BPOVERVIEW">
@@ -337,7 +367,20 @@
   
       <keyMapping columnObjectName="P_BPOVERVIEW" columnName="CC_Reengagement_Flag"/>
   
-    </attribute></attributes>
+    </attribute>
+    <attribute id="CC_TaxYearStartDt" order="44" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Year Start Date"/>
+      <keyMapping columnObjectName="P_BPOVERVIEW" columnName="CC_TaxYearStartDt"/>
+    </attribute>
+    <attribute id="CC_Todays_Date" order="47" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Todays Date"/>
+      <keyMapping columnObjectName="P_BPOVERVIEW" columnName="CC_Todays_Date"/>
+    </attribute>
+    <attribute id="CC_AssessmentIssueDate" order="48" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Assessment Issue Date"/>
+      <keyMapping columnObjectName="P_BPOVERVIEW" columnName="CC_AssessmentIssueDate"/>
+    </attribute>
+  </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="CC_Land_Tax_Insights_Flag" order="35" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Land Tax Insights Flag"/>
@@ -370,6 +413,15 @@
       <descriptions defaultDescription="Reengagement Time"/>
       <measureMapping columnObjectName="P_BPOVERVIEW" columnName="CC_Reengagement_Time"/>
     </measure>
+  
+    <measure id="AssessmentAmount" order="45" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Assessment Amount"/>
+      <measureMapping columnObjectName="P_BPOVERVIEW" columnName="AssessmentAmount"/>
+    </measure>
+    <measure id="AssessmentAmountCleared" order="46" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Assessment Amount Cleared"/>
+      <measureMapping columnObjectName="P_BPOVERVIEW" columnName="AssessmentAmountCleared"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures>
     <measure id="COUNT_1" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -399,6 +451,8 @@
       </measure>
   
     <measure id="CC_Risk_Score" order="36" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+  
+      <descriptions defaultDescription="Risk Score"/>
       <formula>IF(&quot;CC_BP_Count&quot;&gt;0 and not isnull(&quot;CC_BP_Count&quot;) or &quot;RISK_SCORE&quot;&gt;0 and not isnull(&quot;RISK_SCORE&quot;),(&quot;RISK_SCORE&quot;/&quot;CC_BP_Count&quot;),0)</formula>
       
       
@@ -407,10 +461,13 @@
       </measure>
   
     <measure id="CC_Individual_Count" order="39" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+  
+      <descriptions defaultDescription="Individual Count"/>
       <formula>IF(not isnull(&quot;CC_Reengagement_Flag&quot;) and &quot;CC_BP_Count&quot;&gt;0 and not isnull(&quot;CC_BP_Count&quot;) or not isnull(&quot;CC_Reengagement_Flag&quot;) and &quot;CC_Individual&quot;&gt;0 and not isnull(&quot;CC_Individual&quot;),(&quot;CC_Individual&quot;/&quot;CC_BP_Count&quot;),0)</formula>
       
       </measure>
     <measure id="CC_Non-Individual_Count" order="40" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+      <descriptions defaultDescription="Non Individual Count"/>
       <formula>IF(not isnull(&quot;CC_Reengagement_Flag&quot;) and &quot;CC_BP_Count&quot;&gt;0 and not isnull(&quot;CC_BP_Count&quot;) or not isnull(&quot;CC_Reengagement_Flag&quot;) and &quot;CC_Non-Individual&quot;&gt;0 and not isnull(&quot;CC_Non-Individual&quot;),(&quot;CC_Non-Individual&quot;/&quot;CC_BP_Count&quot;),0)</formula>
       
       </measure>
