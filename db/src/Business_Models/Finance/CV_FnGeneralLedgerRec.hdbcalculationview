@@ -32,6 +32,13 @@
       <viewAttribute id="RACCT">
         <descriptions defaultDescription="RACCT"/>
       </viewAttribute>
+    
+      <viewAttribute id="Period">
+        <descriptions defaultDescription="Period"/>
+      </viewAttribute>
+      <viewAttribute id="GLGroups">
+        <descriptions defaultDescription="GLGroups"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -42,6 +49,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV1" source="GLPlanningV1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV2" source="GLPlanningV2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLGroups" source="GLGroups"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_GLBASE">
@@ -57,18 +67,10 @@
       </viewAttribute>
       <viewAttribute id="FiscalMonth">
         <descriptions defaultDescription="FiscalMonth"/>
-      </viewAttribute>
-    
-      <viewAttribute id="ComparisonFY">
-        <descriptions defaultDescription="ComparisonFY"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="GLBase_Per01" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;FiscalMonth&quot;='1',&quot;BETRH&quot;,null)</formula>
-      </calculatedViewAttribute>
-      <calculatedViewAttribute id="GLBase_Per12" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;FiscalMonth&quot;='12',&quot;BETRH&quot;,null)</formula>
+      <calculatedViewAttribute id="Period" datatype="NVARCHAR" length="3" expressionLanguage="COLUMN_ENGINE">
+        <formula>lpad(&quot;FiscalMonth&quot;,3,'0')</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -76,10 +78,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="ComparisonFY" source="ComparisonFY"/>
-    </input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/></input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_GLREC" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
@@ -104,11 +103,11 @@
       <viewAttribute id="BETRH" aggregationType="sum">
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
-      <viewAttribute id="GLBase_Per01">
-        <descriptions defaultDescription="GLBase_Per01"/>
+      <viewAttribute id="Period">
+        <descriptions defaultDescription="Period"/>
       </viewAttribute>
-      <viewAttribute id="GLBase_Per12">
-        <descriptions defaultDescription="GLBase_Per12"/>
+      <viewAttribute id="GLGroups">
+        <descriptions defaultDescription="GLGroups"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -120,27 +119,24 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV1" source="GLPlanningV1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV2" source="GLPlanningV2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLGroups" source="GLGroups"/>
     </input>
     <input node="AGG_GLBASE">
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GLBase_Per01" source="GLBase_Per01"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GLBase_Per12" source="GLBase_Per12"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
     </input>
     <joinAttribute name="RYEAR"/>
     <joinAttribute name="RACCT"/>
+    <joinAttribute name="Period"/>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_GLBASE">
     <viewAttributes>
       <viewAttribute id="BETRH" aggregationType="sum">
         <descriptions defaultDescription="BETRH"/>
-      </viewAttribute>
-      <viewAttribute id="GLBase_Per01" aggregationType="sum">
-        <descriptions defaultDescription="GLBase_Per01"/>
-      </viewAttribute>
-      <viewAttribute id="GLBase_Per12" aggregationType="sum">
-        <descriptions defaultDescription="GLBase_Per12"/>
       </viewAttribute>
     
       <viewAttribute id="FISCAL_YEAR">
@@ -148,15 +144,18 @@
       </viewAttribute>
       <viewAttribute id="HKONT">
         <descriptions defaultDescription="HKONT"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="Period">
+        <descriptions defaultDescription="Period"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_GLBASE">
-      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="ComparisonFY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GLBase_Per01" source="GLBase_Per01"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GLBase_Per12" source="GLBase_Per12"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -170,8 +169,29 @@
       <descriptions defaultDescription="RACCT"/>
       <keyMapping columnObjectName="J_GLREC" columnName="RACCT"/>
     </attribute>
+  
+    <attribute id="Period" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Period"/>
+  
+      <keyMapping columnObjectName="J_GLREC" columnName="Period"/>
+  
+    </attribute>
+    <attribute id="GLGroups" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GLGroups"/>
+      <keyMapping columnObjectName="J_GLREC" columnName="GLGroups"/>
+    </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="RecFlag" order="10" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Reconciled Flag"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="15">
+        <formula>if(&quot;GLActuals&quot;!=&quot;BETRH&quot; or isNull(&quot;GLActuals&quot;) or isNull(&quot;BETRH&quot;),
+    'Not reconciled',
+    'Reconciled'
+)</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures>
     <measure id="GLPlanningV0" order="2" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="General Ledger Planning (Ver. 0)"/>
@@ -192,17 +212,16 @@
     <measure id="BETRH" order="7" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BETRH"/>
       <measureMapping columnObjectName="J_GLREC" columnName="BETRH"/>
-    </measure>
-    <measure id="GLBase_Per01" order="8" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="GLBase_Per01"/>
-      <measureMapping columnObjectName="J_GLREC" columnName="GLBase_Per01"/>
-    </measure>
-    <measure id="GLBase_Per12" order="9" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="GLBase_Per12"/>
-      <measureMapping columnObjectName="J_GLREC" columnName="GLBase_Per12"/>
-    </measure>
-  </baseMeasures>
-  <calculatedMeasures/>
+    </measure></baseMeasures>
+  <calculatedMeasures>
+    <measure id="GLCounter" order="11" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="General Ledger Account Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="RACCT"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
