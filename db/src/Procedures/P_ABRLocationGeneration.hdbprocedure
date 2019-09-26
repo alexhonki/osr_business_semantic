@@ -1,0 +1,25 @@
+PROCEDURE "osr.business.semantic.db.Procedures::P_ABRLocationGeneration"( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+
+TRUNCATE TABLE "osr.business.semantic.db.Tables::T_ABRLocationData";
+
+UPSERT "osr.business.semantic.db.Tables::T_ABRLocationData" ("PARTNER")
+SELECT "PARTNER" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_ABR" 
+WHERE "PARTNER" IS NOT NULL
+GROUP BY "PARTNER";
+
+UPDATE "osr.business.semantic.db.Tables::T_ABRLocationData"
+SET "BP_Location" = new ST_GEOMETRY('POINT(' || "Longitude" || ' ' ||"Latitude" || ')', 4326).ST_Transform(3857)
+FROM (
+SELECT MIN("ADDR_LATITUDE") "Latitude", MIN("ADDR_LONGITUDE") "Longitude", "PARTNER" "BP_PARTNER"
+FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_ABR" 
+GROUP BY "PARTNER"
+), "osr.business.semantic.db.Tables::T_ABRLocationData"
+WHERE "PARTNER" = "BP_PARTNER";
+
+
+END
