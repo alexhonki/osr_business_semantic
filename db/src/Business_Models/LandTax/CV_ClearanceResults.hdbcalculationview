@@ -71,7 +71,9 @@
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_Clearance_Processing_Days" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>&quot;CC_CR_Date&quot;-&quot;CC_Issue_Date&quot;</formula>
+    
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_CR_Date" datatype="DATE" expressionLanguage="SQL">
         <formula>&quot;CR_DATE&quot;</formula>
@@ -79,7 +81,7 @@
       <calculatedViewAttribute id="CC_Issue_Date" datatype="DATE" expressionLanguage="SQL">
         <formula>&quot;ISSUE_DATE&quot;</formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_Clearance_Processing_Range" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_Clearance_Processing_Range" datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="13">
         <formula>IF(&quot;CC_Clearance_Processing_Days&quot;=0, '1 day',
 IF(&quot;CC_Clearance_Processing_Days&quot;&lt;=7 and &quot;CC_Clearance_Processing_Days&quot;&gt;0,'1 Week',
 IF(&quot;CC_Clearance_Processing_Days&quot;&lt;=14 and &quot;CC_Clearance_Processing_Days&quot;&gt;7,'2 Weeks',
@@ -168,6 +170,11 @@ IF(&quot;CC_Clearance_Processing_Days&quot;&lt;=31 and &quot;CC_Clearance_Proces
       <keyMapping columnObjectName="P_LTCRES" columnName="ClearanceType"/>
   
     </attribute>
+  
+    <attribute id="CC_Clearance_Processing_Range" order="20" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearance Processing Range"/>
+      <keyMapping columnObjectName="P_LTCRES" columnName="CC_Clearance_Processing_Range"/>
+    </attribute>
   </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="CC_USER_TYPE_FLAG" order="18" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
@@ -193,12 +200,7 @@ if(match(&quot;USER_ID&quot;,'*FF_*') , 'X',
     <measure id="CC_Clearance_Processing_Days" order="19" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Clearance Processing Days"/>
       <measureMapping columnObjectName="P_LTCRES" columnName="CC_Clearance_Processing_Days"/>
-    </measure>
-    <measure id="CC_Clearance_Processing_Range" order="20" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Clearance Processing Range"/>
-      <measureMapping columnObjectName="P_LTCRES" columnName="CC_Clearance_Processing_Range"/>
-    </measure>
-  </baseMeasures>
+    </measure></baseMeasures>
   <calculatedMeasures>
     <measure id="ClearanceCounter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Clearance Counter"/>
@@ -206,6 +208,7 @@ if(match(&quot;USER_ID&quot;,'*FF_*') , 'X',
         <attribute attributeName="INTRENORR"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
