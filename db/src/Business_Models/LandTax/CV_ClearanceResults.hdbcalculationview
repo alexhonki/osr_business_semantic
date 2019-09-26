@@ -72,7 +72,7 @@
     
       <calculatedViewAttribute id="CC_Clearance_Processing_Days" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>IF(isNull(&quot;CC_CR_Date&quot;) or isNull(&quot;CC_Issue_Date&quot;),0,&quot;CC_CR_Date&quot;-&quot;CC_Issue_Date&quot;)</formula>
+        <formula>IF(isNull(&quot;CC_Issue_Date&quot;),&quot;CC_Today&quot;-&quot;CC_CR_Date&quot;,&quot;CC_Issue_Date&quot;-&quot;CC_CR_Date&quot;)</formula>
     
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_CR_Date" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
@@ -88,6 +88,10 @@ IF(&quot;CC_Clearance_Processing_Days&quot;&lt;=14 and &quot;CC_Clearance_Proces
 IF(&quot;CC_Clearance_Processing_Days&quot;&lt;=21 and &quot;CC_Clearance_Processing_Days&quot;&gt;14,'3 Weeks',
 IF(&quot;CC_Clearance_Processing_Days&quot;&lt;=31 and &quot;CC_Clearance_Processing_Days&quot;&gt;21,'1 Month',
 '+1 Month')))))</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_Today" datatype="DATE" expressionLanguage="SQL">
+        <formula>NOW()</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -180,7 +184,9 @@ IF(&quot;CC_Clearance_Processing_Days&quot;&lt;=31 and &quot;CC_Clearance_Proces
   
     <attribute id="CC_CR_Date" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CC_CR_Date"/>
+  
       <keyMapping columnObjectName="P_LTCRES" columnName="CC_CR_Date"/>
+  
     </attribute>
     <attribute id="CC_Issue_Date" order="22" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CC_Issue_Date"/>
@@ -197,7 +203,7 @@ if(match(&quot;USER_ID&quot;,'*PISRVUSER*') , 'X',
 if(match(&quot;USER_ID&quot;,'*FF_*') , 'X',
 ''))))</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="ISSUED_AMOUNT" order="9" aggregationType="sum" measureType="simple">
