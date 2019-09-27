@@ -12,7 +12,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:AggregationView" id="AGG_GLTOTALS">
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_GLTOTALS" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="RYEAR">
         <descriptions defaultDescription="RYEAR"/>
@@ -39,6 +39,10 @@
       <viewAttribute id="GLGroups">
         <descriptions defaultDescription="GLGroups"/>
       </viewAttribute>
+    
+      <viewAttribute id="AWTYP">
+        <descriptions defaultDescription="AWTYP"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -52,7 +56,10 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GLGroups" source="GLGroups"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
     </input>
+    <filter>&quot;AWTYP&quot;='FKKSU'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_GLBASE">
     <viewAttributes>
@@ -67,7 +74,11 @@
       </viewAttribute>
       <viewAttribute id="FiscalMonth">
         <descriptions defaultDescription="FiscalMonth"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="Period" datatype="NVARCHAR" length="3" expressionLanguage="COLUMN_ENGINE">
         <formula>lpad(&quot;FiscalMonth&quot;,3,'0')</formula>
@@ -78,7 +89,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/></input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+    </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_GLREC" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
@@ -109,6 +122,10 @@
       <viewAttribute id="GLGroups">
         <descriptions defaultDescription="GLGroups"/>
       </viewAttribute>
+    
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -125,6 +142,7 @@
     </input>
     <input node="AGG_GLBASE">
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
@@ -139,6 +157,11 @@
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
     
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+    
+    
       <viewAttribute id="FISCAL_YEAR">
         <descriptions defaultDescription="FISCAL_YEAR"/>
       </viewAttribute>
@@ -147,8 +170,7 @@
       </viewAttribute>
       <viewAttribute id="Period">
         <descriptions defaultDescription="Period"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_GLBASE">
@@ -156,29 +178,234 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
     </input>
   </calculationView>
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_YTDAMTS" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="RYEAR">
+        <descriptions defaultDescription="RYEAR"/>
+      </viewAttribute>
+      <viewAttribute id="RACCT">
+        <descriptions defaultDescription="RACCT"/>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV0" aggregationType="sum">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 0)"/>
+      </viewAttribute>
+      <viewAttribute id="GLActuals" aggregationType="sum">
+        <descriptions defaultDescription="General Ledger Actuals"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV2" aggregationType="sum">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 2)"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV1" aggregationType="sum">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 1)"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_GLREC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+    </input>
+  
+    <input node="P_MONTHLY">
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV0" source="GLPlanningV0"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLActuals" source="GLActuals"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV2" source="GLPlanningV2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV1" source="GLPlanningV1"/>
+    </input>
+    <joinAttribute leftColumn="RYEAR" rightColumn="RYEAR" operator="EQ"/>
+    <joinAttribute leftColumn="RACCT" rightColumn="RACCT" operator="EQ"/>
+    <joinAttribute leftColumn="EndOfMonth" rightColumn="EndOfMonth" operator="GE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_MONTHLY" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="RYEAR">
+        <descriptions defaultDescription="RYEAR"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV0">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 0)"/>
+      </viewAttribute>
+      <viewAttribute id="GLActuals">
+        <descriptions defaultDescription="General Ledger Actuals"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV1">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 1)"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV2">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 2)"/>
+      </viewAttribute>
+      <viewAttribute id="RACCT">
+        <descriptions defaultDescription="RACCT"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_GLREC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV0" source="GLPlanningV0"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLActuals" source="GLActuals"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV1" source="GLPlanningV1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV2" source="GLPlanningV2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+    </input>
+    <filter>not(isNull(&quot;EndOfMonth&quot;))</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_YTDAMTS">
+    <viewAttributes>
+      <viewAttribute id="RYEAR">
+        <descriptions defaultDescription="RYEAR"/>
+      </viewAttribute>
+      <viewAttribute id="RACCT">
+        <descriptions defaultDescription="RACCT"/>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV0" aggregationType="sum">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 0)"/>
+      </viewAttribute>
+      <viewAttribute id="GLActuals" aggregationType="sum">
+        <descriptions defaultDescription="General Ledger Actuals"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV2" aggregationType="sum">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 2)"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV1" aggregationType="sum">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 1)"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="NEJ_YTDAMTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV0" source="GLPlanningV0"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLActuals" source="GLActuals"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV2" source="GLPlanningV2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV1" source="GLPlanningV1"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_GLREC_YTDAMTS" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="RYEAR">
+        <descriptions defaultDescription="RYEAR"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV0" aggregationType="sum">
+        <descriptions defaultDescription="GLPlanningV0"/>
+      </viewAttribute>
+      <viewAttribute id="GLActuals" aggregationType="sum">
+        <descriptions defaultDescription="GLActuals"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV1" aggregationType="sum">
+        <descriptions defaultDescription="GLPlanningV1"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV2" aggregationType="sum">
+        <descriptions defaultDescription="GLPlanningV2"/>
+      </viewAttribute>
+      <viewAttribute id="RACCT">
+        <descriptions defaultDescription="RACCT"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="Period">
+        <descriptions defaultDescription="Period"/>
+      </viewAttribute>
+      <viewAttribute id="GLGroups">
+        <descriptions defaultDescription="GLGroups"/>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+      <viewAttribute id="YTD_GLPlanningV0" aggregationType="sum">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 0)"/>
+      </viewAttribute>
+      <viewAttribute id="YTD_GLActuals" aggregationType="sum">
+        <descriptions defaultDescription="General Ledger Actuals"/>
+      </viewAttribute>
+      <viewAttribute id="YTD_GLPlanningV2" aggregationType="sum">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 2)"/>
+      </viewAttribute>
+      <viewAttribute id="YTD_BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="YTD_GLPlanningV1" aggregationType="sum">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 1)"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_GLREC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV0" source="GLPlanningV0"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLActuals" source="GLActuals"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV1" source="GLPlanningV1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV2" source="GLPlanningV2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLGroups" source="GLGroups"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+    </input>
+    <input node="AGG_YTDAMTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="YTD_GLPlanningV0" source="GLPlanningV0"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="YTD_GLActuals" source="GLActuals"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="YTD_GLPlanningV2" source="GLPlanningV2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="YTD_BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="YTD_GLPlanningV1" source="GLPlanningV1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+    </input>
+    <joinAttribute name="RYEAR"/>
+    <joinAttribute name="RACCT"/>
+    <joinAttribute name="EndOfMonth"/>
+  </calculationView>
 </calculationViews>
-<logicalModel id="J_GLREC">
+<logicalModel id="J_GLREC_YTDAMTS">
   <attributes>
     <attribute id="RYEAR" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="RYEAR"/>
-      <keyMapping columnObjectName="J_GLREC" columnName="RYEAR"/>
+      <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="RYEAR"/>
     </attribute>
     <attribute id="RACCT" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="RACCT"/>
-      <keyMapping columnObjectName="J_GLREC" columnName="RACCT"/>
+      <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="RACCT"/>
     </attribute>
   
     <attribute id="Period" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period"/>
   
-      <keyMapping columnObjectName="J_GLREC" columnName="Period"/>
+      <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="Period"/>
   
     </attribute>
     <attribute id="GLGroups" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="GLGroups"/>
-      <keyMapping columnObjectName="J_GLREC" columnName="GLGroups"/>
+      <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="GLGroups"/>
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -190,36 +417,43 @@
     'Reconciled'
 )</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="GLPlanningV0" order="2" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="General Ledger Planning (Ver. 0)"/>
-      <measureMapping columnObjectName="J_GLREC" columnName="GLPlanningV0"/>
+      <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="GLPlanningV0"/>
     </measure>
     <measure id="GLActuals" order="3" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="General Ledger Actuals"/>
-      <measureMapping columnObjectName="J_GLREC" columnName="GLActuals"/>
+      <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="GLActuals"/>
     </measure>
     <measure id="GLPlanningV1" order="4" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="General Ledger Planning (Ver. 1)"/>
-      <measureMapping columnObjectName="J_GLREC" columnName="GLPlanningV1"/>
+      <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="GLPlanningV1"/>
     </measure>
     <measure id="GLPlanningV2" order="5" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="General Ledger Planning (Ver. 2)"/>
-      <measureMapping columnObjectName="J_GLREC" columnName="GLPlanningV2"/>
+      <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="GLPlanningV2"/>
     </measure>
     <measure id="BETRH" order="7" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BETRH"/>
-      <measureMapping columnObjectName="J_GLREC" columnName="BETRH"/>
+      <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="BETRH"/>
     </measure></baseMeasures>
   <calculatedMeasures>
-    <measure id="GLCounter" order="11" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
-      <descriptions defaultDescription="General Ledger Account Counter"/>
+    <measure id="GLPeriodCounter" order="11" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="General Ledger Account Per Period Counter"/>
       <exceptionAggregation>
         <attribute attributeName="RACCT"/>
+        <attribute attributeName="Period"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      </measure>
+    <measure id="Variance" order="12" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="23" scale="2" expressionLanguage="COLUMN_ENGINE">
+      <descriptions defaultDescription="Variance"/>
+      <formula>&quot;GLActuals&quot; - &quot;BETRH&quot;</formula>
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -228,19 +462,21 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="40" y="85"/>
+      <upperLeftCorner x="241.37236535693756" y="112"/>
+    
+      <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_GLTOTALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-50" y="446"/>
+      <upperLeftCorner x="92" y="946.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_GLBASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="250" y="535"/>
+      <upperLeftCorner x="282.7285169905698" y="1091.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_GLREC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="237"/>
+      <upperLeftCorner x="198.69568800008568" y="786.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="AGG_GLTOTALS" modelObjectNameSpace="J_GLREC" modelObjectType="JoinNodeInput">
@@ -252,8 +488,42 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_GLBASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="250" y="446"/>
+      <upperLeftCorner x="302" y="956.9999952316284"/>
       <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="NEJ_YTDAMTS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="345.28762001674954" y="485.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_GLREC" modelObjectNameSpace="NEJ_YTDAMTS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_MONTHLY" modelObjectNameSpace="NEJ_YTDAMTS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_MONTHLY" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="428.6956874040393" y="647.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="AGG_YTDAMTS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="349.28762001674954" y="378.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_GLREC_YTDAMTS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="241.37236535693756" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_GLREC" modelObjectNameSpace="J_GLREC_YTDAMTS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="AGG_YTDAMTS" modelObjectNameSpace="J_GLREC_YTDAMTS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
     </shape>
   </shapes>
 </layout>
