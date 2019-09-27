@@ -259,11 +259,11 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="BNAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="NAME_TEXT"/>
     </input>
-    <joinAttribute name="CLIENT"/>
     <joinAttribute name="WI_CRUSER"/>
+    <joinAttribute name="CLIENT"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_FWDUSER" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
@@ -563,6 +563,10 @@
       <viewAttribute id="WI_AAGENT">
         <descriptions defaultDescription="WI_AAGENT"/>
       </viewAttribute>
+    
+      <viewAttribute id="WI_CRUSER">
+        <descriptions defaultDescription="WI_CRUSER"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Days_Bt_Creation_Mod" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
@@ -592,6 +596,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="WI_AAGENT" source="WI_AAGENT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="WI_CRUSER"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -634,23 +640,23 @@
       <keyMapping columnObjectName="P_USERS" columnName="TOP_WI_ID"/>
     </attribute>
     <attribute id="CC_CreatedDate" order="12" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Created Date"/>
+      <descriptions defaultDescription="Date Created"/>
       <keyMapping columnObjectName="P_USERS" columnName="CC_CreatedDate"/>
     </attribute>
     <attribute id="CC_CompletedDate" order="13" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Completed Date"/>
+      <descriptions defaultDescription="Date Completed"/>
       <keyMapping columnObjectName="P_USERS" columnName="CC_CompletedDate"/>
     </attribute>
     <attribute id="CreatedByName" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Created By Name"/>
+      <descriptions defaultDescription="Name Created"/>
       <keyMapping columnObjectName="P_USERS" columnName="CreatedByName"/>
     </attribute>
     <attribute id="LastForwardedByName" order="15" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Forwarded By Name"/>
+      <descriptions defaultDescription="Name Forwarded By"/>
       <keyMapping columnObjectName="P_USERS" columnName="LastForwardedByName"/>
     </attribute>
     <attribute id="CompletedByName" order="19" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Completed By Name"/>
+      <descriptions defaultDescription="Name Processed"/>
       <keyMapping columnObjectName="P_USERS" columnName="CompletedByName"/>
     </attribute>
     <attribute id="ORGEH" order="20" displayAttribute="false" attributeHierarchyActive="false">
@@ -663,9 +669,16 @@
     </attribute>
   
     <attribute id="WI_AAGENT" order="23" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Processing User"/>
+      <descriptions defaultDescription="User Processed"/>
   
       <keyMapping columnObjectName="P_USERS" columnName="WI_AAGENT"/>
+  
+    </attribute>
+  
+    <attribute id="WI_CRUSER" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="User Created"/>
+  
+      <keyMapping columnObjectName="P_USERS" columnName="WI_CRUSER"/>
   
     </attribute>
   </attributes>
@@ -676,11 +689,11 @@
       <measureMapping columnObjectName="P_USERS" columnName="CC_RowCount"/>
     </measure>
     <measure id="CC_CreatedAtTime" order="17" aggregationType="min" measureType="simple">
-      <descriptions defaultDescription="Created Time"/>
+      <descriptions defaultDescription="Time Created"/>
       <measureMapping columnObjectName="P_USERS" columnName="CC_CreatedAtTime"/>
     </measure>
     <measure id="CC_CompletedTime" order="18" aggregationType="min" measureType="simple">
-      <descriptions defaultDescription="Completed Time"/>
+      <descriptions defaultDescription="Time Completed"/>
       <measureMapping columnObjectName="P_USERS" columnName="CC_CompletedTime"/>
     </measure>
     <measure id="CC_Days_Bt_Creation_Mod" order="22" aggregationType="sum" measureType="simple">
@@ -710,11 +723,13 @@
       
       
       
+      
       </measure>
   
     <measure id="CC_WorkflowDurationAvg" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Workflow Duration (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
       
       
       
