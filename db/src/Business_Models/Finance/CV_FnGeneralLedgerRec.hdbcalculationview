@@ -230,26 +230,26 @@
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_MONTHLY" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
-      <viewAttribute id="RYEAR">
-        <descriptions defaultDescription="RYEAR"/>
-      </viewAttribute>
       <viewAttribute id="GLPlanningV0">
         <descriptions defaultDescription="General Ledger Planning (Ver. 0)"/>
       </viewAttribute>
       <viewAttribute id="GLActuals">
         <descriptions defaultDescription="General Ledger Actuals"/>
       </viewAttribute>
-      <viewAttribute id="GLPlanningV1">
-        <descriptions defaultDescription="General Ledger Planning (Ver. 1)"/>
-      </viewAttribute>
       <viewAttribute id="GLPlanningV2">
         <descriptions defaultDescription="General Ledger Planning (Ver. 2)"/>
       </viewAttribute>
-      <viewAttribute id="RACCT">
-        <descriptions defaultDescription="RACCT"/>
-      </viewAttribute>
       <viewAttribute id="BETRH">
         <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="GLPlanningV1">
+        <descriptions defaultDescription="General Ledger Planning (Ver. 1)"/>
+      </viewAttribute>
+      <viewAttribute id="RYEAR">
+        <descriptions defaultDescription="RYEAR"/>
+      </viewAttribute>
+      <viewAttribute id="RACCT">
+        <descriptions defaultDescription="RACCT"/>
       </viewAttribute>
       <viewAttribute id="EndOfMonth">
         <descriptions defaultDescription="EndOfMonth"/>
@@ -389,11 +389,11 @@
 <logicalModel id="J_GLREC_YTDAMTS">
   <attributes>
     <attribute id="RYEAR" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="RYEAR"/>
+      <descriptions defaultDescription="Fiscal Year"/>
       <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="RYEAR"/>
     </attribute>
     <attribute id="RACCT" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="RACCT"/>
+      <descriptions defaultDescription="General Ledger Account"/>
       <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="RACCT"/>
     </attribute>
   
@@ -404,7 +404,7 @@
   
     </attribute>
     <attribute id="GLGroups" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="GLGroups"/>
+      <descriptions defaultDescription="General Ledger Groups"/>
       <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="GLGroups"/>
     </attribute>
   </attributes>
@@ -417,7 +417,7 @@
     'Reconciled'
 )</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="GLPlanningV0" order="2" aggregationType="sum" measureType="simple">
@@ -437,9 +437,30 @@
       <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="GLPlanningV2"/>
     </measure>
     <measure id="BETRH" order="7" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="BETRH"/>
+      <descriptions defaultDescription="PSCD Amount"/>
       <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="BETRH"/>
-    </measure></baseMeasures>
+    </measure>
+    <measure id="YTD_GLPlanningV0" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="YTD General Ledger Planning (Ver. 0)"/>
+      <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="YTD_GLPlanningV0"/>
+    </measure>
+    <measure id="YTD_GLActuals" order="14" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="YTD General Ledger Actuals"/>
+      <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="YTD_GLActuals"/>
+    </measure>
+    <measure id="YTD_GLPlanningV2" order="15" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="YTD General Ledger Planning (Ver. 2)"/>
+      <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="YTD_GLPlanningV2"/>
+    </measure>
+    <measure id="YTD_BETRH" order="16" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="YTD PSCD Amount"/>
+      <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="YTD_BETRH"/>
+    </measure>
+    <measure id="YTD_GLPlanningV1" order="17" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="YTD General Ledger Planning (Ver. 1)"/>
+      <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="YTD_GLPlanningV1"/>
+    </measure>
+  </baseMeasures>
   <calculatedMeasures>
     <measure id="GLPeriodCounter" order="11" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="General Ledger Account Per Period Counter"/>
@@ -449,10 +470,12 @@
       </exceptionAggregation>
       <formula>1</formula>
       
+      
       </measure>
     <measure id="Variance" order="12" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="23" scale="2" expressionLanguage="COLUMN_ENGINE">
-      <descriptions defaultDescription="Variance"/>
+      <descriptions defaultDescription="GL to PSCD Variance"/>
       <formula>&quot;GLActuals&quot; - &quot;BETRH&quot;</formula>
+      
       
       </measure>
   </calculatedMeasures>
@@ -462,21 +485,21 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="241.37236535693756" y="112"/>
+      <upperLeftCorner x="241" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_GLTOTALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="946.9999952316284"/>
+      <upperLeftCorner x="92" y="946"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_GLBASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="282.7285169905698" y="1091.9999940395355"/>
+      <upperLeftCorner x="282" y="1091"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_GLREC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="198.69568800008568" y="786.9999964237213"/>
+      <upperLeftCorner x="198" y="786"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="AGG_GLTOTALS" modelObjectNameSpace="J_GLREC" modelObjectType="JoinNodeInput">
@@ -488,12 +511,12 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_GLBASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="956.9999952316284"/>
+      <upperLeftCorner x="302" y="956"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="NEJ_YTDAMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="345.28762001674954" y="485.9999988079071"/>
+      <upperLeftCorner x="345" y="485"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_GLREC" modelObjectNameSpace="NEJ_YTDAMTS" modelObjectType="JoinNodeInput">
@@ -505,16 +528,16 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_MONTHLY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="428.6956874040393" y="647.9999976158142"/>
+      <upperLeftCorner x="428" y="647"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_YTDAMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="349.28762001674954" y="378.9999988079071"/>
+      <upperLeftCorner x="349" y="378"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_GLREC_YTDAMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="241.37236535693756" y="217"/>
+      <upperLeftCorner x="241" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_GLREC" modelObjectNameSpace="J_GLREC_YTDAMTS" modelObjectType="JoinNodeInput">
