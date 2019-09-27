@@ -10,9 +10,6 @@
   <DataSource id="osr.business.semantic.db.Business_Models.Finance::CV_FnFinancialsSnapshots">
     <resourceUri>osr.business.semantic.db.Business_Models.Finance::CV_FnFinancialsSnapshots</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.synonyms::DPAYH">
-    <resourceUri>osr.business.semantic.db.synonyms::DPAYH</resourceUri>
-  </DataSource>
   <DataSource id="osr.business.semantic.db.synonyms::DFKKKO">
     <resourceUri>osr.business.semantic.db.synonyms::DFKKKO</resourceUri>
   </DataSource>
@@ -74,9 +71,12 @@
       <viewAttribute id="BETRH" aggregationType="sum">
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
+      <viewAttribute id="CarryOverFlag">
+        <descriptions defaultDescription="CarryOverFlag"/>
+      </viewAttribute>
     
-      <viewAttribute datatype="NVARCHAR" length="1" id="FinancialsSource">
-        <descriptions defaultDescription="FinancialsSource"/>
+      <viewAttribute id="EOMBalance" aggregationType="sum">
+        <descriptions defaultDescription="GLPostingAmount"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -88,37 +88,30 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="RelevantDate" source="RelevantDate"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CarryOverFlag" null="true" value=""/>
     
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="FinancialsSource" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="EOMBalance" null="true" value=""/>
     </input>
   
     <input node="P_FINANCIALS" emptyUnionBehavior="NO_ROW">
+  
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MANDT" null="true" value=""/>
+  
       <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+  
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+  
       <mapping xsi:type="Calculation:AttributeMapping" target="RelevantDate" source="KeyDateString"/>
-    
   
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="GLPostingAmount"/>
   
+      <mapping xsi:type="Calculation:AttributeMapping" target="CarryOverFlag" source="CarryOverFlag"/>
+  
     
   
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="FinancialsSource" null="false" value="X"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EOMBalance" source="EOMBalance"/>
   
-    </input>
-  
-    <input node="P_DPAYH" emptyUnionBehavior="NO_ROW">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PRCTR" null="true" value=""/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="UBKNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RelevantDate" source="ZALDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="RBETR"/>
-    
-  
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="FinancialsSource" null="true" value=""/>
-  
-    </input>
-  </calculationView>
+    </input></calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_DOCDATE" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="MANDT">
@@ -175,6 +168,14 @@
         <descriptions defaultDescription="GLPostingAmount"/>
       </viewAttribute>
     
+      <viewAttribute id="CarryOverFlag">
+        <descriptions defaultDescription="CarryOverFlag"/>
+      </viewAttribute>
+      <viewAttribute id="EOMBalance">
+        <descriptions defaultDescription="GLPostingAmount"/>
+      </viewAttribute>
+    
+    
     
       <viewAttribute id="KeyDate">
         <descriptions defaultDescription="KeyDate"/>
@@ -190,36 +191,11 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GLPostingAmount" source="GLPostingAmount"/>
-    </input>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_DPAYH" filterExpressionLanguage="COLUMN_ENGINE">
-    <viewAttributes>
-      <viewAttribute id="MANDT">
-        <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute id="UBKNT">
-        <descriptions defaultDescription="UBKNT"/>
-      </viewAttribute>
-      <viewAttribute id="ZALDT">
-        <descriptions defaultDescription="ZALDT"/>
-      </viewAttribute>
-      <viewAttribute id="RBETR">
-        <descriptions defaultDescription="RBETR"/>
-      </viewAttribute>
     
-      <viewAttribute id="DOC1R">
-        <descriptions defaultDescription="DOC1R"/>
-      </viewAttribute></viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::DPAYH">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DOC1R" source="DOC1R"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="UBKNT" source="UBKNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZALDT" source="ZALDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RBETR" source="RBETR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EOMBalance" source="EOMBalance"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CarryOverFlag" source="CarryOverFlag"/>
     </input>
-    <filter>&quot;DOC1R&quot;!='' AND &quot;DOC1R&quot;!='SIMU'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKKO">
     <viewAttributes>
@@ -265,26 +241,23 @@
       <viewAttribute id="BETRH" aggregationType="sum">
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
-      <viewAttribute id="FinancialsSource">
-        <descriptions defaultDescription="FinancialsSource"/>
+      <viewAttribute id="CarryOverFlag">
+        <descriptions defaultDescription="CarryOverFlag"/>
+      </viewAttribute>
+      <viewAttribute id="EOMBalance" aggregationType="sum">
+        <descriptions defaultDescription="GLPostingAmount"/>
       </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$RelevantDate$DATE"/>
     </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="ComparisonFY" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
-        <formula>if((&quot;FinancialsSource&quot;='X' AND &quot;FiscalMonth&quot; = '12') OR isNull(&quot;FinancialsSource&quot;),
-    &quot;FISCAL_YEAR&quot;,
-    string(null)
-)</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+    <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="U_GENLEDGERS">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FinancialsSource" source="FinancialsSource"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CarryOverFlag" source="CarryOverFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EOMBalance" source="EOMBalance"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$RelevantDate$DATE" source="RelevantDate"/>
     </input>
     <input node="P_CALENDAR">
@@ -323,9 +296,6 @@
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_GLPER_PRCTRDESC" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
-      <viewAttribute id="FISCAL_YEAR">
-        <descriptions defaultDescription="FISCAL_YEAR"/>
-      </viewAttribute>
       <viewAttribute id="FiscalMonth">
         <descriptions defaultDescription="FiscalMonth"/>
       </viewAttribute>
@@ -353,23 +323,20 @@
       <viewAttribute id="BETRH" aggregationType="sum">
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
-    
-      <viewAttribute id="ComparisonFY">
-        <descriptions defaultDescription="ComparisonFY"/>
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="J_GL_PERIODS">
-      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+    <input node="U_ACTUALPERIODS">
       <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="ComparisonFY" source="ComparisonFY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
     </input>
     <input node="P_CEPCT">
       <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
@@ -380,6 +347,54 @@
     </input>
     <joinAttribute name="PRCTR"/>
     <joinAttribute name="MANDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="U_ACTUALPERIODS">
+    <viewAttributes>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+    
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_PERIODS" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+    </input>
+    <input node="P_CARRYOVER" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="CarryOverFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FiscalYearAdj"/>
+    </input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CEPCT" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
@@ -418,54 +433,131 @@
     </input>
     <filter>&quot;SPRAS&quot; = 'E' AND &quot;KOKRS&quot; = '1000'</filter>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PERIODS">
+    <viewAttributes>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="CarryOverFlag">
+        <descriptions defaultDescription="CarryOverFlag"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_GL_PERIODS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CarryOverFlag" source="CarryOverFlag"/>
+    </input></calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CARRYOVER" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="CarryOverFlag">
+        <descriptions defaultDescription="CarryOverFlag"/>
+      </viewAttribute>
+      <viewAttribute id="EndOfMonth">
+        <descriptions defaultDescription="EndOfMonth"/>
+      </viewAttribute>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+    
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FiscalYearAdj" datatype="VARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
+        <formula>string(int(&quot;FISCAL_YEAR&quot;) + 1)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="J_GL_PERIODS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CarryOverFlag" source="CarryOverFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="EOMBalance"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+    </input>
+    <filter>&quot;CarryOverFlag&quot;='COV'</filter>
+  </calculationView>
 </calculationViews>
 <logicalModel id="J_GLPER_PRCTRDESC">
   <attributes>
-    <attribute id="FISCAL_YEAR" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="FISCAL_YEAR"/>
-      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="FISCAL_YEAR"/>
-    </attribute>
-    <attribute id="FiscalMonth" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FiscalMonth" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FiscalMonth"/>
       <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="FiscalMonth"/>
     </attribute>
-    <attribute id="KTEXT" order="3" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="KTEXT" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="KTEXT"/>
       <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="KTEXT"/>
     </attribute>
-    <attribute id="LTEXT" order="4" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="LTEXT" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="LTEXT"/>
       <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="LTEXT"/>
     </attribute>
-    <attribute id="MCTXT" order="5" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MCTXT" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MCTXT"/>
       <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="MCTXT"/>
     </attribute>
-    <attribute id="EndOfMonth" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="EndOfMonth" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="EndOfMonth"/>
       <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="EndOfMonth"/>
     </attribute>
-    <attribute id="MANDT" order="7" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MANDT" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MANDT"/>
       <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="MANDT"/>
     </attribute>
-    <attribute id="PRCTR" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="PRCTR" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PRCTR"/>
       <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="PRCTR"/>
     </attribute>
-    <attribute id="HKONT" order="9" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="HKONT" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="HKONT"/>
       <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="HKONT"/>
     </attribute>
-  
-    <attribute id="ComparisonFY" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ComparisonFY"/>
-      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="ComparisonFY"/>
+    <attribute id="FISCAL_YEAR" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FISCAL_YEAR"/>
+      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="FISCAL_YEAR"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="BETRH" order="10" aggregationType="sum" measureType="simple">
+    <measure id="BETRH" order="9" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BETRH"/>
       <measureMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="BETRH"/>
     </measure>
@@ -483,16 +575,16 @@
     </shape>
   
     <shape expanded="true" modelObjectName="P_DFKKOPK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="17" y="871"/>
+      <upperLeftCorner x="24" y="1202"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="U_GENLEDGERS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="131" y="536"/>
+      <upperLeftCorner x="144" y="852"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_DOCDATE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="131" y="703"/>
+      <upperLeftCorner x="144" y="1028"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_DFKKOPK" modelObjectNameSpace="J_DOCDATE" modelObjectType="JoinNodeInput">
@@ -504,22 +596,18 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_FINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="474" y="703"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_DPAYH" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-253" y="709"/>
+      <upperLeftCorner x="474" y="1028"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_DFKKKO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="248" y="871"/>
+      <upperLeftCorner x="264" y="1202"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_GL_PERIODS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="414" y="376"/>
+      <upperLeftCorner x="474" y="660"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="U_GENLEDGERS" modelObjectNameSpace="J_GL_PERIODS" modelObjectType="JoinNodeInput">
@@ -531,7 +619,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CALENDAR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="464" y="536"/>
+      <upperLeftCorner x="474" y="852"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
@@ -539,7 +627,7 @@
       <upperLeftCorner x="337" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_GL_PERIODS" modelObjectNameSpace="J_GLPER_PRCTRDESC" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="U_ACTUALPERIODS" modelObjectNameSpace="J_GLPER_PRCTRDESC" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
@@ -547,9 +635,22 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="P_CEPCT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="204" y="376"/>
+    <shape expanded="true" modelObjectName="U_ACTUALPERIODS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="464" y="371"/>
       <rectangleSize height="30" width="160"/>
-    </shape></shapes>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CEPCT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="131" y="371"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_PERIODS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="304" y="521"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CARRYOVER" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="631" y="521"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
