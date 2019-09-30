@@ -12,7 +12,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:AggregationView" id="AGG_GLTOTALS" filterExpressionLanguage="COLUMN_ENGINE">
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_GLTOTALS">
     <viewAttributes>
       <viewAttribute id="RYEAR">
         <descriptions defaultDescription="RYEAR"/>
@@ -39,7 +39,6 @@
       <viewAttribute id="GLGroups">
         <descriptions defaultDescription="GLGroups"/>
       </viewAttribute>
-    
       <viewAttribute id="AWTYP">
         <descriptions defaultDescription="AWTYP"/>
       </viewAttribute>
@@ -56,11 +55,8 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GLGroups" source="GLGroups"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
-    </input>
-    <filter>&quot;AWTYP&quot;='FKKSU'</filter>
-  </calculationView>
+    </input></calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_GLBASE">
     <viewAttributes>
       <viewAttribute id="FISCAL_YEAR">
@@ -78,6 +74,10 @@
       <viewAttribute id="EndOfMonth">
         <descriptions defaultDescription="EndOfMonth"/>
       </viewAttribute>
+    
+      <viewAttribute id="AWTYPKey">
+        <descriptions defaultDescription="AWTYPKey"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="Period" datatype="NVARCHAR" length="3" expressionLanguage="COLUMN_ENGINE">
@@ -91,6 +91,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYPKey" source="AWTYPKey"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_GLREC" cardinality="C1_1" joinType="leftOuter">
@@ -126,6 +128,10 @@
       <viewAttribute id="EndOfMonth">
         <descriptions defaultDescription="EndOfMonth"/>
       </viewAttribute>
+    
+      <viewAttribute id="AWTYP">
+        <descriptions defaultDescription="AWTYP"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -139,6 +145,8 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GLGroups" source="GLGroups"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
     </input>
     <input node="AGG_GLBASE">
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
@@ -146,10 +154,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYPKey"/>
     </input>
     <joinAttribute name="RYEAR"/>
     <joinAttribute name="RACCT"/>
     <joinAttribute name="Period"/>
+    <joinAttribute name="AWTYP"/>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_GLBASE">
     <viewAttributes>
@@ -170,7 +180,11 @@
       </viewAttribute>
       <viewAttribute id="Period">
         <descriptions defaultDescription="Period"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="AWTYPKey">
+        <descriptions defaultDescription="AWTYPKey"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_GLBASE">
@@ -180,6 +194,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYPKey" source="AWTYPKey"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_YTDAMTS" cardinality="C1_N" joinType="leftOuter">
@@ -356,6 +372,10 @@
       <viewAttribute id="YTD_GLPlanningV1" aggregationType="sum">
         <descriptions defaultDescription="General Ledger Planning (Ver. 1)"/>
       </viewAttribute>
+    
+      <viewAttribute id="AWTYP">
+        <descriptions defaultDescription="AWTYP"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -370,6 +390,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GLGroups" source="GLGroups"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
     </input>
     <input node="AGG_YTDAMTS">
       <mapping xsi:type="Calculation:AttributeMapping" target="YTD_GLPlanningV0" source="GLPlanningV0"/>
@@ -407,6 +429,13 @@
       <descriptions defaultDescription="General Ledger Groups"/>
       <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="GLGroups"/>
     </attribute>
+  
+    <attribute id="AWTYP" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AWTYP"/>
+  
+      <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="AWTYP"/>
+  
+    </attribute>
   </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="RecFlag" order="10" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
@@ -417,7 +446,7 @@
     'Reconciled'
 )</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="GLPlanningV0" order="2" aggregationType="sum" measureType="simple">
@@ -491,15 +520,15 @@
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_GLTOTALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="946"/>
+      <upperLeftCorner x="8" y="1165"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_GLBASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="282" y="1091"/>
+      <upperLeftCorner x="476" y="1165"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_GLREC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="198" y="786"/>
+      <upperLeftCorner x="198" y="720"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="AGG_GLTOTALS" modelObjectNameSpace="J_GLREC" modelObjectType="JoinNodeInput">
@@ -511,12 +540,12 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_GLBASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="956"/>
+      <upperLeftCorner x="476" y="974"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="NEJ_YTDAMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="345" y="485"/>
+      <upperLeftCorner x="514" y="495"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_GLREC" modelObjectNameSpace="NEJ_YTDAMTS" modelObjectType="JoinNodeInput">
@@ -528,12 +557,12 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_MONTHLY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="428" y="647"/>
+      <upperLeftCorner x="504" y="655"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_YTDAMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="349" y="378"/>
+      <upperLeftCorner x="514" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_GLREC_YTDAMTS" modelObjectNameSpace="CalculationView">

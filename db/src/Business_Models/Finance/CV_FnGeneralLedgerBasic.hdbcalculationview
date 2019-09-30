@@ -21,7 +21,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKOPK">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKOPK" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="VALUT">
         <descriptions defaultDescription="VALUT"/>
@@ -52,6 +52,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/></input>
+  
+    <filter>&quot;HKONT&quot; != '0000010111'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:UnionView" id="U_GENLEDGERS">
     <viewAttributes>
@@ -78,6 +80,10 @@
       <viewAttribute id="EOMBalance" aggregationType="sum">
         <descriptions defaultDescription="GLPostingAmount"/>
       </viewAttribute>
+    
+      <viewAttribute id="AWTYPKey">
+        <descriptions defaultDescription="AWTYPKey"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -91,6 +97,8 @@
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CarryOverFlag" null="true" value=""/>
     
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="EOMBalance" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYPKey" source="AWTYPKey"/>
     </input>
   
     <input node="P_FINANCIALS" emptyUnionBehavior="NO_ROW">
@@ -110,6 +118,10 @@
     
   
       <mapping xsi:type="Calculation:AttributeMapping" target="EOMBalance" source="EOMBalance"/>
+  
+    
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYPKey" source="AWTYPKey"/>
   
     </input></calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_DOCDATE" cardinality="CN_1" joinType="leftOuter">
@@ -137,6 +149,12 @@
     <calculatedViewAttributes>
       <calculatedViewAttribute id="RelevantDate" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;VALUT&quot; = '00000000',&quot;BUDAT&quot;,&quot;VALUT&quot;)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="AWTYPKey" datatype="NVARCHAR" length="5" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>'FKKSU'</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -183,6 +201,12 @@
     <calculatedViewAttributes>
       <calculatedViewAttribute id="KeyDateString" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
         <formula>replace(string(&quot;KeyDate&quot;),'-','')</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="AWTYPKey" datatype="NVARCHAR" length="5" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>'FKKSU'</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -247,6 +271,9 @@
       <viewAttribute id="EOMBalance" aggregationType="sum">
         <descriptions defaultDescription="GLPostingAmount"/>
       </viewAttribute>
+      <viewAttribute id="AWTYPKey">
+        <descriptions defaultDescription="AWTYPKey"/>
+      </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$RelevantDate$DATE"/>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -258,6 +285,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CarryOverFlag" source="CarryOverFlag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EOMBalance" source="EOMBalance"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYPKey" source="AWTYPKey"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$RelevantDate$DATE" source="RelevantDate"/>
     </input>
     <input node="P_CALENDAR">
@@ -326,6 +354,10 @@
       <viewAttribute id="FISCAL_YEAR">
         <descriptions defaultDescription="FISCAL_YEAR"/>
       </viewAttribute>
+    
+      <viewAttribute id="AWTYPKey">
+        <descriptions defaultDescription="AWTYPKey"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -337,6 +369,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYPKey" source="AWTYPKey"/>
     </input>
     <input node="P_CEPCT">
       <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
@@ -372,6 +406,10 @@
       <viewAttribute id="FISCAL_YEAR">
         <descriptions defaultDescription="FISCAL_YEAR"/>
       </viewAttribute>
+    
+      <viewAttribute id="AWTYPKey">
+        <descriptions defaultDescription="AWTYPKey"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -384,6 +422,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYPKey" source="AWTYPKey"/>
     </input>
     <input node="P_CARRYOVER" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="CarryOverFlag"/>
@@ -394,6 +434,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FiscalYearAdj"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYPKey" source="AWTYPKey"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CEPCT" filterExpressionLanguage="COLUMN_ENGINE">
@@ -456,10 +498,14 @@
       <viewAttribute id="FISCAL_YEAR">
         <descriptions defaultDescription="FISCAL_YEAR"/>
       </viewAttribute>
+    
+      <viewAttribute id="AWTYPKey">
+        <descriptions defaultDescription="AWTYPKey"/>
+      </viewAttribute>
+    
       <viewAttribute id="CarryOverFlag">
         <descriptions defaultDescription="CarryOverFlag"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_GL_PERIODS">
@@ -471,6 +517,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CarryOverFlag" source="CarryOverFlag"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYPKey" source="AWTYPKey"/>
     </input></calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CARRYOVER" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
@@ -493,10 +541,14 @@
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
     
+      <viewAttribute id="AWTYPKey">
+        <descriptions defaultDescription="AWTYPKey"/>
+      </viewAttribute>
+    
+    
       <viewAttribute id="FISCAL_YEAR">
         <descriptions defaultDescription="FISCAL_YEAR"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="FiscalYearAdj" datatype="VARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
         <formula>string(int(&quot;FISCAL_YEAR&quot;) + 1)</formula>
@@ -512,6 +564,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="EOMBalance"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYPKey" source="AWTYPKey"/>
     </input>
     <filter>&quot;CarryOverFlag&quot;='COV'</filter>
   </calculationView>
@@ -553,6 +607,13 @@
     <attribute id="FISCAL_YEAR" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FISCAL_YEAR"/>
       <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="FISCAL_YEAR"/>
+    </attribute>
+  
+    <attribute id="AWTYPKey" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AWTYPKey"/>
+  
+      <keyMapping columnObjectName="J_GLPER_PRCTRDESC" columnName="AWTYPKey"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>

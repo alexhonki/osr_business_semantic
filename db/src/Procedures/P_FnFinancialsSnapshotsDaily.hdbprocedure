@@ -58,7 +58,12 @@ BEGIN
 			SELECT :dt_keydate AS "KeyDate", "PRCTR", "HKONT", SUM("BETRH") AS "BETRH", SUM("GLPostingAmount") AS "GLPostingAmount", CURRENT_DATE
 			FROM "osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials"
 				(placeholder."$$IP_KeyDate$$"=>:dt_keydate)
-			GROUP BY "PRCTR", "HKONT";
+			GROUP BY "PRCTR", "HKONT"
+			UNION
+			SELECT :dt_keydate AS "KeyDate", '' AS "PRCTR", "UBHKT" AS "HKONT", SUM("RBETR") AS "BETRH", SUM("RWBTR") AS "GLPostingAmount", CURRENT_DATE
+			FROM "osr.business.semantic.db.Business_Models.Finance::CV_FnGeneralLedgerCheques"
+				(placeholder."$$IP_KeyDate$$"=>:dt_keydate)
+			GROUP BY "UBHKT";
 			
 			DELETE FROM "osr.business.semantic.db.Tables::FnFinancials"
 			WHERE "KeyDate" = :dt_keydate;
