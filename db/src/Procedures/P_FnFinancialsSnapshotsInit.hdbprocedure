@@ -7,12 +7,13 @@ BEGIN
 	DECLARE v_arb VARCHAR(1) = '';
 	DECLARE CURSOR c_dates (v_arb VARCHAR(1)) FOR
 		SELECT "DATE_SQL" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar"
-		WHERE "DATE_SQL" >= '2018-07-01' AND (
+		WHERE "DATE_SQL" >= '2009-07-01' AND 
+		(
 			("DATE_SQL" BETWEEN ADD_DAYS(LAST_DAY(ADD_MONTHS(CURRENT_DATE,-2)),1) AND LAST_DAY(NOW()))
 			OR
-			("CC_FinYear" IN (SELECT "CC_FinYear" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar" WHERE "DATE_SQL" = ADD_DAYS(CURRENT_DATE,-1)) AND "DATE_SQL" < ADD_DAYS(LAST_DAY(ADD_MONTHS(CURRENT_DATE,-2)),1) AND "Weekly" = 'X')
+			("CC_FinYear" IN (SELECT "CC_FinYear" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar" WHERE "DATE_SQL" = ADD_DAYS(CURRENT_DATE,-1)) AND "Weekly" = 'X')
 			OR
-			("CC_FinYear" NOT IN (SELECT "CC_FinYear" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar" WHERE "DATE_SQL" = ADD_DAYS(CURRENT_DATE,-1)) AND "Monthly" = 'X')
+			"Monthly" = 'X'
 		);
 		
 	DELETE FROM "osr.business.semantic.db.Tables::FnFinancials";
@@ -22,10 +23,15 @@ BEGIN
 		DECLARE dt_keydate DATE = curr_row.DATE_SQL;
 		
 		output_table = 
-		SELECT :dt_keydate AS "KeyDate", "PRCTR", "HKONT", "FiscalMonth", "FISCAL_YEAR", SUM("BETRH") AS "BETRH", CURRENT_DATE
+		SELECT :dt_keydate AS "KeyDate", "PRCTR", "HKONT", SUM("BETRH") AS "BETRH", SUM("GLPostingAmount") AS "GLPostingAmount", CURRENT_DATE
 		FROM "osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials"
 			(placeholder."$$IP_KeyDate$$"=>:dt_keydate)
-		GROUP BY "PRCTR", "HKONT", "FiscalMonth", "FISCAL_YEAR";
+		GROUP BY "PRCTR", "HKONT"
+		UNION
+		SELECT :dt_keydate AS "KeyDate", '' AS "PRCTR", "UBHKT" AS "HKONT", SUM("RBETR") AS "BETRH", SUM("RWBTR") AS "GLPostingAmount", CURRENT_DATE
+		FROM "osr.business.semantic.db.Business_Models.Finance::CV_FnGeneralLedgerCheques"
+			(placeholder."$$IP_KeyDate$$"=>:dt_keydate)
+		GROUP BY "UBHKT";
 		
 		DELETE FROM "osr.business.semantic.db.Tables::FnFinancials"
 		WHERE "KeyDate" = :dt_keydate;
