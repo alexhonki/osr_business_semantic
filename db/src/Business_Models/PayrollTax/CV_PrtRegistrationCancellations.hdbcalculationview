@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtRegistrationCancellations" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="Payroll Tax Registrations and Cancellations"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorkItems">
+    <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorkItems</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPFACTS" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_CAT_SEQ">
+        <descriptions defaultDescription="Fact Category Sequence"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_SET">
+        <descriptions defaultDescription="Fact Set"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_TYPE">
+        <descriptions defaultDescription="Fact Type"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_CATEGORY">
+        <descriptions defaultDescription="Fact Category"/>
+      </viewAttribute>
+      <viewAttribute id="VALUE_GENERIC">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CAT_SEQ" source="FACT_CAT_SEQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_TYPE" source="FACT_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CATEGORY" source="FACT_CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
+    </input>
+    <filter>&quot;FACT_SET&quot;='ZPTX' AND &quot;FACT_TYPE&quot; = 'RG01' AND &quot;FACT_CATEGORY&quot; = '0004' AND ( &quot;FACT_CAT_SEQ&quot; = '81' OR &quot;FACT_CAT_SEQ&quot; = '82')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_REGOS" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="VALUE_GENERIC">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_CAT_SEQ">
+        <descriptions defaultDescription="Fact Category Sequence"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_EventDate" datatype="DATE" expressionLanguage="SQL">
+        <formula>TO_DATE(LEFT(&quot;VALUE_GENERIC&quot;,8))</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_ProcessType" datatype="NVARCHAR" length="40" expressionLanguage="SQL">
+        <formula>'Facts - Registrations'</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_EventCounter" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="P_BPFACTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CAT_SEQ" source="FACT_CAT_SEQ"/>
+    </input>
+    <filter>&quot;FACT_CAT_SEQ&quot; = '81'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CANCELLATIONS" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_CAT_SEQ">
+        <descriptions defaultDescription="Fact Category Sequence"/>
+      </viewAttribute>
+      <viewAttribute id="VALUE_GENERIC">
+        <descriptions defaultDescription="Fact Value"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_EventDate" datatype="DATE" expressionLanguage="SQL">
+        <formula>TO_DATE(LEFT(&quot;VALUE_GENERIC&quot;,8))</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_ProcessType" datatype="NVARCHAR" length="40" expressionLanguage="SQL">
+        <formula>'Facts - Cancellation'</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_EventCounter" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="P_BPFACTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CAT_SEQ" source="FACT_CAT_SEQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
+    </input>
+    <filter>&quot;FACT_CAT_SEQ&quot;='82' AND &quot;VALUE_GENERIC&quot;!='99991231'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_WorkItemsRegoCancell" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="Change_CompletedDate">
+        <descriptions defaultDescription="Last Changed date"/>
+      </viewAttribute>
+      <viewAttribute id="BP">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="CC_WorkItemGroup">
+        <descriptions defaultDescription="Work Item Group"/>
+      </viewAttribute>
+      <viewAttribute id="Source">
+        <descriptions defaultDescription="Source or Work Item"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_Status">
+        <descriptions defaultDescription="Status - Open or Closed"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_ProcessType" datatype="NVARCHAR" length="40" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CC_WorkItemGroup&quot;='Registration Cancellations' AND &quot;Source&quot; = 'Tasks &amp; Interactions','TI - Cancellation',
+    if(&quot;CC_WorkItemGroup&quot;='Registration Cancellations' AND &quot;Source&quot; = 'Workflow','WF - Cancellation',
+        if(&quot;CC_WorkItemGroup&quot;='Registrations' AND &quot;Source&quot; = 'Tasks &amp; Interactions','TI - Registration',
+            if(&quot;CC_WorkItemGroup&quot;='Registrations' AND &quot;Source&quot; = 'Workflow','WF - Registration',''
+            )
+        )
+    )
+)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_EventCounter" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorkItems">
+      <mapping xsi:type="Calculation:AttributeMapping" target="Change_CompletedDate" source="Change_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP" source="BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WorkItemGroup" source="CC_WorkItemGroup"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Status" source="CC_Status"/>
+    </input>
+    <filter>&quot;CC_Status&quot; = 'Closed Status' AND &quot;BP&quot; IS NOT NULL AND (&quot;CC_WorkItemGroup&quot; = 'Registrations' OR &quot;CC_WorkItemGroup&quot; = 'Registration Cancellations')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="U_REGO_CANCEL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="Business Partner"/>
+      </viewAttribute>
+      <viewAttribute id="CC_EventDate">
+        <descriptions defaultDescription="CC_EventDate"/>
+      </viewAttribute>
+      <viewAttribute id="CC_EventCounter" aggregationType="sum">
+        <descriptions defaultDescription="CC_EventCounter"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_ProcessType">
+        <descriptions defaultDescription="CC_ProcessType"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_REGOS" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EventDate" source="CC_EventDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EventCounter" source="CC_EventCounter"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ProcessType" source="CC_ProcessType"/>
+    </input>
+    <input node="P_CANCELLATIONS" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EventDate" source="CC_EventDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EventCounter" source="CC_EventCounter"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ProcessType" source="CC_ProcessType"/>
+    </input>
+    <input node="P_WorkItemsRegoCancell" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EventDate" source="Change_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EventCounter" source="CC_EventCounter"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ProcessType" source="CC_ProcessType"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FISCALDATES">
+    <viewAttributes>
+      <viewAttribute id="DATE_SQL">
+        <descriptions defaultDescription="Date"/>
+      </viewAttribute>
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_REGOCANCEL_FISCALDATES" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="CC_EventDate">
+        <descriptions defaultDescription="CC_EventDate"/>
+      </viewAttribute>
+      <viewAttribute id="CC_EventCounter" aggregationType="sum">
+        <descriptions defaultDescription="CC_EventCounter"/>
+      </viewAttribute>
+    
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ProcessType">
+        <descriptions defaultDescription="CC_ProcessType"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="U_REGO_CANCEL">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EventDate" source="CC_EventDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EventCounter" source="CC_EventCounter"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ProcessType" source="CC_ProcessType"/>
+    </input>
+    <input node="P_FISCALDATES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EventDate" source="DATE_SQL"/>
+    </input>
+    <joinAttribute name="CC_EventDate"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_REGOCANCEL_FISCALDATES">
+  <attributes>
+    <attribute id="CLIENT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SAP Client"/>
+      <keyMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner"/>
+      <keyMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="PARTNER"/>
+    </attribute>
+    <attribute id="CC_EventDate" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Event Date"/>
+      <keyMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="CC_EventDate"/>
+    </attribute>
+    <attribute id="FISCAL_YEAR" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fiscal Year"/>
+      <keyMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="FISCAL_YEAR"/>
+    </attribute>
+    <attribute id="FiscalMonth" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fiscal Period"/>
+      <keyMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="FiscalMonth"/>
+    </attribute>
+    <attribute id="CC_ProcessType" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Process Type"/>
+      <keyMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="CC_ProcessType"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="CC_EventCounter" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Event Counter"/>
+      <measureMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="CC_EventCounter"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="273" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_BPFACTS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118" y="676"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_REGOS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="531"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CANCELLATIONS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="531"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_WorkItemsRegoCancell" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="512" y="531"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="U_REGO_CANCEL" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="359" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_FISCALDATES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="149" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_REGOCANCEL_FISCALDATES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="273" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="U_REGO_CANCEL" modelObjectNameSpace="J_REGOCANCEL_FISCALDATES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_FISCALDATES" modelObjectNameSpace="J_REGOCANCEL_FISCALDATES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
