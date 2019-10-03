@@ -6918,7 +6918,22 @@
         <descriptions defaultDescription="FiscalMonth"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_FiscalMonthDesc" datatype="NVARCHAR" length="6" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;FiscalMonth&quot;='1','01-Jul',
+if(&quot;FiscalMonth&quot;='2','02-Aug',
+if(&quot;FiscalMonth&quot;='3','03-Sep',
+if(&quot;FiscalMonth&quot;='4','04-Oct',
+if(&quot;FiscalMonth&quot;='5','05-Nov',
+if(&quot;FiscalMonth&quot;='6','06-Dec',
+if(&quot;FiscalMonth&quot;='7','07-Jan',
+if(&quot;FiscalMonth&quot;='8','08-Feb',
+if(&quot;FiscalMonth&quot;='9','09-Mar',
+if(&quot;FiscalMonth&quot;='10','10-Apr',
+if(&quot;FiscalMonth&quot;='11','11-May',
+if(&quot;FiscalMonth&quot;='12','12-Jun','0'))))))))))))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="J_ACS_CASES_RESPUSER">
       <mapping xsi:type="Calculation:AttributeMapping" target="C_UserCreatedBy" source="C_UserCreatedBy"/>
@@ -7178,16 +7193,16 @@
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_Calendar">
     <viewAttributes>
-      <viewAttribute id="DATE_SQL">
-        <descriptions defaultDescription="Date"/>
-      </viewAttribute>
       <viewAttribute id="CC_FinYear">
         <descriptions defaultDescription="Financial Year"/>
       </viewAttribute>
       <viewAttribute id="FiscalMonth">
         <descriptions defaultDescription="FiscalMonth"/>
       </viewAttribute>
-    </viewAttributes>
+    
+      <viewAttribute id="DATE_SQL">
+        <descriptions defaultDescription="Date"/>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
@@ -8123,11 +8138,18 @@
   
     <attribute id="FiscalMonth" order="251" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Closed Fiscal Month "/>
+  
       <keyMapping columnObjectName="J_ACSCASES_CAL" columnName="FiscalMonth"/>
+  
     </attribute>
     <attribute id="CC_FinYear" order="252" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Closed Financial Year"/>
       <keyMapping columnObjectName="J_ACSCASES_CAL" columnName="CC_FinYear"/>
+    </attribute>
+  
+    <attribute id="CC_FiscalMonthDesc" order="253" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Case Closed Fiscal Month "/>
+      <keyMapping columnObjectName="J_ACSCASES_CAL" columnName="CC_FiscalMonthDesc"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -8235,12 +8257,14 @@
       
       
       
+      
       </measure>
     <measure id="C_CC_Days_Bt_Creation" order="2" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Case Date Between Creation">
         <comment text="Cases - Days Between Creation"/>
       </descriptions>
       <formula>if(&quot;C_STATUS_DESC&quot;='Closed' or &quot;C_STATUS_DESC&quot;='Complete' or &quot;C_STATUS_DESC&quot;='Completed' or &quot;C_STATUS_DESC&quot;='Discontinued' or &quot;C_STATUS_DESC&quot;='Finalised',daysbetween(&quot;C_CC_DateCreated&quot;, &quot;C_CC_DateClosed&quot;), daysbetween(&quot;C_CC_DateCreated&quot;, now()))</formula>
+      
       </measure>
   
     <measure id="AlertCount" order="192" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -8254,6 +8278,7 @@
       
       
       
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -8262,18 +8287,18 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="466.83226624817365" y="112"/>
+      <upperLeftCorner x="466" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_PrtCases" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302.0000000000001" y="1156.9999928474426"/>
+      <upperLeftCorner x="302" y="1156"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_Cases_CMGALRT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="275.33333333333337" y="996.9999940395355"/>
+      <upperLeftCorner x="275" y="996"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PrtCases" modelObjectNameSpace="J_Cases_CMGALRT" modelObjectType="JoinNodeInput">
@@ -8285,12 +8310,12 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CMGALRT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92.00000000000006" y="1156.9999928474426"/>
+      <upperLeftCorner x="92" y="1156"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_Cases_ACS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="836.9999952316284"/>
+      <upperLeftCorner x="302" y="836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_Cases_CMGALRT" modelObjectNameSpace="J_Cases_ACS" modelObjectType="JoinNodeInput">
@@ -8303,17 +8328,17 @@
     </shape>
   
     <shape expanded="true" modelObjectName="R_ACS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="512" y="1014.4999940395355"/>
+      <upperLeftCorner x="512" y="1014"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_ACS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="512.0000000000001" y="1156.9999928474426"/>
+      <upperLeftCorner x="512" y="1156"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_ACS_CASES_CRUSER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="411.8427908289446" y="676.9999964237213"/>
+      <upperLeftCorner x="411" y="676"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_Cases_ACS" modelObjectNameSpace="J_ACS_CASES_CRUSER" modelObjectType="JoinNodeInput">
@@ -8325,11 +8350,11 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_UserInfo" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="542.2072188974596" y="836.9999952316284"/>
+      <upperLeftCorner x="542" y="836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ACS_CASES_LCHUSER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="438.5094574956113" y="516.9999976158142"/>
+      <upperLeftCorner x="438" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ACS_CASES_CRUSER" modelObjectNameSpace="J_ACS_CASES_LCHUSER" modelObjectType="JoinNodeInput">
@@ -8341,7 +8366,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ACS_CASES_RESPUSER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="571.116101104947" y="356.9999988079071"/>
+      <upperLeftCorner x="571" y="356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ACS_CASES_LCHUSER" modelObjectNameSpace="J_ACS_CASES_RESPUSER" modelObjectType="JoinNodeInput">
@@ -8354,19 +8379,19 @@
     </shape>
   
     <shape expanded="true" modelObjectName="J_ACSCASES_CAL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="466.83226624817365" y="217"/>
+      <upperLeftCorner x="466" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ACS_CASES_RESPUSER" modelObjectNameSpace="J_ACSCASES_CAL" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="283.4736328125"/>
+      <rectangleSize width="283"/>
     </shape>
     <shape modelObjectName="P_Calendar" modelObjectNameSpace="J_ACSCASES_CAL" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="364" y="1616"/>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_Calendar" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="357.69460108003227" y="356.9999988079071"/>
+      <upperLeftCorner x="357" y="356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
