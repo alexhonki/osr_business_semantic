@@ -1729,16 +1729,39 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="AssessmentAmountCleared">
         <descriptions defaultDescription="Assessment Amount Cleared"/>
       </viewAttribute>
+    
+      <viewAttribute id="FN_ReassessmentAmount">
+        <descriptions defaultDescription="Act. Reassessment Amount"/>
+      </viewAttribute>
+      <viewAttribute id="ReassessmentAmountCleared">
+        <descriptions defaultDescription="Reassessment Amount Cleared"/>
+      </viewAttribute>
+      <viewAttribute id="LatestReassessment">
+        <descriptions defaultDescription="Latest Reassessment Date"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Reengagement_Time" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>IF(&quot;AssessmentAmountCleared&quot;&gt;=&quot;AssessmentAmount&quot;,component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_AssessmentIssueDate&quot;,1),0)</formula>
+        <formula>IF(&quot;CC_FN_ReassessmentAmount&quot; &gt;0 and (&quot;AssessmentAmountCleared&quot;&gt;=&quot;AssessmentAmount&quot;),component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_AssessmentIssueDate&quot;,1),
+IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&quot;,component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_LatestReassessment&quot;,1),0))</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Todays_Date" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
         <formula>NOW()</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_AssessmentIssueDate" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
         <formula>&quot;AssessmentIssueDate&quot;</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_FN_ReassessmentAmount" datatype="INTEGER" expressionLanguage="SQL">
+    
+        <formula>&quot;FN_ReassessmentAmount&quot;</formula>
+    
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_ReassessmentAmountCleared" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>&quot;ReassessmentAmountCleared&quot;</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_LatestReassessment" datatype="DATE" expressionLanguage="SQL">
+        <formula>&quot;LatestReassessment&quot;</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -1753,10 +1776,14 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     
       <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="FN_ReassessmentAmount" source="FN_ReassessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmountCleared" source="ReassessmentAmountCleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="LatestReassessment"/>
     </input>
     <filter>&quot;AssessmentIssueDate&quot; != ''</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NonEquiJoin_1" cardinality="CN_1" joinType="rightOuter">
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NonEquiJoin_1" joinType="rightOuter">
     <viewAttributes>
       <viewAttribute id="PARTNER">
         <descriptions defaultDescription="PARTNER"/>
@@ -1888,6 +1915,32 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="CC_AssessmentIssueDate">
         <descriptions defaultDescription="CC_AssessmentIssueDate"/>
       </viewAttribute>
+    
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FN_ReassessmentAmount" aggregationType="sum">
+        <descriptions defaultDescription="CC_FN_ReassessmentAmount"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ReassessmentAmountCleared" aggregationType="sum">
+        <descriptions defaultDescription="CC_ReassessmentAmountCleared"/>
+      </viewAttribute>
+      <viewAttribute id="CC_LatestReassessment">
+        <descriptions defaultDescription="CC_LatestReassessment"/>
+      </viewAttribute>
+      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum">
+        <descriptions defaultDescription="FN_ReassessmentAmount"/>
+      </viewAttribute>
+      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum">
+        <descriptions defaultDescription="ReassessmentAmountCleared"/>
+      </viewAttribute>
+      <viewAttribute id="LatestReassessment">
+        <descriptions defaultDescription="LatestReassessment"/>
+      </viewAttribute>
+    
+      <viewAttribute id="TAXYRENDDT">
+        <descriptions defaultDescription="Tax Year End Date"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -1897,6 +1950,13 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_AssessmentIssueDate" source="CC_AssessmentIssueDate"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FN_ReassessmentAmount" source="CC_FN_ReassessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ReassessmentAmountCleared" source="CC_ReassessmentAmountCleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LatestReassessment" source="CC_LatestReassessment"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FN_ReassessmentAmount" source="FN_ReassessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmountCleared" source="ReassessmentAmountCleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="LatestReassessment"/>
     </input>
     <input node="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
@@ -1937,11 +1997,16 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Individual" source="CC_Individual"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Non-Individual" source="CC_Non-Individual"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxYearStartDt" source="CC_TaxYearStartDt"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
     </input>
-    <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="PERIODEND" operator="LE"/>
     <joinAttribute leftColumn="MANDT" rightColumn="CLIENT" operator="EQ"/>
     <joinAttribute leftColumn="ZZ_PARTNER" rightColumn="PARTNER" operator="EQ"/>
     <joinAttribute leftColumn="CC_AssessmentIssueDate" rightColumn="TAXYRSTARTDT" operator="GE"/>
+    <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="PERIODEND" operator="LE"/>
+    <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="PERIODBEGIN" operator="GE"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
@@ -2053,6 +2118,10 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
       </viewAttribute>
+    
+      <viewAttribute id="TAXYRENDDT">
+        <descriptions defaultDescription="Tax Year End Date"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Individual" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
@@ -2104,6 +2173,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     <input node="R_HOMEEXEMPTIONREENGAGEMENT">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Flag" source="CC_Reengagement_Flag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="ZZ_PARTNER"/>
     </input>
@@ -2124,7 +2194,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       </viewAttribute>
       <viewAttribute id="ZZ_PARTNER">
         <descriptions defaultDescription="ZZ_PARTNER"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="TAXYRENDDT">
+        <descriptions defaultDescription="Tax Year End Date"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_HOMEEXEMPTIONREENGAGEMENT">
@@ -2132,6 +2206,8 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
     </input>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>ZZ_PARTNER</partitionViewAttributeName>
@@ -2155,7 +2231,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       </viewAttribute>
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="Tax Year Start Date"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="TAXYRENDDT">
+        <descriptions defaultDescription="Tax Year End Date"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.LandTax::CV_HomeExemptionReengagement">
@@ -2163,6 +2243,8 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Flag" source="CC_Reengagement_Flag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -2304,6 +2386,21 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <descriptions defaultDescription="CC_AssessmentIssueDate"/>
       <keyMapping columnObjectName="NonEquiJoin_1" columnName="CC_AssessmentIssueDate"/>
     </attribute>
+  
+    <attribute id="TAXYRSTARTDT" order="49" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TAXYRSTARTDT"/>
+  
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="TAXYRSTARTDT"/>
+  
+    </attribute>
+    <attribute id="CC_LatestReassessment" order="52" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_LatestReassessment"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="CC_LatestReassessment"/>
+    </attribute>
+    <attribute id="LatestReassessment" order="55" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LatestReassessment"/>
+      <keyMapping columnObjectName="NonEquiJoin_1" columnName="LatestReassessment"/>
+    </attribute>
   </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="CC_PortalAccountCreationDate" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
@@ -2311,7 +2408,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <keyCalculation datatype="DATE" expressionLanguage="SQL">
         <formula>TO_DATE(&quot;BUT0ID_ENTRY_DATE&quot;)</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="CC_Age" order="27" aggregationType="sum" measureType="simple">
@@ -2350,10 +2447,28 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <descriptions defaultDescription="Assessment Amount Cleared"/>
       <measureMapping columnObjectName="NonEquiJoin_1" columnName="AssessmentAmountCleared"/>
     </measure>
+  
+    <measure id="CC_FN_ReassessmentAmount" order="50" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_FN_ReassessmentAmount"/>
+      <measureMapping columnObjectName="NonEquiJoin_1" columnName="CC_FN_ReassessmentAmount"/>
+    </measure>
+    <measure id="CC_ReassessmentAmountCleared" order="51" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_ReassessmentAmountCleared"/>
+      <measureMapping columnObjectName="NonEquiJoin_1" columnName="CC_ReassessmentAmountCleared"/>
+    </measure>
+    <measure id="FN_ReassessmentAmount" order="53" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FN_ReassessmentAmount"/>
+      <measureMapping columnObjectName="NonEquiJoin_1" columnName="FN_ReassessmentAmount"/>
+    </measure>
+    <measure id="ReassessmentAmountCleared" order="54" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ReassessmentAmountCleared"/>
+      <measureMapping columnObjectName="NonEquiJoin_1" columnName="ReassessmentAmountCleared"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures>
     <measure id="CC_Risk_Score" order="2" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
       <formula>IF(&quot;CC_BP_Count&quot;&gt;0 and not isnull(&quot;CC_BP_Count&quot;) or &quot;RISK_SCORE&quot;&gt;0 and not isnull(&quot;RISK_SCORE&quot;),(&quot;RISK_SCORE&quot;/&quot;CC_BP_Count&quot;),0)</formula>
+      
       
       
       
@@ -2373,6 +2488,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       
       
       
+      
       </measure>
   
     <measure id="CC_Individual_Count" order="4" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
@@ -2381,9 +2497,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       
       
       
+      
       </measure>
     <measure id="CC_Non-Individual_Count" order="5" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
       <formula>IF(not isnull(&quot;CC_Reengagement_Flag&quot;) and &quot;CC_BP_Count&quot;&gt;0 and not isnull(&quot;CC_BP_Count&quot;) or not isnull(&quot;CC_Reengagement_Flag&quot;) and &quot;CC_Non-Individual&quot;&gt;0 and not isnull(&quot;CC_Non-Individual&quot;),(&quot;CC_Non-Individual&quot;/&quot;CC_BP_Count&quot;),0)</formula>
+      
       
       
       
@@ -2396,25 +2514,25 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="946.9524323383005" y="112"/>
+      <upperLeftCorner x="946" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="807.4062521313858" y="1836.999988079071"/>
+      <upperLeftCorner x="807" y="1836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPROLE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1017.4062521313858" y="1996.9999868869781"/>
+      <upperLeftCorner x="1017" y="1996"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ADR2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="387.40625213138605" y="1836.999988079071"/>
+      <upperLeftCorner x="387" y="1836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="807.4062521313858" y="1516.9999904632568"/>
+      <upperLeftCorner x="807" y="1516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="J_BPINFO_ACN" modelObjectType="JoinNodeInput">
@@ -2426,7 +2544,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="834.0729187980525" y="1676.999989271164"/>
+      <upperLeftCorner x="834" y="1676"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BPINFO" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
@@ -2438,16 +2556,16 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BP_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="597.4062521313857" y="1844.499988079071"/>
+      <upperLeftCorner x="597" y="1844"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BP_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1017.4062521313858" y="1844.499988079071"/>
+      <upperLeftCorner x="1017" y="1844"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="714.7884689675163" y="1336.9999916553497"/>
+      <upperLeftCorner x="714" y="1336"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="J_BPINFO_RESADDRS" modelObjectType="JoinNodeInput">
@@ -2459,11 +2577,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="J_RESID_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="571.0999170676166" y="1524.4999904632568"/>
+      <upperLeftCorner x="571" y="1524"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRS_PHONE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="360.7395854647194" y="1676.999989271164"/>
+      <upperLeftCorner x="360" y="1676"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="J_ADDRS_PHONE" modelObjectType="JoinNodeInput">
@@ -2475,7 +2593,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118.66666666666652" y="1836.999988079071"/>
+      <upperLeftCorner x="118" y="1836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="J_ADDRES_EMAIL" modelObjectType="JoinNodeInput">
@@ -2488,25 +2606,25 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
   
     <shape expanded="true" modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="308.475142207147" y="2006.9999868869781"/>
+      <upperLeftCorner x="308" y="2006"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_ADR6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91.99999999999977" y="1996.9999868869781"/>
+      <upperLeftCorner x="91" y="1996"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="308.475142207147" y="2121.999986886978"/>
+      <upperLeftCorner x="308" y="2121"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SERVICE_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="361.0999170676164" y="1524.4999904632568"/>
+      <upperLeftCorner x="361" y="1524"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="688.1218023008497" y="1176.9999928474426"/>
+      <upperLeftCorner x="688" y="1176"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="J_BPINFO_SERADDRS" modelObjectType="JoinNodeInput">
@@ -2518,12 +2636,12 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PORTALID" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1227.4062521313858" y="1841.999988079071"/>
+      <upperLeftCorner x="1227" y="1841"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_PORTALID_RELS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1280.739585464719" y="1676.999989271164"/>
+      <upperLeftCorner x="1280" y="1676"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PORTALID" modelObjectNameSpace="J_PORTALID_RELS" modelObjectType="JoinNodeInput">
@@ -2535,11 +2653,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BUT050" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1437.4062521313858" y="1836.999988079071"/>
+      <upperLeftCorner x="1437" y="1836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_PORTALACC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="989.1527423004784" y="1016.9999940395355"/>
+      <upperLeftCorner x="989" y="1016"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="J_BPINFO_PORTALACC" modelObjectType="JoinNodeInput">
@@ -2551,7 +2669,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PORTALACC_RELS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1015.819408967145" y="1336.9999916553497"/>
+      <upperLeftCorner x="1015" y="1336"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PORTALID" modelObjectNameSpace="J_PORTALACC_RELS" modelObjectType="JoinNodeInput">
@@ -2563,12 +2681,12 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_ONLY_ONE_REL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1255.4805814935096" y="1534.4999904632568"/>
+      <upperLeftCorner x="1255" y="1534"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_OPTINFLAG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="725.6077672598477" y="856.9999952316284"/>
+      <upperLeftCorner x="725" y="856"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_PORTALACC" modelObjectNameSpace="J_BPINFO_OPTINFLAG" modelObjectType="JoinNodeInput">
@@ -2580,15 +2698,15 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPCONTRACT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="698.9411005931811" y="1016.9999940395355"/>
+      <upperLeftCorner x="698" y="1016"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPOwnerTypes" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="935.6077672598478" y="856.9999952316284"/>
+      <upperLeftCorner x="935" y="856"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="839.507384493817" y="696.9999964237213"/>
+      <upperLeftCorner x="839" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_OPTINFLAG" modelObjectNameSpace="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectType="JoinNodeInput">
@@ -2601,11 +2719,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
   
     <shape expanded="true" modelObjectName="P_LITRisk" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1049.507384493817" y="696.9999964237213"/>
+      <upperLeftCorner x="1049" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_LTIRISK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1022.8407178271503" y="536.9999976158142"/>
+      <upperLeftCorner x="1022" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectNameSpace="J_BPINFO_LTIRISK" modelObjectType="JoinNodeInput">
@@ -2618,41 +2736,41 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
   
     <shape expanded="true" modelObjectName="P_ContractValues" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1008.156271040479" y="376.9999988079071"/>
+      <upperLeftCorner x="1008" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="NonEquiJoin_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="946.9524323383005" y="217"/>
+      <upperLeftCorner x="946" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_ContractValues" modelObjectNameSpace="NonEquiJoin_1" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="381" y="30"/>
-      <rectangleSize width="250"/>
+      <rectangleSize width="257"/>
     </shape>
     <shape modelObjectName="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="NonEquiJoin_1" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="681" y="30"/>
-      <rectangleSize width="293.646484375"/>
+      <rectangleSize width="293"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="793.0422455263443" y="376.9999988079071"/>
+      <upperLeftCorner x="793" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_LTIRISK" modelObjectNameSpace="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="293"/>
+      <rectangleSize width="293.646484375"/>
     </shape>
     <shape modelObjectName="R_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="397" y="30"/>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="766.3755788596777" y="554.4999976158142"/>
+      <upperLeftCorner x="766" y="554"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="618.5408480816905" y="696.9999964237213"/>
+      <upperLeftCorner x="618" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape></shapes>
 </layout>
