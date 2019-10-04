@@ -10,17 +10,91 @@
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_TFK002AT">
-    <viewAttributes/>
-    <calculatedViewAttributes/>
+    <viewAttributes>
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="SPRAS">
+        <descriptions defaultDescription="SPRAS"/>
+      </viewAttribute>
+      <viewAttribute id="APPLK">
+        <descriptions defaultDescription="APPLK"/>
+      </viewAttribute>
+      <viewAttribute id="VKTYP">
+        <descriptions defaultDescription="VKTYP"/>
+      </viewAttribute>
+      <viewAttribute id="TEXT">
+        <descriptions defaultDescription="TEXT"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="AltRevenueTypeGroups" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(in(&quot;VKTYP&quot;,'BG'),'QBBG',
+if(in(&quot;VKTYP&quot;,'BT'),'Betting Tax',
+if(in(&quot;VKTYP&quot;,'CA','ID','MV','OD','TD'),'Duties',
+if(in(&quot;VKTYP&quot;,'CC'),'CAC',
+if(in(&quot;VKTYP&quot;,'FH'),'FHOG',
+if(in(&quot;VKTYP&quot;,'FS'),'FSS',
+if(in(&quot;VKTYP&quot;,'GM','GT'),'Gambling',
+if(in(&quot;VKTYP&quot;,'LT'),'Land Tax',
+if(in(&quot;VKTYP&quot;,'OB'),'OFT',
+if(in(&quot;VKTYP&quot;,'OL'),'OLGR',
+if(in(&quot;VKTYP&quot;,'PT'),'PRT',
+if(in(&quot;VKTYP&quot;,'RY'),'Royalties',
+if(in(&quot;VKTYP&quot;,'ZZ'),'Other',
+if(in(&quot;VKTYP&quot;,'SP'),'SPER',
+'Undefined'
+))))))))))))))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::TFK002AT"/>
+    <input node="osr.business.semantic.db.synonyms::TFK002AT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPRAS" source="SPRAS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APPLK" source="APPLK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP" source="VKTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TEXT" source="TEXT"/>
+    </input>
   </calculationView>
 </calculationViews>
 <logicalModel id="P_TFK002AT">
-  <attributes/>
+  <attributes>
+    <attribute id="AltRevenueTypeGroups" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Alt. Revenue Type Groups"/>
+      <keyMapping columnObjectName="P_TFK002AT" columnName="AltRevenueTypeGroups"/>
+    </attribute>
+    <attribute id="MANDT" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MANDT"/>
+      <keyMapping columnObjectName="P_TFK002AT" columnName="MANDT"/>
+    </attribute>
+    <attribute id="SPRAS" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SPRAS"/>
+      <keyMapping columnObjectName="P_TFK002AT" columnName="SPRAS"/>
+    </attribute>
+    <attribute id="APPLK" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="APPLK"/>
+      <keyMapping columnObjectName="P_TFK002AT" columnName="APPLK"/>
+    </attribute>
+    <attribute id="VKTYP" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VKTYP"/>
+      <keyMapping columnObjectName="P_TFK002AT" columnName="VKTYP"/>
+    </attribute>
+    <attribute id="TEXT" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TEXT"/>
+      <keyMapping columnObjectName="P_TFK002AT" columnName="TEXT"/>
+    </attribute>
+  </attributes>
   <calculatedAttributes/>
   <baseMeasures/>
-  <calculatedMeasures/>
+  <calculatedMeasures>
+    <measure id="Counter" order="7" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+      <descriptions defaultDescription="Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="VKTYP"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
