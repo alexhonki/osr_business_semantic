@@ -24,14 +24,14 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_DunningHistory">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_DunningHistory</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_RevenueTypeGroups">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_RevenueTypeGroups</resourceUri>
+  </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpSolvency">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpSolvency</resourceUri>
   </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar</resourceUri>
-  </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_RevenueTypeGroups">
-    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_RevenueTypeGroups</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -1945,6 +1945,41 @@
     <joinAttribute name="MANDT"/>
     <joinAttribute name="VKTYP_PS"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_TFK002AT" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="TEXT">
+        <descriptions defaultDescription="TEXT"/>
+      </viewAttribute>
+      <viewAttribute id="AltRevenueTypeGroups">
+        <descriptions defaultDescription="Alt. Revenue Type Groups"/>
+      </viewAttribute>
+    
+    
+      <viewAttribute id="MANDT">
+        <descriptions defaultDescription="MANDT"/>
+      </viewAttribute>
+      <viewAttribute id="VKTYP">
+        <descriptions defaultDescription="VKTYP"/>
+      </viewAttribute>
+      <viewAttribute id="SPRAS">
+        <descriptions defaultDescription="SPRAS"/>
+      </viewAttribute>
+      <viewAttribute id="APPLK">
+        <descriptions defaultDescription="APPLK"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_RevenueTypeGroups">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPRAS" source="SPRAS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APPLK" source="APPLK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP" source="VKTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TEXT" source="TEXT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AltRevenueTypeGroups" source="AltRevenueTypeGroups"/>
+    </input>
+    <filter>&quot;SPRAS&quot; = 'E' AND &quot;APPLK&quot; = 'P'</filter>
+  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_BpSolvency" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="BPCounter">
@@ -3096,9 +3131,6 @@
       <viewAttribute id="ZZTFLDPVC3OA">
         <descriptions defaultDescription="ZZTFLDPVC3OA"/>
       </viewAttribute>
-      <viewAttribute id="OpenItemBalance" aggregationType="sum">
-        <descriptions defaultDescription="OpenItemBalance"/>
-      </viewAttribute>
     
       <viewAttribute id="AccountBalanceStatus">
         <descriptions defaultDescription="AccountBalanceStatus"/>
@@ -3279,7 +3311,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="AltRevenueTypeGroups" source="AltRevenueTypeGroups"/>
     </input>
     <input node="AGG_CONTACCTBAL">
-      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemBalance" source="OpenItemBalance"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceStatus" source="AccountBalanceStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -3812,9 +3843,6 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       <viewAttribute id="ZZTFLDPVC3OA">
         <descriptions defaultDescription="ZZTFLDPVC3OA"/>
       </viewAttribute>
-      <viewAttribute id="OpenItemBalance" aggregationType="sum">
-        <descriptions defaultDescription="OpenItemBalance"/>
-      </viewAttribute>
     
       <viewAttribute id="FiscalMonth">
         <descriptions defaultDescription="FiscalMonth"/>
@@ -3994,7 +4022,6 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUSDT" source="AUSDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTFLDPVC3OA" source="ZZTFLDPVC3OA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemBalance" source="OpenItemBalance"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceStatus" source="AccountBalanceStatus"/>
     
@@ -4499,9 +4526,6 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       <viewAttribute id="ZZTFLDPVC3OA">
         <descriptions defaultDescription="ZZTFLDPVC3OA"/>
       </viewAttribute>
-      <viewAttribute id="OpenItemBalance" aggregationType="sum">
-        <descriptions defaultDescription="OpenItemBalance"/>
-      </viewAttribute>
       <viewAttribute id="FiscalMonth">
         <descriptions defaultDescription="FiscalMonth"/>
       </viewAttribute>
@@ -4523,6 +4547,10 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       </viewAttribute>
       <viewAttribute id="AltRevenueTypeGroups">
         <descriptions defaultDescription="AltRevenueTypeGroups"/>
+      </viewAttribute>
+    
+      <viewAttribute id="FormBundleValueCategory">
+        <descriptions defaultDescription="FormBundleValueCategory"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -4679,7 +4707,6 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUSDT" source="AUSDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZTFLDPVC3OA" source="ZZTFLDPVC3OA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemBalance" source="OpenItemBalance"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceStatus" source="AccountBalanceStatus"/>
@@ -4690,6 +4717,7 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       <mapping xsi:type="Calculation:AttributeMapping" target="AltRevenueTypeGroups" source="AltRevenueTypeGroups"/>
     </input>
     <input node="AGG_FBNUM_AMTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FormBundleValueCategory" source="FormBundleValueCategory"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
     </input>
@@ -4717,20 +4745,82 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
         <descriptions defaultDescription="Main Transaction for Line Item"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FormBundleValueCategory" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(abs(&quot;AssessmentAmount&quot;) &lt; 999999,'&lt; $1M',
+if(abs(&quot;AssessmentAmount&quot;) &gt;= 1000000 AND abs(&quot;AssessmentAmount&quot;) &lt;= 20000000,'$1M to $20M',
+if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
+'Err'
+)))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes>
-      <restrictedViewAttribute id="PrimaryTaxAmount" baseViewAttribute="BETRH">
+      <restrictedViewAttribute id="AssessmentAmount" baseViewAttribute="BETRH">
         <restriction logicalOperator="AND">
-          <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
-            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4000"/>
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AA"/>
           </filter>
-          <attributeName>HVORG</attributeName>
+          <attributeName>BLART</attributeName>
         </restriction>
         <restriction logicalOperator="AND">
-          <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
-            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4010"/>
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AB"/>
           </filter>
-          <attributeName>HVORG</attributeName>
+          <attributeName>BLART</attributeName>
+        </restriction>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AC"/>
+          </filter>
+          <attributeName>BLART</attributeName>
+        </restriction>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AD"/>
+          </filter>
+          <attributeName>BLART</attributeName>
+        </restriction>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AF"/>
+          </filter>
+          <attributeName>BLART</attributeName>
+        </restriction>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AG"/>
+          </filter>
+          <attributeName>BLART</attributeName>
+        </restriction>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AL"/>
+          </filter>
+          <attributeName>BLART</attributeName>
+        </restriction>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AR"/>
+          </filter>
+          <attributeName>BLART</attributeName>
+        </restriction>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AY"/>
+          </filter>
+          <attributeName>BLART</attributeName>
+        </restriction>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AZ"/>
+          </filter>
+          <attributeName>BLART</attributeName>
+        </restriction>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
+          </filter>
+          <attributeName>AUGRD</attributeName>
         </restriction>
       </restrictedViewAttribute>
     </restrictedViewAttributes>
@@ -4742,41 +4832,6 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
     </input>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_TFK002AT" filterExpressionLanguage="COLUMN_ENGINE">
-    <viewAttributes>
-      <viewAttribute id="TEXT">
-        <descriptions defaultDescription="TEXT"/>
-      </viewAttribute>
-    
-      <viewAttribute id="MANDT">
-        <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute id="VKTYP">
-        <descriptions defaultDescription="VKTYP"/>
-      </viewAttribute>
-      <viewAttribute id="SPRAS">
-        <descriptions defaultDescription="SPRAS"/>
-      </viewAttribute>
-      <viewAttribute id="APPLK">
-        <descriptions defaultDescription="APPLK"/>
-      </viewAttribute>
-      <viewAttribute id="AltRevenueTypeGroups">
-        <descriptions defaultDescription="Alt. Revenue Type Groups"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_RevenueTypeGroups">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="SPRAS" source="SPRAS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="APPLK" source="APPLK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP" source="VKTYP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TEXT" source="TEXT"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="AltRevenueTypeGroups" source="AltRevenueTypeGroups"/>
-    </input>
-    <filter>&quot;SPRAS&quot; = 'E' AND &quot;APPLK&quot; = 'P'</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_FIN_ASSTAMTS">
@@ -5307,39 +5362,39 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ZZTFLDPVC3OA"/>
     </attribute>
   
-    <attribute id="FiscalMonth" order="155" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FiscalMonth" order="154" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Posting Fiscal Month"/>
   
       <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="FiscalMonth"/>
   
     </attribute>
-    <attribute id="FISCAL_YEAR" order="156" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FISCAL_YEAR" order="155" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Posting Fiscal Year"/>
       <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="FISCAL_YEAR"/>
     </attribute>
   
-    <attribute id="AccountBalanceStatus" order="157" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AccountBalanceStatus" order="156" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Account Balance Status"/>
   
       <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AccountBalanceStatus"/>
   
     </attribute>
   
-    <attribute id="AccountBalanceRange" order="158" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AccountBalanceRange" order="157" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Account Balance Range"/>
   
       <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AccountBalanceRange"/>
   
     </attribute>
-    <attribute id="ValueCategory" order="160" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ValueCategory" order="159" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Value Category"/>
       <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ValueCategory"/>
     </attribute>
-    <attribute id="TEXT" order="162" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TEXT" order="161" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account Category Desc"/>
       <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="TEXT"/>
     </attribute>
-    <attribute id="AltRevenueTypeGroups" order="163" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AltRevenueTypeGroups" order="162" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Alt. Contract Account Category Groups"/>
       <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AltRevenueTypeGroups"/>
     </attribute>
@@ -5435,12 +5490,7 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKKOP_SKTPZ"/>
     </measure>
   
-    <measure id="OpenItemBalance" order="154" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Open Item Balance"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="OpenItemBalance"/>
-    </measure>
-  
-    <measure id="AVG_BETRH" order="159" aggregationType="avg" measureType="simple">
+    <measure id="AVG_BETRH" order="158" aggregationType="avg" measureType="simple">
       <descriptions defaultDescription="Avg. Amount In Local Currency With +/- Signs"/>
       <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="BETRH"/>
     </measure>
@@ -5452,6 +5502,7 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
         <attribute attributeName="OPBEL"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -5488,10 +5539,11 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       
       
       
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures>
-    <measure id="GLPostingAmount" order="161" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+    <measure id="GLPostingAmount" order="160" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="General Ledger Posting Amount"/>
       <restriction logicalOperator="AND">
         <filter xsi:type="Privilege:AttributeFilter" attributeName="OpenItemFlag">
@@ -5505,7 +5557,98 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
         </filter>
         <attributeName>BLART</attributeName>
       </restriction>
-    </measure>
+      </measure>
+  
+    <measure id="OpenItemBalance" order="163" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      <descriptions defaultDescription="Open Item Balance"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="OpenItemFlag">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="X"/>
+        </filter>
+        <attributeName>OpenItemFlag</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="B1"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      </measure>
+    <measure id="AssessmentAmount" order="164" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      <descriptions defaultDescription="Assessment Amount"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AA"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AB"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AC"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AD"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AF"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AG"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AL"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AR"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AY"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AZ"/>
+        </filter>
+        <attributeName>BLART</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
+        </filter>
+        <attributeName>AUGRD</attributeName>
+      </restriction>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="FBNUM">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value=""/>
+        </filter>
+        <attributeName>FBNUM</attributeName>
+      </restriction>
+      </measure>
   </restrictedMeasures>
   <localDimensions/>
 </logicalModel>
@@ -5550,6 +5693,11 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
+    <shape expanded="true" modelObjectName="P_TFK002AT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="89" y="1251"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="P_CV_BpSolvency" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="318" y="883"/>
       <rectangleSize height="30" width="160"/>
@@ -5622,11 +5770,6 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
     <shape expanded="true" modelObjectName="AGG_FBNUM_AMTS" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="-336" y="453"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_TFK002AT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="89" y="1251"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
