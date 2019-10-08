@@ -28,9 +28,6 @@
       <viewAttribute id="BETRH">
         <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
       </viewAttribute>
-      <viewAttribute id="VTREF">
-        <descriptions defaultDescription="Reference Specifications from Contract"/>
-      </viewAttribute>
     
       <viewAttribute id="AccountBalanceStatus">
         <descriptions defaultDescription="Account Balance Status"/>
@@ -51,6 +48,10 @@
       <viewAttribute id="AccountBalanceRange">
         <descriptions defaultDescription="AccountBalanceRange"/>
       </viewAttribute>
+    
+      <viewAttribute id="VKONT">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="DueDate" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
@@ -60,7 +61,6 @@
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials">
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceStatus" source="AccountBalanceStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_FAEDN" source="DFKKOP_FAEDN"/>
@@ -69,42 +69,46 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="VKONT" source="DFKKOP_VKONT"/>
     </input>
     <filter>&quot;AccountBalanceStatus&quot; = 'Debit Balance' AND &quot;OpenItemFlag&quot; = 'X' AND date('$$IP_KeyDate$$') &gt; date(&quot;DueDate&quot;)</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="P_FNFINANCIALS">
   <attributes>
-    <attribute id="VTREF" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Reference Specifications from Contract"/>
-      <keyMapping columnObjectName="P_FNFINANCIALS" columnName="VTREF"/>
-    </attribute>
-    <attribute id="CreditDebitFlag" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CreditDebitFlag" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CreditDebitFlag"/>
       <keyMapping columnObjectName="P_FNFINANCIALS" columnName="CreditDebitFlag"/>
     </attribute>
   
-    <attribute id="AccountBalanceRange" order="5" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AccountBalanceRange" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="AccountBalanceRange"/>
   
       <keyMapping columnObjectName="P_FNFINANCIALS" columnName="AccountBalanceRange"/>
   
     </attribute>
+  
+    <attribute id="VKONT" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VKONT"/>
+      <keyMapping columnObjectName="P_FNFINANCIALS" columnName="VKONT"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="BETRH" order="3" aggregationType="sum" measureType="simple">
+    <measure id="BETRH" order="2" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
       <measureMapping columnObjectName="P_FNFINANCIALS" columnName="BETRH"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
-    <measure id="ContractCounter" order="4" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+    <measure id="ContractCounter" order="3" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Contract Counter"/>
       <exceptionAggregation>
-        <attribute attributeName="VTREF"/>
+        <attribute attributeName="VKONT"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
