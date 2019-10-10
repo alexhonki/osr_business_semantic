@@ -10,6 +10,9 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_BPFACTS" filterExpressionLanguage="SQL">
@@ -206,8 +209,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
     </input>
-  
-    <windowFunction>
+    <windowFunction dynamicPartitionAttributes="null">
       <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
       <partitionViewAttributeName>PSOBKEY</partitionViewAttributeName>
       <order byViewAttributeName="VALID_TO" direction="DESC"/>
@@ -402,6 +404,10 @@
       <viewAttribute id="PARTNER">
         <descriptions defaultDescription="Business Partner"/>
       </viewAttribute>
+      <viewAttribute id="PSOBKEY">
+        <descriptions defaultDescription="Contract Object ID"/>
+      </viewAttribute>
+    
       <viewAttribute id="VALUE_GENERIC">
         <descriptions defaultDescription="Fact Value"/>
       </viewAttribute>
@@ -410,11 +416,7 @@
       </viewAttribute>
       <viewAttribute id="VALID_FROM">
         <descriptions defaultDescription="Valid From Date"/>
-      </viewAttribute>
-      <viewAttribute id="PSOBKEY">
-        <descriptions defaultDescription="Contract Object ID"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_BPFACTS">
@@ -651,39 +653,117 @@
     </input>
     <filter>left(to_char(&quot;VALID_TO&quot;),10)!='9999-12-31'</filter>
   </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_REGCANC_BPNAME" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="FISCAL_YEAR">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+      </viewAttribute>
+      <viewAttribute id="FiscalMonth">
+        <descriptions defaultDescription="FiscalMonth"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="CC_EventDate">
+        <descriptions defaultDescription="CC_EventDate"/>
+      </viewAttribute>
+      <viewAttribute id="CC_EventCounter" aggregationType="sum">
+        <descriptions defaultDescription="CC_EventCounter"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ProcessType">
+        <descriptions defaultDescription="CC_ProcessType"/>
+      </viewAttribute>
+      <viewAttribute id="BP_TYPE">
+        <descriptions defaultDescription="BP Type (Person/Company)"/>
+      </viewAttribute>
+      <viewAttribute id="STD_FIRM">
+        <descriptions defaultDescription="STD_FIRM"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN">
+        <descriptions defaultDescription="STD_PERSON_GN"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN2">
+        <descriptions defaultDescription="STD_PERSON_GN2"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_FN">
+        <descriptions defaultDescription="STD_PERSON_FN"/>
+      </viewAttribute>
+      <viewAttribute id="NAME_GRP1">
+        <descriptions defaultDescription="Group Name"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_FullName" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;BP_TYPE&quot; = '2',&quot;STD_FIRM&quot;,
+    if(&quot;BP_TYPE&quot; = '3',&quot;NAME_GRP1&quot;,&quot;STD_PERSON_GN&quot;+' '+&quot;STD_PERSON_GN2&quot;+' '+&quot;STD_PERSON_FN&quot;
+    )
+)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="J_REGOCANCEL_FISCALDATES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EventDate" source="CC_EventDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EventCounter" source="CC_EventCounter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ProcessType" source="CC_ProcessType"/>
+    </input>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE" source="BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_FIRM" source="STD_FIRM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN" source="STD_PERSON_GN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN2" source="STD_PERSON_GN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_GRP1" source="NAME_GRP1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
 </calculationViews>
-<logicalModel id="J_REGOCANCEL_FISCALDATES">
+<logicalModel id="J_REGCANC_BPNAME">
   <attributes>
     <attribute id="FISCAL_YEAR" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fiscal Year"/>
-      <keyMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="FISCAL_YEAR"/>
+      <keyMapping columnObjectName="J_REGCANC_BPNAME" columnName="FISCAL_YEAR"/>
     </attribute>
     <attribute id="FiscalMonth" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fiscal Period"/>
-      <keyMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="FiscalMonth"/>
+      <keyMapping columnObjectName="J_REGCANC_BPNAME" columnName="FiscalMonth"/>
     </attribute>
     <attribute id="CLIENT" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAP Client"/>
-      <keyMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="CLIENT"/>
+      <keyMapping columnObjectName="J_REGCANC_BPNAME" columnName="CLIENT"/>
     </attribute>
-    <attribute id="PARTNER" order="4" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="PARTNER" order="4" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_FullName">
       <descriptions defaultDescription="Business Partner"/>
-      <keyMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="PARTNER"/>
+      <keyMapping columnObjectName="J_REGCANC_BPNAME" columnName="PARTNER"/>
     </attribute>
     <attribute id="CC_EventDate" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Event Date"/>
-      <keyMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="CC_EventDate"/>
+      <keyMapping columnObjectName="J_REGCANC_BPNAME" columnName="CC_EventDate"/>
     </attribute>
     <attribute id="CC_ProcessType" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Process Type"/>
-      <keyMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="CC_ProcessType"/>
+      <keyMapping columnObjectName="J_REGCANC_BPNAME" columnName="CC_ProcessType"/>
+    </attribute>
+  
+    <attribute id="CC_FullName" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Name"/>
+      <keyMapping columnObjectName="J_REGCANC_BPNAME" columnName="CC_FullName"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="CC_EventCounter" order="6" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Event Counter"/>
-      <measureMapping columnObjectName="J_REGOCANCEL_FISCALDATES" columnName="CC_EventCounter"/>
+      <measureMapping columnObjectName="J_REGCANC_BPNAME" columnName="CC_EventCounter"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures/>
@@ -693,38 +773,38 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="789.9618009109781" y="112"/>
+      <upperLeftCorner x="834.5540565148924" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BPFACTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="579.1304869970222" y="1161.9999928474426"/>
+      <upperLeftCorner x="713.9741903823801" y="1341.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_REGOS_NOR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92.00000000000017" y="1006.9999940395355"/>
+      <upperLeftCorner x="994.4741903823801" y="1186.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CANCELLATIONS_NOR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="831.9999952316284"/>
+      <upperLeftCorner x="800" y="1011.9999940395355"/>
       <rectangleSize height="30" width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_LATEST_CANCEL_NOR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="363.50882316261004" y="1006.9999940395355"/>
+      <upperLeftCorner x="675.4741903823801" y="1186.9999928474426"/>
       <rectangleSize height="30" width="269"/>
     </shape>
   
     <shape expanded="true" modelObjectName="U_REGO_CANCEL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="418.63545190228325" y="531.9999976158142"/>
+      <upperLeftCorner x="812.8785328951049" y="711.9999964237213"/>
       <rectangleSize height="30" width="216"/>
     </shape>
     <shape expanded="true" modelObjectName="R_REGOS_NOR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92.00000000000017" y="841.9999952316284"/>
+      <upperLeftCorner x="1100" y="1021.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_REMOVE_REINST" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="482.63545190228325" y="671.9999964237213"/>
+      <upperLeftCorner x="725.8466135039182" y="851.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CANCELLATIONS_NOR" modelObjectNameSpace="J_REMOVE_REINST" modelObjectType="JoinNodeInput">
@@ -737,21 +817,21 @@
     </shape>
   
     <shape expanded="true" modelObjectName="M_REMOVE_REINST_BP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="602.0000000000001" y="835.3333285649617"/>
+      <upperLeftCorner x="548" y="1015.3333273728688"/>
       <rectangleSize height="30" width="202"/>
     </shape>
     <shape expanded="true" modelObjectName="P_REINSTATEMENTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="781.6806222009046" y="996.9999940395355"/>
+      <upperLeftCorner x="314" y="1176.9999928474426"/>
       <rectangleSize height="30" width="208"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_FISCALDATES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="859.3390962541055" y="376.9999988079071"/>
+      <upperLeftCorner x="582.5454908928028" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_REGOCANCEL_FISCALDATES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="789.9618009109781" y="217"/>
+      <upperLeftCorner x="779.8788242261361" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="U_REG_CAN_REINST" modelObjectNameSpace="J_REGOCANCEL_FISCALDATES" modelObjectType="JoinNodeInput">
@@ -763,20 +843,33 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="U_REG_CAN_REINST" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="621.3390962541055" y="376.9999988079071"/>
+      <upperLeftCorner x="792.5454908928027" y="536.9999976158142"/>
       <rectangleSize height="30" width="188"/>
     </shape>
     <shape expanded="true" modelObjectName="P_REINST_REGO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="958.9610609990702" y="689.4999964237213"/>
+      <upperLeftCorner x="515.1814500467616" y="869.4999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_REINST_CANCEL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="854" y="841.9999952316284"/>
+      <upperLeftCorner x="92" y="1021.9999940395355"/>
       <rectangleSize height="30" width="196"/>
     </shape>
     <shape expanded="true" modelObjectName="P_NO_REGO_9999" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1100" y="831.9999952316284"/>
+      <upperLeftCorner x="338" y="1011.9999940395355"/>
       <rectangleSize height="30" width="160"/>
-    </shape></shapes>
+    </shape>
+    <shape expanded="true" modelObjectName="J_REGCANC_BPNAME" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="779.8788242261361" y="236.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_REGOCANCEL_FISCALDATES" modelObjectNameSpace="J_REGCANC_BPNAME" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo" modelObjectNameSpace="J_REGCANC_BPNAME" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="263.4501953125"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
