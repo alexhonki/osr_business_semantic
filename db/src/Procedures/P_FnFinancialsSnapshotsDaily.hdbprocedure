@@ -1,0 +1,77 @@
+PROCEDURE "osr.business.semantic.db.Procedures::P_FnFinancialsSnapshotsDaily"( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+	DECLARE v_arb VARCHAR(1) = '';
+	DECLARE CURSOR c_dates (v_arb VARCHAR(1)) FOR
+		SELECT "DATE_SQL" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar"
+		WHERE "DATE_SQL" >= '2009-07-01' AND 
+		(
+			("DATE_SQL" BETWEEN ADD_DAYS(LAST_DAY(ADD_MONTHS(CURRENT_DATE,-2)),1) AND LAST_DAY(NOW()))
+			OR
+			("CC_FinYear" IN (SELECT "CC_FinYear" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar" WHERE "DATE_SQL" = ADD_DAYS(CURRENT_DATE,-1)) AND "Weekly" = 'X')
+			OR
+			"Monthly" = 'X'
+		);
+
+	DELETE FROM "osr.business.semantic.db.Tables::FnFinancials"
+	WHERE "KeyDate" NOT IN (
+		SELECT "DATE_SQL" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar"
+		WHERE "DATE_SQL" >= '2008-07-01' AND 
+		(
+			("DATE_SQL" BETWEEN ADD_DAYS(LAST_DAY(ADD_MONTHS(CURRENT_DATE,-2)),1) AND LAST_DAY(NOW()))
+			OR
+			("CC_FinYear" IN (SELECT "CC_FinYear" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar" WHERE "DATE_SQL" = ADD_DAYS(CURRENT_DATE,-1)) AND "Weekly" = 'X')
+			OR
+			"Monthly" = 'X'
+		)
+	);
+	
+	FOR curr_row AS c_dates(v_arb)
+		DO
+		DECLARE dt_keydate DATE = curr_row.DATE_SQL;
+		
+		IF 
+			ADD_DAYS(CURRENT_DATE,-1) = :dt_keydate OR -- Daily snapshot
+			
+			(DAYNAME(CURRENT_DATE) = 'SUNDAY' AND :dt_keydate BETWEEN ADD_DAYS(LAST_DAY(ADD_MONTHS(CURRENT_DATE,-2)),1) AND LAST_DAY(CURRENT_DATE)) OR -- Weekly refresh of daily snapshot data for current and previous month
+			
+			(LAST_DAY(CURRENT_DATE) = CURRENT_DATE AND DAYNAME(:dt_keydate) = 'SUNDAY' AND :dt_keydate BETWEEN
+				CASE WHEN MONTH(CURRENT_DATE) >= 7 THEN 
+					TO_DATE(CONCAT(YEAR(CURRENT_DATE),'-07-01'))
+				ELSE
+					TO_DATE(CONCAT(YEAR(CURRENT_DATE) - 1,'-07-01'))
+				END
+				AND
+				CASE WHEN MONTH(CURRENT_DATE) >= 7 THEN 
+					TO_DATE(CONCAT(YEAR(CURRENT_DATE) + 1,'-06-30'))
+				ELSE
+					TO_DATE(CONCAT(YEAR(CURRENT_DATE),'-06-30'))
+				END
+			) OR -- Monthly refresh of weekly snapshots for current financial year
+			
+			(DAYOFMONTH(CURRENT_DATE) = 31 AND MONTH(CURRENT_DATE) = 12) -- Yearly refresh of all snapshots
+		THEN
+			output_table = 
+			SELECT :dt_keydate AS "KeyDate", "PRCTR", "HKONT", SUM("BETRH") AS "BETRH", SUM("GLPostingAmount") AS "GLPostingAmount", CURRENT_DATE
+			FROM "osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials"
+				(placeholder."$$IP_KeyDate$$"=>:dt_keydate)
+			GROUP BY "PRCTR", "HKONT"
+			UNION
+			SELECT :dt_keydate AS "KeyDate", '' AS "PRCTR", "UBHKT" AS "HKONT", SUM("RBETR") AS "BETRH", SUM("RWBTR") AS "GLPostingAmount", CURRENT_DATE
+			FROM "osr.business.semantic.db.Business_Models.Finance::CV_FnGeneralLedgerCheques"
+				(placeholder."$$IP_KeyDate$$"=>:dt_keydate)
+			GROUP BY "UBHKT";
+			
+			DELETE FROM "osr.business.semantic.db.Tables::FnFinancials"
+			WHERE "KeyDate" = :dt_keydate;
+			
+			INSERT INTO "osr.business.semantic.db.Tables::FnFinancials"
+			SELECT * FROM :output_table;
+		ELSE
+			CONTINUE;
+		END IF;
+	END FOR;
+END

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnGeneralLedgerCheques" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_GeneralLedgerFnChecks"/>
+<localVariables>
+  <variable id="IP_KeyDate" parameter="true">
+    <descriptions defaultDescription="Key Date"/>
+    <variableProperties datatype="NVARCHAR" length="8" mandatory="false">
+      <valueDomain type="Date"/>
+      <selection multiLine="false" type="Single"/>
+      <defaultRange lowValue="date(leftstr(string(now()),10))" lowExpression="true"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.Finance::CV_FnChecks">
+    <resourceUri>osr.business.semantic.db.Business_Models.Finance::CV_FnChecks</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::DPAYH">
+    <resourceUri>osr.business.semantic.db.synonyms::DPAYH</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_FNCHECKS" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="DOC1R">
+        <descriptions defaultDescription="Reference to Payment Document"/>
+      </viewAttribute>
+      <viewAttribute id="RWBTR">
+        <descriptions defaultDescription="Amount Paid in the Payment Currency"/>
+      </viewAttribute>
+      <viewAttribute id="STATE">
+        <descriptions defaultDescription="Status of a Payment Medium"/>
+      </viewAttribute>
+      <viewAttribute id="AEDAT">
+        <descriptions defaultDescription="Date of Last Change"/>
+      </viewAttribute>
+      <viewAttribute id="BNKDT">
+        <descriptions defaultDescription="Check encashment date"/>
+      </viewAttribute>
+      <viewAttribute id="BUDAT">
+        <descriptions defaultDescription="Issue Date of Check"/>
+      </viewAttribute>
+      <viewAttribute id="RBETR">
+        <descriptions defaultDescription="Check Amount in Currency of Encashment"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.Finance::CV_FnChecks">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOC1R" source="DOC1R"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RWBTR" source="RWBTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STATE" source="STATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BNKDT" source="BNKDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RBETR" source="RBETR"/>
+    </input>
+    <filter>date(&quot;BUDAT&quot;) &lt;= date('$$IP_KeyDate$$') AND (
+	&quot;STATE&quot; = ''
+	OR
+	(
+		&quot;STATE&quot; = 'B' AND date(&quot;BNKDT&quot;) &gt; date('$$IP_KeyDate$$')
+	)
+	OR
+	(
+		in(&quot;STATE&quot;,'V','S') AND date(&quot;AEDAT&quot;) &gt; date('$$IP_KeyDate$$')
+	)
+)</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CHEQUES_GLACCT" cardinality="C1_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="DOC1R">
+        <descriptions defaultDescription="DOC1R"/>
+      </viewAttribute>
+      <viewAttribute id="RWBTR" aggregationType="sum">
+        <descriptions defaultDescription="RWBTR"/>
+      </viewAttribute>
+      <viewAttribute id="UBHKT">
+        <descriptions defaultDescription="UBHKT"/>
+      </viewAttribute>
+      <viewAttribute id="RBETR" aggregationType="sum">
+        <descriptions defaultDescription="RBETR"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_FNCHECKS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOC1R" source="DOC1R"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RWBTR" source="RWBTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RBETR" source="RBETR"/>
+    </input>
+    <input node="P_DPAYH">
+      <mapping xsi:type="Calculation:AttributeMapping" target="UBHKT" source="UBHKT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOC1R" source="DOC1R"/>
+    </input>
+    <joinAttribute name="DOC1R"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_DPAYH">
+    <viewAttributes>
+      <viewAttribute id="UBHKT">
+        <descriptions defaultDescription="UBHKT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="DOC1R">
+        <descriptions defaultDescription="DOC1R"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::DPAYH">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOC1R" source="DOC1R"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UBHKT" source="UBHKT"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_CHEQUES_GLACCT">
+  <attributes>
+    <attribute id="DOC1R" order="1" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="DOC1R">
+      <descriptions defaultDescription="Reference to Payment Document"/>
+      <keyMapping columnObjectName="J_CHEQUES_GLACCT" columnName="DOC1R"/>
+    </attribute>
+    <attribute id="UBHKT" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="General Ledger Account"/>
+      <keyMapping columnObjectName="J_CHEQUES_GLACCT" columnName="UBHKT"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="RWBTR" order="2" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Amount Paid in the Payment Currency"/>
+      <measureMapping columnObjectName="J_CHEQUES_GLACCT" columnName="RWBTR"/>
+    </measure>
+    <measure id="RBETR" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Check Amount in Currency of Encashment"/>
+      <measureMapping columnObjectName="J_CHEQUES_GLACCT" columnName="RBETR"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_CV_FNCHECKS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="718"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_CHEQUES_GLACCT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="421"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CV_FNCHECKS" modelObjectNameSpace="J_CHEQUES_GLACCT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_DPAYH" modelObjectNameSpace="J_CHEQUES_GLACCT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_DPAYH" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="336" y="718"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

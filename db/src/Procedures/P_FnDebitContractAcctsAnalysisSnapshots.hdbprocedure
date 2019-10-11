@@ -1,0 +1,28 @@
+PROCEDURE "osr.business.semantic.db.Procedures::P_FnDebitContractAcctsAnalysisSnapshots"( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+	DECLARE v_arb VARCHAR(1) = '';
+	DECLARE CURSOR c_dates (v_arb VARCHAR(1)) FOR
+			SELECT "DATE_SQL" FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_SnapshotCalendar"
+			WHERE "DATE_SQL" >= '2010-07-01' AND "Monthly" = 'X';
+
+	FOR curr_row AS c_dates(v_arb)
+		DO
+		DECLARE dt_keydate DATE = curr_row.DATE_SQL;
+		
+		output_table = 
+		SELECT :dt_keydate AS "KeyDate", "VKONT", "CreditDebitFlag", "AccountBalanceRange", SUM("BETRH") AS "BETRH", SUM("ContractCounter") AS "ContractCounter", CURRENT_DATE
+		FROM "osr.business.semantic.db.Business_Models.Finance::CV_FnDebitContractAcctsAnalysis"
+			(placeholder."$$IP_KeyDate$$"=>:dt_keydate)
+		GROUP BY "VKONT", "CreditDebitFlag", "AccountBalanceRange";
+		
+		DELETE FROM "osr.business.semantic.db.Tables::FnDebitContractAcctsAnalysis"
+		WHERE "KeyDate" = :dt_keydate;
+		
+		INSERT INTO "osr.business.semantic.db.Tables::FnDebitContractAcctsAnalysis"
+		SELECT * FROM :output_table;
+	END FOR;
+END

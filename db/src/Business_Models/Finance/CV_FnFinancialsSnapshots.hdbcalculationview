@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnFinancialsSnapshots" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_FnFinancialsSnapshots"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Tables::FnFinancials">
+    <resourceUri>osr.business.semantic.db.Tables::FnFinancials</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FINANCIALSSNAPSHOTS">
+    <viewAttributes>
+      <viewAttribute id="KeyDate">
+        <descriptions defaultDescription="KeyDate"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="LastUpdate">
+        <descriptions defaultDescription="LastUpdate"/>
+      </viewAttribute>
+    
+      <viewAttribute id="GLPostingAmount">
+        <descriptions defaultDescription="GLPostingAmount"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="PrevMonth" datatype="DATE" expressionLanguage="SQL">
+        <formula>ADD_MONTHS_LAST(&quot;KeyDate&quot;, -1)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CarryOverFlag" datatype="NVARCHAR" length="3" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(component(&quot;KeyDate&quot;,2) = 6,'COV','')</formula>
+    
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Tables::FnFinancials">
+      <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LastUpdate" source="LastUpdate"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPostingAmount" source="GLPostingAmount"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PREVMONTH">
+    <viewAttributes>
+      <viewAttribute id="KeyDate">
+        <descriptions defaultDescription="KeyDate"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="GLPostingAmount">
+        <descriptions defaultDescription="GLPostingAmount"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_FINANCIALSSNAPSHOTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPostingAmount" source="GLPostingAmount"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PREVMONTH" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="KeyDate">
+        <descriptions defaultDescription="KeyDate"/>
+      </viewAttribute>
+      <viewAttribute id="PRCTR">
+        <descriptions defaultDescription="PRCTR"/>
+      </viewAttribute>
+      <viewAttribute id="HKONT">
+        <descriptions defaultDescription="HKONT"/>
+      </viewAttribute>
+      <viewAttribute id="BETRH" aggregationType="sum">
+        <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="LastUpdate">
+        <descriptions defaultDescription="LastUpdate"/>
+      </viewAttribute>
+      <viewAttribute id="GLPostingAmount" aggregationType="sum">
+        <descriptions defaultDescription="GLPostingAmount"/>
+      </viewAttribute>
+      <viewAttribute id="GLPostingAmountPrev" aggregationType="sum">
+        <descriptions defaultDescription="GLPostingAmount"/>
+      </viewAttribute>
+      <viewAttribute id="CarryOverFlag">
+        <descriptions defaultDescription="CarryOverFlag"/>
+      </viewAttribute>
+      <viewAttribute hidden="true" id="JOIN$PrevMonth$KeyDate"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="GLPostingAmountCalc" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+        <formula>&quot;GLPostingAmount&quot; - &quot;GLPostingAmountPrev&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="P_FINANCIALSSNAPSHOTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LastUpdate" source="LastUpdate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPostingAmount" source="GLPostingAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CarryOverFlag" source="CarryOverFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PrevMonth$KeyDate" source="PrevMonth"/>
+    </input>
+    <input node="P_PREVMONTH">
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPostingAmountPrev" source="GLPostingAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PrevMonth$KeyDate" source="KeyDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+    </input>
+    <joinAttribute name="JOIN$PrevMonth$KeyDate"/>
+    <joinAttribute name="HKONT"/>
+    <joinAttribute name="PRCTR"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_PREVMONTH">
+  <attributes>
+    <attribute id="KeyDate" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Key Date"/>
+      <keyMapping columnObjectName="J_PREVMONTH" columnName="KeyDate"/>
+    </attribute>
+    <attribute id="PRCTR" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Profit Centre"/>
+      <keyMapping columnObjectName="J_PREVMONTH" columnName="PRCTR"/>
+    </attribute>
+    <attribute id="HKONT" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="General Ledger Account"/>
+      <keyMapping columnObjectName="J_PREVMONTH" columnName="HKONT"/>
+    </attribute>
+    <attribute id="LastUpdate" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Last Update"/>
+      <keyMapping columnObjectName="J_PREVMONTH" columnName="LastUpdate"/>
+    </attribute>
+    <attribute id="CarryOverFlag" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Carry Over Flag"/>
+      <keyMapping columnObjectName="J_PREVMONTH" columnName="CarryOverFlag"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="BETRH" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total Balance"/>
+      <measureMapping columnObjectName="J_PREVMONTH" columnName="BETRH"/>
+    </measure>
+  
+    <measure id="GLPostingAmount" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="GL Posting Amount"/>
+      <measureMapping columnObjectName="J_PREVMONTH" columnName="GLPostingAmountCalc"/>
+    </measure>
+  
+    <measure id="EOMBalance" order="7" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="GL Balance"/>
+      <measureMapping columnObjectName="J_PREVMONTH" columnName="GLPostingAmount"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_FINANCIALSSNAPSHOTS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="105" y="568"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_PREVMONTH" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="342" y="416"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_PREVMONTH" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="105" y="271"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_FINANCIALSSNAPSHOTS" modelObjectNameSpace="J_PREVMONTH" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_PREVMONTH" modelObjectNameSpace="J_PREVMONTH" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
