@@ -194,6 +194,10 @@
         <formula>REPLACE(TO_NVARCHAR(LAST_DAY(&quot;DATE_SQL&quot;)),'-','')</formula>
     
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_FiscalPeriodFormatted" datatype="VARCHAR" length="3" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(strlen(&quot;FiscalMonth&quot;)=1,'0'+&quot;FiscalMonth&quot;,&quot;FiscalMonth&quot;)</formula>
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::_SYS_BI.M_FISCAL_CALENDAR">
@@ -205,7 +209,6 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CALENDAR_VARIANT" source="CALENDAR_VARIANT"/>
     </input>
-  
     <filter>&quot;CALENDAR_VARIANT&quot;='Z6'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_TimeTHOC_Fiscal" cardinality="C1_1" joinType="leftOuter">
@@ -269,7 +272,7 @@
     <input node="P_FiscalCal">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_FinYear" source="CC_FinYear"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="CC_FiscalPeriodFormatted"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DATE" source="DATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
