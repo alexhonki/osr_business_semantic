@@ -250,7 +250,7 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
     </input>
-    <input node="P_BP_ACN">
+    <input node="R_BP_ACN">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZACN" source="CC_ZACN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
@@ -307,13 +307,75 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
     </input>
-    <input node="P_BP_ABN">
+    <input node="R_BP_ABN">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
     </input>
     <joinAttribute name="PARTNER"/>
     <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_BP_ACN">
+    <viewAttributes>
+      <viewAttribute id="CC_ZACN">
+        <descriptions defaultDescription="CC_ZACN"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="ID_TYPE">
+        <descriptions defaultDescription="ID_TYPE"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BP_ACN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZACN" source="CC_ZACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_TYPE" source="ID_TYPE"/>
+    </input>
+    <windowFunction dynamicPartitionAttributes="null">
+      <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="CC_ZACN" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_BP_ABN">
+    <viewAttributes>
+      <viewAttribute id="CC_ABN">
+        <descriptions defaultDescription="CC_ABN"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="ID_TYPE">
+        <descriptions defaultDescription="ID_TYPE"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BP_ABN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ID_TYPE" source="ID_TYPE"/>
+    </input>
+    <windowFunction dynamicPartitionAttributes="null">
+      <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="CC_ABN" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_BP_ACN" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -1772,8 +1834,7 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
     
       <calculatedViewAttribute id="CC_Reengagement_Time_Dimension" datatype="NVARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>IF(&quot;CC_FN_ReassessmentAmount&quot; &gt;0 and (&quot;AssessmentAmountCleared&quot;&gt;=&quot;AssessmentAmount&quot;),component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_AssessmentIssueDate&quot;,1),
-IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&quot;,component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_LatestReassessment&quot;,1),0))</formula>
+        <formula>&quot;CC_Reengagement_Time&quot;</formula>
     
       </calculatedViewAttribute>
     </calculatedViewAttributes>
@@ -2662,8 +2723,10 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_SCV_ORG_ID" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>&quot;SCV_ID&quot;</formula>
+      <calculatedViewAttribute id="CC_SCV_ORG_ID" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>&quot;SCV_ID&quot;
+
+</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -3221,58 +3284,67 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="982" y="112"/>
+      <upperLeftCorner x="1018" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="721" y="2156"/>
+      <upperLeftCorner x="897" y="2196"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPROLE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="511" y="2316"/>
+      <upperLeftCorner x="518" y="2501"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ADR2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1141" y="2156"/>
+      <upperLeftCorner x="1317" y="2196"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="779" y="1816"/>
+      <upperLeftCorner x="751" y="1836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="J_BPINFO_ACN" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_BP_ACN" modelObjectNameSpace="J_BPINFO_ACN" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="R_BP_ACN" modelObjectNameSpace="J_BPINFO_ACN" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="538" y="1976"/>
+      <upperLeftCorner x="777" y="2036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BPINFO" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_BP_ABN" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="R_BP_ABN" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
+    <shape expanded="true" modelObjectName="R_BP_ACN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="477" y="2214"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="R_BP_ABN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="687" y="2214"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="P_BP_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="931" y="2164"/>
+      <upperLeftCorner x="518" y="2356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BP_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="511" y="2164"/>
+      <upperLeftCorner x="728" y="2356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="898" y="1656"/>
+      <upperLeftCorner x="958" y="1676"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="J_BPINFO_RESADDRS" modelObjectType="JoinNodeInput">
@@ -3284,11 +3356,11 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="J_RESID_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="994" y="1824"/>
+      <upperLeftCorner x="985" y="1844"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRS_PHONE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1168" y="1976"/>
+      <upperLeftCorner x="1133" y="2036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="J_ADDRS_PHONE" modelObjectType="JoinNodeInput">
@@ -3300,7 +3372,7 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1351" y="2156"/>
+      <upperLeftCorner x="1107" y="2196"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="J_ADDRES_EMAIL" modelObjectType="JoinNodeInput">
@@ -3313,25 +3385,25 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
     </shape>
   
     <shape expanded="true" modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1208" y="2326"/>
+      <upperLeftCorner x="969" y="2366"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_ADR6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1427" y="2316"/>
+      <upperLeftCorner x="1179" y="2356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1208" y="2441"/>
+      <upperLeftCorner x="969" y="2501"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SERVICE_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1204" y="1824"/>
+      <upperLeftCorner x="1195" y="1844"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="925" y="1496"/>
+      <upperLeftCorner x="1077" y="1516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="J_BPINFO_SERADDRS" modelObjectType="JoinNodeInput">
@@ -3343,12 +3415,12 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PORTALID" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="2161"/>
+      <upperLeftCorner x="308" y="2356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_PORTALID_RELS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="325" y="1976"/>
+      <upperLeftCorner x="243" y="2196"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PORTALID" modelObjectNameSpace="J_PORTALID_RELS" modelObjectType="JoinNodeInput">
@@ -3360,11 +3432,11 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BUT050" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="301" y="2156"/>
+      <upperLeftCorner x="92" y="2356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_PORTALACC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="898" y="1336"/>
+      <upperLeftCorner x="1163" y="1336"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="J_BPINFO_PORTALACC" modelObjectType="JoinNodeInput">
@@ -3376,7 +3448,7 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PORTALACC_RELS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="393" y="1656"/>
+      <upperLeftCorner x="452" y="1836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PORTALID" modelObjectNameSpace="J_PORTALACC_RELS" modelObjectType="JoinNodeInput">
@@ -3388,12 +3460,12 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_ONLY_ONE_REL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="420" y="1834"/>
+      <upperLeftCorner x="243" y="2054"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_OPTINFLAG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="677" y="1176"/>
+      <upperLeftCorner x="1153" y="1176"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_PORTALACC" modelObjectNameSpace="J_BPINFO_OPTINFLAG" modelObjectType="JoinNodeInput">
@@ -3405,15 +3477,15 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPCONTRACT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="650" y="1336"/>
+      <upperLeftCorner x="953" y="1336"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPOwnerTypes" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="887" y="1176"/>
+      <upperLeftCorner x="943" y="1176"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="800" y="1016"/>
+      <upperLeftCorner x="1072" y="1016"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_OPTINFLAG" modelObjectNameSpace="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectType="JoinNodeInput">
@@ -3426,11 +3498,11 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
     </shape>
   
     <shape expanded="true" modelObjectName="P_LITRisk" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="578" y="1016"/>
+      <upperLeftCorner x="862" y="1016"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_LTIRISK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="604" y="856"/>
+      <upperLeftCorner x="917" y="856"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectNameSpace="J_BPINFO_LTIRISK" modelObjectType="JoinNodeInput">
@@ -3443,11 +3515,11 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
     </shape>
   
     <shape expanded="true" modelObjectName="P_ContractValues" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1134" y="856"/>
+      <upperLeftCorner x="1129" y="856"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_BPOVERVIEW_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="921" y="536"/>
+      <upperLeftCorner x="927" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_CONTRACTVALUES" modelObjectNameSpace="NEJ_BPOVERVIEW_CONTRACTVALUES" modelObjectType="JoinNodeInput">
@@ -3460,13 +3532,13 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
     </shape>
   
     <shape expanded="true" modelObjectName="R_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1078" y="714"/>
+      <upperLeftCorner x="1081" y="714"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="864" y="696"/>
+      <upperLeftCorner x="857" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_LTIRISK" modelObjectNameSpace="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectType="JoinNodeInput">
@@ -3478,20 +3550,20 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="924" y="874"/>
+      <upperLeftCorner x="652" y="874"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1010" y="1016"/>
+      <upperLeftCorner x="652" y="1016"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_SCVIND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="651" y="696"/>
+      <upperLeftCorner x="647" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPOVERVIEW_SCVIND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="730" y="376"/>
+      <upperLeftCorner x="735" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="NEJ_BPOVERVIEW_CONTRACTVALUES" modelObjectNameSpace="J_BPOVERVIEW_SCVIND" modelObjectType="JoinNodeInput">
@@ -3503,28 +3575,28 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_SCVIND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="703" y="554"/>
+      <upperLeftCorner x="709" y="554"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_SCVORG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1131" y="536"/>
+      <upperLeftCorner x="1137" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPOVERVIEW_SCVORG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="982" y="217"/>
+      <upperLeftCorner x="1018" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPOVERVIEW_SCVIND" modelObjectNameSpace="J_BPOVERVIEW_SCVORG" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="293.646484375"/>
+      <rectangleSize width="293"/>
     </shape>
     <shape modelObjectName="R_SCVORG" modelObjectNameSpace="J_BPOVERVIEW_SCVORG" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="359" y="30"/>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_SCVORG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1067" y="394"/>
+      <upperLeftCorner x="1082" y="394"/>
       <rectangleSize height="30" width="160"/>
     </shape></shapes>
 </layout>
