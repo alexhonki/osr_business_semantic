@@ -7,6 +7,16 @@ modules:
     type: hdb
     path: db
     requires:
+      - name: OSR_SCV_FOUNDATION-grantor
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: logical-OSR-SCV-FOUNDATION-grantor
+          service: '~{OSR_SCV_FOUNDATION-grantor-service}'
+      - name: OSR_SCV_FOUNDATION_ORG-grantor
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: logical-OSR-SCV-FOUNDATION-ORG-grantor
+          service: '~{OSR_SCV_FOUNDATION_ORG-grantor-service}'    
       - name: OSR_BUSINESS_SEMANTIC-container
         properties:
           HDI_DEPLOY_OPTIONS: { "auto_undeploy": true }
@@ -61,7 +71,18 @@ resources:
     properties:
        hdi-container-name: ${service-name}
     type: com.sap.xs.hdi-container
-    
+  - name: OSR_SCV_FOUNDATION-grantor
+    properties:
+      OSR_SCV_FOUNDATION-grantor-service: '${service-name}'
+    parameters:
+      service-name: OSR_SCV_FOUNDATION-deploy
+    type: org.cloudfoundry.existing-service
+  - name: OSR_SCV_FOUNDATION_ORG-grantor
+    properties:
+      OSR_SCV_FOUNDATION_ORG-grantor-service: '${service-name}'
+    parameters:
+      service-name: OSR_SCV_FOUNDATION_ORG-deploy
+    type: org.cloudfoundry.existing-service    
   - name: OSR-EDW-PLATFORM-grantor
     properties:
       OSR-EDW-PLATFORM-grantor-service: '${service-name}'

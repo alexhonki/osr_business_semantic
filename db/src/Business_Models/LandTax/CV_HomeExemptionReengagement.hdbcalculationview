@@ -46,7 +46,7 @@
       </viewAttribute></viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_UPPER_TAX_YEAR" datatype="NVARCHAR" length="8" expressionLanguage="COLUMN_ENGINE">
-        <formula>string(component(date(&quot;TAXYRSTARTDT&quot;),1) + 5) + '0701'</formula>
+        <formula>string(component(date(&quot;TAXYRSTARTDT&quot;),1) + 100) + '0701'</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="HE_Counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;CONCESSCODE&quot;='R',1,0)</formula>
@@ -85,6 +85,10 @@
       <viewAttribute id="TAXESTIMATE">
         <descriptions defaultDescription="Land Tax - Estimated Tax"/>
       </viewAttribute>
+    
+      <viewAttribute id="TAXYRENDDT">
+        <descriptions defaultDescription="Tax Year End Date"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -95,6 +99,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_HE_NONLIABLE" cardinality="C1_1" joinType="inner">
@@ -111,6 +117,14 @@
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
       </viewAttribute>
+    
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+    
+      <viewAttribute id="TAXYRENDDT">
+        <descriptions defaultDescription="TAXYRENDDT"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -119,8 +133,11 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPPER_TAX_YEAR" source="CC_UPPER_TAX_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
     </input>
     <input node="P_CNRES_NONLIABLE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -143,10 +160,14 @@
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
       </viewAttribute>
+    
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+    
       <viewAttribute id="HE_Counter" aggregationType="sum">
         <descriptions defaultDescription="HE_Counter"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_CV_OWNERSHIPCNRESP">
@@ -155,11 +176,18 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPPER_TAX_YEAR" source="CC_UPPER_TAX_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HE_Counter" source="HE_Counter"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
     </input>
     <filter>&quot;HE_Counter&quot;&gt;0</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CNRES_NONLIABLE" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
+    
+      <viewAttribute id="TAXYRENDDT">
+        <descriptions defaultDescription="TAXYRENDDT"/>
+      </viewAttribute>
+    
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="MANDT"/>
       </viewAttribute>
@@ -177,8 +205,7 @@
       </viewAttribute>
       <viewAttribute id="TAXESTIMATE">
         <descriptions defaultDescription="TAXESTIMATE"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_CV_CONTRACTRESULTS">
@@ -188,6 +215,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
     </input>
     <filter>&quot;TAXAMOUNT&quot;=0</filter>
   </calculationView>
@@ -202,6 +231,12 @@
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
       </viewAttribute>
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRENDDT">
+        <descriptions defaultDescription="TAXYRENDDT"/>
+      </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
       <viewAttribute hidden="true" id="JOIN$INTRENOCN$INTRENO"/>
       <viewAttribute hidden="true" id="JOIN$TAXYRSTARTDT$TAXYRSTARTDT"/>
@@ -209,6 +244,7 @@
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="AGG_BP_NOHE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENOCN$INTRENO" source="INTRENOCN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TAXYRSTARTDT$TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -217,6 +253,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENOCN$INTRENO" source="INTRENO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TAXYRSTARTDT$TAXYRSTARTDT" source="TAXYRSTARTDT"/>
@@ -227,6 +264,11 @@
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_BP_NOHE" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
+    
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
+      </viewAttribute>
+    
       <viewAttribute id="MANDT">
         <descriptions defaultDescription="Client"/>
       </viewAttribute>
@@ -238,8 +280,7 @@
       </viewAttribute>
       <viewAttribute id="HE_Counter" aggregationType="sum">
         <descriptions defaultDescription="HE_Counter_1"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_CV_OWNERSHIPCNRESP">
@@ -247,6 +288,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="HE_Counter" source="HE_Counter"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
     </input>
     <filter>&quot;HE_Counter&quot;=0</filter>
   </calculationView>
@@ -261,6 +304,11 @@
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
       </viewAttribute>
+    
+      <viewAttribute id="TAXYRENDDT">
+        <descriptions defaultDescription="TAXYRENDDT"/>
+      </viewAttribute>
+    
       <viewAttribute id="TOTBPTAXABLEVAL">
         <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
       </viewAttribute>
@@ -269,8 +317,7 @@
       </viewAttribute>
       <viewAttribute id="TAXESTIMATE">
         <descriptions defaultDescription="TAXESTIMATE"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_CV_CONTRACTRESULTS">
@@ -280,6 +327,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
     </input>
     <filter>&quot;TAXAMOUNT&quot;&gt;0 or &quot;TAXESTIMATE&quot;&gt;0</filter>
   </calculationView>
@@ -291,10 +340,15 @@
       <viewAttribute id="INTRENOCN">
         <descriptions defaultDescription="INTRENOCN"/>
       </viewAttribute>
-      <viewAttribute id="TAXYRSTARTDT">
-        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="Business Partner Number"/>
       </viewAttribute>
-      <viewAttribute id="UPPER_TAXYRSTARTDT">
+    
+      <viewAttribute id="TAXYRENDDT">
+        <descriptions defaultDescription="TAXYRENDDT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
       </viewAttribute>
     </viewAttributes>
@@ -303,15 +357,18 @@
     <input node="J_HE_NONLIABLE">
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOCN" source="INTRENOCN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
     </input>
     <input node="J_NOHE_LIABLE">
-      <mapping xsi:type="Calculation:AttributeMapping" target="UPPER_TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
     </input>
     <joinAttribute leftColumn="INTRENOCN" rightColumn="INTRENO" operator="EQ"/>
     <joinAttribute leftColumn="MANDT" rightColumn="MANDT" operator="EQ"/>
-    <joinAttribute leftColumn="CC_UPPER_TAX_YEAR" rightColumn="TAXYRSTARTDT" operator="GE"/>
     <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="TAXYRSTARTDT" operator="LT"/>
+    <joinAttribute leftColumn="ZZ_PARTNER" rightColumn="ZZ_PARTNER" operator="EQ"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="NEJ_NEXT_FIVE_YEARS">
@@ -323,16 +380,40 @@
       <keyMapping columnObjectName="NEJ_NEXT_FIVE_YEARS" columnName="INTRENOCN"/>
   
     </attribute>
-    <attribute id="TAXYRSTARTDT" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Tax Year Start Date"/>
-      <keyMapping columnObjectName="NEJ_NEXT_FIVE_YEARS" columnName="TAXYRSTARTDT"/>
-    </attribute>
-    <attribute id="MANDT" keepFlag="true" order="4" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MANDT" keepFlag="true" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Client"/>
       <keyMapping columnObjectName="NEJ_NEXT_FIVE_YEARS" columnName="MANDT"/>
     </attribute>
+  
+    <attribute id="ZZ_PARTNER" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Number"/>
+  
+      <keyMapping columnObjectName="NEJ_NEXT_FIVE_YEARS" columnName="ZZ_PARTNER"/>
+  
+    </attribute>
+  
+    <attribute id="TAXYRENDDT" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Year End Date"/>
+  
+      <keyMapping columnObjectName="NEJ_NEXT_FIVE_YEARS" columnName="TAXYRENDDT"/>
+  
+    </attribute>
+  
+    <attribute id="TAXYRSTARTDT" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Year Start Date"/>
+  
+      <keyMapping columnObjectName="NEJ_NEXT_FIVE_YEARS" columnName="TAXYRSTARTDT"/>
+  
+    </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_Reengagement_Flag" order="4" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Reengagement Flag"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="30">
+        <formula>'Reengagement with Client'</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures/>
   <calculatedMeasures>
     <measure id="ContractCounter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -341,6 +422,9 @@
         <attribute attributeName="INTRENOCN"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
+      
       
       
       

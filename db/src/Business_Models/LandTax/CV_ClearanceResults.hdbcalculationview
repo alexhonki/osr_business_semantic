@@ -69,6 +69,38 @@
     '08','Cancelled Garnishee',
     'Undefined')</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_Clearance_Processing_Days" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>IF(&quot;ISSUE_DATE&quot;='00000000',&quot;CC_Today&quot;-&quot;CC_CR_Date&quot;,&quot;CC_CR_Date&quot;-&quot;CC_Issue_Date&quot;)</formula>
+    
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_CR_Date" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+        <formula>IF(&quot;CR_DATE&quot;= '00000000','0',&quot;CR_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_Issue_Date" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+        <formula>IF(&quot;ISSUE_DATE&quot;= '00000000','0',&quot;ISSUE_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_Clearance_Processing_Range" datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="13">
+        <formula>IF(&quot;CC_Clearance_Processing_Days&quot;=0, '1 day',
+IF(&quot;CC_Clearance_Processing_Days&quot;&lt;=7 and &quot;CC_Clearance_Processing_Days&quot;&gt;0,'1 Week',
+IF(&quot;CC_Clearance_Processing_Days&quot;&lt;=14 and &quot;CC_Clearance_Processing_Days&quot;&gt;7,'2 Weeks',
+IF(&quot;CC_Clearance_Processing_Days&quot;&lt;=21 and &quot;CC_Clearance_Processing_Days&quot;&gt;14,'3 Weeks',
+IF(&quot;CC_Clearance_Processing_Days&quot;&lt;=31 and &quot;CC_Clearance_Processing_Days&quot;&gt;21,'1 Month',
+'+1 Month')))))</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_Today" datatype="DATE" expressionLanguage="SQL">
+    
+        <formula>NOW()</formula>
+    
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_Username" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>IF(&quot;USER_ID&quot;='APP_BATCH' OR &quot;USER_ID&quot;='WF_BATCH' OR &quot;USER_ID&quot;='FF_APPDEV' OR &quot;USER_ID&quot;='PISRVUSER', 'Automatic',IF(LEFTSTR(&quot;USER_ID&quot;,2) = 'FF','ESD','Manual'))</formula>
+    
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::LTC_RES">
@@ -104,7 +136,7 @@
       <keyMapping columnObjectName="P_LTCRES" columnName="TYPE"/>
     </attribute>
     <attribute id="VERSION" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="VERSION"/>
+      <descriptions defaultDescription="Version"/>
       <keyMapping columnObjectName="P_LTCRES" columnName="VERSION"/>
     </attribute>
     <attribute id="CR_DATE" order="6" displayAttribute="false" attributeHierarchyActive="false">
@@ -116,7 +148,7 @@
       <keyMapping columnObjectName="P_LTCRES" columnName="ISSUE_DATE"/>
     </attribute>
     <attribute id="STATUS" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="STATUS"/>
+      <descriptions defaultDescription="Status"/>
       <keyMapping columnObjectName="P_LTCRES" columnName="STATUS"/>
     </attribute>
     <attribute id="INTRENOPL" order="11" displayAttribute="false" attributeHierarchyActive="false">
@@ -132,11 +164,11 @@
       <keyMapping columnObjectName="P_LTCRES" columnName="USER_ID"/>
     </attribute>
     <attribute id="PAYMENT_REF" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="PAYMENT_REF"/>
+      <descriptions defaultDescription="Payment Ref"/>
       <keyMapping columnObjectName="P_LTCRES" columnName="PAYMENT_REF"/>
     </attribute>
     <attribute id="UPDATE_TS" order="15" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="UPDATE_TS"/>
+      <descriptions defaultDescription="Update TS"/>
       <keyMapping columnObjectName="P_LTCRES" columnName="UPDATE_TS"/>
     </attribute>
     <attribute id="PLNO" order="16" displayAttribute="false" attributeHierarchyActive="false">
@@ -150,6 +182,31 @@
       <keyMapping columnObjectName="P_LTCRES" columnName="ClearanceType"/>
   
     </attribute>
+  
+    <attribute id="CC_Clearance_Processing_Range" order="20" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearance Processing Range"/>
+  
+      <keyMapping columnObjectName="P_LTCRES" columnName="CC_Clearance_Processing_Range"/>
+  
+    </attribute>
+  
+    <attribute id="CC_CR_Date" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CR Date"/>
+  
+      <keyMapping columnObjectName="P_LTCRES" columnName="CC_CR_Date"/>
+  
+    </attribute>
+    <attribute id="CC_Issue_Date" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Issue Date"/>
+      <keyMapping columnObjectName="P_LTCRES" columnName="CC_Issue_Date"/>
+    </attribute>
+  
+    <attribute id="CC_Username" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Username"/>
+  
+      <keyMapping columnObjectName="P_LTCRES" columnName="CC_Username"/>
+  
+    </attribute>
   </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="CC_USER_TYPE_FLAG" order="18" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
@@ -161,7 +218,7 @@ if(match(&quot;USER_ID&quot;,'*PISRVUSER*') , 'X',
 if(match(&quot;USER_ID&quot;,'*FF_*') , 'X',
 ''))))</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="ISSUED_AMOUNT" order="9" aggregationType="sum" measureType="simple">
@@ -171,6 +228,10 @@ if(match(&quot;USER_ID&quot;,'*FF_*') , 'X',
     <measure id="PAID_AMOUNT" order="10" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount Paid"/>
       <measureMapping columnObjectName="P_LTCRES" columnName="PAID_AMOUNT"/>
+    </measure>
+    <measure id="CC_Clearance_Processing_Days" order="19" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Clearance Processing Days"/>
+      <measureMapping columnObjectName="P_LTCRES" columnName="CC_Clearance_Processing_Days"/>
     </measure></baseMeasures>
   <calculatedMeasures>
     <measure id="ClearanceCounter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -179,6 +240,11 @@ if(match(&quot;USER_ID&quot;,'*FF_*') , 'X',
         <attribute attributeName="INTRENORR"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
+      
+      
+      
       
       
       

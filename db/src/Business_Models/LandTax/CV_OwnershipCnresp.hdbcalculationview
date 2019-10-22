@@ -619,7 +619,23 @@
         <descriptions defaultDescription="LandTaxYear"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_500K_Flag" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+        <formula>IF(&quot;CC_BPRelevant_Dimension&quot;&gt;= 500000, 'X','')</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_BPRelevant_Dimension" datatype="DECIMAL" expressionLanguage="SQL" length="13" scale="2">
+    
+        <formula>&quot;BPRELVNTVAL&quot;</formula>
+    
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_Username" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>IF(&quot;CHUSER&quot;='APP_BATCH' OR &quot;CHUSER&quot;='WF-BATCH' OR &quot;CHUSER&quot;='FF_APPDEV' OR &quot;CHUSER&quot;='PISRVUSER', 'Automatic',IF(LEFTSTR(&quot;CHUSER&quot;,2) = 'FF','ESD','Manual'))</formula>
+    
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="J_CNRESPBP_OWNERTYPE">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -805,7 +821,7 @@
     </attribute>
   
     <attribute id="CC_OwnerTypeDescription" order="38" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_OwnerTypeDescription"/>
+      <descriptions defaultDescription="Owner Type Description"/>
   
       <keyMapping columnObjectName="J_ADD_LANDUSECODES" columnName="CC_OwnerTypeDescription"/>
   
@@ -815,6 +831,27 @@
       <descriptions defaultDescription="Land Owned As At"/>
   
       <keyMapping columnObjectName="J_ADD_LANDUSECODES" columnName="LandTaxYear"/>
+  
+    </attribute>
+  
+    <attribute id="CC_500K_Flag" order="40" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="$500K Flag"/>
+  
+      <keyMapping columnObjectName="J_ADD_LANDUSECODES" columnName="CC_500K_Flag"/>
+  
+    </attribute>
+  
+    <attribute id="CC_BPRelevant_Dimension" order="41" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BP Relevant Value Dimension"/>
+  
+      <keyMapping columnObjectName="J_ADD_LANDUSECODES" columnName="CC_BPRelevant_Dimension"/>
+  
+    </attribute>
+  
+    <attribute id="CC_Username" order="42" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Username"/>
+  
+      <keyMapping columnObjectName="J_ADD_LANDUSECODES" columnName="CC_Username"/>
   
     </attribute>
   </attributes>
@@ -854,6 +891,11 @@
       <formula>1</formula>
       
       
+      
+      
+      
+      
+      
       </measure>
   
     <measure id="ContractCounter" order="36" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -862,6 +904,11 @@
         <attribute attributeName="INTRENOCN"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
+      
+      
+      
       </measure>
     <measure id="PropertyCounter" order="37" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Property Counter"/>
@@ -869,6 +916,11 @@
         <attribute attributeName="NANO"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
+      
+      
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -883,11 +935,11 @@
     </shape>
   
     <shape expanded="true" modelObjectName="P_CNRESP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91" y="676"/>
+      <upperLeftCorner x="91" y="696"/>
       <rectangleSize height="30" width="177"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CNRESP_BPCONTRACT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="127" y="516"/>
+      <upperLeftCorner x="127" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CNRESP" modelObjectNameSpace="J_CNRESP_BPCONTRACT" modelObjectType="JoinNodeInput">
@@ -899,12 +951,12 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_VICNCN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="318" y="676"/>
+      <upperLeftCorner x="318" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_CNRESPBP_OWNERTYPE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="153" y="356"/>
+      <upperLeftCorner x="153" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CNRESP_BPCONTRACT" modelObjectNameSpace="J_CNRESPBP_OWNERTYPE" modelObjectType="JoinNodeInput">
@@ -916,7 +968,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_OWNERTYPE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="397" y="516"/>
+      <upperLeftCorner x="397" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
@@ -933,7 +985,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_LANDUSECODES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="502" y="356"/>
+      <upperLeftCorner x="502" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
