@@ -97,8 +97,7 @@ if(match(&quot;WorkItemType&quot;,'WF - Non-bulk refunds - Sup Only') , 'Refunds
 if(match(&quot;WorkItemType&quot;,'WF - Group wages equal to DGE Wages') , 'Assessment/Reassessment',
 if(match(&quot;WorkItemType&quot;,'WF - BP Excess Group Deduction') , 'Assessment/Reassessment',
 if(match(&quot;WorkItemType&quot;,'WF - BP Excess Rebate for Allocation') , 'Assessment/Reassessment',
-if(match(&quot;WorkItemType&quot;,'WF- Request for Reassessment') , 'Assessment/Reassessment',
-if(match(&quot;WorkItemType&quot;,'WF- Acknowledge- Request for Reassessment') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WF - Request for Reassessment') , 'Assessment/Reassessment',
 if(match(&quot;WorkItemType&quot;,'WM - 1 Annual Return*') , 'Assessment/Reassessment',
 if(match(&quot;WorkItemType&quot;,'WM - 1 Reassessment') , 'Assessment/Reassessment',
 if(match(&quot;WorkItemType&quot;,'WM - 1 Refund') , 'Assessment/Reassessment',
@@ -116,7 +115,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Cancellations (AN)') , 'Registration C
 if(match(&quot;WorkItemType&quot;,'WM - 1 Cancellations (CI)') , 'Registration Cancellations',
 if(match(&quot;WorkItemType&quot;,'WF - BP Status Change – Annual') , 'Status Change',
 if(match(&quot;WorkItemType&quot;,'WF - BP Status Change – Final') , 'Status Change',
-if(match(&quot;WorkItemType&quot;,'WM - 1 Status change (*') , 'Status Change',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Status Change (*') , 'Status Change',
 if(match(&quot;WorkItemType&quot;,'WF - Default Assmt Failed (BP_Cancelled)') , 'Default Assessments',
 if(match(&quot;WorkItemType&quot;,'WF - Default Assmt Failed (Illegal_Fin_Status)') , 'Default Assessments',
 if(match(&quot;WorkItemType&quot;,'WF - Default Assmt Failed (No_FormB_Type)') , 'Default Assessments',
@@ -145,13 +144,13 @@ if(match(&quot;WorkItemType&quot;,'WF - Registration check – Update Group Rela
 if(match(&quot;WorkItemType&quot;,'WF - Rego check – BP is trying to change their applicant type') , 'Other Workflows',
 if(match(&quot;WorkItemType&quot;,'WF - Update DGE Status') , 'Other Workflows',
 if(match(&quot;WorkItemType&quot;,'WF - Registration check – ABN Manual Check Required') , 'Other Workflows',
-if(match(&quot;WorkItemType&quot;,'WF- Acknowledge- Request for Reassessment') , 'Other Workflows',
+if(match(&quot;WorkItemType&quot;,'WF - Acknowledge - Request for Reassessment') , 'Other Workflows',
 if(match(&quot;WorkItemType&quot;,'WM - 1 Returned Refund Cheques') , 'Other Whitemail',
 if(match(&quot;WorkItemType&quot;,'WM - 1 Miscellaneous') , 'Other Whitemail',
 if(match(&quot;WorkItemType&quot;,'WM - 1 2nd Requests/Urgent') , 'Other Whitemail',
 if(match(&quot;WorkItemType&quot;,'WM - 1 Objection') , 'Other Whitemail',
-if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail',
-'Unspecified'))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))</formula>
+if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*'), 'Other Whitemail',
+'Unspecified')))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))</formula>
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_SixtyDays" datatype="NVARCHAR" length="30" expressionLanguage="COLUMN_ENGINE">
@@ -182,7 +181,9 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_ResponsiblePerson" datatype="NVARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;ResponsibleName&quot;=&quot;CC_FullName&quot;,'',&quot;ResponsibleName&quot;)</formula>
+    
+        <formula>&quot;ResponsibleName&quot;</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -317,6 +318,9 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <viewAttribute id="OBJECT_ID">
         <descriptions defaultDescription="Object ID"/>
       </viewAttribute>
+      <viewAttribute id="EMP_NAME">
+        <descriptions defaultDescription="Employee Responsible Name"/>
+      </viewAttribute>
     
       <viewAttribute id="P_DESCRIPTION">
         <descriptions defaultDescription="Process Type (Desc)"/>
@@ -339,9 +343,6 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       </viewAttribute>
       <viewAttribute id="EMP_PARTNER">
         <descriptions defaultDescription="Employee Responsible"/>
-      </viewAttribute>
-      <viewAttribute id="EMP_NAME">
-        <descriptions defaultDescription="Employee Responsible Name"/>
       </viewAttribute></viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_RowCountTI" datatype="INTEGER" expressionLanguage="SQL">
@@ -743,7 +744,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <descriptions defaultDescription="ChangedByName"/>
       <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="Changed_CompletedName"/>
     </attribute>
-    <attribute id="ORGEH" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ORGEH" order="8" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="SHORT">
       <descriptions defaultDescription="Org. Unit (Team)"/>
       <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="ORGEH"/>
     </attribute>
@@ -811,7 +812,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
   
     </attribute>
   
-    <attribute id="WorkItemID" order="26" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="WorkItemID" order="26" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="WorkItemDescription">
       <descriptions defaultDescription="WorkItemID"/>
   
       <keyMapping columnObjectName="J_AGGNonBusDays_WorkItems" columnName="WorkItemID"/>
@@ -948,7 +949,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
       <rectangleSize width="257"/>
     </shape>
     <shape modelObjectName="P_Calendar" modelObjectNameSpace="NEJ_CalendarWorkItems" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="348" y="259"/>
+      <upperLeftCorner x="351" y="77"/>
       <rectangleSize width="257"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_SumNonBusDays" modelObjectNameSpace="CalculationView">
@@ -961,7 +962,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*') , 'Other Whitemail'
     </shape>
     <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="257.7890625"/>
+      <rectangleSize width="257"/>
     </shape>
     <shape modelObjectName="AGG_SumNonBusDays" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
