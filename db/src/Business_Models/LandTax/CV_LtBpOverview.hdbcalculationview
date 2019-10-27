@@ -1807,11 +1807,16 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="LatestReassessment">
         <descriptions defaultDescription="Latest Reassessment Date"/>
       </viewAttribute>
+    
+      <viewAttribute id="All_FTTPs">
+        <descriptions defaultDescription="All Unissued FTTPs"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Reengagement_Time" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>IF(&quot;AssessmentAmount&quot; &gt;0 and (&quot;AssessmentAmountCleared&quot;&gt;=&quot;AssessmentAmount&quot;),component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_AssessmentIssueDate&quot;,1),
-IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&quot;,component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_LatestReassessment&quot;,1),0))</formula>
+        <formula>IF(&quot;AssessmentAmount&quot;&gt;0,
+(IF(&quot;AssessmentAmountCleared&quot;&gt;=&quot;AssessmentAmount&quot;,component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_AssessmentIssueDate&quot;,1),
+(IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&quot;,component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_LatestReassessment&quot;,1),0)))),0)</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Todays_Date" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
         <formula>NOW()</formula>
@@ -1854,6 +1859,8 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <mapping xsi:type="Calculation:AttributeMapping" target="FN_ReassessmentAmount" source="FN_ReassessmentAmount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmountCleared" source="ReassessmentAmountCleared"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="LatestReassessment"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="All_FTTPs" source="All_FTTPs"/>
     </input>
     <filter>&quot;ACTIVE&quot;='X'</filter>
   </calculationView>
@@ -3076,7 +3083,7 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <keyCalculation datatype="DATE" expressionLanguage="SQL">
         <formula>TO_DATE(&quot;BUT0ID_ENTRY_DATE&quot;)</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="CC_Age" order="27" aggregationType="sum" measureType="simple">
@@ -3416,7 +3423,7 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
     </shape>
   
     <shape expanded="true" modelObjectName="P_ContractValues" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1129" y="856"/>
+      <upperLeftCorner x="1109" y="856"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
@@ -3469,11 +3476,11 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
     </shape>
     <shape modelObjectName="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="J_BPOVERVIEW_CONTRACTVALUES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="293.646484375"/>
+      <rectangleSize width="293"/>
     </shape>
     <shape modelObjectName="R_CONTRACTVALUES" modelObjectNameSpace="J_BPOVERVIEW_CONTRACTVALUES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="395" y="30"/>
-      <rectangleSize width="271.4638671875"/>
+      <rectangleSize width="271"/>
     </shape>
   
     <shape expanded="true" modelObjectName="R_SCVIND" modelObjectNameSpace="CalculationView">
