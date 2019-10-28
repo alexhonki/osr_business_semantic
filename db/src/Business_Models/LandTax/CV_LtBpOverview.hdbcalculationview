@@ -1807,11 +1807,16 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="LatestReassessment">
         <descriptions defaultDescription="Latest Reassessment Date"/>
       </viewAttribute>
+    
+      <viewAttribute id="All_FTTPs">
+        <descriptions defaultDescription="All Unissued FTTPs"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Reengagement_Time" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>IF(&quot;AssessmentAmount&quot; &gt;0 and (&quot;AssessmentAmountCleared&quot;&gt;=&quot;AssessmentAmount&quot;),component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_AssessmentIssueDate&quot;,1),
-IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&quot;,component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_LatestReassessment&quot;,1),0))</formula>
+        <formula>IF(ISNULL(&quot;CC_AssessmentIssueDate&quot;) and ISNULL(&quot;CC_LatestReassessment&quot;),0,(IF(&quot;AssessmentAmount&quot;&gt;0,
+(IF(&quot;AssessmentAmountCleared&quot;&gt;=&quot;AssessmentAmount&quot;,component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_AssessmentIssueDate&quot;,1),
+(IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&quot;,component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_LatestReassessment&quot;,1),0)))),0)))</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Todays_Date" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
         <formula>NOW()</formula>
@@ -1854,253 +1859,10 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <mapping xsi:type="Calculation:AttributeMapping" target="FN_ReassessmentAmount" source="FN_ReassessmentAmount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmountCleared" source="ReassessmentAmountCleared"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="LatestReassessment"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="All_FTTPs" source="All_FTTPs"/>
     </input>
-    <filter>&quot;AssessmentIssueDate&quot; != '' and &quot;CC_Reengagement_Time_Dimension&quot; != 'null'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_BPOVERVIEW_CONTRACTVALUES" joinType="rightOuter">
-    <viewAttributes>
-      <viewAttribute id="PARTNER">
-        <descriptions defaultDescription="PARTNER"/>
-      </viewAttribute>
-      <viewAttribute id="BIRTHDT">
-        <descriptions defaultDescription="BIRTHDT"/>
-      </viewAttribute>
-      <viewAttribute id="DEATHDT">
-        <descriptions defaultDescription="DEATHDT"/>
-      </viewAttribute>
-      <viewAttribute id="CC_ZACN">
-        <descriptions defaultDescription="CC_ZACN"/>
-      </viewAttribute>
-      <viewAttribute id="CC_ABN">
-        <descriptions defaultDescription="CC_ABN"/>
-      </viewAttribute>
-      <viewAttribute id="RES_STD_ADDR_ADDRESS_DELIVERY">
-        <descriptions defaultDescription="RES_STD_ADDR_ADDRESS_DELIVERY"/>
-      </viewAttribute>
-      <viewAttribute id="RES_STD_ADDR_LOCALITY">
-        <descriptions defaultDescription="RES_STD_ADDR_LOCALITY"/>
-      </viewAttribute>
-      <viewAttribute id="RES_STD_ADDR_REGION">
-        <descriptions defaultDescription="RES_STD_ADDR_REGION"/>
-      </viewAttribute>
-      <viewAttribute id="RES_STD_ADDR_POSTCODE1">
-        <descriptions defaultDescription="RES_STD_ADDR_POSTCODE1"/>
-      </viewAttribute>
-      <viewAttribute id="RES_TEL_NUMBER">
-        <descriptions defaultDescription="RES_TEL_NUMBER"/>
-      </viewAttribute>
-      <viewAttribute id="SER_STD_ADDR_ADDRESS_DELIVERY">
-        <descriptions defaultDescription="SER_STD_ADDR_ADDRESS_DELIVERY"/>
-      </viewAttribute>
-      <viewAttribute id="SER_STD_ADDR_LOCALITY">
-        <descriptions defaultDescription="SER_STD_ADDR_LOCALITY"/>
-      </viewAttribute>
-      <viewAttribute id="SER_STD_ADDR_REGION">
-        <descriptions defaultDescription="SER_STD_ADDR_REGION"/>
-      </viewAttribute>
-      <viewAttribute id="SER_STD_ADDR_POSTCODE1">
-        <descriptions defaultDescription="SER_STD_ADDR_POSTCODE1"/>
-      </viewAttribute>
-      <viewAttribute id="SER_TEL_NUMBER">
-        <descriptions defaultDescription="SER_TEL_NUMBER"/>
-      </viewAttribute>
-      <viewAttribute id="RES_SMTP_ADDR">
-        <descriptions defaultDescription="RES_SMTP_ADDR"/>
-      </viewAttribute>
-      <viewAttribute id="SER_SMTP_ADDR">
-        <descriptions defaultDescription="SER_SMTP_ADDR"/>
-      </viewAttribute>
-      <viewAttribute id="CC_FullName">
-        <descriptions defaultDescription="CC_FullName"/>
-      </viewAttribute>
-      <viewAttribute id="CC_FirstName">
-        <descriptions defaultDescription="CC_FirstName"/>
-      </viewAttribute>
-      <viewAttribute id="CC_MiddleName">
-        <descriptions defaultDescription="CC_MiddleName"/>
-      </viewAttribute>
-      <viewAttribute id="CC_LastName">
-        <descriptions defaultDescription="CC_LastName"/>
-      </viewAttribute>
-      <viewAttribute id="CC_Age" aggregationType="sum">
-        <descriptions defaultDescription="CC_Age"/>
-      </viewAttribute>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="BUT0ID_ENTRY_DATE">
-        <descriptions defaultDescription="BUT0ID_ENTRY_DATE"/>
-      </viewAttribute>
-      <viewAttribute id="CC_Delegate">
-        <descriptions defaultDescription="CC_Delegate"/>
-      </viewAttribute>
-      <viewAttribute id="ZZ_E_ASS_OPT">
-        <descriptions defaultDescription="ZZ_E_ASS_OPT"/>
-      </viewAttribute>
-      <viewAttribute id="ZZ_OT_CONF">
-        <descriptions defaultDescription="ZZ_OT_CONF"/>
-      </viewAttribute>
-      <viewAttribute id="RISK_CATEGORY">
-        <descriptions defaultDescription="RISK_CATEGORY"/>
-      </viewAttribute>
-      <viewAttribute id="RISK_SCORE" aggregationType="sum">
-        <descriptions defaultDescription="RISK_SCORE"/>
-      </viewAttribute>
-      <viewAttribute id="CODEID">
-        <descriptions defaultDescription="CODEID"/>
-      </viewAttribute>
-      <viewAttribute id="PERIODBEGIN">
-        <descriptions defaultDescription="PERIODBEGIN"/>
-      </viewAttribute>
-      <viewAttribute id="PERIODEND">
-        <descriptions defaultDescription="PERIODEND"/>
-      </viewAttribute>
-      <viewAttribute id="CUST_ID" aggregationType="sum">
-        <descriptions defaultDescription="CUST_ID"/>
-      </viewAttribute>
-      <viewAttribute id="CC_BP_Count" aggregationType="sum">
-        <descriptions defaultDescription="CC_BP_Count"/>
-      </viewAttribute>
-      <viewAttribute id="CC_Reengagement_Flag">
-        <descriptions defaultDescription="Reengagement Flag"/>
-      </viewAttribute>
-      <viewAttribute id="CC_Individual" aggregationType="sum">
-        <descriptions defaultDescription="CC_Individual"/>
-      </viewAttribute>
-      <viewAttribute id="CC_Non-Individual" aggregationType="sum">
-        <descriptions defaultDescription="CC_Non-Individual"/>
-      </viewAttribute>
-      <viewAttribute id="CC_TaxYearStartDt">
-        <descriptions defaultDescription="CC_TaxYearStartDt"/>
-      </viewAttribute>
-    
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum">
-        <descriptions defaultDescription="CC_Reengagement_Time"/>
-      </viewAttribute>
-      <viewAttribute id="AssessmentAmount" aggregationType="sum">
-        <descriptions defaultDescription="Assessment Amount"/>
-      </viewAttribute>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum">
-        <descriptions defaultDescription="Assessment Amount Cleared"/>
-      </viewAttribute>
-      <viewAttribute id="CC_Todays_Date">
-        <descriptions defaultDescription="CC_Todays_Date"/>
-      </viewAttribute>
-      <viewAttribute id="CC_AssessmentIssueDate">
-        <descriptions defaultDescription="CC_AssessmentIssueDate"/>
-      </viewAttribute>
-    
-      <viewAttribute id="TAXYRSTARTDT">
-        <descriptions defaultDescription="TAXYRSTARTDT"/>
-      </viewAttribute>
-      <viewAttribute id="CC_FN_ReassessmentAmount" aggregationType="sum">
-        <descriptions defaultDescription="CC_FN_ReassessmentAmount"/>
-      </viewAttribute>
-      <viewAttribute id="CC_ReassessmentAmountCleared" aggregationType="sum">
-        <descriptions defaultDescription="CC_ReassessmentAmountCleared"/>
-      </viewAttribute>
-      <viewAttribute id="CC_LatestReassessment">
-        <descriptions defaultDescription="CC_LatestReassessment"/>
-      </viewAttribute>
-      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum">
-        <descriptions defaultDescription="FN_ReassessmentAmount"/>
-      </viewAttribute>
-      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum">
-        <descriptions defaultDescription="ReassessmentAmountCleared"/>
-      </viewAttribute>
-      <viewAttribute id="LatestReassessment">
-        <descriptions defaultDescription="LatestReassessment"/>
-      </viewAttribute>
-    
-      <viewAttribute id="TAXYRENDDT">
-        <descriptions defaultDescription="Tax Year End Date"/>
-      </viewAttribute>
-    
-      <viewAttribute id="CC_Reengagement_Time_Dimension">
-        <descriptions defaultDescription="CC_Reengagement_Time_Dimension"/>
-      </viewAttribute>
-    
-      <viewAttribute id="MANDT">
-        <descriptions defaultDescription="MANDT"/>
-      </viewAttribute>
-      <viewAttribute id="ZZ_PARTNER">
-        <descriptions defaultDescription="ZZ_PARTNER"/>
-      </viewAttribute>
-      <viewAttribute id="TAXYRSTARTDT_1">
-        <descriptions defaultDescription="TAXYRSTARTDT"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="R_CONTRACTVALUES">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AssessmentIssueDate" source="CC_AssessmentIssueDate"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FN_ReassessmentAmount" source="CC_FN_ReassessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ReassessmentAmountCleared" source="CC_ReassessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LatestReassessment" source="CC_LatestReassessment"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FN_ReassessmentAmount" source="FN_ReassessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmountCleared" source="ReassessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="LatestReassessment"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT_1" source="TAXYRSTARTDT"/>
-    </input>
-    <input node="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DEATHDT" source="DEATHDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZACN" source="CC_ZACN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_ADDRESS_DELIVERY" source="RES_STD_ADDR_ADDRESS_DELIVERY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_LOCALITY" source="RES_STD_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_REGION" source="RES_STD_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_POSTCODE1" source="RES_STD_ADDR_POSTCODE1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RES_TEL_NUMBER" source="RES_TEL_NUMBER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_ADDRESS_DELIVERY" source="SER_STD_ADDR_ADDRESS_DELIVERY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_LOCALITY" source="SER_STD_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_REGION" source="SER_STD_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_POSTCODE1" source="SER_STD_ADDR_POSTCODE1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="SER_TEL_NUMBER" source="SER_TEL_NUMBER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RES_SMTP_ADDR" source="RES_SMTP_ADDR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="SER_SMTP_ADDR" source="SER_SMTP_ADDR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FirstName" source="CC_FirstName"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_MiddleName" source="CC_MiddleName"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LastName" source="CC_LastName"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Age" source="CC_Age"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Delegate" source="CC_Delegate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_E_ASS_OPT" source="ZZ_E_ASS_OPT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_OT_CONF" source="ZZ_OT_CONF"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RISK_CATEGORY" source="RISK_CATEGORY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RISK_SCORE" source="RISK_SCORE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CODEID" source="CODEID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PERIODBEGIN" source="PERIODBEGIN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PERIODEND" source="PERIODEND"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Count" source="CC_BP_Count"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Flag" source="CC_Reengagement_Flag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Individual" source="CC_Individual"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Non-Individual" source="CC_Non-Individual"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxYearStartDt" source="CC_TaxYearStartDt"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
-    </input>
-    <joinAttribute leftColumn="MANDT" rightColumn="CLIENT" operator="EQ"/>
-    <joinAttribute leftColumn="ZZ_PARTNER" rightColumn="PARTNER" operator="EQ"/>
-    <joinAttribute leftColumn="CC_AssessmentIssueDate" rightColumn="TAXYRSTARTDT" operator="GE"/>
-    <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="PERIODEND" operator="LE"/>
-    <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="PERIODBEGIN" operator="GE"/>
+    <filter>&quot;ACTIVE&quot;='X'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_CONTRACTVALUES">
     <viewAttributes>
@@ -2569,41 +2331,8 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <viewAttribute id="CC_TaxYearStartDt">
         <descriptions defaultDescription="CC_TaxYearStartDt"/>
       </viewAttribute>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum">
-        <descriptions defaultDescription="CC_Reengagement_Time"/>
-      </viewAttribute>
-      <viewAttribute id="AssessmentAmount" aggregationType="sum">
-        <descriptions defaultDescription="AssessmentAmount"/>
-      </viewAttribute>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum">
-        <descriptions defaultDescription="AssessmentAmountCleared"/>
-      </viewAttribute>
-      <viewAttribute id="CC_Todays_Date">
-        <descriptions defaultDescription="CC_Todays_Date"/>
-      </viewAttribute>
-      <viewAttribute id="CC_AssessmentIssueDate">
-        <descriptions defaultDescription="CC_AssessmentIssueDate"/>
-      </viewAttribute>
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
-      </viewAttribute>
-      <viewAttribute id="CC_FN_ReassessmentAmount" aggregationType="sum">
-        <descriptions defaultDescription="CC_FN_ReassessmentAmount"/>
-      </viewAttribute>
-      <viewAttribute id="CC_ReassessmentAmountCleared" aggregationType="sum">
-        <descriptions defaultDescription="CC_ReassessmentAmountCleared"/>
-      </viewAttribute>
-      <viewAttribute id="CC_LatestReassessment">
-        <descriptions defaultDescription="CC_LatestReassessment"/>
-      </viewAttribute>
-      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum">
-        <descriptions defaultDescription="FN_ReassessmentAmount"/>
-      </viewAttribute>
-      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum">
-        <descriptions defaultDescription="ReassessmentAmountCleared"/>
-      </viewAttribute>
-      <viewAttribute id="LatestReassessment">
-        <descriptions defaultDescription="LatestReassessment"/>
       </viewAttribute>
       <viewAttribute id="TAXYRENDDT">
         <descriptions defaultDescription="TAXYRENDDT"/>
@@ -2611,14 +2340,30 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <viewAttribute id="CC_SCV_IND_ID">
         <descriptions defaultDescription="CC_SCV_IND_ID"/>
       </viewAttribute>
-    
+      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum">
+        <descriptions defaultDescription="CC_Reengagement_Time"/>
+      </viewAttribute>
       <viewAttribute id="CC_Reengagement_Time_Dimension">
         <descriptions defaultDescription="CC_Reengagement_Time_Dimension"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_Todays_Date">
+        <descriptions defaultDescription="CC_Todays_Date"/>
+      </viewAttribute>
+    
+      <viewAttribute id="AssessmentAmount" aggregationType="sum">
+        <descriptions defaultDescription="AssessmentAmount"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum">
+        <descriptions defaultDescription="AssessmentAmountCleared"/>
+      </viewAttribute>
+      <viewAttribute id="CC_AssessmentIssueDate">
+        <descriptions defaultDescription="CC_AssessmentIssueDate"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="NEJ_BPOVERVIEW_CONTRACTVALUES">
+    <input node="J_BPOVERVIEW_CONTRACTVALUES">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DEATHDT" source="DEATHDT"/>
@@ -2657,27 +2402,225 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Individual" source="CC_Individual"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Non-Individual" source="CC_Non-Individual"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxYearStartDt" source="CC_TaxYearStartDt"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
+    
       <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_AssessmentIssueDate" source="CC_AssessmentIssueDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FN_ReassessmentAmount" source="CC_FN_ReassessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ReassessmentAmountCleared" source="CC_ReassessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LatestReassessment" source="CC_LatestReassessment"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FN_ReassessmentAmount" source="FN_ReassessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmountCleared" source="ReassessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="LatestReassessment"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
     </input>
     <input node="R_SCVIND">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_SCV_IND_ID" source="CC_SCV_IND_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="SOURCE_ID"/>
     </input>
     <joinAttribute name="PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPOVERVIEW_CONTRACTVALUES" cardinality="C1_N" joinType="leftOuter" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BIRTHDT">
+        <descriptions defaultDescription="BIRTHDT"/>
+      </viewAttribute>
+      <viewAttribute id="DEATHDT">
+        <descriptions defaultDescription="DEATHDT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ZACN">
+        <descriptions defaultDescription="CC_ZACN"/>
+      </viewAttribute>
+      <viewAttribute id="CC_ABN">
+        <descriptions defaultDescription="CC_ABN"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_ADDRESS_DELIVERY">
+        <descriptions defaultDescription="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_LOCALITY">
+        <descriptions defaultDescription="RES_STD_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_REGION">
+        <descriptions defaultDescription="RES_STD_ADDR_REGION"/>
+      </viewAttribute>
+      <viewAttribute id="RES_STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="RES_STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+      <viewAttribute id="RES_TEL_NUMBER">
+        <descriptions defaultDescription="RES_TEL_NUMBER"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_ADDRESS_DELIVERY">
+        <descriptions defaultDescription="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_LOCALITY">
+        <descriptions defaultDescription="SER_STD_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_REGION">
+        <descriptions defaultDescription="SER_STD_ADDR_REGION"/>
+      </viewAttribute>
+      <viewAttribute id="SER_STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="SER_STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+      <viewAttribute id="SER_TEL_NUMBER">
+        <descriptions defaultDescription="SER_TEL_NUMBER"/>
+      </viewAttribute>
+      <viewAttribute id="RES_SMTP_ADDR">
+        <descriptions defaultDescription="RES_SMTP_ADDR"/>
+      </viewAttribute>
+      <viewAttribute id="SER_SMTP_ADDR">
+        <descriptions defaultDescription="SER_SMTP_ADDR"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FullName">
+        <descriptions defaultDescription="CC_FullName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FirstName">
+        <descriptions defaultDescription="CC_FirstName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_MiddleName">
+        <descriptions defaultDescription="CC_MiddleName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_LastName">
+        <descriptions defaultDescription="CC_LastName"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Age" aggregationType="sum">
+        <descriptions defaultDescription="CC_Age"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="BUT0ID_ENTRY_DATE">
+        <descriptions defaultDescription="BUT0ID_ENTRY_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Delegate">
+        <descriptions defaultDescription="CC_Delegate"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_E_ASS_OPT">
+        <descriptions defaultDescription="ZZ_E_ASS_OPT"/>
+      </viewAttribute>
+      <viewAttribute id="ZZ_OT_CONF">
+        <descriptions defaultDescription="ZZ_OT_CONF"/>
+      </viewAttribute>
+      <viewAttribute id="RISK_CATEGORY">
+        <descriptions defaultDescription="RISK_CATEGORY"/>
+      </viewAttribute>
+      <viewAttribute id="RISK_SCORE" aggregationType="sum">
+        <descriptions defaultDescription="RISK_SCORE"/>
+      </viewAttribute>
+      <viewAttribute id="CODEID">
+        <descriptions defaultDescription="CODEID"/>
+      </viewAttribute>
+      <viewAttribute id="PERIODBEGIN">
+        <descriptions defaultDescription="PERIODBEGIN"/>
+      </viewAttribute>
+      <viewAttribute id="PERIODEND">
+        <descriptions defaultDescription="PERIODEND"/>
+      </viewAttribute>
+      <viewAttribute id="CUST_ID" aggregationType="sum">
+        <descriptions defaultDescription="CUST_ID"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BP_Count" aggregationType="sum">
+        <descriptions defaultDescription="CC_BP_Count"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Reengagement_Flag">
+        <descriptions defaultDescription="CC_Reengagement_Flag"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Individual" aggregationType="sum">
+        <descriptions defaultDescription="CC_Individual"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Non-Individual" aggregationType="sum">
+        <descriptions defaultDescription="CC_Non-Individual"/>
+      </viewAttribute>
+      <viewAttribute id="CC_TaxYearStartDt">
+        <descriptions defaultDescription="CC_TaxYearStartDt"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRSTARTDT">
+        <descriptions defaultDescription="TAXYRSTARTDT"/>
+      </viewAttribute>
+      <viewAttribute id="TAXYRENDDT">
+        <descriptions defaultDescription="TAXYRENDDT"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum">
+        <descriptions defaultDescription="CC_Reengagement_Time"/>
+      </viewAttribute>
+      <viewAttribute id="CC_Reengagement_Time_Dimension">
+        <descriptions defaultDescription="CC_Reengagement_Time_Dimension"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_Todays_Date">
+        <descriptions defaultDescription="CC_Todays_Date"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentAmount" aggregationType="sum">
+        <descriptions defaultDescription="AssessmentAmount"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum">
+        <descriptions defaultDescription="AssessmentAmountCleared"/>
+      </viewAttribute>
+      <viewAttribute id="CC_AssessmentIssueDate">
+        <descriptions defaultDescription="CC_AssessmentIssueDate"/>
+      </viewAttribute>
+    
+      <viewAttribute id="ZZ_PARTNER">
+        <descriptions defaultDescription="ZZ_PARTNER"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEATHDT" source="DEATHDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZACN" source="CC_ZACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_ADDRESS_DELIVERY" source="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_LOCALITY" source="RES_STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_REGION" source="RES_STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_POSTCODE1" source="RES_STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_TEL_NUMBER" source="RES_TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_ADDRESS_DELIVERY" source="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_LOCALITY" source="SER_STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_REGION" source="SER_STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_POSTCODE1" source="SER_STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_TEL_NUMBER" source="SER_TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_SMTP_ADDR" source="RES_SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_SMTP_ADDR" source="SER_SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FirstName" source="CC_FirstName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_MiddleName" source="CC_MiddleName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LastName" source="CC_LastName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Age" source="CC_Age"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Delegate" source="CC_Delegate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_E_ASS_OPT" source="ZZ_E_ASS_OPT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_OT_CONF" source="ZZ_OT_CONF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RISK_CATEGORY" source="RISK_CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RISK_SCORE" source="RISK_SCORE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODEID" source="CODEID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIODBEGIN" source="PERIODBEGIN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIODEND" source="PERIODEND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Count" source="CC_BP_Count"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Flag" source="CC_Reengagement_Flag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Individual" source="CC_Individual"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Non-Individual" source="CC_Non-Individual"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxYearStartDt" source="CC_TaxYearStartDt"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/></input>
+    <input node="R_CONTRACTVALUES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AssessmentIssueDate" source="CC_AssessmentIssueDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+    </input>
+    <filter>&quot;ZZ_PARTNER&quot; is not null</filter>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_SCVIND">
     <viewAttributes>
@@ -2853,41 +2796,8 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <viewAttribute id="CC_TaxYearStartDt">
         <descriptions defaultDescription="CC_TaxYearStartDt"/>
       </viewAttribute>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum">
-        <descriptions defaultDescription="CC_Reengagement_Time"/>
-      </viewAttribute>
-      <viewAttribute id="AssessmentAmount" aggregationType="sum">
-        <descriptions defaultDescription="AssessmentAmount"/>
-      </viewAttribute>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum">
-        <descriptions defaultDescription="AssessmentAmountCleared"/>
-      </viewAttribute>
-      <viewAttribute id="CC_Todays_Date">
-        <descriptions defaultDescription="CC_Todays_Date"/>
-      </viewAttribute>
-      <viewAttribute id="CC_AssessmentIssueDate">
-        <descriptions defaultDescription="CC_AssessmentIssueDate"/>
-      </viewAttribute>
       <viewAttribute id="TAXYRSTARTDT">
         <descriptions defaultDescription="TAXYRSTARTDT"/>
-      </viewAttribute>
-      <viewAttribute id="CC_FN_ReassessmentAmount" aggregationType="sum">
-        <descriptions defaultDescription="CC_FN_ReassessmentAmount"/>
-      </viewAttribute>
-      <viewAttribute id="CC_ReassessmentAmountCleared" aggregationType="sum">
-        <descriptions defaultDescription="CC_ReassessmentAmountCleared"/>
-      </viewAttribute>
-      <viewAttribute id="CC_LatestReassessment">
-        <descriptions defaultDescription="CC_LatestReassessment"/>
-      </viewAttribute>
-      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum">
-        <descriptions defaultDescription="FN_ReassessmentAmount"/>
-      </viewAttribute>
-      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum">
-        <descriptions defaultDescription="ReassessmentAmountCleared"/>
-      </viewAttribute>
-      <viewAttribute id="LatestReassessment">
-        <descriptions defaultDescription="LatestReassessment"/>
       </viewAttribute>
       <viewAttribute id="TAXYRENDDT">
         <descriptions defaultDescription="TAXYRENDDT"/>
@@ -2898,9 +2808,25 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <viewAttribute id="CC_SCV_IND_ID">
         <descriptions defaultDescription="CC_SCV_IND_ID"/>
       </viewAttribute>
-    
+      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum">
+        <descriptions defaultDescription="CC_Reengagement_Time"/>
+      </viewAttribute>
       <viewAttribute id="CC_Reengagement_Time_Dimension">
         <descriptions defaultDescription="CC_Reengagement_Time_Dimension"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_Todays_Date">
+        <descriptions defaultDescription="CC_Todays_Date"/>
+      </viewAttribute>
+    
+      <viewAttribute id="AssessmentAmount" aggregationType="sum">
+        <descriptions defaultDescription="AssessmentAmount"/>
+      </viewAttribute>
+      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum">
+        <descriptions defaultDescription="AssessmentAmountCleared"/>
+      </viewAttribute>
+      <viewAttribute id="CC_AssessmentIssueDate">
+        <descriptions defaultDescription="CC_AssessmentIssueDate"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -2944,22 +2870,17 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Individual" source="CC_Individual"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Non-Individual" source="CC_Non-Individual"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxYearStartDt" source="CC_TaxYearStartDt"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AssessmentIssueDate" source="CC_AssessmentIssueDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FN_ReassessmentAmount" source="CC_FN_ReassessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ReassessmentAmountCleared" source="CC_ReassessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LatestReassessment" source="CC_LatestReassessment"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FN_ReassessmentAmount" source="FN_ReassessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmountCleared" source="ReassessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="LatestReassessment"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_SCV_IND_ID" source="CC_SCV_IND_ID"/>
-    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AssessmentIssueDate" source="CC_AssessmentIssueDate"/>
     </input>
     <input node="R_SCVORG">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_SCV_ORG_ID" source="CC_SCV_ORG_ID"/>
@@ -3129,42 +3050,30 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <descriptions defaultDescription="Latest Reengagement Start Date"/>
       <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_TaxYearStartDt"/>
     </attribute>
-    <attribute id="CC_Todays_Date" order="47" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Todays Date"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Todays_Date"/>
-    </attribute>
-    <attribute id="CC_AssessmentIssueDate" order="48" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Assessment Issue Date"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_AssessmentIssueDate"/>
-    </attribute>
-  
-    <attribute id="TAXYRSTARTDT" order="49" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Latest Reengagement Start Date"/>
-  
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="TAXYRSTARTDT"/>
-  
-    </attribute>
-    <attribute id="CC_LatestReassessment" order="52" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Latest Reassessment"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_LatestReassessment"/>
-    </attribute>
-    <attribute id="LatestReassessment" order="55" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Latest Reassessment"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="LatestReassessment"/>
-    </attribute>
-    <attribute id="CC_SCV_ORG_ID" order="56" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_SCV_ORG_ID" order="44" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SCV ID (Organisation)"/>
       <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_SCV_ORG_ID"/>
     </attribute>
-    <attribute id="CC_SCV_IND_ID" order="57" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_SCV_IND_ID" order="45" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SCV ID (Individual)"/>
       <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_SCV_IND_ID"/>
     </attribute>
-  
-    <attribute id="CC_Reengagement_Time_Dimension" order="58" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_Reengagement_Time_Dimension" order="47" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reengagement Time Dimension"/>
-  
       <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Reengagement_Time_Dimension"/>
+    </attribute>
+  
+    <attribute id="CC_Todays_Date" order="48" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Today&apos;s Date"/>
+  
+      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Todays_Date"/>
+  
+    </attribute>
+  
+    <attribute id="CC_AssessmentIssueDate" order="51" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Assessment Issue Date"/>
+  
+      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_AssessmentIssueDate"/>
   
     </attribute>
   </attributes>
@@ -3201,40 +3110,26 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <descriptions defaultDescription="Non-Individual"/>
       <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Non-Individual"/>
     </measure>
-    <measure id="CC_Reengagement_Time" order="44" aggregationType="sum" measureType="simple">
+    <measure id="CC_Reengagement_Time" order="46" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Reengagement Time"/>
       <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Reengagement_Time"/>
     </measure>
-    <measure id="AssessmentAmount" order="45" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Assessment Amount"/>
+  
+    <measure id="AssessmentAmount" order="49" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AssessmentAmount"/>
       <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="AssessmentAmount"/>
     </measure>
-    <measure id="AssessmentAmountCleared" order="46" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Assessment Amount Cleared"/>
+    <measure id="AssessmentAmountCleared" order="50" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AssessmentAmountCleared"/>
       <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="AssessmentAmountCleared"/>
-    </measure>
-  
-    <measure id="CC_FN_ReassessmentAmount" order="50" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Actual Reassessment Amount"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_FN_ReassessmentAmount"/>
-    </measure>
-    <measure id="CC_ReassessmentAmountCleared" order="51" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Reassessment Amount Cleared"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_ReassessmentAmountCleared"/>
-    </measure>
-    <measure id="FN_ReassessmentAmount" order="53" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Actual Reassessment Amount"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="FN_ReassessmentAmount"/>
-    </measure>
-    <measure id="ReassessmentAmountCleared" order="54" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Reassessment Amount Cleared"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="ReassessmentAmountCleared"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
     <measure id="CC_Risk_Score" order="2" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Risk Score"/>
       <formula>IF(&quot;CC_BP_Count&quot;&gt;0 and not isnull(&quot;CC_BP_Count&quot;) or &quot;RISK_SCORE&quot;&gt;0 and not isnull(&quot;RISK_SCORE&quot;),(&quot;RISK_SCORE&quot;/&quot;CC_BP_Count&quot;),0)</formula>
+      
+      
       
       
       
@@ -3259,6 +3154,8 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       
       
       
+      
+      
       </measure>
   
     <measure id="CC_Individual_Count" order="4" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
@@ -3271,10 +3168,16 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       
       
       
+      
+  
+      
+  
       </measure>
     <measure id="CC_Non-Individual_Count" order="5" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Non Individual Count"/>
       <formula>IF(not isnull(&quot;CC_Reengagement_Flag&quot;) and &quot;CC_BP_Count&quot;&gt;0 and not isnull(&quot;CC_BP_Count&quot;) or not isnull(&quot;CC_Reengagement_Flag&quot;) and &quot;CC_Non-Individual&quot;&gt;0 and not isnull(&quot;CC_Non-Individual&quot;),(&quot;CC_Non-Individual&quot;/&quot;CC_BP_Count&quot;),0)</formula>
+      
+      
       
       
       
@@ -3520,20 +3423,8 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
     </shape>
   
     <shape expanded="true" modelObjectName="P_ContractValues" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1129" y="856"/>
+      <upperLeftCorner x="1109" y="856"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="NEJ_BPOVERVIEW_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="927" y="536"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="R_CONTRACTVALUES" modelObjectNameSpace="NEJ_BPOVERVIEW_CONTRACTVALUES" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="381" y="30"/>
-      <rectangleSize width="271"/>
-    </shape>
-    <shape modelObjectName="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="NEJ_BPOVERVIEW_CONTRACTVALUES" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="681" y="30"/>
-      <rectangleSize width="293"/>
     </shape>
   
     <shape expanded="true" modelObjectName="R_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
@@ -3571,7 +3462,7 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <upperLeftCorner x="735" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="NEJ_BPOVERVIEW_CONTRACTVALUES" modelObjectNameSpace="J_BPOVERVIEW_SCVIND" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_BPOVERVIEW_CONTRACTVALUES" modelObjectNameSpace="J_BPOVERVIEW_SCVIND" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="293"/>
     </shape>
@@ -3579,6 +3470,19 @@ IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&q
       <upperLeftCorner x="351" y="30"/>
       <rectangleSize width="250"/>
     </shape>
+    <shape expanded="true" modelObjectName="J_BPOVERVIEW_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="927" y="536"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="J_BPOVERVIEW_CONTRACTVALUES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="293"/>
+    </shape>
+    <shape modelObjectName="R_CONTRACTVALUES" modelObjectNameSpace="J_BPOVERVIEW_CONTRACTVALUES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="395" y="30"/>
+      <rectangleSize width="271"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="R_SCVIND" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="709" y="554"/>
       <rectangleSize height="30" width="160"/>
