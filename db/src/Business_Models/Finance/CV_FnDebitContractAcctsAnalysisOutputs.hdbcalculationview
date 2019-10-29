@@ -35,7 +35,6 @@
       </calculatedViewAttribute></calculatedViewAttributes>
     <restrictedViewAttributes>
       <restrictedViewAttribute id="CreditAmount" baseViewAttribute="BETRH">
-        <descriptions defaultDescription=""/>
         <restriction logicalOperator="AND">
           <filter xsi:type="Privilege:AttributeFilter" attributeName="CreditDebitFlag">
             <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Credit"/>
@@ -44,7 +43,6 @@
         </restriction>
       </restrictedViewAttribute>
       <restrictedViewAttribute id="DebitAmount" baseViewAttribute="BETRH">
-        <descriptions defaultDescription=""/>
         <restriction logicalOperator="AND">
           <filter xsi:type="Privilege:AttributeFilter" attributeName="CreditDebitFlag">
             <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Debit"/>
@@ -63,7 +61,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="VKONT" source="VKONT"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_COMPARE_PREV_DATE" cardinality="C1_1" joinType="referential" referentialDirection="left" multiJoinNode="J_COMPARE_PREV_DATE" multiJoinCentralTable="Projection_1" multiJoinOrder="Outside In">
+  <calculationView xsi:type="Calculation:JoinView" id="J_COMPARE_PREV_DATE" cardinality="C1_1" joinType="fullOuter" referentialDirection="left" multiJoinNode="J_COMPARE_PREV_DATE" multiJoinCentralTable="Projection_1" multiJoinOrder="Outside In">
     <viewAttributes>
       <viewAttribute id="CurrKeyDate">
         <descriptions defaultDescription="KeyDate"/>
@@ -152,10 +150,12 @@
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="OutputCreditAmount" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>if(isNull(&quot;CurrCreditAmount&quot;),
     &quot;PrevCreditAmount&quot;,
     &quot;CurrCreditAmount&quot;
 )</formula>
+    
       </calculatedViewAttribute>
       <calculatedViewAttribute id="OutputDebitAmount" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
         <formula>if(isNull(&quot;CurrDebitAmount&quot;),
@@ -211,18 +211,18 @@
       <viewAttribute id="CURR_VKONT">
         <descriptions defaultDescription="VKONT"/>
       </viewAttribute>
-    
-    
-      <viewAttribute id="PrevKeyDate">
-        <descriptions defaultDescription="PrevKeyDate"/>
-      </viewAttribute>
       <viewAttribute id="CreditAmount">
         <descriptions defaultDescription="CreditAmount"/>
       </viewAttribute>
       <viewAttribute id="DebitAmount">
         <descriptions defaultDescription="DebitAmount"/>
       </viewAttribute>
-    </viewAttributes>
+    
+    
+    
+      <viewAttribute id="PrevKeyDate">
+        <descriptions defaultDescription="PrevKeyDate"/>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_T_FnDebitContractAcctsAnalysis">
