@@ -9,7 +9,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_T_FnDebitContractAcctsAnalysis">
+  <calculationView xsi:type="Calculation:AggregationView" id="P_T_FnDebitContractAcctsAnalysis">
     <viewAttributes>
       <viewAttribute id="KeyDate">
         <descriptions defaultDescription="KeyDate"/>
@@ -17,7 +17,7 @@
       <viewAttribute id="CreditDebitFlag">
         <descriptions defaultDescription="CreditDebitFlag"/>
       </viewAttribute>
-      <viewAttribute id="BETRH">
+      <viewAttribute id="BETRH" aggregationType="sum">
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
     
@@ -33,7 +33,26 @@
       <calculatedViewAttribute id="PrevKeyDate" datatype="DATE" expressionLanguage="SQL">
         <formula>LAST_DAY(ADD_MONTHS(&quot;KeyDate&quot;, -1))</formula>
       </calculatedViewAttribute></calculatedViewAttributes>
-    <restrictedViewAttributes/>
+    <restrictedViewAttributes>
+      <restrictedViewAttribute id="CreditAmount" baseViewAttribute="BETRH">
+        <descriptions defaultDescription=""/>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="CreditDebitFlag">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Credit"/>
+          </filter>
+          <attributeName>CreditDebitFlag</attributeName>
+        </restriction>
+      </restrictedViewAttribute>
+      <restrictedViewAttribute id="DebitAmount" baseViewAttribute="BETRH">
+        <descriptions defaultDescription=""/>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="CreditDebitFlag">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Debit"/>
+          </filter>
+          <attributeName>CreditDebitFlag</attributeName>
+        </restriction>
+      </restrictedViewAttribute>
+    </restrictedViewAttributes>
     <input node="osr.business.semantic.db.Tables::FnDebitContractAcctsAnalysis">
       <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
@@ -44,13 +63,10 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="VKONT" source="VKONT"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_COMPARE_PREV_DATE" cardinality="C1_1" joinType="fullOuter" multiJoinNode="J_COMPARE_PREV_DATE" multiJoinCentralTable="Projection_1" multiJoinOrder="Outside In">
+  <calculationView xsi:type="Calculation:JoinView" id="J_COMPARE_PREV_DATE" cardinality="C1_1" joinType="referential" referentialDirection="left" multiJoinNode="J_COMPARE_PREV_DATE" multiJoinCentralTable="Projection_1" multiJoinOrder="Outside In">
     <viewAttributes>
       <viewAttribute id="CurrKeyDate">
         <descriptions defaultDescription="KeyDate"/>
-      </viewAttribute>
-      <viewAttribute id="CreditDebitFlag">
-        <descriptions defaultDescription="CreditDebitFlag"/>
       </viewAttribute>
       <viewAttribute id="CURR_BETRH" aggregationType="sum">
         <descriptions defaultDescription="BETRH"/>
@@ -73,6 +89,18 @@
       </viewAttribute>
       <viewAttribute id="PREV_BETRH" aggregationType="sum">
         <descriptions defaultDescription="BETRH"/>
+      </viewAttribute>
+      <viewAttribute id="CurrCreditAmount" aggregationType="formula">
+        <descriptions defaultDescription="CreditAmount"/>
+      </viewAttribute>
+      <viewAttribute id="CurrDebitAmount" aggregationType="formula">
+        <descriptions defaultDescription="DebitAmount"/>
+      </viewAttribute>
+      <viewAttribute id="PrevCreditAmount" aggregationType="formula">
+        <descriptions defaultDescription="CreditAmount"/>
+      </viewAttribute>
+      <viewAttribute id="PrevDebitAmount" aggregationType="formula">
+        <descriptions defaultDescription="DebitAmount"/>
       </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$PrevKeyDate$KeyDate"/>
     </viewAttributes>
@@ -122,14 +150,28 @@
     &quot;CURR_BETRH&quot;
 )</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="OutputCreditAmount" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(isNull(&quot;CurrCreditAmount&quot;),
+    &quot;PrevCreditAmount&quot;,
+    &quot;CurrCreditAmount&quot;
+)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="OutputDebitAmount" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(isNull(&quot;CurrDebitAmount&quot;),
+    &quot;PrevDebitAmount&quot;,
+    &quot;CurrDebitAmount&quot;
+)</formula>
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="P_CURR">
       <mapping xsi:type="Calculation:AttributeMapping" target="CurrKeyDate" source="KeyDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CURR_BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CurrAccountBalanceRange" source="AccountBalanceRange"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CURR_VKONT" source="CURR_VKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CurrCreditAmount" source="CreditAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CurrDebitAmount" source="DebitAmount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PrevKeyDate$KeyDate" source="PrevKeyDate"/>
     </input>
   
@@ -142,24 +184,22 @@
   
       <mapping xsi:type="Calculation:AttributeMapping" target="PREV_BETRH" source="BETRH"/>
   
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PrevKeyDate$KeyDate" source="KeyDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PrevCreditAmount" source="CreditAmount"/>
   
-      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PrevDebitAmount" source="DebitAmount"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PrevKeyDate$KeyDate" source="KeyDate"/>
   
       <mapping xsi:type="Calculation:AttributeMapping" target="CURR_VKONT" source="PREV_VKONT"/>
   
     </input>
     <joinAttribute name="JOIN$PrevKeyDate$KeyDate"/>
-    <joinAttribute name="CreditDebitFlag"/>
     <joinAttribute name="CURR_VKONT"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CURR">
     <viewAttributes>
       <viewAttribute id="KeyDate">
         <descriptions defaultDescription="KeyDate"/>
-      </viewAttribute>
-      <viewAttribute id="CreditDebitFlag">
-        <descriptions defaultDescription="CreditDebitFlag"/>
       </viewAttribute>
       <viewAttribute id="BETRH">
         <descriptions defaultDescription="BETRH"/>
@@ -175,17 +215,26 @@
     
       <viewAttribute id="PrevKeyDate">
         <descriptions defaultDescription="PrevKeyDate"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="CreditAmount">
+        <descriptions defaultDescription="CreditAmount"/>
+      </viewAttribute>
+      <viewAttribute id="DebitAmount">
+        <descriptions defaultDescription="DebitAmount"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_T_FnDebitContractAcctsAnalysis">
       <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PrevKeyDate" source="PrevKeyDate"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CURR_VKONT" source="VKONT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreditAmount" source="CreditAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DebitAmount" source="DebitAmount"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_PREV">
@@ -204,140 +253,64 @@
       <viewAttribute id="BETRH">
         <descriptions defaultDescription="BETRH"/>
       </viewAttribute>
-    
-      <viewAttribute id="CreditDebitFlag">
-        <descriptions defaultDescription="CreditDebitFlag"/>
-      </viewAttribute></viewAttributes>
+      <viewAttribute id="CreditAmount">
+        <descriptions defaultDescription="CreditAmount"/>
+      </viewAttribute>
+      <viewAttribute id="DebitAmount">
+        <descriptions defaultDescription="DebitAmount"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_T_FnDebitContractAcctsAnalysis">
       <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="PREV_VKONT" source="VKONT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
-    </input>
-  </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="AGG_PIVOT_CRDB">
-    <viewAttributes>
-      <viewAttribute id="CurrKeyDate">
-        <descriptions defaultDescription="CurrKeyDate"/>
-      </viewAttribute>
-      <viewAttribute id="CreditDebitFlag">
-        <descriptions defaultDescription="CreditDebitFlag"/>
-      </viewAttribute>
-      <viewAttribute id="BETRH" aggregationType="sum">
-        <descriptions defaultDescription="BETRH"/>
-      </viewAttribute>
-      <viewAttribute id="PrevKeyDate">
-        <descriptions defaultDescription="PrevKeyDate"/>
-      </viewAttribute>
-      <viewAttribute id="CurrAccountBalanceRange">
-        <descriptions defaultDescription="CurrAccountBalanceRange"/>
-      </viewAttribute>
-      <viewAttribute id="PREV_VKONT">
-        <descriptions defaultDescription="PREV_VKONT"/>
-      </viewAttribute>
-      <viewAttribute id="CURR_VKONT">
-        <descriptions defaultDescription="CURR_VKONT"/>
-      </viewAttribute>
-      <viewAttribute id="Status">
-        <descriptions defaultDescription="Status"/>
-      </viewAttribute>
-      <viewAttribute id="KeyDateString">
-        <descriptions defaultDescription="KeyDateString"/>
-      </viewAttribute>
-      <viewAttribute id="OutputKeyDate">
-        <descriptions defaultDescription="OutputKeyDate"/>
-      </viewAttribute>
-      <viewAttribute id="OutputVKONT">
-        <descriptions defaultDescription="OutputVKONT"/>
-      </viewAttribute>
-      <viewAttribute id="PrevKeyDateAdj">
-        <descriptions defaultDescription="PrevKeyDateAdj"/>
-      </viewAttribute>
-      <viewAttribute id="OutputAccBalRange">
-        <descriptions defaultDescription="OutputAccBalRange"/>
-      </viewAttribute>
-      <viewAttribute id="PrevAccountBalanceRange">
-        <descriptions defaultDescription="PrevAccountBalanceRange"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes>
-      <restrictedViewAttribute id="CreditAmount" baseViewAttribute="BETRH">
-        <restriction logicalOperator="AND">
-          <filter xsi:type="Privilege:AttributeFilter" attributeName="CreditDebitFlag">
-            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Credit"/>
-          </filter>
-          <attributeName>CreditDebitFlag</attributeName>
-        </restriction>
-      </restrictedViewAttribute>
-      <restrictedViewAttribute id="DebitAmount" baseViewAttribute="BETRH">
-        <restriction logicalOperator="AND">
-          <filter xsi:type="Privilege:AttributeFilter" attributeName="CreditDebitFlag">
-            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Debit"/>
-          </filter>
-          <attributeName>CreditDebitFlag</attributeName>
-        </restriction>
-      </restrictedViewAttribute>
-    </restrictedViewAttributes>
-    <input node="J_COMPARE_PREV_DATE">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CurrKeyDate" source="CurrKeyDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="OutputBETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PrevKeyDate" source="PrevKeyDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CurrAccountBalanceRange" source="CurrAccountBalanceRange"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PREV_VKONT" source="PREV_VKONT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_VKONT" source="CURR_VKONT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="Status"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="KeyDateString" source="KeyDateString"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OutputKeyDate" source="OutputKeyDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OutputVKONT" source="OutputVKONT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PrevKeyDateAdj" source="PrevKeyDateAdj"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OutputAccBalRange" source="OutputAccBalRange"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PrevAccountBalanceRange" source="PrevAccountBalanceRange"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreditAmount" source="CreditAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DebitAmount" source="DebitAmount"/>
     </input>
   </calculationView>
 </calculationViews>
-<logicalModel id="AGG_PIVOT_CRDB">
+<logicalModel id="J_COMPARE_PREV_DATE">
   <attributes>
     <attribute id="KeyDate" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Key Date"/>
-      <keyMapping columnObjectName="AGG_PIVOT_CRDB" columnName="OutputKeyDate"/>
+      <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="OutputKeyDate"/>
     </attribute>
   
     <attribute id="Status" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Debt Status"/>
   
-      <keyMapping columnObjectName="AGG_PIVOT_CRDB" columnName="Status"/>
+      <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="Status"/>
   
     </attribute>
     <attribute id="AccountBalanceRange" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Account Balance Range"/>
-      <keyMapping columnObjectName="AGG_PIVOT_CRDB" columnName="OutputAccBalRange"/>
+      <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="OutputAccBalRange"/>
     </attribute>
     <attribute id="VKONT" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account Number"/>
-      <keyMapping columnObjectName="AGG_PIVOT_CRDB" columnName="OutputVKONT"/>
+      <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="OutputVKONT"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="BETRH" order="2" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
-      <measureMapping columnObjectName="AGG_PIVOT_CRDB" columnName="BETRH"/>
+      <measureMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="OutputBETRH"/>
     </measure>
   
     <measure id="CreditAmount" order="6" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Credit Amount"/>
-      <measureMapping columnObjectName="AGG_PIVOT_CRDB" columnName="CreditAmount"/>
+      <measureMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="OutputCreditAmount"/>
     </measure>
     <measure id="DebitAmount" order="7" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Debit Amount"/>
-      <measureMapping columnObjectName="AGG_PIVOT_CRDB" columnName="DebitAmount"/>
+      <measureMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="OutputDebitAmount"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
@@ -347,6 +320,7 @@
         <attribute attributeName="VKONT"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       </measure>
   </calculatedMeasures>
@@ -383,11 +357,6 @@
     <shape expanded="true" modelObjectName="P_PREV" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="180" y="566"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="AGG_PIVOT_CRDB" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="248"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
