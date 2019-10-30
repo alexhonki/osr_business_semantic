@@ -129,7 +129,7 @@ or
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
     </input>
-    <filter>&quot;CC_EventDate&quot;!='99991231'</filter>
+    <filter>&quot;CC_EventDate&quot;!='99991231' AND &quot;CC_EventDate&quot;!='99991230'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_LATEST_CANCEL_NOR">
     <viewAttributes>
@@ -264,8 +264,12 @@ or
       <viewAttribute id="CC_RegoLagTime" aggregationType="sum">
         <descriptions defaultDescription="CC_RegoLagTime"/>
       </viewAttribute>
-      <viewAttribute id="CC_QLDLiabilityDate">
+      <viewAttribute id="CC_QLDLiabilityDate" datatype="VARCHAR" length="13">
         <descriptions defaultDescription="CC_QLDLiabilityDate"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_CREATE_DATE">
+        <descriptions defaultDescription="CC_CREATE_DATE"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -279,7 +283,9 @@ or
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_RegistrationFormProcessTime" source="CC_RegistrationFormProcessTime"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPDATE_DATE" source="CC_UPDATE_DATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_RegoLagTime" source="CC_RegoLagTime"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_QLDLiabilityDate" source="CC_QLDLiabilityDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_QLDLiabilityDate" source="CC_QLDLiabilityDateNew"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CREATE_DATE" source="CC_CREATE_DATE"/>
     </input>
     <input node="J_REMOVE_REINST" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
@@ -292,6 +298,8 @@ or
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_UPDATE_DATE" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_RegoLagTime" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_QLDLiabilityDate" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_CREATE_DATE" null="true" value=""/>
     </input>
     <input node="P_REINST_CANCEL" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
@@ -304,6 +312,8 @@ or
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_UPDATE_DATE" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_RegoLagTime" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_QLDLiabilityDate" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_CREATE_DATE" null="true" value=""/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_REGREINST_LAG" cardinality="C1_1" joinType="leftOuter">
@@ -341,7 +351,11 @@ or
       </viewAttribute></viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_RegoLagTime" datatype="INTEGER" expressionLanguage="SQL">
-        <formula>DAYS_BETWEEN(&quot;CC_QLDLiabilityDate&quot;, &quot;CC_UPDATE_DATE&quot;)</formula>
+        <formula>DAYS_BETWEEN(&quot;CC_QLDLiabilityDate&quot;, &quot;CC_CREATE_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_QLDLiabilityDateNew" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CC_ProcessType&quot;='New Registration',&quot;CC_QLDLiabilityDate&quot;,'')</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -755,6 +769,59 @@ or
     <joinAttribute name="ACCOUNT"/>
     <joinAttribute name="MANDT"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FACTS_QLDLIABDATE" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="PARTNERACC">
+        <descriptions defaultDescription="Contract Account Number"/>
+      </viewAttribute>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="CLIENT"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_CAT_SEQ">
+        <descriptions defaultDescription="FACT_CAT_SEQ"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_SET">
+        <descriptions defaultDescription="FACT_SET"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_TYPE">
+        <descriptions defaultDescription="FACT_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="FACT_CATEGORY">
+        <descriptions defaultDescription="FACT_CATEGORY"/>
+      </viewAttribute>
+      <viewAttribute id="VALUE_GENERIC">
+        <descriptions defaultDescription="VALUE_GENERIC"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="PSOBKEY">
+        <descriptions defaultDescription="PSOBKEY"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input emptyUnionBehavior="undefined" node="P_BPFACTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CAT_SEQ" source="FACT_CAT_SEQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_TYPE" source="FACT_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CATEGORY" source="FACT_CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
+    </input>
+    <filter>&quot;FACT_TYPE&quot; = 'ZPRE' AND &quot;FACT_CATEGORY&quot; = '0004' AND &quot;FACT_CAT_SEQ&quot; = '20'</filter>
+  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_REGOFORM" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="TAXPAYER">
@@ -923,6 +990,10 @@ or
       <viewAttribute id="CC_QLDLiabilityDate">
         <descriptions defaultDescription="CC_QLDLiabilityDate"/>
       </viewAttribute>
+    
+      <viewAttribute id="CC_CREATE_DATE">
+        <descriptions defaultDescription="CC_CREATE_DATE"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -936,6 +1007,8 @@ or
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_RegoLagTime" source="CC_RegoLagTime"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_QLDLiabilityDate" source="CC_QLDLiabilityDate"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CREATE_DATE" source="CC_CREATE_DATE"/>
     </input>
     <input node="P_FISCALDATES">
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
@@ -996,6 +1069,10 @@ or
       <viewAttribute id="CC_QLDLiabilityDate">
         <descriptions defaultDescription="CC_QLDLiabilityDate"/>
       </viewAttribute>
+    
+      <viewAttribute id="CC_CREATE_DATE">
+        <descriptions defaultDescription="CC_CREATE_DATE"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_FullName" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
@@ -1019,6 +1096,8 @@ or
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_RegoLagTime" source="CC_RegoLagTime"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_QLDLiabilityDate" source="CC_QLDLiabilityDate"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CREATE_DATE" source="CC_CREATE_DATE"/>
     </input>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo">
       <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE" source="BP_TYPE"/>
@@ -1032,59 +1111,6 @@ or
     </input>
     <joinAttribute name="PARTNER"/>
     <joinAttribute name="CLIENT"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_FACTS_QLDLIABDATE" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="PARTNERACC">
-        <descriptions defaultDescription="Contract Account Number"/>
-      </viewAttribute>
-      <viewAttribute id="PARTNER">
-        <descriptions defaultDescription="PARTNER"/>
-      </viewAttribute>
-      <viewAttribute id="CLIENT">
-        <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="FACT_CAT_SEQ">
-        <descriptions defaultDescription="FACT_CAT_SEQ"/>
-      </viewAttribute>
-      <viewAttribute id="FACT_SET">
-        <descriptions defaultDescription="FACT_SET"/>
-      </viewAttribute>
-      <viewAttribute id="FACT_TYPE">
-        <descriptions defaultDescription="FACT_TYPE"/>
-      </viewAttribute>
-      <viewAttribute id="FACT_CATEGORY">
-        <descriptions defaultDescription="FACT_CATEGORY"/>
-      </viewAttribute>
-      <viewAttribute id="VALUE_GENERIC">
-        <descriptions defaultDescription="VALUE_GENERIC"/>
-      </viewAttribute>
-      <viewAttribute id="VALID_TO">
-        <descriptions defaultDescription="VALID_TO"/>
-      </viewAttribute>
-      <viewAttribute id="VALID_FROM">
-        <descriptions defaultDescription="VALID_FROM"/>
-      </viewAttribute>
-      <viewAttribute id="PSOBKEY">
-        <descriptions defaultDescription="PSOBKEY"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input emptyUnionBehavior="undefined" node="P_BPFACTS">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CAT_SEQ" source="FACT_CAT_SEQ"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_TYPE" source="FACT_TYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CATEGORY" source="FACT_CATEGORY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
-    </input>
-    <filter>&quot;FACT_TYPE&quot; = 'ZPRE' AND &quot;FACT_CATEGORY&quot; = '0004' AND &quot;FACT_CAT_SEQ&quot; = '20'</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_REGCANC_BPNAME">
@@ -1138,6 +1164,11 @@ or
       <keyMapping columnObjectName="J_REGCANC_BPNAME" columnName="CC_QLDLiabilityDate"/>
   
     </attribute>
+  
+    <attribute id="CC_CREATE_DATE" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Registration Lodgement Date"/>
+      <keyMapping columnObjectName="J_REGCANC_BPNAME" columnName="CC_CREATE_DATE"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -1184,7 +1215,7 @@ or
     </shape>
     <shape modelObjectName="P_REG_REINST" modelObjectNameSpace="J_REGREINST_LAG" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
+      <rectangleSize width="256.134765625"/>
     </shape>
     <shape modelObjectName="R_NEWREGDATE" modelObjectNameSpace="J_REGREINST_LAG" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
@@ -1246,6 +1277,10 @@ or
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
+    <shape expanded="true" modelObjectName="P_FACTS_QLDLIABDATE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1000" y="1301"/>
+      <rectangleSize width="229"/>
+    </shape>
     <shape expanded="true" modelObjectName="P_REGOFORM" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="790" y="1301"/>
       <rectangleSize height="30" width="160"/>
@@ -1283,10 +1318,6 @@ or
     <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo" modelObjectNameSpace="J_REGCANC_BPNAME" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="263"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_FACTS_QLDLIABDATE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1000" y="1301"/>
-      <rectangleSize width="229"/>
     </shape></shapes>
 </layout>
 </Calculation:scenario>
