@@ -1418,7 +1418,7 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_OT_CONF" source="ZZ_OT_CONF"/>
     </input>
-    <filter>&quot;ZZ_E_ASS_OPT&quot;='X'</filter>
+    <filter>&quot;ZZ_E_ASS_OPT&quot;='X' OR &quot;ZZ_OT_CONF&quot;='X'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_BPOwnerTypes" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -1814,9 +1814,8 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Reengagement_Time" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>IF(ISNULL(&quot;CC_AssessmentIssueDate&quot;) and ISNULL(&quot;CC_LatestReassessment&quot;),0,(IF(&quot;AssessmentAmount&quot;&gt;0,
-(IF(&quot;AssessmentAmountCleared&quot;&gt;=&quot;AssessmentAmount&quot;,component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_AssessmentIssueDate&quot;,1),
-(IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&quot;,component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_LatestReassessment&quot;,1),0)))),0)))</formula>
+        <formula>IF(ISNULL(&quot;CC_AssessmentIssueDate&quot;) and ISNULL(&quot;CC_LatestReassessment&quot;),0,(IF(&quot;AssessmentAmount&quot;&gt;0 and ISNULL(&quot;CC_LatestReassessment&quot;) and (&quot;AssessmentAmountCleared&quot;&gt;=&quot;AssessmentAmount&quot;),component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_AssessmentIssueDate&quot;,1),
+(IF(&quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&quot;,component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_LatestReassessment&quot;,1),0)))))</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Todays_Date" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
         <formula>NOW()</formula>
@@ -3423,7 +3422,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
   
     <shape expanded="true" modelObjectName="P_ContractValues" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1109" y="856"/>
+      <upperLeftCorner x="1089" y="856"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
