@@ -32,7 +32,19 @@
     <calculatedViewAttributes>
       <calculatedViewAttribute id="PrevKeyDate" datatype="DATE" expressionLanguage="SQL">
         <formula>LAST_DAY(ADD_MONTHS(&quot;KeyDate&quot;, -1))</formula>
-      </calculatedViewAttribute></calculatedViewAttributes>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="OverdueAccountBalanceRange" datatype="NVARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(abs(&quot;BETRH&quot;) &lt; 100.00,'Less than $100.00',
+if(abs(&quot;BETRH&quot;) &gt;= 100.00 AND abs(&quot;BETRH&quot;) &lt; 1000.01,'$100.00 to $1000.00',
+if(abs(&quot;BETRH&quot;) &gt;= 1000.01 AND abs(&quot;BETRH&quot;) &lt; 10000.01,'$1,000.01 to $10,000.00',
+if(abs(&quot;BETRH&quot;) &gt;= 10000.01 AND abs(&quot;BETRH&quot;) &lt; 100000.01,'$10,000.01 to $100,000.00',
+if(abs(&quot;BETRH&quot;) &gt;= 100000.01 AND abs(&quot;BETRH&quot;) &lt; 500000.01,'$100,000.01 to $500,000.00',
+if(abs(&quot;BETRH&quot;) &gt;= 500000.01 AND abs(&quot;BETRH&quot;) &lt; 1000000.01,'$500,000.01 to $1,000,000',
+if(abs(&quot;BETRH&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
+'Err'
+)))))))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes>
       <restrictedViewAttribute id="CreditAmount" baseViewAttribute="BETRH">
         <restriction logicalOperator="AND">
@@ -100,6 +112,12 @@
       <viewAttribute id="PrevDebitAmount" aggregationType="formula">
         <descriptions defaultDescription="DebitAmount"/>
       </viewAttribute>
+      <viewAttribute id="CurrOverdueAccountBalanceRange">
+        <descriptions defaultDescription="OverdueAccountBalanceRange"/>
+      </viewAttribute>
+      <viewAttribute id="PrevOverdueAccountBalanceRange">
+        <descriptions defaultDescription="OverdueAccountBalanceRange"/>
+      </viewAttribute>
       <viewAttribute hidden="true" id="JOIN$PrevKeyDate$KeyDate"/>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -163,6 +181,13 @@
     &quot;CurrDebitAmount&quot;
 )</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="OutputOverdueAccountBalanceRange" datatype="NVARCHAR" length="40" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(isNull(&quot;CurrOverdueAccountBalanceRange&quot;),
+    &quot;PrevOverdueAccountBalanceRange&quot;,
+    &quot;CurrOverdueAccountBalanceRange&quot;
+)</formula>
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="P_CURR">
@@ -172,6 +197,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CURR_VKONT" source="CURR_VKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CurrCreditAmount" source="CreditAmount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CurrDebitAmount" source="DebitAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CurrOverdueAccountBalanceRange" source="OverdueAccountBalanceRange"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PrevKeyDate$KeyDate" source="PrevKeyDate"/>
     </input>
   
@@ -187,6 +213,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PrevCreditAmount" source="CreditAmount"/>
   
       <mapping xsi:type="Calculation:AttributeMapping" target="PrevDebitAmount" source="DebitAmount"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="PrevOverdueAccountBalanceRange" source="OverdueAccountBalanceRange"/>
   
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PrevKeyDate$KeyDate" source="KeyDate"/>
   
@@ -222,7 +250,11 @@
     
       <viewAttribute id="PrevKeyDate">
         <descriptions defaultDescription="PrevKeyDate"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="OverdueAccountBalanceRange">
+        <descriptions defaultDescription="OverdueAccountBalanceRange"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_T_FnDebitContractAcctsAnalysis">
@@ -235,6 +267,8 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CreditAmount" source="CreditAmount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DebitAmount" source="DebitAmount"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OverdueAccountBalanceRange" source="OverdueAccountBalanceRange"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_PREV">
@@ -259,6 +293,10 @@
       <viewAttribute id="DebitAmount">
         <descriptions defaultDescription="DebitAmount"/>
       </viewAttribute>
+    
+      <viewAttribute id="OverdueAccountBalanceRange">
+        <descriptions defaultDescription="OverdueAccountBalanceRange"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -272,6 +310,8 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CreditAmount" source="CreditAmount"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DebitAmount" source="DebitAmount"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OverdueAccountBalanceRange" source="OverdueAccountBalanceRange"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -295,6 +335,11 @@
     <attribute id="VKONT" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account Number"/>
       <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="OutputVKONT"/>
+    </attribute>
+  
+    <attribute id="OutputOverdueAccountBalanceRange" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OutputOverdueAccountBalanceRange"/>
+      <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="OutputOverdueAccountBalanceRange"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -320,6 +365,7 @@
         <attribute attributeName="VKONT"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       </measure>
