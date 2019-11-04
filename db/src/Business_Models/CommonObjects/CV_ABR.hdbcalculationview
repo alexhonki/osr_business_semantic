@@ -4,9 +4,6 @@
 <localVariables/>
 <variableMappings/>
 <dataSources>
-  <DataSource id="osr.business.semantic.db.synonyms::BUSINESS_LOCATION">
-    <resourceUri>osr.business.semantic.db.synonyms::BUSINESS_LOCATION</resourceUri>
-  </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_ANZSICHier">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_ANZSICHier</resourceUri>
   </DataSource>
@@ -25,58 +22,11 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::BUSINESS_LOCATION">
+    <resourceUri>osr.business.semantic.db.synonyms::BUSINESS_LOCATION</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:RankView" id="R_ADDRESSES">
-    <viewAttributes>
-      <viewAttribute id="PID">
-        <descriptions defaultDescription="PID"/>
-      </viewAttribute>
-      <viewAttribute id="STD_ADDR_COUNTRY_NAME">
-        <descriptions defaultDescription="STD_ADDR_COUNTRY_NAME"/>
-      </viewAttribute>
-      <viewAttribute id="STD_ADDR_COUNTRY_2CHAR">
-        <descriptions defaultDescription="STD_ADDR_COUNTRY_2CHAR"/>
-      </viewAttribute>
-      <viewAttribute id="STD_ADDR_POSTCODE1">
-        <descriptions defaultDescription="STD_ADDR_POSTCODE1"/>
-      </viewAttribute>
-      <viewAttribute id="STD_ADDR_PRIM_ADDRESS">
-        <descriptions defaultDescription="STD_ADDR_PRIM_ADDRESS"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_REGION">
-        <descriptions defaultDescription="MATCH_ADDR_REGION"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_LOCALITY">
-        <descriptions defaultDescription="MATCH_ADDR_LOCALITY"/>
-      </viewAttribute>
-      <viewAttribute id="ADDR_LATITUDE">
-        <descriptions defaultDescription="ADDR_LATITUDE"/>
-      </viewAttribute>
-      <viewAttribute id="ADDR_LONGITUDE">
-        <descriptions defaultDescription="ADDR_LONGITUDE"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::BUSINESS_LOCATION">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PID" source="PID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
-    </input>
-    <windowFunction dynamicPartitionAttributes="false">
-      <partitionViewAttributeName>PID</partitionViewAttributeName>
-      <rankThreshold>
-        <value>1</value>
-      </rankThreshold>
-    </windowFunction>
-  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_ANZSIC_Hier">
     <viewAttributes>
       <viewAttribute id="DIVISION">
@@ -664,7 +614,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_TEXT" source="GROUP_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_TEXT" source="CLASS_TEXT"/>
     </input>
-    <input node="R_ADDRESSES">
+    <input node="R_ADDRESSE">
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
@@ -673,7 +623,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PID" source="PID"/>
     </input>
     <joinAttribute name="PID"/>
   </calculationView>
@@ -840,6 +789,115 @@
     </input>
     <joinAttribute name="ABN"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ADDRESSES" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="PID">
+        <descriptions defaultDescription="PID"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_COUNTRY_NAME">
+        <descriptions defaultDescription="STD_ADDR_COUNTRY_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_COUNTRY_2CHAR">
+        <descriptions defaultDescription="STD_ADDR_COUNTRY_2CHAR"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_ADDRESS">
+        <descriptions defaultDescription="STD_ADDR_PRIM_ADDRESS"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_ADDR_REGION">
+        <descriptions defaultDescription="MATCH_ADDR_REGION"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_ADDR_LOCALITY">
+        <descriptions defaultDescription="MATCH_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="ADDR_LATITUDE">
+        <descriptions defaultDescription="ADDR_LATITUDE"/>
+      </viewAttribute>
+      <viewAttribute id="ADDR_LONGITUDE">
+        <descriptions defaultDescription="ADDR_LONGITUDE"/>
+      </viewAttribute>
+      <viewAttribute id="Z_CURR_FLAG">
+        <descriptions defaultDescription="Z_CURR_FLAG"/>
+      </viewAttribute>
+      <viewAttribute id="Z_VALID_FROM">
+        <descriptions defaultDescription="Z_VALID_FROM"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::BUSINESS_LOCATION">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PID" source="PID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_CURR_FLAG" source="Z_CURR_FLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_VALID_FROM" source="Z_VALID_FROM"/>
+    </input>
+    <filter>&quot;Z_CURR_FLAG&quot;='1'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_ADDRESSE">
+    <viewAttributes>
+      <viewAttribute id="PID" aggregationType="sum">
+        <descriptions defaultDescription="PID"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_COUNTRY_NAME">
+        <descriptions defaultDescription="STD_ADDR_COUNTRY_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_COUNTRY_2CHAR">
+        <descriptions defaultDescription="STD_ADDR_COUNTRY_2CHAR"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_ADDRESS">
+        <descriptions defaultDescription="STD_ADDR_PRIM_ADDRESS"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_ADDR_REGION">
+        <descriptions defaultDescription="MATCH_ADDR_REGION"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_ADDR_LOCALITY">
+        <descriptions defaultDescription="MATCH_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="ADDR_LATITUDE" aggregationType="sum">
+        <descriptions defaultDescription="ADDR_LATITUDE"/>
+      </viewAttribute>
+      <viewAttribute id="ADDR_LONGITUDE" aggregationType="sum">
+        <descriptions defaultDescription="ADDR_LONGITUDE"/>
+      </viewAttribute>
+      <viewAttribute id="Z_VALID_FROM">
+        <descriptions defaultDescription="Z_VALID_FROM"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_ADDRESSES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PID" source="PID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_VALID_FROM" source="Z_VALID_FROM"/>
+    </input>
+  
+    <windowFunction>
+      <partitionViewAttributeName>PID</partitionViewAttributeName>
+      <order byViewAttributeName="Z_VALID_FROM" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
 </calculationViews>
 <logicalModel id="J_ABNDATA_PARTNER">
   <attributes>
@@ -987,36 +1045,32 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="611" y="112"/>
+      <upperLeftCorner x="568.3892015804126" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="R_ADDRESSES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="701" y="536"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
     <shape expanded="true" modelObjectName="P_ANZSIC_Hier" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="856"/>
+      <upperLeftCorner x="807.9708043385982" y="876.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_AGENCY_DATA" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="771" y="1016"/>
+      <upperLeftCorner x="92" y="1036.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ANZSIC_DIV_MAP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="856"/>
+      <upperLeftCorner x="597.9708043385982" y="876.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ENTITY_GROUP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="561" y="1016"/>
+      <upperLeftCorner x="301.9999999999999" y="1036.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ENTITY_MAPPING" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="351" y="1016"/>
+      <upperLeftCorner x="511.9999999999999" y="1036.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ABNDATA_ENTITYPE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="538" y="696"/>
+      <upperLeftCorner x="439.8957679745899" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_ONEABN" modelObjectNameSpace="J_ABNDATA_ENTITYPE" modelObjectType="JoinNodeInput">
@@ -1029,12 +1083,12 @@
     </shape>
   
     <shape expanded="true" modelObjectName="R_ONEABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="739" y="874"/>
+      <upperLeftCorner x="92.00000000000011" y="894.4999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_ENTITY_TYPE_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="512" y="856"/>
+      <upperLeftCorner x="387.9708043385981" y="876.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_ENTITY_MAPPING" modelObjectNameSpace="J_ENTITY_TYPE_DESC" modelObjectType="JoinNodeInput">
@@ -1046,7 +1100,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ANZSIC_Hier" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="275" y="696"/>
+      <upperLeftCorner x="656.8783283416323" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_ANZSIC_DIV_MAP" modelObjectNameSpace="J_ANZSIC_Hier" modelObjectType="JoinNodeInput">
@@ -1058,7 +1112,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ABNDATA_ANZSCIHier" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="536"/>
+      <upperLeftCorner x="622.6799300816144" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ABNDATA_ENTITYPE" modelObjectNameSpace="J_ABNDATA_ANZSCIHier" modelObjectType="JoinNodeInput">
@@ -1070,24 +1124,24 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ABNDATA_ADDRES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="680" y="376"/>
+      <upperLeftCorner x="596.0132634149477" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ABNDATA_ANZSCIHier" modelObjectNameSpace="J_ABNDATA_ADDRES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
+      <rectangleSize width="256"/>
     </shape>
-    <shape modelObjectName="R_ADDRESSES" modelObjectNameSpace="J_ABNDATA_ADDRES" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="R_ADDRESSE" modelObjectNameSpace="J_ABNDATA_ADDRES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_PARTNERABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="470" y="376"/>
+      <upperLeftCorner x="386.0132634149477" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ABNDATA_PARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="611" y="217"/>
+      <upperLeftCorner x="568.3892015804126" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ABNDATA_ADDRES" modelObjectNameSpace="J_ABNDATA_PARTNER" modelObjectType="JoinNodeInput">
@@ -1097,6 +1151,15 @@
     <shape modelObjectName="P_PARTNERABN" modelObjectNameSpace="J_ABNDATA_PARTNER" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
-    </shape></shapes>
+    </shape>
+    <shape expanded="true" modelObjectName="P_ADDRESSES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="218.99576679044424" y="696.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="R_ADDRESSE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="218.99576679044424" y="554.4999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
