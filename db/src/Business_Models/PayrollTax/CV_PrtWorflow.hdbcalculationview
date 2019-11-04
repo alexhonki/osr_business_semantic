@@ -151,10 +151,26 @@ if(match(&quot;WI_TEXT&quot;,'*REGISTRATION CHECK*ABN Manual Check Required*'), 
     midstr(&quot;WI_TEXT&quot;,(instr(&quot;WI_TEXT&quot;, ' BP 000')+4), 10), 'No BP')</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_BpNo07" datatype="NVARCHAR" length="10" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(instr(&quot;WI_TEXT&quot;, ' BP 1') &gt; 0 OR instr(&quot;WI_TEXT&quot;, ' BP 2') &gt; 0 OR instr(&quot;WI_TEXT&quot;, ' BP 3') &gt; 0 OR instr(&quot;WI_TEXT&quot;, ' BP 4') &gt; 0 OR
-instr(&quot;WI_TEXT&quot;, ' BP 5') &gt; 0 OR instr(&quot;WI_TEXT&quot;, ' BP 6') &gt; 0 OR instr(&quot;WI_TEXT&quot;, ' BP 7') &gt; 0 OR instr(&quot;WI_TEXT&quot;, ' BP 8') &gt; 0 OR 
+        <formula>if(instr(&quot;WI_TEXT&quot;, ' BP 1') &gt; 0 OR 
+instr(&quot;WI_TEXT&quot;, ' BP 2') &gt; 0 OR 
+instr(&quot;WI_TEXT&quot;, ' BP 3') &gt; 0 OR 
+instr(&quot;WI_TEXT&quot;, ' BP 4') &gt; 0 OR
+instr(&quot;WI_TEXT&quot;, ' BP 5') &gt; 0 OR 
+instr(&quot;WI_TEXT&quot;, ' BP 6') &gt; 0 OR 
+instr(&quot;WI_TEXT&quot;, ' BP 7') &gt; 0 OR 
+instr(&quot;WI_TEXT&quot;, ' BP 8') &gt; 0 OR 
 instr(&quot;WI_TEXT&quot;, ' BP 9') &gt; 0,
- '000' + (midstr(&quot;WI_TEXT&quot;,(instr(&quot;WI_TEXT&quot;, ' BP ')+4), 7)), 'No BP')</formula>
+ '000' + (midstr(&quot;WI_TEXT&quot;,(instr(&quot;WI_TEXT&quot;, ' BP ')+4), 7)),
+if(instr(&quot;WI_TEXT&quot;, 'Business Partner 1') &gt;= 0 OR
+instr(&quot;WI_TEXT&quot;, 'Business Partner 2') &gt;= 0 OR
+instr(&quot;WI_TEXT&quot;, 'Business Partner 3') &gt;= 0 OR
+instr(&quot;WI_TEXT&quot;, 'Business Partner 4') &gt;= 0 OR
+instr(&quot;WI_TEXT&quot;, 'Business Partner 5') &gt;= 0 OR
+instr(&quot;WI_TEXT&quot;, 'Business Partner 6') &gt;= 0 OR
+instr(&quot;WI_TEXT&quot;, 'Business Partner 7') &gt;= 0 OR
+instr(&quot;WI_TEXT&quot;, 'Business Partner 8') &gt;= 0 OR
+instr(&quot;WI_TEXT&quot;, 'Business Partner 9') &gt;= 0,
+ '000' + (midstr(&quot;WI_TEXT&quot;,(instr(&quot;WI_TEXT&quot;, 'Business Partner ')+17), 7)), 'No BP'))</formula>
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_RowCount" datatype="INTEGER" expressionLanguage="SQL">
@@ -441,8 +457,8 @@ instr(&quot;WI_TEXT&quot;, ' BP 9') &gt; 0,
     
       <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="WI_CRUSER"/>
     </input>
-    <filter>&quot;CC_FormBundleNo&quot;='No FBN' AND (&quot;CC_BpNo10&quot;!='No BP' OR 
-&quot;CC_BpNo07&quot;!='No BP')</filter>
+    <filter>&quot;CC_BpNo10&quot;!='No BP' OR 
+&quot;CC_BpNo07&quot;!='No BP'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_DFMCA_FBN" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
@@ -719,6 +735,142 @@ instr(&quot;WI_TEXT&quot;, ' BP 9') &gt; 0,
     
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WI_CRUSER" null="true" value=""/>
     </input>
+  
+    <input node="P_NoFbnNoBp" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_ID" source="WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TYPE" source="WI_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TEXT" source="WI_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RHTEXT" source="WI_RHTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_STAT" source="WI_STAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CHCKWI" source="WI_CHCKWI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RH_TASK" source="WI_RH_TASK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOP_WI_ID" source="TOP_WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedDate" source="CC_CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedDate" source="CC_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CompletedByName" source="CompletedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FormBundleNo" source="CC_FormBundleNo"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TAXPAYER" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedTime" source="CC_CompletedTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LastForwardedByName" source="LastForwardedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRT_WF_Type" source="CC_PRT_WF_Type"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AAGENT" source="WI_AAGENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="WI_CRUSER"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_NoFbnNoBp" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT">
+        <descriptions defaultDescription="SAP Client"/>
+      </viewAttribute>
+      <viewAttribute id="WI_ID">
+        <descriptions defaultDescription="Work Item ID"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TYPE">
+        <descriptions defaultDescription="Work Item Type"/>
+      </viewAttribute>
+      <viewAttribute id="WI_TEXT">
+        <descriptions defaultDescription="Work Item Desc"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RHTEXT">
+        <descriptions defaultDescription="Task Short Text"/>
+      </viewAttribute>
+      <viewAttribute id="WI_STAT">
+        <descriptions defaultDescription="Work Item Status"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CHCKWI">
+        <descriptions defaultDescription="Work Item Superordinate"/>
+      </viewAttribute>
+      <viewAttribute id="WI_RH_TASK">
+        <descriptions defaultDescription="Task ID"/>
+      </viewAttribute>
+      <viewAttribute id="TOP_WI_ID">
+        <descriptions defaultDescription="Top Level ID"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CreatedDate">
+        <descriptions defaultDescription="Creation Date"/>
+      </viewAttribute>
+      <viewAttribute id="CC_CompletedDate">
+        <descriptions defaultDescription="Completed Date"/>
+      </viewAttribute>
+      <viewAttribute id="ORGEH">
+        <descriptions defaultDescription="Org. Unit (Team)"/>
+      </viewAttribute>
+      <viewAttribute id="SHORT">
+        <descriptions defaultDescription="Org. Unit (Team) Name"/>
+      </viewAttribute>
+      <viewAttribute id="CreatedByName">
+        <descriptions defaultDescription="Full Name of Person"/>
+      </viewAttribute>
+      <viewAttribute id="CompletedByName">
+        <descriptions defaultDescription="Full Name of Person"/>
+      </viewAttribute>
+      <viewAttribute id="CC_FormBundleNo">
+        <descriptions defaultDescription="CC_FormBundleNo"/>
+      </viewAttribute>
+      <viewAttribute id="CC_RowCount">
+        <descriptions defaultDescription="CC_RowCount"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CC_CompletedTime">
+        <descriptions defaultDescription="Completed Time"/>
+      </viewAttribute>
+      <viewAttribute id="LastForwardedByName">
+        <descriptions defaultDescription="Forwarded By Name"/>
+      </viewAttribute>
+      <viewAttribute id="CC_PRT_WF_Type">
+        <descriptions defaultDescription="CC_PRT_WF_Type"/>
+      </viewAttribute>
+      <viewAttribute id="Source">
+        <descriptions defaultDescription="Source"/>
+      </viewAttribute>
+      <viewAttribute id="WI_AAGENT">
+        <descriptions defaultDescription="Processing User"/>
+      </viewAttribute>
+      <viewAttribute id="WI_CRUSER">
+        <descriptions defaultDescription="User Created"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BpNo10">
+        <descriptions defaultDescription="CC_BpNo10"/>
+      </viewAttribute>
+      <viewAttribute id="CC_BpNo07">
+        <descriptions defaultDescription="CC_BpNo07"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_Workflow">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_ID" source="WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TYPE" source="WI_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_TEXT" source="WI_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RHTEXT" source="WI_RHTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_STAT" source="WI_STAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CHCKWI" source="WI_CHCKWI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_RH_TASK" source="WI_RH_TASK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOP_WI_ID" source="TOP_WI_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedDate" source="CC_CreatedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedDate" source="CC_CompletedDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreatedByName" source="CreatedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CompletedByName" source="CompletedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CompletedTime" source="CC_CompletedTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LastForwardedByName" source="LastForwardedByName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_AAGENT" source="WI_AAGENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WI_CRUSER" source="WI_CRUSER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRT_WF_Type" source="CC_PRT_WF_Type"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Source" source="Source"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FormBundleNo" source="CC_FormBundleNo"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BpNo10" source="CC_BpNo10"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BpNo07" source="CC_BpNo07"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RowCount" source="CC_RowCount"/>
+    </input>
+    <filter>&quot;CC_FormBundleNo&quot;='No FBN' AND (&quot;CC_BpNo10&quot;='No BP' AND &quot;CC_BpNo07&quot;='No BP')</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_BUT000">
     <viewAttributes>
@@ -1025,11 +1177,13 @@ instr(&quot;WI_TEXT&quot;, ' BP 9') &gt; 0,
       
       
       
+      
       </measure>
   
     <measure id="CC_WorkflowDurationAvg" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Workflow Duration (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
       
       
       
@@ -1052,7 +1206,7 @@ instr(&quot;WI_TEXT&quot;, ' BP 9') &gt; 0,
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_Workflow" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="801"/>
+      <upperLeftCorner x="128" y="801"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
@@ -1080,6 +1234,11 @@ instr(&quot;WI_TEXT&quot;, ' BP 9') &gt; 0,
       <upperLeftCorner x="126" y="356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+    <shape expanded="true" modelObjectName="P_NoFbnNoBp" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-151" y="656"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
   
     <shape expanded="true" modelObjectName="P_BUT000" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="336" y="356"/>
@@ -1096,7 +1255,6 @@ instr(&quot;WI_TEXT&quot;, ' BP 9') &gt; 0,
     <shape modelObjectName="P_BUT000" modelObjectNameSpace="J_DFMCA_BP" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="354" y="0"/>
       <rectangleSize width="250"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
