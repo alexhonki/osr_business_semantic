@@ -19,11 +19,11 @@
   <DataSource id="osr.business.semantic.db.synonyms::ENTITY_MAPPING">
     <resourceUri>osr.business.semantic.db.synonyms::ENTITY_MAPPING</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles">
-    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles</resourceUri>
-  </DataSource>
   <DataSource id="osr.business.semantic.db.synonyms::BUSINESS_LOCATION">
     <resourceUri>osr.business.semantic.db.synonyms::BUSINESS_LOCATION</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -323,7 +323,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="PID" source="PID"/>
     </input>
     <joinAttribute name="PID"/>
@@ -340,16 +339,40 @@
       <viewAttribute id="ADDR_LONGITUDE" aggregationType="sum"/>
       <viewAttribute id="PID" aggregationType="sum"/>
       <viewAttribute id="Z_VALID_FROM"/>
+    
+      <viewAttribute id="Z_CHANGE_TIME" aggregationType="min"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_ADDRESSES"/>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>PID</partitionViewAttributeName>
-      <order byViewAttributeName="Z_VALID_FROM" direction="DESC"/>
+      <order byViewAttributeName="Z_CHANGE_TIME" direction="DESC"/>
       <rankThreshold>
         <value>1</value>
       </rankThreshold>
     </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ADDRESSES" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
+      <viewAttribute id="STD_ADDR_COUNTRY_2CHAR"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="STD_ADDR_PRIM_ADDRESS"/>
+      <viewAttribute id="MATCH_ADDR_REGION"/>
+      <viewAttribute id="MATCH_ADDR_LOCALITY"/>
+      <viewAttribute id="ADDR_LATITUDE"/>
+      <viewAttribute id="ADDR_LONGITUDE"/>
+      <viewAttribute id="PID"/>
+      <viewAttribute id="Z_VALID_FROM"/>
+      <viewAttribute id="Z_CURR_FLAG"/>
+    
+      <viewAttribute id="LOCN_TYP_CD"/>
+    
+      <viewAttribute id="Z_CHANGE_TIME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::BUSINESS_LOCATION"/>
+    <filter>&quot;Z_CURR_FLAG&quot;='1' AND &quot;LOCN_TYP_CD&quot; = '010'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_PARTNERABN" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -438,26 +461,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="CC_ABN"/>
     </input>
     <joinAttribute name="ABN"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_ADDRESSES" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="PID"/>
-      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
-      <viewAttribute id="STD_ADDR_COUNTRY_2CHAR"/>
-      <viewAttribute id="STD_ADDR_POSTCODE1"/>
-      <viewAttribute id="STD_ADDR_PRIM_ADDRESS"/>
-      <viewAttribute id="MATCH_ADDR_REGION"/>
-      <viewAttribute id="MATCH_ADDR_LOCALITY"/>
-      <viewAttribute id="ADDR_LATITUDE"/>
-      <viewAttribute id="ADDR_LONGITUDE"/>
-      <viewAttribute id="Z_CURR_FLAG"/>
-      <viewAttribute id="Z_VALID_FROM"/>
-    
-      <viewAttribute id="LOCN_TYP_CD"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::BUSINESS_LOCATION"/>
-    <filter>&quot;Z_CURR_FLAG&quot;='1' AND &quot;LOCN_TYP_CD&quot; = '010'</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_ABNDATA_PARTNER">
@@ -700,6 +703,10 @@
       <upperLeftCorner x="218" y="554"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+    <shape expanded="true" modelObjectName="P_ADDRESSES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="218" y="696"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
   
   
     <shape expanded="true" modelObjectName="P_PARTNERABN" modelObjectNameSpace="CalculationView">
@@ -717,10 +724,6 @@
     <shape modelObjectName="P_PARTNERABN" modelObjectNameSpace="J_ABNDATA_PARTNER" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_ADDRESSES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="218" y="696"/>
-      <rectangleSize height="30" width="160"/>
     </shape></shapes>
 </layout>
 </Calculation:scenario>
