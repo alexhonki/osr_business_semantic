@@ -617,10 +617,23 @@
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="All_FTTPs" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;ZZ_NOIA_DATE&quot;= '00000000' and isnull(&quot;FBNUM&quot;),'',
-if(&quot;ZZ_NOIA_DATE&quot;= '00000000' and &quot;FBNUM&quot;!='','FTTP',
-If(&quot;ZZ_NOIA_DATE&quot;&gt;=&quot;TAXYRSTARTDT&quot; and &quot;ZZ_NOIA_DATE&quot;&lt;=&quot;TAXYRENDDT&quot;,'FTTP',
-If(&quot;ZZ_NOIA_DATE&quot;&lt;&quot;TAXYRSTARTDT&quot;,'EXTP','')))) </formula>
+        <formula>if(
+    &quot;ZZ_NOIA_DATE&quot;= '00000000' and isnull(&quot;FBNUM&quot;),
+    '',
+    if(
+        &quot;ZZ_NOIA_DATE&quot;= '00000000' and &quot;FBNUM&quot;!='' and &quot;FBNUMCount&quot; &lt;=1,
+        'FTTP',
+        If(
+            &quot;ZZ_NOIA_DATE&quot;&gt;=&quot;TAXYRSTARTDT&quot; and &quot;ZZ_NOIA_DATE&quot;&lt;=&quot;TAXYRENDDT&quot; and &quot;FBNUMCount&quot; &lt;=1,
+            'FTTP',
+            If(
+                &quot;ZZ_NOIA_DATE&quot;&lt;&quot;TAXYRSTARTDT&quot;,'EXTP',
+                ''
+                )
+            )
+        )
+    )
+</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
