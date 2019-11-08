@@ -1,0 +1,32 @@
+PROCEDURE "osr.business.semantic.db.Procedures::P_FnBpOverviewStaticTable"( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+
+	output_table =
+	SELECT
+		"PARTNER",
+		"CC_Full_Name",
+		"ABN",
+		"ACN",
+		"BP_TYPE_DESC",
+		"PORTAL_REG_DATE",
+		"CC_PORTAL_REG_FLAG",
+		"DFKKOP_VKONT",
+		"FACT_SET",
+		"VALUE_GENERIC",
+		"FACT_SET_TEXT",
+		"CC_HasBankDetails",
+		SUM("BETRH") AS "BETRH",
+		SUM("Counter") AS "Counter"
+	FROM "osr.business.semantic.db.Business_Models.Finance::CV_FnBpOverview"
+	GROUP BY "PARTNER", "CC_Full_Name", "ABN", "ACN", "BP_TYPE_DESC", "PORTAL_REG_DATE", "CC_PORTAL_REG_FLAG", "DFKKOP_VKONT", "FACT_SET", "VALUE_GENERIC", "FACT_SET_TEXT", "CC_HasBankDetails";
+	
+	DELETE FROM "osr.business.semantic.db.Tables::FnBpOverview";
+	
+	INSERT INTO "osr.business.semantic.db.Tables::FnBpOverview"
+	SELECT * FROM :output_table;
+   
+END

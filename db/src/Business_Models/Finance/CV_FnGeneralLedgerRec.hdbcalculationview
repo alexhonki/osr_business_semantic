@@ -408,7 +408,7 @@
     <joinAttribute name="EndOfMonth"/>
   </calculationView>
 </calculationViews>
-<logicalModel id="J_GLREC_YTDAMTS">
+<logicalModel id="J_GLREC_YTDAMTS" filterExpressionLanguage="COLUMN_ENGINE">
   <attributes>
     <attribute id="RYEAR" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fiscal Year"/>
@@ -446,7 +446,7 @@
     'Reconciled'
 )</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="GLPlanningV0" order="2" aggregationType="sum" measureType="simple">
@@ -500,16 +500,26 @@
       <formula>1</formula>
       
       
+      
       </measure>
     <measure id="Variance" order="12" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="23" scale="2" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="GL to PSCD Variance"/>
       <formula>&quot;GLActuals&quot; - &quot;BETRH&quot;</formula>
       
       
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
+
+  <filter>(
+    match(&quot;RACCT&quot;,'000004*') OR 
+    match(&quot;RACCT&quot;,'000005*')
+) AND 
+not(
+    in(&quot;RACCT&quot;,'0000050600','0000050601')
+)</filter>
 </logicalModel>
 <layout>
   <shapes>
