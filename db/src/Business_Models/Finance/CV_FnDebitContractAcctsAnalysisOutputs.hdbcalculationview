@@ -11,23 +11,13 @@
 <calculationViews>
   <calculationView xsi:type="Calculation:AggregationView" id="P_T_FnDebitContractAcctsAnalysis">
     <viewAttributes>
-      <viewAttribute id="KeyDate">
-        <descriptions defaultDescription="KeyDate"/>
-      </viewAttribute>
-      <viewAttribute id="CreditDebitFlag">
-        <descriptions defaultDescription="CreditDebitFlag"/>
-      </viewAttribute>
-      <viewAttribute id="BETRH" aggregationType="sum">
-        <descriptions defaultDescription="BETRH"/>
-      </viewAttribute>
+      <viewAttribute id="KeyDate"/>
+      <viewAttribute id="CreditDebitFlag"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
     
-      <viewAttribute id="AccountBalanceRange">
-        <descriptions defaultDescription="AccountBalanceRange"/>
-      </viewAttribute>
+      <viewAttribute id="AccountBalanceRange"/>
     
-      <viewAttribute id="VKONT">
-        <descriptions defaultDescription="VKONT"/>
-      </viewAttribute>
+      <viewAttribute id="VKONT"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="PrevKeyDate" datatype="DATE" expressionLanguage="SQL">
@@ -63,61 +53,25 @@ if(abs(&quot;BETRH&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
         </restriction>
       </restrictedViewAttribute>
     </restrictedViewAttributes>
-    <input node="osr.business.semantic.db.Tables::FnDebitContractAcctsAnalysis">
-      <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="VKONT" source="VKONT"/>
-    </input>
+    <input node="osr.business.semantic.db.Tables::FnDebitContractAcctsAnalysis"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_COMPARE_PREV_DATE" cardinality="C1_1" joinType="fullOuter" referentialDirection="left" multiJoinNode="J_COMPARE_PREV_DATE" multiJoinCentralTable="Projection_1" multiJoinOrder="Outside In">
+  <calculationView xsi:type="Calculation:JoinView" id="J_COMPARE_PREV_DATE" cardinality="C1_1" joinType="fullOuter" referentialDirection="left">
     <viewAttributes>
-      <viewAttribute id="CurrKeyDate">
-        <descriptions defaultDescription="KeyDate"/>
-      </viewAttribute>
-      <viewAttribute id="CURR_BETRH" aggregationType="sum">
-        <descriptions defaultDescription="BETRH"/>
-      </viewAttribute>
+      <viewAttribute id="CurrKeyDate"/>
+      <viewAttribute id="CURR_BETRH" aggregationType="sum"/>
     
-      <viewAttribute id="PrevKeyDate">
-        <descriptions defaultDescription="KeyDate"/>
-      </viewAttribute>
-      <viewAttribute id="CurrAccountBalanceRange">
-        <descriptions defaultDescription="AccountBalanceRange"/>
-      </viewAttribute>
-      <viewAttribute id="PREV_VKONT">
-        <descriptions defaultDescription="VKONT"/>
-      </viewAttribute>
-      <viewAttribute id="CURR_VKONT">
-        <descriptions defaultDescription="VKONT"/>
-      </viewAttribute>
-      <viewAttribute id="PrevAccountBalanceRange">
-        <descriptions defaultDescription="AccountBalanceRange"/>
-      </viewAttribute>
-      <viewAttribute id="PREV_BETRH" aggregationType="sum">
-        <descriptions defaultDescription="BETRH"/>
-      </viewAttribute>
-      <viewAttribute id="CurrCreditAmount" aggregationType="formula">
-        <descriptions defaultDescription="CreditAmount"/>
-      </viewAttribute>
-      <viewAttribute id="CurrDebitAmount" aggregationType="formula">
-        <descriptions defaultDescription="DebitAmount"/>
-      </viewAttribute>
-      <viewAttribute id="PrevCreditAmount" aggregationType="formula">
-        <descriptions defaultDescription="CreditAmount"/>
-      </viewAttribute>
-      <viewAttribute id="PrevDebitAmount" aggregationType="formula">
-        <descriptions defaultDescription="DebitAmount"/>
-      </viewAttribute>
-      <viewAttribute id="CurrOverdueAccountBalanceRange">
-        <descriptions defaultDescription="OverdueAccountBalanceRange"/>
-      </viewAttribute>
-      <viewAttribute id="PrevOverdueAccountBalanceRange">
-        <descriptions defaultDescription="OverdueAccountBalanceRange"/>
-      </viewAttribute>
+      <viewAttribute id="PrevKeyDate"/>
+      <viewAttribute id="CurrAccountBalanceRange"/>
+      <viewAttribute id="PREV_VKONT"/>
+      <viewAttribute id="CURR_VKONT"/>
+      <viewAttribute id="PrevAccountBalanceRange"/>
+      <viewAttribute id="PREV_BETRH" aggregationType="sum"/>
+      <viewAttribute id="CurrCreditAmount" aggregationType="formula"/>
+      <viewAttribute id="CurrDebitAmount" aggregationType="formula"/>
+      <viewAttribute id="PrevCreditAmount" aggregationType="formula"/>
+      <viewAttribute id="PrevDebitAmount" aggregationType="formula"/>
+      <viewAttribute id="CurrOverdueAccountBalanceRange"/>
+      <viewAttribute id="PrevOverdueAccountBalanceRange"/>
       <viewAttribute hidden="true" id="JOIN$PrevKeyDate$KeyDate"/>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -183,13 +137,14 @@ if(abs(&quot;BETRH&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="OutputOverdueAccountBalanceRange" datatype="NVARCHAR" length="40" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>if(isNull(&quot;CurrOverdueAccountBalanceRange&quot;),
     &quot;PrevOverdueAccountBalanceRange&quot;,
     &quot;CurrOverdueAccountBalanceRange&quot;
 )</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
-    <restrictedViewAttributes/>
     <input node="P_CURR">
       <mapping xsi:type="Calculation:AttributeMapping" target="CurrKeyDate" source="KeyDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CURR_BETRH" source="BETRH"/>
@@ -226,93 +181,40 @@ if(abs(&quot;BETRH&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CURR">
     <viewAttributes>
-      <viewAttribute id="KeyDate">
-        <descriptions defaultDescription="KeyDate"/>
-      </viewAttribute>
-      <viewAttribute id="BETRH">
-        <descriptions defaultDescription="BETRH"/>
-      </viewAttribute>
+      <viewAttribute id="KeyDate"/>
+      <viewAttribute id="BETRH"/>
     
-      <viewAttribute id="AccountBalanceRange">
-        <descriptions defaultDescription="AccountBalanceRange"/>
-      </viewAttribute>
-      <viewAttribute id="CURR_VKONT">
-        <descriptions defaultDescription="VKONT"/>
-      </viewAttribute>
-      <viewAttribute id="CreditAmount">
-        <descriptions defaultDescription="CreditAmount"/>
-      </viewAttribute>
-      <viewAttribute id="DebitAmount">
-        <descriptions defaultDescription="DebitAmount"/>
-      </viewAttribute>
+      <viewAttribute id="AccountBalanceRange"/>
+      <viewAttribute id="CURR_VKONT"/>
+      <viewAttribute id="CreditAmount"/>
+      <viewAttribute id="DebitAmount"/>
+      <viewAttribute id="OverdueAccountBalanceRange"/>
     
     
     
-      <viewAttribute id="PrevKeyDate">
-        <descriptions defaultDescription="PrevKeyDate"/>
-      </viewAttribute>
-      <viewAttribute id="OverdueAccountBalanceRange">
-        <descriptions defaultDescription="OverdueAccountBalanceRange"/>
-      </viewAttribute>
-    </viewAttributes>
+    
+      <viewAttribute id="PrevKeyDate"/></viewAttributes>
     <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
     <input node="P_T_FnDebitContractAcctsAnalysis">
-      <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PrevKeyDate" source="PrevKeyDate"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_VKONT" source="VKONT"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="CreditAmount" source="CreditAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DebitAmount" source="DebitAmount"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="OverdueAccountBalanceRange" source="OverdueAccountBalanceRange"/>
-    </input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_VKONT" source="VKONT"/></input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_PREV">
     <viewAttributes>
-      <viewAttribute id="KeyDate">
-        <descriptions defaultDescription="KeyDate"/>
-      </viewAttribute>
+      <viewAttribute id="KeyDate"/>
     
-      <viewAttribute id="PREV_VKONT">
-        <descriptions defaultDescription="VKONT"/>
-      </viewAttribute>
-      <viewAttribute id="AccountBalanceRange">
-        <descriptions defaultDescription="AccountBalanceRange"/>
-      </viewAttribute>
+      <viewAttribute id="PREV_VKONT"/>
+      <viewAttribute id="AccountBalanceRange"/>
     
-      <viewAttribute id="BETRH">
-        <descriptions defaultDescription="BETRH"/>
-      </viewAttribute>
-      <viewAttribute id="CreditAmount">
-        <descriptions defaultDescription="CreditAmount"/>
-      </viewAttribute>
-      <viewAttribute id="DebitAmount">
-        <descriptions defaultDescription="DebitAmount"/>
-      </viewAttribute>
+      <viewAttribute id="BETRH"/>
+      <viewAttribute id="CreditAmount"/>
+      <viewAttribute id="DebitAmount"/>
     
-      <viewAttribute id="OverdueAccountBalanceRange">
-        <descriptions defaultDescription="OverdueAccountBalanceRange"/>
-      </viewAttribute>
+      <viewAttribute id="OverdueAccountBalanceRange"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
     <input node="P_T_FnDebitContractAcctsAnalysis">
-      <mapping xsi:type="Calculation:AttributeMapping" target="KeyDate" source="KeyDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
     
-      <mapping xsi:type="Calculation:AttributeMapping" target="PREV_VKONT" source="VKONT"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="CreditAmount" source="CreditAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DebitAmount" source="DebitAmount"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="OverdueAccountBalanceRange" source="OverdueAccountBalanceRange"/>
-    </input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PREV_VKONT" source="VKONT"/></input>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_COMPARE_PREV_DATE">
@@ -329,7 +231,7 @@ if(abs(&quot;BETRH&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
   
     </attribute>
     <attribute id="AccountBalanceRange" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Account Balance Range"/>
+      <descriptions defaultDescription="Total Account Balance Range"/>
       <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="OutputAccBalRange"/>
     </attribute>
     <attribute id="VKONT" order="5" displayAttribute="false" attributeHierarchyActive="false">
@@ -338,8 +240,10 @@ if(abs(&quot;BETRH&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
     </attribute>
   
     <attribute id="OutputOverdueAccountBalanceRange" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="OutputOverdueAccountBalanceRange"/>
+      <descriptions defaultDescription="Overdue Account Balance Range"/>
+  
       <keyMapping columnObjectName="J_COMPARE_PREV_DATE" columnName="OutputOverdueAccountBalanceRange"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -365,6 +269,7 @@ if(abs(&quot;BETRH&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
         <attribute attributeName="VKONT"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
