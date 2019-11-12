@@ -62,7 +62,7 @@
       <viewAttribute id="CLIENT"/>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_FullName" datatype="VARCHAR" length="150" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_FullName" datatype="VARCHAR" length="152" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;BP_TYPE&quot; = '2',&quot;STD_FIRM&quot;,&quot;STD_PERSON_GN&quot;+' '+&quot;STD_PERSON_GN2&quot;+' '+&quot;STD_PERSON_FN&quot;)</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_FirstName" datatype="VARCHAR" length="50" expressionLanguage="COLUMN_ENGINE">
@@ -1150,6 +1150,122 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
     </input>
   </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_CONTRACTVALUES_0">
+    <viewAttributes>
+      <viewAttribute id="AssessmentIssueDate"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="INTRENO"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="ACTIVE"/>
+      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
+      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
+      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum"/>
+      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum"/>
+      <viewAttribute id="LatestReassessment"/>
+      <viewAttribute id="All_FTTPs"/>
+      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum"/>
+      <viewAttribute id="CC_Todays_Date"/>
+      <viewAttribute id="CC_AssessmentIssueDate"/>
+      <viewAttribute id="CC_FN_ReassessmentAmount" aggregationType="sum"/>
+      <viewAttribute id="CC_ReassessmentAmountCleared" aggregationType="sum"/>
+      <viewAttribute id="CC_LatestReassessment"/>
+      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_ContractValues_0"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>ZZ_PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="CC_Reengagement_Time" direction="ASC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_CONTRACTVALUES_NOT_0">
+    <viewAttributes>
+      <viewAttribute id="AssessmentIssueDate"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="INTRENO"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="ACTIVE"/>
+      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
+      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
+      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum"/>
+      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum"/>
+      <viewAttribute id="LatestReassessment"/>
+      <viewAttribute id="All_FTTPs"/>
+      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum"/>
+      <viewAttribute id="CC_Todays_Date"/>
+      <viewAttribute id="CC_AssessmentIssueDate"/>
+      <viewAttribute id="CC_FN_ReassessmentAmount" aggregationType="sum"/>
+      <viewAttribute id="CC_ReassessmentAmountCleared" aggregationType="sum"/>
+      <viewAttribute id="CC_LatestReassessment"/>
+      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_ContractValues_Not_0"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>ZZ_PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="CC_Reengagement_Time" direction="ASC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ContractValues_0" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="AssessmentIssueDate"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="INTRENO"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="ACTIVE"/>
+      <viewAttribute id="AssessmentAmount"/>
+      <viewAttribute id="AssessmentAmountCleared"/>
+      <viewAttribute id="FN_ReassessmentAmount"/>
+      <viewAttribute id="ReassessmentAmountCleared"/>
+      <viewAttribute id="LatestReassessment"/>
+      <viewAttribute id="All_FTTPs"/>
+      <viewAttribute id="CC_Reengagement_Time"/>
+      <viewAttribute id="CC_Todays_Date"/>
+      <viewAttribute id="CC_AssessmentIssueDate"/>
+      <viewAttribute id="CC_FN_ReassessmentAmount"/>
+      <viewAttribute id="CC_ReassessmentAmountCleared"/>
+      <viewAttribute id="CC_LatestReassessment"/>
+      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_ContractValues"/>
+    <filter>&quot;CC_Reengagement_Time&quot; = 0</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ContractValues_Not_0" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="AssessmentIssueDate"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="INTRENO"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="ACTIVE"/>
+      <viewAttribute id="AssessmentAmount"/>
+      <viewAttribute id="AssessmentAmountCleared"/>
+      <viewAttribute id="FN_ReassessmentAmount"/>
+      <viewAttribute id="ReassessmentAmountCleared"/>
+      <viewAttribute id="LatestReassessment"/>
+      <viewAttribute id="All_FTTPs"/>
+      <viewAttribute id="CC_Reengagement_Time"/>
+      <viewAttribute id="CC_Todays_Date"/>
+      <viewAttribute id="CC_AssessmentIssueDate"/>
+      <viewAttribute id="CC_FN_ReassessmentAmount"/>
+      <viewAttribute id="CC_ReassessmentAmountCleared"/>
+      <viewAttribute id="CC_LatestReassessment"/>
+      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_ContractValues"/>
+    <filter>&quot;CC_Reengagement_Time&quot; &gt; 0</filter>
+  </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="PARTNER"/>
@@ -1677,122 +1793,6 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       </rankThreshold>
     </windowFunction>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_ContractValues_0" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="AssessmentIssueDate"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYRSTARTDT"/>
-      <viewAttribute id="ACTIVE"/>
-      <viewAttribute id="AssessmentAmount"/>
-      <viewAttribute id="AssessmentAmountCleared"/>
-      <viewAttribute id="FN_ReassessmentAmount"/>
-      <viewAttribute id="ReassessmentAmountCleared"/>
-      <viewAttribute id="LatestReassessment"/>
-      <viewAttribute id="All_FTTPs"/>
-      <viewAttribute id="CC_Reengagement_Time"/>
-      <viewAttribute id="CC_Todays_Date"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
-      <viewAttribute id="CC_FN_ReassessmentAmount"/>
-      <viewAttribute id="CC_ReassessmentAmountCleared"/>
-      <viewAttribute id="CC_LatestReassessment"/>
-      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_ContractValues"/>
-    <filter>&quot;CC_Reengagement_Time&quot; = 0</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_ContractValues_Not_0" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="AssessmentIssueDate"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYRSTARTDT"/>
-      <viewAttribute id="ACTIVE"/>
-      <viewAttribute id="AssessmentAmount"/>
-      <viewAttribute id="AssessmentAmountCleared"/>
-      <viewAttribute id="FN_ReassessmentAmount"/>
-      <viewAttribute id="ReassessmentAmountCleared"/>
-      <viewAttribute id="LatestReassessment"/>
-      <viewAttribute id="All_FTTPs"/>
-      <viewAttribute id="CC_Reengagement_Time"/>
-      <viewAttribute id="CC_Todays_Date"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
-      <viewAttribute id="CC_FN_ReassessmentAmount"/>
-      <viewAttribute id="CC_ReassessmentAmountCleared"/>
-      <viewAttribute id="CC_LatestReassessment"/>
-      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_ContractValues"/>
-    <filter>&quot;CC_Reengagement_Time&quot; &gt; 0</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="R_CONTRACTVALUES_0">
-    <viewAttributes>
-      <viewAttribute id="AssessmentIssueDate"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYRSTARTDT"/>
-      <viewAttribute id="ACTIVE"/>
-      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="LatestReassessment"/>
-      <viewAttribute id="All_FTTPs"/>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum"/>
-      <viewAttribute id="CC_Todays_Date"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
-      <viewAttribute id="CC_FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="CC_ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="CC_LatestReassessment"/>
-      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_ContractValues_0"/>
-    <windowFunction dynamicPartitionAttributes="false">
-      <partitionViewAttributeName>ZZ_PARTNER</partitionViewAttributeName>
-      <order byViewAttributeName="CC_Reengagement_Time" direction="ASC"/>
-      <rankThreshold>
-        <value>1</value>
-      </rankThreshold>
-    </windowFunction>
-  </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="R_CONTRACTVALUES_NOT_0">
-    <viewAttributes>
-      <viewAttribute id="AssessmentIssueDate"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYRSTARTDT"/>
-      <viewAttribute id="ACTIVE"/>
-      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="LatestReassessment"/>
-      <viewAttribute id="All_FTTPs"/>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum"/>
-      <viewAttribute id="CC_Todays_Date"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
-      <viewAttribute id="CC_FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="CC_ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="CC_LatestReassessment"/>
-      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_ContractValues_Not_0"/>
-    <windowFunction dynamicPartitionAttributes="false">
-      <partitionViewAttributeName>ZZ_PARTNER</partitionViewAttributeName>
-      <order byViewAttributeName="CC_Reengagement_Time" direction="ASC"/>
-      <rankThreshold>
-        <value>1</value>
-      </rankThreshold>
-    </windowFunction>
-  </calculationView>
 </calculationViews>
 <logicalModel id="J_BPOVERVIEW_SCVORG">
   <attributes>
@@ -1945,7 +1945,9 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
   
     <attribute id="CC_Birth_Date" order="50" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Birth Date"/>
+  
       <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Birth_Date"/>
+  
     </attribute>
     <attribute id="CC_Death_Date" order="51" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Death Date"/>
@@ -1958,7 +1960,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <keyCalculation datatype="DATE" expressionLanguage="SQL">
         <formula>TO_DATE(&quot;BUT0ID_ENTRY_DATE&quot;)</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="CC_Age" order="25" aggregationType="sum" measureType="simple">
@@ -2315,6 +2317,23 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <upperLeftCorner x="1092" y="929"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+    <shape expanded="true" modelObjectName="R_CONTRACTVALUES_0" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1049" y="1074"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="R_CONTRACTVALUES_NOT_0" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1248" y="1074"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_ContractValues_0" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1048" y="1184"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_ContractValues_Not_0" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1258" y="1184"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
   
   
     <shape expanded="true" modelObjectName="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
@@ -2390,23 +2409,6 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
     <shape expanded="true" modelObjectName="R_SCVORG" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="1077" y="394"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_ContractValues_0" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1048" y="1184"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_ContractValues_Not_0" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1258" y="1184"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="R_CONTRACTVALUES_0" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1049" y="1074"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="R_CONTRACTVALUES_NOT_0" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1248" y="1074"/>
       <rectangleSize height="30" width="160"/>
     </shape></shapes>
 </layout>
