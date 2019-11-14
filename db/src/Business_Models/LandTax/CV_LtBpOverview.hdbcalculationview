@@ -62,7 +62,7 @@
       <viewAttribute id="CLIENT"/>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_FullName" datatype="VARCHAR" length="150" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_FullName" datatype="VARCHAR" length="152" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;BP_TYPE&quot; = '2',&quot;STD_FIRM&quot;,&quot;STD_PERSON_GN&quot;+' '+&quot;STD_PERSON_GN2&quot;+' '+&quot;STD_PERSON_FN&quot;)</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_FirstName" datatype="VARCHAR" length="50" expressionLanguage="COLUMN_ENGINE">
@@ -1009,24 +1009,21 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="All_FTTPs"/>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_Reengagement_Time" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_Reengagement_Time_Calculation" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <formula>IF(
     ISNULL(&quot;CC_AssessmentIssueDate&quot;) and ISNULL(&quot;CC_LatestReassessment&quot;),
-    0,
+    Null,
         (IF(
             &quot;AssessmentAmount&quot;&gt;0 and ISNULL(&quot;CC_LatestReassessment&quot;) and (&quot;AssessmentAmountCleared&quot;&gt;=&quot;AssessmentAmount&quot;),
-            component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_AssessmentIssueDate&quot;,1),
+            component(NOW(),1)-component(&quot;CC_AssessmentIssueDate&quot;,1),
             (IF(
                 (NOT ISNULL(&quot;CC_ReassessmentAmountCleared&quot;) AND NOT ISNULL(&quot;CC_FN_ReassessmentAmount&quot;)) AND &quot;CC_ReassessmentAmountCleared&quot;&gt;=&quot;CC_FN_ReassessmentAmount&quot;,
-                component(&quot;CC_Todays_Date&quot;,1)-component(&quot;CC_LatestReassessment&quot;,1),
-                0)
+                component(NOW(),1)-component(&quot;CC_LatestReassessment&quot;,1),
+                Null)
             )
         )
     )
 )</formula>
-      </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_Todays_Date" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
-        <formula>NOW()</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_AssessmentIssueDate" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
         <formula>&quot;AssessmentIssueDate&quot;</formula>
@@ -1042,115 +1039,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_LatestReassessment" datatype="DATE" expressionLanguage="SQL">
         <formula>&quot;LatestReassessment&quot;</formula>
-      </calculatedViewAttribute>
-    
-      <calculatedViewAttribute id="CC_Reengagement_Time_Dimension" datatype="NVARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
-    
-        <formula>&quot;CC_Reengagement_Time&quot;</formula>
-    
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+      </calculatedViewAttribute></calculatedViewAttributes>
     <input node="osr.business.semantic.db.Business_Models.LandTax::CV_ContractValuesLocal"/>
     <filter>&quot;ACTIVE&quot;='X'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="R_CONTRACTVALUES">
-    <viewAttributes>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum"/>
-      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="CC_Todays_Date"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
-      <viewAttribute id="CC_FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="CC_ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="CC_LatestReassessment"/>
-      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="LatestReassessment"/>
-      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
-    
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYRSTARTDT"/>
-      <viewAttribute id="AssessmentIssueDate"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="ACTIVE"/></viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="U_CONTRACTVALUES"/>
-    <windowFunction dynamicPartitionAttributes="false">
-      <partitionViewAttributeName>ZZ_PARTNER</partitionViewAttributeName>
-      <order byViewAttributeName="CC_Reengagement_Time" direction="DESC"/>
-      <rankThreshold>
-        <value>1</value>
-      </rankThreshold>
-    </windowFunction>
-  </calculationView>
-  <calculationView xsi:type="Calculation:UnionView" id="U_CONTRACTVALUES">
-    <viewAttributes>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum"/>
-      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="CC_Todays_Date"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
-      <viewAttribute id="CC_FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="CC_ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="CC_LatestReassessment"/>
-      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="LatestReassessment"/>
-      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
-    
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYRSTARTDT"/>
-      <viewAttribute id="AssessmentIssueDate"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="ACTIVE"/>
-      <viewAttribute id="All_FTTPs"/></viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="R_CONTRACTVALUES_0" emptyUnionBehavior="NO_ROW">
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentIssueDate" source="AssessmentIssueDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE" source="ACTIVE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FN_ReassessmentAmount" source="FN_ReassessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmountCleared" source="ReassessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="LatestReassessment"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="All_FTTPs" source="All_FTTPs"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AssessmentIssueDate" source="CC_AssessmentIssueDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FN_ReassessmentAmount" source="CC_FN_ReassessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ReassessmentAmountCleared" source="CC_ReassessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LatestReassessment" source="CC_LatestReassessment"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
-    </input>
-    <input node="R_CONTRACTVALUES_NOT_0" emptyUnionBehavior="NO_ROW">
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentIssueDate" source="AssessmentIssueDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE" source="ACTIVE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FN_ReassessmentAmount" source="FN_ReassessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmountCleared" source="ReassessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LatestReassessment" source="LatestReassessment"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="All_FTTPs" source="All_FTTPs"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AssessmentIssueDate" source="CC_AssessmentIssueDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FN_ReassessmentAmount" source="CC_FN_ReassessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ReassessmentAmountCleared" source="CC_ReassessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LatestReassessment" source="CC_LatestReassessment"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
-    </input>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" cardinality="C1_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_HOMEEXEMPTIONREENGAGEMENT" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="PARTNER"/>
       <viewAttribute id="BIRTHDT"/>
@@ -1292,7 +1185,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     <input node="osr.business.semantic.db.synonyms::SCVFoundation.PersonRms"/>
     <filter>&quot;SOURCE&quot;='RMS'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_BPOVERVIEW_SCVIND" cardinality="CN_N" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_SCVIND" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="PARTNER"/>
       <viewAttribute id="BIRTHDT"/>
@@ -1335,17 +1228,12 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="TAXYRSTARTDT"/>
       <viewAttribute id="TAXYRENDDT"/>
       <viewAttribute id="CC_SCV_IND_ID"/>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum"/>
       <viewAttribute id="CC_Reengagement_Time_Dimension"/>
     
-      <viewAttribute id="CC_Todays_Date"/>
-    
-      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
+      <viewAttribute id="CC_Reengagement_Time"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="J_BPOVERVIEW_CONTRACTVALUES">
+    <input node="J_BPINFO_CONTRACTVALUES">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DEATHDT" source="DEATHDT"/>
@@ -1386,14 +1274,9 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxYearStartDt" source="CC_TaxYearStartDt"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
     
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AssessmentIssueDate" source="CC_AssessmentIssueDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
     </input>
     <input node="R_SCVIND">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_SCV_IND_ID" source="CC_SCV_IND_ID"/>
@@ -1401,7 +1284,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </input>
     <joinAttribute name="PARTNER"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_BPOVERVIEW_CONTRACTVALUES" cardinality="C1_N" joinType="leftOuter" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_CONTRACTVALUES" cardinality="CN_N" joinType="inner" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="PARTNER"/>
       <viewAttribute id="BIRTHDT"/>
@@ -1443,17 +1326,19 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="CC_TaxYearStartDt"/>
       <viewAttribute id="TAXYRSTARTDT"/>
       <viewAttribute id="TAXYRENDDT"/>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum"/>
-      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="CC_Reengagement_Time_Calculation" aggregationType="min"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_Reengagement_Time_Dimension" datatype="VARCHAR" length="13" expressionLanguage="SQL">
+        <formula>&quot;CC_Reengagement_Time&quot;</formula>
+      </calculatedViewAttribute>
     
-      <viewAttribute id="CC_Todays_Date"/>
-      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
-    
-      <viewAttribute id="ZZ_PARTNER"/></viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT">
+      <calculatedViewAttribute id="CC_Reengagement_Time" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+        <formula>IF(ISNULL(&quot;CC_Reengagement_Time_Calculation&quot;), 0,&quot;CC_Reengagement_Time_Calculation&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="J_BPINFO_HOMEEXEMPTIONREENGAGEMENT">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DEATHDT" source="DEATHDT"/>
@@ -1494,20 +1379,13 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxYearStartDt" source="CC_TaxYearStartDt"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/></input>
-    <input node="R_CONTRACTVALUES">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
+    <input node="AGG_CONTRACTVALUES">
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AssessmentIssueDate" source="CC_AssessmentIssueDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Calculation" source="CC_Reengagement_Time_Calculation"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="ZZ_PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
     </input>
     <filter>&quot;ZZ_PARTNER&quot; is not null</filter>
     <joinAttribute name="PARTNER"/>
-    <joinAttribute name="CLIENT"/>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_SCVIND">
     <viewAttributes>
@@ -1526,6 +1404,15 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       </rankThreshold>
     </windowFunction>
   </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_CONTRACTVALUES">
+    <viewAttributes>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="CC_Reengagement_Time_Calculation" aggregationType="min"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_ContractValues"/>
+  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_SCVORG" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="SCV_ID"/>
@@ -1542,7 +1429,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     <input node="osr.business.semantic.db.synonyms::SCVFoundation.Organisation"/>
     <filter>&quot;SOURCE&quot;='RMS'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_BPOVERVIEW_SCVORG" cardinality="C1_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_SCVORG" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="PARTNER"/>
       <viewAttribute id="BIRTHDT"/>
@@ -1586,14 +1473,9 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="TAXYRENDDT"/>
       <viewAttribute id="CC_SCV_ORG_ID"/>
       <viewAttribute id="CC_SCV_IND_ID"/>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum"/>
       <viewAttribute id="CC_Reengagement_Time_Dimension"/>
     
-      <viewAttribute id="CC_Todays_Date"/>
-    
-      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
+      <viewAttribute id="CC_Reengagement_Time"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Birth_Date" datatype="DATE" expressionLanguage="SQL">
@@ -1603,7 +1485,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
         <formula>&quot;DEATHDT&quot;</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
-    <input node="J_BPOVERVIEW_SCVIND">
+    <input node="J_BPINFO_SCVIND">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DEATHDT" source="DEATHDT"/>
@@ -1645,14 +1527,9 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_SCV_IND_ID" source="CC_SCV_IND_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
     
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Todays_Date" source="CC_Todays_Date"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AssessmentIssueDate" source="CC_AssessmentIssueDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
     </input>
     <input node="R_SCVORG">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_SCV_ORG_ID" source="CC_SCV_ORG_ID"/>
@@ -1677,279 +1554,156 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       </rankThreshold>
     </windowFunction>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_ContractValues_0" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="AssessmentIssueDate"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYRSTARTDT"/>
-      <viewAttribute id="ACTIVE"/>
-      <viewAttribute id="AssessmentAmount"/>
-      <viewAttribute id="AssessmentAmountCleared"/>
-      <viewAttribute id="FN_ReassessmentAmount"/>
-      <viewAttribute id="ReassessmentAmountCleared"/>
-      <viewAttribute id="LatestReassessment"/>
-      <viewAttribute id="All_FTTPs"/>
-      <viewAttribute id="CC_Reengagement_Time"/>
-      <viewAttribute id="CC_Todays_Date"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
-      <viewAttribute id="CC_FN_ReassessmentAmount"/>
-      <viewAttribute id="CC_ReassessmentAmountCleared"/>
-      <viewAttribute id="CC_LatestReassessment"/>
-      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_ContractValues"/>
-    <filter>&quot;CC_Reengagement_Time&quot; = 0</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_ContractValues_Not_0" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="AssessmentIssueDate"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYRSTARTDT"/>
-      <viewAttribute id="ACTIVE"/>
-      <viewAttribute id="AssessmentAmount"/>
-      <viewAttribute id="AssessmentAmountCleared"/>
-      <viewAttribute id="FN_ReassessmentAmount"/>
-      <viewAttribute id="ReassessmentAmountCleared"/>
-      <viewAttribute id="LatestReassessment"/>
-      <viewAttribute id="All_FTTPs"/>
-      <viewAttribute id="CC_Reengagement_Time"/>
-      <viewAttribute id="CC_Todays_Date"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
-      <viewAttribute id="CC_FN_ReassessmentAmount"/>
-      <viewAttribute id="CC_ReassessmentAmountCleared"/>
-      <viewAttribute id="CC_LatestReassessment"/>
-      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_ContractValues"/>
-    <filter>&quot;CC_Reengagement_Time&quot; &gt; 0</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="R_CONTRACTVALUES_0">
-    <viewAttributes>
-      <viewAttribute id="AssessmentIssueDate"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYRSTARTDT"/>
-      <viewAttribute id="ACTIVE"/>
-      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="LatestReassessment"/>
-      <viewAttribute id="All_FTTPs"/>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum"/>
-      <viewAttribute id="CC_Todays_Date"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
-      <viewAttribute id="CC_FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="CC_ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="CC_LatestReassessment"/>
-      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_ContractValues_0"/>
-    <windowFunction dynamicPartitionAttributes="false">
-      <partitionViewAttributeName>ZZ_PARTNER</partitionViewAttributeName>
-      <order byViewAttributeName="CC_Reengagement_Time" direction="ASC"/>
-      <rankThreshold>
-        <value>1</value>
-      </rankThreshold>
-    </windowFunction>
-  </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="R_CONTRACTVALUES_NOT_0">
-    <viewAttributes>
-      <viewAttribute id="AssessmentIssueDate"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYRSTARTDT"/>
-      <viewAttribute id="ACTIVE"/>
-      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="LatestReassessment"/>
-      <viewAttribute id="All_FTTPs"/>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="sum"/>
-      <viewAttribute id="CC_Todays_Date"/>
-      <viewAttribute id="CC_AssessmentIssueDate"/>
-      <viewAttribute id="CC_FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="CC_ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="CC_LatestReassessment"/>
-      <viewAttribute id="CC_Reengagement_Time_Dimension"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_ContractValues_Not_0"/>
-    <windowFunction dynamicPartitionAttributes="false">
-      <partitionViewAttributeName>ZZ_PARTNER</partitionViewAttributeName>
-      <order byViewAttributeName="CC_Reengagement_Time" direction="ASC"/>
-      <rankThreshold>
-        <value>1</value>
-      </rankThreshold>
-    </windowFunction>
-  </calculationView>
 </calculationViews>
-<logicalModel id="J_BPOVERVIEW_SCVORG">
+<logicalModel id="J_BPINFO_SCVORG">
   <attributes>
     <attribute id="PARTNER" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="PARTNER"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="PARTNER"/>
     </attribute>
     <attribute id="CC_ZACN" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ACN"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_ZACN"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_ZACN"/>
     </attribute>
     <attribute id="CC_ABN" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABN"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_ABN"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_ABN"/>
     </attribute>
     <attribute id="RES_STD_ADDR_ADDRESS_DELIVERY" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Residential Address"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="RES_STD_ADDR_ADDRESS_DELIVERY"/>
     </attribute>
     <attribute id="RES_STD_ADDR_LOCALITY" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Residential Suburb"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="RES_STD_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="RES_STD_ADDR_LOCALITY"/>
     </attribute>
     <attribute id="RES_STD_ADDR_REGION" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Residential State"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="RES_STD_ADDR_REGION"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="RES_STD_ADDR_REGION"/>
     </attribute>
     <attribute id="RES_STD_ADDR_POSTCODE1" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Residential Post Code"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="RES_STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="RES_STD_ADDR_POSTCODE1"/>
     </attribute>
     <attribute id="RES_TEL_NUMBER" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Residential Tel Number"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="RES_TEL_NUMBER"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="RES_TEL_NUMBER"/>
     </attribute>
     <attribute id="SER_STD_ADDR_ADDRESS_DELIVERY" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Service Address"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="SER_STD_ADDR_ADDRESS_DELIVERY"/>
     </attribute>
     <attribute id="SER_STD_ADDR_LOCALITY" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Service Suburb"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="SER_STD_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="SER_STD_ADDR_LOCALITY"/>
     </attribute>
     <attribute id="SER_STD_ADDR_REGION" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Service State"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="SER_STD_ADDR_REGION"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="SER_STD_ADDR_REGION"/>
     </attribute>
     <attribute id="SER_STD_ADDR_POSTCODE1" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Serviec Post Code"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="SER_STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="SER_STD_ADDR_POSTCODE1"/>
     </attribute>
     <attribute id="SER_TEL_NUMBER" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Service Tel Number"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="SER_TEL_NUMBER"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="SER_TEL_NUMBER"/>
     </attribute>
     <attribute id="RES_SMTP_ADDR" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Residential Email"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="RES_SMTP_ADDR"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="RES_SMTP_ADDR"/>
     </attribute>
     <attribute id="SER_SMTP_ADDR" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Service Email"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="SER_SMTP_ADDR"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="SER_SMTP_ADDR"/>
     </attribute>
     <attribute id="CC_FullName" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Name"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_FullName"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_FullName"/>
     </attribute>
     <attribute id="CC_FirstName" order="22" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="First Name"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_FirstName"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_FirstName"/>
     </attribute>
     <attribute id="CC_MiddleName" order="23" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Middle Name"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_MiddleName"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_MiddleName"/>
     </attribute>
     <attribute id="CC_LastName" order="24" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Name"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_LastName"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_LastName"/>
     </attribute>
     <attribute id="CLIENT" order="26" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAP Client"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CLIENT"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CLIENT"/>
     </attribute>
     <attribute id="BUT0ID_ENTRY_DATE" order="27" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BUT0ID Entry Date"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="BUT0ID_ENTRY_DATE"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="BUT0ID_ENTRY_DATE"/>
     </attribute>
     <attribute id="CC_Delegate" order="28" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Use Delegate for Portal"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Delegate"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Delegate"/>
     </attribute>
     <attribute id="ZZ_E_ASS_OPT" order="29" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Opt. In Electronic Assessment"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="ZZ_E_ASS_OPT"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="ZZ_E_ASS_OPT"/>
     </attribute>
     <attribute id="ZZ_OT_CONF" order="30" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Owner Type Confirmed"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="ZZ_OT_CONF"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="ZZ_OT_CONF"/>
     </attribute>
     <attribute id="RISK_CATEGORY" order="31" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Risk Category"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="RISK_CATEGORY"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="RISK_CATEGORY"/>
     </attribute>
     <attribute id="CODEID" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Code ID"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CODEID"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CODEID"/>
     </attribute>
     <attribute id="PERIODBEGIN" order="34" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Begin"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="PERIODBEGIN"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="PERIODBEGIN"/>
     </attribute>
     <attribute id="PERIODEND" order="35" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period End"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="PERIODEND"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="PERIODEND"/>
     </attribute>
     <attribute id="CC_Reengagement_Flag" order="38" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reengagement Flag"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Reengagement_Flag"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Reengagement_Flag"/>
     </attribute>
     <attribute id="CC_TaxYearStartDt" order="41" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Latest Reengagement Start Date"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_TaxYearStartDt"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_TaxYearStartDt"/>
     </attribute>
     <attribute id="CC_SCV_ORG_ID" order="42" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SCV ID (Organisation)"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_SCV_ORG_ID"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_SCV_ORG_ID"/>
     </attribute>
     <attribute id="CC_SCV_IND_ID" order="43" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SCV ID (Individual)"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_SCV_IND_ID"/>
-    </attribute>
-    <attribute id="CC_Reengagement_Time_Dimension" order="45" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Reengagement Time Dimension"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Reengagement_Time_Dimension"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_SCV_IND_ID"/>
     </attribute>
   
-    <attribute id="CC_Todays_Date" order="46" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Today&apos;s Date"/>
-  
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Todays_Date"/>
-  
-    </attribute>
-  
-    <attribute id="CC_AssessmentIssueDate" order="49" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Assessment Issue Date"/>
-  
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_AssessmentIssueDate"/>
-  
-    </attribute>
-  
-    <attribute id="CC_Birth_Date" order="50" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_Birth_Date" order="44" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Birth Date"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Birth_Date"/>
+  
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Birth_Date"/>
+  
     </attribute>
-    <attribute id="CC_Death_Date" order="51" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_Death_Date" order="45" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Death Date"/>
-      <keyMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Death_Date"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Death_Date"/>
+    </attribute>
+    <attribute id="CC_Reengagement_Time_Dimension" order="46" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_Reengagement_Time_Dimension"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Reengagement_Time_Dimension"/>
+    </attribute>
+  
+    <attribute id="CC_Reengagement_Time" order="47" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_Reengagement_Time"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Reengagement_Time"/>
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -1958,47 +1712,33 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <keyCalculation datatype="DATE" expressionLanguage="SQL">
         <formula>TO_DATE(&quot;BUT0ID_ENTRY_DATE&quot;)</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="CC_Age" order="25" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Age"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Age"/>
+      <measureMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Age"/>
     </measure>
     <measure id="RISK_SCORE" order="32" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Risk Score"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="RISK_SCORE"/>
+      <measureMapping columnObjectName="J_BPINFO_SCVORG" columnName="RISK_SCORE"/>
     </measure>
     <measure id="CUST_ID" order="36" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BP Number"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CUST_ID"/>
+      <measureMapping columnObjectName="J_BPINFO_SCVORG" columnName="CUST_ID"/>
     </measure>
     <measure id="CC_BP_Count" order="37" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BP Count"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_BP_Count"/>
+      <measureMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_BP_Count"/>
     </measure>
     <measure id="CC_Individual" order="39" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Individual"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Individual"/>
+      <measureMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Individual"/>
     </measure>
     <measure id="CC_Non-Individual" order="40" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Non-Individual"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Non-Individual"/>
-    </measure>
-    <measure id="CC_Reengagement_Time" order="44" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Reengagement Time"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="CC_Reengagement_Time"/>
-    </measure>
-  
-    <measure id="AssessmentAmount" order="47" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="AssessmentAmount"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="AssessmentAmount"/>
-    </measure>
-    <measure id="AssessmentAmountCleared" order="48" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="AssessmentAmountCleared"/>
-      <measureMapping columnObjectName="J_BPOVERVIEW_SCVORG" columnName="AssessmentAmountCleared"/>
-    </measure>
-  </baseMeasures>
+      <measureMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Non-Individual"/>
+    </measure></baseMeasures>
   <calculatedMeasures>
     <measure id="CC_Risk_Score" order="2" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Risk Score"/>
@@ -2072,25 +1812,25 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="996" y="112"/>
+      <upperLeftCorner x="1018" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="409" y="2156"/>
+      <upperLeftCorner x="897" y="2196"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPROLE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="521" y="2461"/>
+      <upperLeftCorner x="518" y="2501"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ADR2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1250" y="2156"/>
+      <upperLeftCorner x="1317" y="2196"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="705" y="1816"/>
+      <upperLeftCorner x="751" y="1836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="J_BPINFO_ACN" modelObjectType="JoinNodeInput">
@@ -2102,7 +1842,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="593" y="1996"/>
+      <upperLeftCorner x="777" y="2036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BPINFO" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
@@ -2114,25 +1854,25 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_BP_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="829" y="2174"/>
+      <upperLeftCorner x="477" y="2214"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_BP_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="619" y="2174"/>
+      <upperLeftCorner x="687" y="2214"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BP_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="731" y="2316"/>
+      <upperLeftCorner x="518" y="2356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BP_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="521" y="2316"/>
+      <upperLeftCorner x="728" y="2356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="731" y="1656"/>
+      <upperLeftCorner x="958" y="1676"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="J_BPINFO_RESADDRS" modelObjectType="JoinNodeInput">
@@ -2144,11 +1884,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="J_RESID_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="916" y="1824"/>
+      <upperLeftCorner x="985" y="1844"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRS_PHONE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1067" y="1996"/>
+      <upperLeftCorner x="1133" y="2036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="J_ADDRS_PHONE" modelObjectType="JoinNodeInput">
@@ -2160,7 +1900,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1040" y="2156"/>
+      <upperLeftCorner x="1107" y="2196"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="J_ADDRES_EMAIL" modelObjectType="JoinNodeInput">
@@ -2173,42 +1913,42 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
   
     <shape expanded="true" modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="941" y="2326"/>
+      <upperLeftCorner x="969" y="2366"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_ADR6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1151" y="2316"/>
+      <upperLeftCorner x="1179" y="2356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="941" y="2461"/>
+      <upperLeftCorner x="969" y="2501"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SERVICE_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1126" y="1824"/>
+      <upperLeftCorner x="1195" y="1844"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="931" y="1496"/>
+      <upperLeftCorner x="1077" y="1516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="J_BPINFO_SERADDRS" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
+      <upperLeftCorner x="-12" y="22"/>
       <rectangleSize width="293"/>
     </shape>
     <shape modelObjectName="J_SERVICE_ADDRS" modelObjectNameSpace="J_BPINFO_SERADDRS" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="451" y="30"/>
+      <upperLeftCorner x="341" y="22"/>
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PORTALID" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="309" y="2316"/>
+      <upperLeftCorner x="308" y="2356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_PORTALID_RELS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="168" y="2156"/>
+      <upperLeftCorner x="243" y="2196"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PORTALID" modelObjectNameSpace="J_PORTALID_RELS" modelObjectType="JoinNodeInput">
@@ -2220,11 +1960,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BUT050" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="2316"/>
+      <upperLeftCorner x="91" y="2356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_PORTALACC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="905" y="1336"/>
+      <upperLeftCorner x="1163" y="1336"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="J_BPINFO_PORTALACC" modelObjectType="JoinNodeInput">
@@ -2236,24 +1976,24 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PORTALACC_RELS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="345" y="1816"/>
+      <upperLeftCorner x="452" y="1836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PORTALID" modelObjectNameSpace="J_PORTALACC_RELS" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
+      <upperLeftCorner x="105" y="68"/>
+      <rectangleSize width="202"/>
     </shape>
     <shape modelObjectName="R_ONLY_ONE_REL" modelObjectNameSpace="J_PORTALACC_RELS" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
+      <upperLeftCorner x="377" y="68"/>
+      <rectangleSize width="202"/>
     </shape>
     <shape expanded="true" modelObjectName="R_ONLY_ONE_REL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="168" y="2014"/>
+      <upperLeftCorner x="243" y="2054"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_OPTINFLAG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="830" y="1176"/>
+      <upperLeftCorner x="1153" y="1176"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_PORTALACC" modelObjectNameSpace="J_BPINFO_OPTINFLAG" modelObjectType="JoinNodeInput">
@@ -2265,15 +2005,15 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPCONTRACT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="676" y="1336"/>
+      <upperLeftCorner x="953" y="1336"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPOwnerTypes" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="574" y="1176"/>
+      <upperLeftCorner x="943" y="1176"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="803" y="1016"/>
+      <upperLeftCorner x="1072" y="1016"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_OPTINFLAG" modelObjectNameSpace="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectType="JoinNodeInput">
@@ -2286,11 +2026,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
   
     <shape expanded="true" modelObjectName="P_LITRisk" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="593" y="1016"/>
+      <upperLeftCorner x="862" y="1016"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_LTIRISK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="777" y="856"/>
+      <upperLeftCorner x="917" y="856"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectNameSpace="J_BPINFO_LTIRISK" modelObjectType="JoinNodeInput">
@@ -2303,110 +2043,89 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
   
     <shape expanded="true" modelObjectName="P_ContractValues" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1137" y="1336"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="R_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="988" y="794"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="U_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1092" y="929"/>
+      <upperLeftCorner x="1129" y="856"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
-    <shape expanded="true" modelObjectName="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="410" y="696"/>
+    <shape expanded="true" modelObjectName="J_BPINFO_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="857" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_BPINFO_LTIRISK" modelObjectNameSpace="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_BPINFO_LTIRISK" modelObjectNameSpace="J_BPINFO_HOMEEXEMPTIONREENGAGEMENT" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="293"/>
     </shape>
-    <shape modelObjectName="R_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="R_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="J_BPINFO_HOMEEXEMPTIONREENGAGEMENT" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="397" y="30"/>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="383" y="874"/>
+      <upperLeftCorner x="652" y="874"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="383" y="1016"/>
+      <upperLeftCorner x="652" y="1016"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_SCVIND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1006" y="696"/>
+      <upperLeftCorner x="647" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="J_BPOVERVIEW_SCVIND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="739" y="376"/>
+    <shape expanded="true" modelObjectName="J_BPINFO_SCVIND" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="735" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_BPOVERVIEW_CONTRACTVALUES" modelObjectNameSpace="J_BPOVERVIEW_SCVIND" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_BPINFO_CONTRACTVALUES" modelObjectNameSpace="J_BPINFO_SCVIND" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="293"/>
     </shape>
-    <shape modelObjectName="R_SCVIND" modelObjectNameSpace="J_BPOVERVIEW_SCVIND" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="351" y="30"/>
-      <rectangleSize width="250"/>
+    <shape modelObjectName="R_SCVIND" modelObjectNameSpace="J_BPINFO_SCVIND" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="435" y="30"/>
+      <rectangleSize width="172"/>
     </shape>
-    <shape expanded="true" modelObjectName="J_BPOVERVIEW_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="712" y="536"/>
+    <shape expanded="true" modelObjectName="J_BPINFO_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="927" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_BPINFO_LTIRISK_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="J_BPOVERVIEW_CONTRACTVALUES" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_BPINFO_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="J_BPINFO_CONTRACTVALUES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="293"/>
     </shape>
-    <shape modelObjectName="R_CONTRACTVALUES" modelObjectNameSpace="J_BPOVERVIEW_CONTRACTVALUES" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="395" y="30"/>
+    <shape modelObjectName="AGG_CONTRACTVALUES" modelObjectNameSpace="J_BPINFO_CONTRACTVALUES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="439" y="30"/>
       <rectangleSize width="271"/>
     </shape>
   
     <shape expanded="true" modelObjectName="R_SCVIND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="927" y="554"/>
+      <upperLeftCorner x="709" y="554"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+    <shape expanded="true" modelObjectName="AGG_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1081" y="714"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
   
     <shape expanded="true" modelObjectName="P_SCVORG" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="1137" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="J_BPOVERVIEW_SCVORG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="996" y="217"/>
+    <shape expanded="true" modelObjectName="J_BPINFO_SCVORG" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1018" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_BPOVERVIEW_SCVIND" modelObjectNameSpace="J_BPOVERVIEW_SCVORG" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_BPINFO_SCVIND" modelObjectNameSpace="J_BPINFO_SCVORG" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="293"/>
     </shape>
-    <shape modelObjectName="R_SCVORG" modelObjectNameSpace="J_BPOVERVIEW_SCVORG" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="359" y="30"/>
-      <rectangleSize width="250"/>
+    <shape modelObjectName="R_SCVORG" modelObjectNameSpace="J_BPINFO_SCVORG" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="425" y="30"/>
+      <rectangleSize width="178"/>
     </shape>
     <shape expanded="true" modelObjectName="R_SCVORG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1077" y="394"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_ContractValues_0" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1048" y="1184"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_ContractValues_Not_0" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1258" y="1184"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="R_CONTRACTVALUES_0" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1049" y="1074"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="R_CONTRACTVALUES_NOT_0" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1248" y="1074"/>
+      <upperLeftCorner x="1082" y="394"/>
       <rectangleSize height="30" width="160"/>
     </shape></shapes>
 </layout>
