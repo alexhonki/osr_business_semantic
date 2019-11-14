@@ -517,7 +517,7 @@
       <keyMapping columnObjectName="Join_2" columnName="ZZ_PARTNER"/>
     </attribute>
     <attribute id="TAXYR" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Tax Year"/>
+      <descriptions defaultDescription="Year"/>
       <keyMapping columnObjectName="Join_2" columnName="TAXYR"/>
     </attribute>
     <attribute id="FBNUM" order="8" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
@@ -529,7 +529,7 @@
       <keyMapping columnObjectName="Join_2" columnName="TaxBracket"/>
     </attribute>
     <attribute id="UnissuedAssessmentFlag" order="14" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
-      <descriptions defaultDescription="Unissued AssessmentFlag"/>
+      <descriptions defaultDescription="Unissued Assessment Flag"/>
       <keyMapping columnObjectName="Join_2" columnName="UnissuedAssessmentFlag"/>
     </attribute>
     <attribute id="TAXYRENDDT" order="15" displayAttribute="false" attributeHierarchyActive="false">
@@ -571,19 +571,19 @@
   <calculatedAttributes>
     <calculatedAttribute id="CC_AssessmentStatus" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Assessment Status"/>
-      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="13">
+      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
         <formula>if(&quot;UnissuedAssessmentFlag&quot;='X','Unissued',
-    If(&quot;FBNUM&quot;!='' and &quot;UnissuedAssessmentFlag&quot;='','Issued',''))</formula>
+    If(&quot;FBNUM&quot;!='' and &quot;UnissuedAssessmentFlag&quot;='','Issued','Not Assessed'))</formula>
       </keyCalculation>
     </calculatedAttribute>
     <calculatedAttribute id="CC_TaxpayerStatus" order="3" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Taxpayer Status"/>
-      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="13">
+      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
         <formula>if(&quot;ZZ_NOIA_DATE&quot;='00000000' and &quot;FBNUM&quot;!='','Existing',
-    if(&quot;ZZ_NOIA_DATE&quot;='00000000' and &quot;FBNUM&quot;='','',
+    if(&quot;ZZ_NOIA_DATE&quot;='00000000' and &quot;FBNUM&quot;='','Non-Taxpayer',
            if(&quot;ZZ_NOIA_DATE&quot;&gt;=&quot;TAXYRSTARTDT&quot; and &quot;ZZ_NOIA_DATE&quot;&lt;=&quot;TAXYRENDDT&quot;,'FTTP',
             if(&quot;ZZ_NOIA_DATE&quot;&lt;&quot;TAXYRSTARTDT&quot;,'Existing',
-                IF(&quot;ZZ_NOIA_DATE&quot;&gt;&quot;TAXYRENDDT&quot;,'','')))))</formula>
+                IF(&quot;ZZ_NOIA_DATE&quot;&gt;&quot;TAXYRENDDT&quot;,'Non-Taxpayer','Non_Taxpayer')))))</formula>
       </keyCalculation>
     </calculatedAttribute>
     <calculatedAttribute id="CC_LiabilityStatus" order="29" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
@@ -594,31 +594,31 @@
     </calculatedAttribute>
   
     <calculatedAttribute id="CC_Reassessment" order="33" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
-      <descriptions defaultDescription="Reassessments"/>
+      <descriptions defaultDescription="Reassessment Status"/>
   
-      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="13">
+      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
   
-        <formula>If(&quot;FN_ReassessmentAmount&quot;!=0 and not isnull(&quot;FN_ReassessmentAmount&quot;),'Reassessed','')</formula>
+        <formula>If(&quot;FN_ReassessmentAmount&quot;!=0 and not isnull(&quot;FN_ReassessmentAmount&quot;),'Reassessed','Not Reassessed')</formula>
   
       </keyCalculation>
   
     </calculatedAttribute>
     <calculatedAttribute id="CC_HomeExemptionFlag" hidden="false" order="35" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Home Exemption"/>
-      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
-        <formula>IF(&quot;CC_HomeExemptionParcels&quot;&gt;0,'Home Exemption','')</formula>
+      <descriptions defaultDescription="Home Exemption Status"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
+        <formula>IF(&quot;CC_HomeExemptionParcels&quot;&gt;0,'Home Exemption','No Home Exemption')</formula>
       </keyCalculation>
     </calculatedAttribute>
     <calculatedAttribute id="CC_PrimaryProductionFlag" hidden="false" order="36" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Primary Production"/>
-      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
-        <formula>IF(&quot;CC_PrimaryProductionParcels&quot;&gt;0,'Primary Production','')</formula>
+      <descriptions defaultDescription="Primary Production Status"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
+        <formula>IF(&quot;CC_PrimaryProductionParcels&quot;&gt;0,'Primary Production','No Primary Production')</formula>
       </keyCalculation>
     </calculatedAttribute>
     <calculatedAttribute id="CC_SubdividerFlag" hidden="false" order="40" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Subdivider Discount Flag"/>
-      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
-        <formula>IF(&quot;CC_SubdivderParcels&quot;&gt;0,'Subdivider','')</formula>
+      <descriptions defaultDescription="Subdivider Discount Status"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
+        <formula>IF(&quot;CC_SubdivderParcels&quot;&gt;0,'Subdivider Discount','No Subdivider Discount')</formula>
       </keyCalculation>
     </calculatedAttribute>
   </calculatedAttributes>
@@ -648,11 +648,11 @@
       <measureMapping columnObjectName="Join_2" columnName="AssessmentAmountCleared"/>
     </measure>
     <measure id="PROPERTYCNT" order="18" aggregationType="sum" measureType="simple" replaceNull="true">
-      <descriptions defaultDescription="Property Count"/>
+      <descriptions defaultDescription="Properties"/>
       <measureMapping columnObjectName="Join_2" columnName="PROPERTYCNT"/>
     </measure>
     <measure id="PARCELCNT" order="19" aggregationType="sum" measureType="simple" replaceNull="true">
-      <descriptions defaultDescription="Parcel Count"/>
+      <descriptions defaultDescription="Parcels"/>
       <measureMapping columnObjectName="Join_2" columnName="PARCELCNT"/>
     </measure>
     <measure id="TAXESTIMATE" order="20" aggregationType="sum" measureType="simple" replaceNull="true">
@@ -676,21 +676,21 @@
       <measureMapping columnObjectName="Join_2" columnName="ABSURCHARGE"/>
     </measure>
     <measure id="CC_SubdivderParcels" order="37" aggregationType="sum" measureType="simple" replaceNull="true">
-      <descriptions defaultDescription="SDD Parcel Count"/>
+      <descriptions defaultDescription="Subdivider Discount Parcels"/>
       <measureMapping columnObjectName="Join_2" columnName="CC_SubdivderParcels"/>
     </measure>
     <measure id="CC_PrimaryProductionParcels" order="38" aggregationType="sum" measureType="simple" replaceNull="true">
-      <descriptions defaultDescription="PP Parcel Count"/>
+      <descriptions defaultDescription="Primary Production Parcels"/>
       <measureMapping columnObjectName="Join_2" columnName="CC_PrimaryProductionParcels"/>
     </measure>
     <measure id="CC_HomeExemptionParcels" order="39" aggregationType="sum" measureType="simple" replaceNull="true">
-      <descriptions defaultDescription="HE Parcel Count"/>
+      <descriptions defaultDescription="Home Exemption Parcels"/>
       <measureMapping columnObjectName="Join_2" columnName="CC_HomeExemptionParcels"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
     <measure id="CC_BPCount" order="2" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
-      <descriptions defaultDescription="BP Count"/>
+      <descriptions defaultDescription="BPs"/>
       <exceptionAggregation>
         <attribute attributeName="ZZ_PARTNER"/>
       </exceptionAggregation>
@@ -717,7 +717,7 @@
       
       </measure>
     <measure id="CC_AssessmentCounter" order="34" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
-      <descriptions defaultDescription="Assessment Counter"/>
+      <descriptions defaultDescription="Assessments"/>
       <exceptionAggregation>
         <attribute attributeName="FBNUM"/>
       </exceptionAggregation>
