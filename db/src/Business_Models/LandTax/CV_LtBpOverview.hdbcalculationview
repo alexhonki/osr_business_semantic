@@ -1009,7 +1009,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="All_FTTPs"/>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_Reengagement_Time" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_Reengagement_Time_Calculation" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <formula>IF(
     ISNULL(&quot;CC_AssessmentIssueDate&quot;) and ISNULL(&quot;CC_LatestReassessment&quot;),
     Null,
@@ -1228,8 +1228,9 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="TAXYRSTARTDT"/>
       <viewAttribute id="TAXYRENDDT"/>
       <viewAttribute id="CC_SCV_IND_ID"/>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="min"/>
       <viewAttribute id="CC_Reengagement_Time_Dimension"/>
+    
+      <viewAttribute id="CC_Reengagement_Time"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_BPINFO_CONTRACTVALUES">
@@ -1273,8 +1274,9 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxYearStartDt" source="CC_TaxYearStartDt"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
     </input>
     <input node="R_SCVIND">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_SCV_IND_ID" source="CC_SCV_IND_ID"/>
@@ -1324,11 +1326,16 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="CC_TaxYearStartDt"/>
       <viewAttribute id="TAXYRSTARTDT"/>
       <viewAttribute id="TAXYRENDDT"/>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="min"/>
-      <viewAttribute id="ZZ_PARTNER"/></viewAttributes>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="CC_Reengagement_Time_Calculation" aggregationType="min"/>
+    </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Reengagement_Time_Dimension" datatype="VARCHAR" length="13" expressionLanguage="SQL">
         <formula>&quot;CC_Reengagement_Time&quot;</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_Reengagement_Time" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+        <formula>IF(ISNULL(&quot;CC_Reengagement_Time_Calculation&quot;), 0,&quot;CC_Reengagement_Time_Calculation&quot;)</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="J_BPINFO_HOMEEXEMPTIONREENGAGEMENT">
@@ -1374,7 +1381,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/></input>
     <input node="AGG_CONTRACTVALUES">
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Calculation" source="CC_Reengagement_Time_Calculation"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="ZZ_PARTNER"/>
     </input>
     <filter>&quot;ZZ_PARTNER&quot; is not null</filter>
@@ -1400,7 +1407,8 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_CONTRACTVALUES">
     <viewAttributes>
       <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="min"/></viewAttributes>
+      <viewAttribute id="CC_Reengagement_Time_Calculation" aggregationType="min"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_ContractValues"/>
@@ -1465,8 +1473,9 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <viewAttribute id="TAXYRENDDT"/>
       <viewAttribute id="CC_SCV_ORG_ID"/>
       <viewAttribute id="CC_SCV_IND_ID"/>
-      <viewAttribute id="CC_Reengagement_Time" aggregationType="min"/>
       <viewAttribute id="CC_Reengagement_Time_Dimension"/>
+    
+      <viewAttribute id="CC_Reengagement_Time"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Birth_Date" datatype="DATE" expressionLanguage="SQL">
@@ -1518,8 +1527,9 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_SCV_IND_ID" source="CC_SCV_IND_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Dimension" source="CC_Reengagement_Time_Dimension"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time" source="CC_Reengagement_Time"/>
     </input>
     <input node="R_SCVORG">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_SCV_ORG_ID" source="CC_SCV_ORG_ID"/>
@@ -1686,9 +1696,14 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <descriptions defaultDescription="Death Date"/>
       <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Death_Date"/>
     </attribute>
-    <attribute id="CC_Reengagement_Time_Dimension" order="47" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_Reengagement_Time_Dimension" order="46" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CC_Reengagement_Time_Dimension"/>
       <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Reengagement_Time_Dimension"/>
+    </attribute>
+  
+    <attribute id="CC_Reengagement_Time" order="47" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_Reengagement_Time"/>
+      <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Reengagement_Time"/>
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -1723,12 +1738,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     <measure id="CC_Non-Individual" order="40" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Non-Individual"/>
       <measureMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Non-Individual"/>
-    </measure>
-    <measure id="CC_Reengagement_Time" order="46" aggregationType="min" measureType="simple">
-      <descriptions defaultDescription="CC_Reengagement_Time"/>
-      <measureMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Reengagement_Time"/>
-    </measure>
-  </baseMeasures>
+    </measure></baseMeasures>
   <calculatedMeasures>
     <measure id="CC_Risk_Score" order="2" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Risk Score"/>
