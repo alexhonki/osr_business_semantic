@@ -95,9 +95,7 @@
       <viewAttribute id="REASON_CODE"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::SCMG_T_CASE_ATTR"/>
-    <filter>&quot;CATEGORY&quot;!='RY'</filter>
-  </calculationView>
+    <input node="osr.business.semantic.db.synonyms::SCMG_T_CASE_ATTR"/></calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CASE_INDEX">
     <viewAttributes>
       <viewAttribute id="CLIENT"/>
@@ -4326,7 +4324,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_OSRDIVRESP" source="PARTNER_NO"/></input>
     <filter>&quot;PARTNER_FCT&quot;='Z0000003' AND &quot;CRM_MAIN_PARTNER&quot; = 'X'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_ATTRIBUTES" cardinality="C1_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_ATTRIBUTES" cardinality="C1_1" joinType="leftOuter" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="CRM_SCH_REF_TIME" aggregationType="sum"/>
       <viewAttribute id="CRM_BUS_REF_TIME" aggregationType="sum"/>
@@ -4489,6 +4487,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE" source="REASON_CODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
     </input>
+    <filter>&quot;CATEGORY&quot;!='RY'</filter>
     <joinAttribute name="CASE_GUID"/>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_CASEP">
@@ -10699,7 +10698,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     <joinAttribute name="MANDT"/>
     <joinAttribute name="JOIN$PARTNER_NO_CORREC$PARTNER"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_CHANGEDUSER_CASE" cardinality="CN_1" joinType="referential" referentialDirection="left">
+  <calculationView xsi:type="Calculation:JoinView" id="J_CHANGEDUSER_CASE" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="UserCreatedBy"/>
       <viewAttribute id="UserChangedBy"/>
@@ -11484,7 +11483,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Days_Bt_Creation" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;STATUS_DESC&quot;='Closed' or &quot;STATUS_DESC&quot;='Complete' or &quot;STATUS_DESC&quot;='Completed' or &quot;STATUS_DESC&quot;='Discontinued' or &quot;STATUS_DESC&quot;='Finalised',daysbetween(&quot;CC_DateCreated&quot;, &quot;CC_DateClosed&quot;), daysbetween(&quot;CC_DateCreated&quot;, now()))</formula>
+        <formula>if(&quot;STATUS_DESC&quot;='Closed' or &quot;STATUS_DESC&quot;='Complete' or &quot;STATUS_DESC&quot;='Completed' or &quot;STATUS_DESC&quot;='Discontinued' or &quot;STATUS_DESC&quot;='Finalised' or (&quot;PROFILE_ID&quot; = 'ZIPTSP' AND &quot;STAT_ORDERNO&quot; = '50'),daysbetween(&quot;CC_DateCreated&quot;, &quot;CC_DateClosed&quot;), daysbetween(&quot;CC_DateCreated&quot;, now()))</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="J_CLOSEDUSER_CASES">
@@ -12944,7 +12943,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     </shape>
     <shape modelObjectName="P_USER_INFO" modelObjectNameSpace="J_CREATEDUSER_CASE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="339" y="393"/>
-      <rectangleSize width="152.0107421875"/>
+      <rectangleSize width="152"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SUCCESS_DISCTYPE" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="1410" y="1036"/>
@@ -13257,8 +13256,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="P_USER_INFO" modelObjectNameSpace="J_CHANGEDUSER_CASE" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="313" y="393"/>
-      <rectangleSize width="152.0107421875"/>
+      <upperLeftCorner x="330" y="222"/>
+      <rectangleSize width="152"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CLOSEDUSER_CASES" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="1284" y="536"/>
@@ -13294,7 +13293,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     </shape>
     <shape modelObjectName="P_USER_INFO" modelObjectNameSpace="NEJ_RESPUSER_CASE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="393" y="374"/>
-      <rectangleSize width="152.0107421875"/>
+      <rectangleSize width="152"/>
     </shape></shapes>
 </layout>
 </Calculation:scenario>
