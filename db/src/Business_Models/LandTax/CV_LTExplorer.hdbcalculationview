@@ -305,6 +305,15 @@
     </input>
     <joinAttribute name="ZZ_PARTNER"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Agg_CV_ContractValueLocal">
+    <viewAttributes>
+      <viewAttribute id="CC_TotalAssessments" aggregationType="sum"/>
+    
+      <viewAttribute id="ZZ_PARTNER"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CVContractValuesLocal"/>
+  </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_Agg_Address_Rank_To_HE_Parcel" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="ZZ_NOIA_DATE"/>
@@ -602,15 +611,6 @@
     <joinAttribute name="ZZ_PARTNER"/>
     <joinAttribute name="TAXYR"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="Agg_CV_ContractValueLocal">
-    <viewAttributes>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="CC_TotalAssessments" aggregationType="sum"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="P_CVContractValuesLocal"/>
-  </calculationView>
 </calculationViews>
 <logicalModel id="J_Agg_Address_Rank_To_SDD_Parcel">
   <attributes>
@@ -678,10 +678,10 @@
     <calculatedAttribute id="CC_AssessmentStatus" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true" replaceNullBy="Not Assessed">
       <descriptions defaultDescription="Assessment Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
-        <formula>if(&quot;UnissuedAssessmentFlag&quot;='X','Unissued',
+        <formula>if(&quot;UnissuedAssessmentFlag&quot;='X' or (&quot;CC_LiabilityStatus&quot;='Liable' and isnull(&quot;FBNUM&quot;)),'Unissued',
     If(not isnull(&quot;FBNUM&quot;),'Issued','Not Assessed'))</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="CC_TaxpayerStatus" order="3" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true" replaceNullBy="Non-Taxpayer">
       <descriptions defaultDescription="Taxpayer Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
@@ -692,13 +692,13 @@
             if(&quot;ZZ_NOIA_DATE&quot;&lt;&quot;TAXYRSTARTDT&quot;,'Existing Taxpayer',
                 IF(&quot;ZZ_NOIA_DATE&quot;&gt;&quot;TAXYRENDDT&quot;,'Non-Taxpayer','Non-Taxpayer'))))))</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="CC_LiabilityStatus" order="29" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liability Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="13">
         <formula>if(&quot;TAXESTIMATE&quot;&gt;0,'Liable','Not liable')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   
     <calculatedAttribute id="CC_Reassessment" order="33" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Reassessment Status"/>
@@ -708,25 +708,26 @@
         <formula>If(&quot;FN_ReassessmentAmount&quot;!=0 and not isnull(&quot;FN_ReassessmentAmount&quot;),'Reassessed','Not Reassessed')</formula>
   
       </keyCalculation>
-      </calculatedAttribute>
+  
+    </calculatedAttribute>
     <calculatedAttribute id="CC_HomeExemptionFlag" hidden="false" order="35" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Home Exemption Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
         <formula>IF(&quot;CC_HomeExemptionParcels&quot;&gt;0,'Home Exemption','No Home Exemption')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="CC_PrimaryProductionFlag" hidden="false" order="36" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Primary Production Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
         <formula>IF(&quot;CC_PrimaryProductionParcels&quot;&gt;0,'Primary Production','No Primary Production')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="CC_SubdividerFlag" hidden="false" order="40" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subdivider Discount Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
         <formula>IF(&quot;CC_SubdivderParcels&quot;&gt;0,'Subdivider Discount','No Subdivider Discount')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="InvoicedAmount" order="7" aggregationType="sum" measureType="simple" replaceNull="true" unconverted="true">
@@ -896,6 +897,11 @@
       <rectangleSize width="196"/>
     </shape>
   
+    <shape expanded="true" modelObjectName="Agg_CV_ContractValueLocal" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="494" y="1039"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="J_Agg_Address_Rank_To_HE_Parcel" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="538" y="556"/>
       <rectangleSize height="30" width="160"/>
@@ -948,11 +954,6 @@
     <shape modelObjectName="P_CV_OwnershipCNRES_Subdivdier" modelObjectNameSpace="J_Agg_Address_Rank_To_SDD_Parcel" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="205"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="Agg_CV_ContractValueLocal" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="494" y="1039"/>
-      <rectangleSize height="30" width="160"/>
     </shape></shapes>
 </layout>
 </Calculation:scenario>
