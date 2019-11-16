@@ -10,8 +10,8 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpAddresses">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpAddresses</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CV_ContractValuesLocal">
-    <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CV_ContractValuesLocal</resourceUri>
+  <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CV_ContractValues">
+    <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CV_ContractValues</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -100,7 +100,7 @@
       <viewAttribute id="CC_TotalAssessments" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="P_CVContractValuesLocal">
+    <input node="P_CVContractValues">
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYR" source="TAXYR"/>
@@ -143,7 +143,7 @@
     <joinAttribute leftColumn="ZZ_PARTNER" rightColumn="PARTNER" operator="EQ"/>
     <joinAttribute leftColumn="MANDT" rightColumn="CLIENT" operator="EQ"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CVContractValuesLocal" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CVContractValues" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="ZZ_NOIA_DATE"/>
       <viewAttribute id="ZZ_PARTNER"/>
@@ -179,7 +179,7 @@
         <formula>if(&quot;FBNUM&quot;!='' or not isnull(&quot;FBNUM&quot;),1,0)</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
-    <input node="osr.business.semantic.db.Business_Models.LandTax::CV_ContractValuesLocal"/>
+    <input node="osr.business.semantic.db.Business_Models.LandTax::CV_ContractValues"/>
     <filter>CURRENT_DATE&gt;&quot;TAXYRSTARTDT&quot;</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_One_Address_Per_BP">
@@ -220,7 +220,7 @@
       <viewAttribute id="CC_TotalAssessments" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="J_Agg_CV_Contract_Results_NEJ_BP_Address"/>
+    <input node="J_Agg_CV_Contract_Value_NEJ_BP_Address"/>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>ZZ_PARTNER</partitionViewAttributeName>
       <partitionViewAttributeName>TAXYR</partitionViewAttributeName>
@@ -230,7 +230,7 @@
       </rankThreshold>
     </windowFunction>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_Agg_CV_Contract_Results_NEJ_BP_Address" cardinality="CN_N" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_Agg_CV_Contract_Value_NEJ_BP_Address" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="ZZ_NOIA_DATE"/>
       <viewAttribute id="ZZ_PARTNER"/>
@@ -299,20 +299,20 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE" source="ABSURCHARGE"/>
     </input>
-    <input node="Agg_CV_ContractValueLocal">
+    <input node="Agg_CV_ContractValue">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TotalAssessments" source="CC_TotalAssessments"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
     </input>
     <joinAttribute name="ZZ_PARTNER"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="Agg_CV_ContractValueLocal">
+  <calculationView xsi:type="Calculation:AggregationView" id="Agg_CV_ContractValue">
     <viewAttributes>
       <viewAttribute id="CC_TotalAssessments" aggregationType="sum"/>
     
       <viewAttribute id="ZZ_PARTNER"/></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="P_CVContractValuesLocal"/>
+    <input node="P_CVContractValues"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_Agg_Address_Rank_To_HE_Parcel" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
@@ -868,7 +868,7 @@
       <upperLeftCorner x="704" y="1021"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="P_CVContractValuesLocal" modelObjectNameSpace="NEJ_CVOwnershipCNRESP_CV_BPAddresses" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_CVContractValues" modelObjectNameSpace="NEJ_CVOwnershipCNRESP_CV_BPAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="427" y="35"/>
       <rectangleSize width="243"/>
     </shape>
@@ -876,7 +876,7 @@
       <upperLeftCorner x="45" y="10"/>
       <rectangleSize width="235"/>
     </shape>
-    <shape expanded="true" modelObjectName="P_CVContractValuesLocal" modelObjectNameSpace="CalculationView">
+    <shape expanded="true" modelObjectName="P_CVContractValues" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="491" y="1181"/>
       <rectangleSize height="30" width="231"/>
     </shape>
@@ -884,20 +884,20 @@
       <upperLeftCorner x="722" y="726"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="J_Agg_CV_Contract_Results_NEJ_BP_Address" modelObjectNameSpace="CalculationView">
+    <shape expanded="true" modelObjectName="J_Agg_CV_Contract_Value_NEJ_BP_Address" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="521" y="861"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="NEJ_CVOwnershipCNRESP_CV_BPAddresses" modelObjectNameSpace="J_Agg_CV_Contract_Results_NEJ_BP_Address" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="NEJ_CVOwnershipCNRESP_CV_BPAddresses" modelObjectNameSpace="J_Agg_CV_Contract_Value_NEJ_BP_Address" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="Agg_CV_ContractValueLocal" modelObjectNameSpace="J_Agg_CV_Contract_Results_NEJ_BP_Address" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="Agg_CV_ContractValue" modelObjectNameSpace="J_Agg_CV_Contract_Value_NEJ_BP_Address" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="374" y="44"/>
       <rectangleSize width="196"/>
     </shape>
   
-    <shape expanded="true" modelObjectName="Agg_CV_ContractValueLocal" modelObjectNameSpace="CalculationView">
+    <shape expanded="true" modelObjectName="Agg_CV_ContractValue" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="494" y="1039"/>
       <rectangleSize height="30" width="160"/>
     </shape>
