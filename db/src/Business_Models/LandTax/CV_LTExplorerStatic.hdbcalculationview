@@ -52,9 +52,13 @@
       <viewAttribute id="CC_SubdividerFlag"/>
       <viewAttribute id="CC_HomeExemptionParcels"/>
       <viewAttribute id="CC_PrimaryProductionParcels"/>
-      <viewAttribute id="CC_SubdivderParcels"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
+      <viewAttribute id="CC_SubdivderParcels"/></viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_AssessmentCount" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CC_AssessmentStatus&quot;='Issued',1,
+if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <input node="osr.business.semantic.db.Tables::LTExplorer"/>
   </calculationView>
 </calculationViews>
@@ -80,7 +84,7 @@
       <descriptions defaultDescription="Owner Type"/>
       <keyMapping columnObjectName="P_T_LTExplorer" columnName="CC_OwnerTypeDescription"/>
     </attribute>
-    <attribute id="CC_TaxpayerStatus" order="6" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true" replaceNullBy="Non-Taxpayer">
+    <attribute id="CC_TaxpayerStatus" order="6" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Taxpayer Status"/>
       <keyMapping columnObjectName="P_T_LTExplorer" columnName="CC_TaxpayerStatus"/>
     </attribute>
@@ -108,7 +112,7 @@
       <descriptions defaultDescription="Form Bundle Number"/>
       <keyMapping columnObjectName="P_T_LTExplorer" columnName="FBNUM"/>
     </attribute>
-    <attribute id="CC_AssessmentStatus" order="13" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true" replaceNullBy="Not Assessed">
+    <attribute id="CC_AssessmentStatus" order="13" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Assessment Status"/>
       <keyMapping columnObjectName="P_T_LTExplorer" columnName="CC_AssessmentStatus"/>
     </attribute>
@@ -220,22 +224,20 @@
       <descriptions defaultDescription="Reassessment Amount Cleared"/>
       <measureMapping columnObjectName="P_T_LTExplorer" columnName="ReassessmentAmountCleared"/>
     </measure>
+    <measure id="CC_AssessmentCount" order="40" aggregationType="sum" measureType="simple" replaceNull="true">
+      <descriptions defaultDescription="CC_AssessmentCount"/>
+      <measureMapping columnObjectName="P_T_LTExplorer" columnName="CC_AssessmentCount"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures>
-    <measure id="CC_AssessmentCount" order="39" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
-      <descriptions defaultDescription="Assessments"/>
-      <exceptionAggregation>
-        <attribute attributeName="FBNUM"/>
-      </exceptionAggregation>
-      <formula>1</formula>
-      
-      </measure>
-    <measure id="CC_BPCount" order="40" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+    <measure id="CC_BPCount" order="39" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="BPs"/>
       <exceptionAggregation>
         <attribute attributeName="ZZ_PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
       
       </measure>
   </calculatedMeasures>
