@@ -1,0 +1,25 @@
+PROCEDURE "osr.business.semantic.db.Procedures::P_PrtRegoCancel"( )							
+   LANGUAGE SQLSCRIPT							
+   SQL SECURITY INVOKER							
+   --DEFAULT SCHEMA <default_schema_name>							
+   AS							
+BEGIN							
+							
+	output_table =						
+	SELECT						
+		"CLIENT",					
+		"PARTNER",					
+		"CC_EventDate",					
+		"CC_ProcessType",					
+		"FISCAL_YEAR",					
+		"FiscalMonth",					
+		SUM("CC_EventCounter") AS "CC_EventCounter"					
+	FROM "osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtRegistrationCancellations"						
+	GROUP BY 	"CLIENT",	"PARTNER",	"CC_EventDate",	"CC_ProcessType",	"FISCAL_YEAR",	"FiscalMonth";
+							
+	DELETE FROM "osr.business.semantic.db.Tables::T_PrtRegoCancel";						
+							
+	INSERT INTO "osr.business.semantic.db.Tables::T_PrtRegoCancel"						
+	SELECT * FROM :output_table;						
+   							
+END							
