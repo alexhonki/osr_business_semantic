@@ -1335,7 +1335,9 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_Reengagement_Time" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>IF(ISNULL(&quot;CC_Reengagement_Time_Calculation&quot;), 0,&quot;CC_Reengagement_Time_Calculation&quot;)</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="J_BPINFO_HOMEEXEMPTIONREENGAGEMENT">
@@ -1379,7 +1381,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxYearStartDt" source="CC_TaxYearStartDt"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/></input>
-    <input node="AGG_CONTRACTVALUES">
+    <input node="R_CONTRACTVALUES">
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Reengagement_Time_Calculation" source="CC_Reengagement_Time_Calculation"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="ZZ_PARTNER"/>
@@ -1554,6 +1556,21 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       </rankThreshold>
     </windowFunction>
   </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_CONTRACTVALUES">
+    <viewAttributes>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="CC_Reengagement_Time_Calculation" aggregationType="min"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="AGG_CONTRACTVALUES"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>ZZ_PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="CC_Reengagement_Time_Calculation" direction="ASC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
 </calculationViews>
 <logicalModel id="J_BPINFO_SCVORG">
   <attributes>
@@ -1703,7 +1720,9 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
   
     <attribute id="CC_Reengagement_Time" order="47" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CC_Reengagement_Time"/>
+  
       <keyMapping columnObjectName="J_BPINFO_SCVORG" columnName="CC_Reengagement_Time"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -1712,7 +1731,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <keyCalculation datatype="DATE" expressionLanguage="SQL">
         <formula>TO_DATE(&quot;BUT0ID_ENTRY_DATE&quot;)</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="CC_Age" order="25" aggregationType="sum" measureType="simple">
@@ -1756,6 +1775,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       
       
       
+      
       </measure>
     <measure id="COUNT_1" order="3" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="BP Counter"/>
@@ -1763,6 +1783,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
         <attribute attributeName="PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -1791,10 +1812,13 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
   
       
   
+      
+  
       </measure>
     <measure id="CC_Non-Individual_Count" order="5" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Non Individual Count"/>
       <formula>IF(not isnull(&quot;CC_Reengagement_Flag&quot;) and &quot;CC_BP_Count&quot;&gt;0 and not isnull(&quot;CC_BP_Count&quot;) or not isnull(&quot;CC_Reengagement_Flag&quot;) and &quot;CC_Non-Individual&quot;&gt;0 and not isnull(&quot;CC_Non-Individual&quot;),(&quot;CC_Non-Individual&quot;/&quot;CC_BP_Count&quot;),0)</formula>
+      
       
       
       
@@ -1812,25 +1836,25 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="1018" y="112"/>
+      <upperLeftCorner x="892.3886610072282" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="897" y="2196"/>
+      <upperLeftCorner x="735.9286808983741" y="2176.9999856948853"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPROLE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="518" y="2501"/>
+      <upperLeftCorner x="874.0434089497444" y="2481.9999833106995"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ADR2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1317" y="2196"/>
+      <upperLeftCorner x="92.00000000000011" y="2176.9999856948853"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="751" y="1836"/>
+      <upperLeftCorner x="738.1440551189382" y="1816.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="J_BPINFO_ACN" modelObjectType="JoinNodeInput">
@@ -1842,7 +1866,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="777" y="2036"/>
+      <upperLeftCorner x="709.2620142317074" y="2016.9999868869781"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BPINFO" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
@@ -1854,25 +1878,25 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_BP_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="477" y="2214"/>
+      <upperLeftCorner x="945.9286808983741" y="2194.4999856948853"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_BP_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="687" y="2214"/>
+      <upperLeftCorner x="525.9286808983741" y="2194.4999856948853"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BP_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="518" y="2356"/>
+      <upperLeftCorner x="874.0434089497444" y="2336.9999845027924"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BP_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="728" y="2356"/>
+      <upperLeftCorner x="654.8625524483257" y="2336.9999845027924"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="958" y="1676"/>
+      <upperLeftCorner x="644.410093632614" y="1656.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="J_BPINFO_RESADDRS" modelObjectType="JoinNodeInput">
@@ -1884,11 +1908,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="J_RESID_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="985" y="1844"/>
+      <upperLeftCorner x="528.1137667477249" y="1824.499988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRS_PHONE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1133" y="2036"/>
+      <upperLeftCorner x="279.71448976378883" y="2016.9999868869781"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="J_ADDRS_PHONE" modelObjectType="JoinNodeInput">
@@ -1900,7 +1924,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1107" y="2196"/>
+      <upperLeftCorner x="306.38115643045546" y="2176.9999856948853"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="J_ADDRES_EMAIL" modelObjectType="JoinNodeInput">
@@ -1913,25 +1937,25 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
   
     <shape expanded="true" modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="969" y="2366"/>
+      <upperLeftCorner x="165.68351133855435" y="2346.9999845027924"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_ADR6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1179" y="2356"/>
+      <upperLeftCorner x="375.68351133855435" y="2336.9999845027924"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="969" y="2501"/>
+      <upperLeftCorner x="165.68351133855435" y="2481.9999833106995"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SERVICE_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1195" y="1844"/>
+      <upperLeftCorner x="318.11376674772475" y="1824.499988079071"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1077" y="1516"/>
+      <upperLeftCorner x="617.7434269659473" y="1496.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="J_BPINFO_SERADDRS" modelObjectType="JoinNodeInput">
@@ -1943,12 +1967,12 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PORTALID" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="308" y="2356"/>
+      <upperLeftCorner x="1294.0434089497444" y="2336.9999845027924"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_PORTALID_RELS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="243" y="2196"/>
+      <upperLeftCorner x="1158.748304999031" y="2176.9999856948853"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PORTALID" modelObjectNameSpace="J_PORTALID_RELS" modelObjectType="JoinNodeInput">
@@ -1960,11 +1984,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BUT050" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91" y="2356"/>
+      <upperLeftCorner x="1084.0434089497444" y="2336.9999845027924"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_PORTALACC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1163" y="1336"/>
+      <upperLeftCorner x="925.4741716065838" y="1336.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="J_BPINFO_PORTALACC" modelObjectType="JoinNodeInput">
@@ -1976,7 +2000,7 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PORTALACC_RELS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="452" y="1836"/>
+      <upperLeftCorner x="952.1408382732504" y="1816.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PORTALID" modelObjectNameSpace="J_PORTALACC_RELS" modelObjectType="JoinNodeInput">
@@ -1988,12 +2012,12 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="202"/>
     </shape>
     <shape expanded="true" modelObjectName="R_ONLY_ONE_REL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="243" y="2054"/>
+      <upperLeftCorner x="1158.748304999031" y="2034.4999868869781"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_OPTINFLAG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1153" y="1176"/>
+      <upperLeftCorner x="584.1396322978134" y="1176.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_PORTALACC" modelObjectNameSpace="J_BPINFO_OPTINFLAG" modelObjectType="JoinNodeInput">
@@ -2005,15 +2029,15 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPCONTRACT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="953" y="1336"/>
+      <upperLeftCorner x="557.4729656311467" y="1336.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPOwnerTypes" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="943" y="1176"/>
+      <upperLeftCorner x="794.1396322978134" y="1176.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1072" y="1016"/>
+      <upperLeftCorner x="694.5452280852842" y="1016.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_OPTINFLAG" modelObjectNameSpace="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectType="JoinNodeInput">
@@ -2026,11 +2050,11 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
   
     <shape expanded="true" modelObjectName="P_LITRisk" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="862" y="1016"/>
+      <upperLeftCorner x="904.5452280852843" y="1016.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_LTIRISK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="917" y="856"/>
+      <upperLeftCorner x="807.4740698538102" y="856.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_OPTIN_BPOWNERTYPES" modelObjectNameSpace="J_BPINFO_LTIRISK" modelObjectType="JoinNodeInput">
@@ -2043,13 +2067,13 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
     </shape>
   
     <shape expanded="true" modelObjectName="P_ContractValues" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1129" y="856"/>
+      <upperLeftCorner x="1114.5452280852842" y="1016.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="J_BPINFO_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="857" y="696"/>
+      <upperLeftCorner x="762.1316174483195" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_LTIRISK" modelObjectNameSpace="J_BPINFO_HOMEEXEMPTIONREENGAGEMENT" modelObjectType="JoinNodeInput">
@@ -2061,20 +2085,20 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="652" y="874"/>
+      <upperLeftCorner x="480.55674447158196" y="874.4999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="652" y="1016"/>
+      <upperLeftCorner x="480.55674447158196" y="1016.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_SCVIND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="647" y="696"/>
+      <upperLeftCorner x="542.6491164331529" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_SCVIND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="735" y="376"/>
+      <upperLeftCorner x="627.0951781304643" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_CONTRACTVALUES" modelObjectNameSpace="J_BPINFO_SCVIND" modelObjectType="JoinNodeInput">
@@ -2086,34 +2110,34 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="172"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="927" y="536"/>
+      <upperLeftCorner x="819.441426656879" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_HOMEEXEMPTIONREENGAGEMENT" modelObjectNameSpace="J_BPINFO_CONTRACTVALUES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="293"/>
     </shape>
-    <shape modelObjectName="AGG_CONTRACTVALUES" modelObjectNameSpace="J_BPINFO_CONTRACTVALUES" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="R_CONTRACTVALUES" modelObjectNameSpace="J_BPINFO_CONTRACTVALUES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="439" y="30"/>
-      <rectangleSize width="271"/>
+      <rectangleSize width="273.91845703125"/>
     </shape>
   
     <shape expanded="true" modelObjectName="R_SCVIND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="709" y="554"/>
+      <upperLeftCorner x="600.4285114637976" y="554.4999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1081" y="714"/>
+      <upperLeftCorner x="1044.2184563576886" y="874.4999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_SCVORG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1137" y="536"/>
+      <upperLeftCorner x="1031.079091420794" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_SCVORG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1018" y="217"/>
+      <upperLeftCorner x="892.3886610072282" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_SCVIND" modelObjectNameSpace="J_BPINFO_SCVORG" modelObjectType="JoinNodeInput">
@@ -2125,8 +2149,13 @@ if(strlen(&quot;CC_Business_Partner_ToString&quot;)=6,'0000'+&quot;CC_Business_P
       <rectangleSize width="178"/>
     </shape>
     <shape expanded="true" modelObjectName="R_SCVORG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1082" y="394"/>
+      <upperLeftCorner x="969.4963649251113" y="394.4999988079071"/>
       <rectangleSize height="30" width="160"/>
-    </shape></shapes>
+    </shape>
+    <shape expanded="true" modelObjectName="R_CONTRACTVALUES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="974.1525065877881" y="714.4999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
