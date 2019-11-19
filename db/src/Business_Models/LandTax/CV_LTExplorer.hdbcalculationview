@@ -153,6 +153,81 @@
       </rankThreshold>
     </windowFunction>
   </calculationView>
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_CV_ContractValues_BPAddresses" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="ZZ_NOIA_DATE"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="TAXYR"/>
+      <viewAttribute id="InvoicedAmount" aggregationType="sum"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="UnpostedAmount" aggregationType="sum"/>
+      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
+      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum"/>
+      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum"/>
+      <viewAttribute id="TaxBracket"/>
+      <viewAttribute id="UnissuedAssessmentFlag"/>
+      <viewAttribute id="TAXYRENDDT"/>
+      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="PROPERTYCNT" aggregationType="sum"/>
+      <viewAttribute id="PARCELCNT" aggregationType="sum"/>
+      <viewAttribute id="TAXESTIMATE" aggregationType="sum"/>
+      <viewAttribute id="ADR_KIND"/>
+      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
+      <viewAttribute id="STD_ADDR_LOCALITY"/>
+      <viewAttribute id="STD_ADDR_REGION"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="CC_AddressRank" aggregationType="sum"/>
+      <viewAttribute id="CC_OwnerTypeDescription"/>
+      <viewAttribute id="TOTBPRELVNTVAL" aggregationType="sum"/>
+      <viewAttribute id="TOTBPCONCESSVAL" aggregationType="sum"/>
+      <viewAttribute id="TOTBPTAXABLEVAL" aggregationType="sum"/>
+      <viewAttribute id="ABSURCHARGE" aggregationType="sum"/>
+      <viewAttribute id="ADRC_DATE_FROM"/>
+      <viewAttribute id="ADRC_DATE_TO"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CVContractValues">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYR" source="TAXYR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="InvoicedAmount" source="InvoicedAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UnpostedAmount" source="UnpostedAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FN_ReassessmentAmount" source="FN_ReassessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmountCleared" source="ReassessmentAmountCleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TaxBracket" source="TaxBracket"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UnissuedAssessmentFlag" source="UnissuedAssessmentFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROPERTYCNT" source="PROPERTYCNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARCELCNT" source="PARCELCNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPRELVNTVAL" source="TOTBPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPCONCESSVAL" source="TOTBPCONCESSVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE" source="ABSURCHARGE"/>
+    </input>
+    <input node="P_CV_BPAddresses">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AddressRank" source="CC_AddressRank"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADRC_DATE_FROM" source="ADRC_DATE_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADRC_DATE_TO" source="ADRC_DATE_TO"/>
+    </input>
+    <joinAttribute leftColumn="MANDT" rightColumn="CLIENT" operator="EQ"/>
+    <joinAttribute leftColumn="ZZ_PARTNER" rightColumn="PARTNER" operator="EQ"/>
+    <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="ADRC_DATE_FROM" operator="GE"/>
+    <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="ADRC_DATE_TO" operator="LE"/>
+  </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_Agg_Address_Rank_To_HE_Parcel" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="ZZ_NOIA_DATE"/>
@@ -438,81 +513,6 @@
     <joinAttribute name="ZZ_PARTNER"/>
     <joinAttribute name="TAXYR"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_CV_ContractValues_BPAddresses" cardinality="CN_N" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="ZZ_NOIA_DATE"/>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYR"/>
-      <viewAttribute id="InvoicedAmount" aggregationType="sum"/>
-      <viewAttribute id="FBNUM"/>
-      <viewAttribute id="UnpostedAmount" aggregationType="sum"/>
-      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum"/>
-      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="TaxBracket"/>
-      <viewAttribute id="UnissuedAssessmentFlag"/>
-      <viewAttribute id="TAXYRENDDT"/>
-      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
-      <viewAttribute id="TAXYRSTARTDT"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="PROPERTYCNT" aggregationType="sum"/>
-      <viewAttribute id="PARCELCNT" aggregationType="sum"/>
-      <viewAttribute id="TAXESTIMATE" aggregationType="sum"/>
-      <viewAttribute id="CC_OwnerTypeDescription"/>
-      <viewAttribute id="TOTBPRELVNTVAL" aggregationType="sum"/>
-      <viewAttribute id="TOTBPCONCESSVAL" aggregationType="sum"/>
-      <viewAttribute id="TOTBPTAXABLEVAL" aggregationType="sum"/>
-      <viewAttribute id="ABSURCHARGE" aggregationType="sum"/>
-      <viewAttribute id="ADR_KIND"/>
-      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
-      <viewAttribute id="STD_ADDR_LOCALITY"/>
-      <viewAttribute id="STD_ADDR_REGION"/>
-      <viewAttribute id="STD_ADDR_POSTCODE1"/>
-      <viewAttribute id="CC_AddressRank" aggregationType="sum"/>
-      <viewAttribute id="ADRC_DATE_FROM"/>
-      <viewAttribute id="ADRC_DATE_TO"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_CVContractValues">
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYR" source="TAXYR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="InvoicedAmount" source="InvoicedAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="UnpostedAmount" source="UnpostedAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FN_ReassessmentAmount" source="FN_ReassessmentAmount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmountCleared" source="ReassessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TaxBracket" source="TaxBracket"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="UnissuedAssessmentFlag" source="UnissuedAssessmentFlag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROPERTYCNT" source="PROPERTYCNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARCELCNT" source="PARCELCNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPRELVNTVAL" source="TOTBPRELVNTVAL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPCONCESSVAL" source="TOTBPCONCESSVAL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE" source="ABSURCHARGE"/>
-    </input>
-    <input node="P_CV_BPAddresses">
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AddressRank" source="CC_AddressRank"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADRC_DATE_FROM" source="ADRC_DATE_FROM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADRC_DATE_TO" source="ADRC_DATE_TO"/>
-    </input>
-    <joinAttribute leftColumn="MANDT" rightColumn="CLIENT" operator="EQ"/>
-    <joinAttribute leftColumn="ZZ_PARTNER" rightColumn="PARTNER" operator="EQ"/>
-    <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="ADRC_DATE_FROM" operator="GE"/>
-    <joinAttribute leftColumn="TAXYRSTARTDT" rightColumn="ADRC_DATE_TO" operator="LE"/>
-  </calculationView>
 </calculationViews>
 <logicalModel id="J_Agg_Address_Rank_To_SDD_Parcel">
   <attributes>
@@ -552,13 +552,13 @@
       <descriptions defaultDescription="Country"/>
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="STD_ADDR_COUNTRY_NAME"/>
     </attribute>
-    <attribute id="STD_ADDR_LOCALITY" order="22" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
-      <descriptions defaultDescription="Locality"/>
-      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="STD_ADDR_LOCALITY"/>
-    </attribute>
-    <attribute id="STD_ADDR_REGION" order="23" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
-      <descriptions defaultDescription="Suburb"/>
+    <attribute id="STD_ADDR_REGION" order="22" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
+      <descriptions defaultDescription="State"/>
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="STD_ADDR_REGION"/>
+    </attribute>
+    <attribute id="STD_ADDR_LOCALITY" order="23" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
+      <descriptions defaultDescription="City"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="STD_ADDR_LOCALITY"/>
     </attribute>
     <attribute id="STD_ADDR_POSTCODE1" order="24" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Postcode"/>
@@ -767,6 +767,19 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       <upperLeftCorner x="722" y="726"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+    <shape expanded="true" modelObjectName="NEJ_CV_ContractValues_BPAddresses" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="732" y="880"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CVContractValues" modelObjectNameSpace="NEJ_CV_ContractValues_BPAddresses" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CV_BPAddresses" modelObjectNameSpace="NEJ_CV_ContractValues_BPAddresses" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
   
     <shape expanded="true" modelObjectName="J_Agg_Address_Rank_To_HE_Parcel" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="538" y="556"/>
@@ -820,19 +833,6 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
     <shape modelObjectName="P_CV_OwnershipCNRES_Subdivdier" modelObjectNameSpace="J_Agg_Address_Rank_To_SDD_Parcel" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="205"/>
-    </shape>
-    <shape expanded="true" modelObjectName="NEJ_CV_ContractValues_BPAddresses" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="732" y="880"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="P_CVContractValues" modelObjectNameSpace="NEJ_CV_ContractValues_BPAddresses" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="P_CV_BPAddresses" modelObjectNameSpace="NEJ_CV_ContractValues_BPAddresses" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
