@@ -68,6 +68,22 @@
       <calculatedViewAttribute id="ADRC_DATE_TO" datatype="NVARCHAR" length="8" expressionLanguage="SQL">
         <formula>LEFT(&quot;BUT021FS_VALID_TO&quot;,8)</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_Locality" datatype="VARCHAR" length="64" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(&quot;STD_ADDR_COUNTRY_NAME&quot;!='Australia' and not isnull(&quot;STD_ADDR_COUNTRY_NAME&quot;) and &quot;STD_ADDR_COUNTRY_NAME&quot;!='','Overseas',&quot;STD_ADDR_LOCALITY&quot;)</formula>
+    
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_Region" datatype="VARCHAR" length="64" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;STD_ADDR_COUNTRY_NAME&quot;!='Australia' and not isnull(&quot;STD_ADDR_COUNTRY_NAME&quot;) and &quot;STD_ADDR_COUNTRY_NAME&quot;!='','Overseas',&quot;STD_ADDR_REGION&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_Postcode" datatype="VARCHAR" length="10" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;STD_ADDR_COUNTRY_NAME&quot;!='Australia' and not isnull(&quot;STD_ADDR_COUNTRY_NAME&quot;) and &quot;STD_ADDR_COUNTRY_NAME&quot;!='','Overseas',&quot;STD_ADDR_POSTCODE1&quot;)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_Country" datatype="VARCHAR" length="10" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;STD_ADDR_COUNTRY_NAME&quot;!='Australia' and not isnull(&quot;STD_ADDR_COUNTRY_NAME&quot;) and &quot;STD_ADDR_COUNTRY_NAME&quot;!='','Overseas',&quot;STD_ADDR_COUNTRY_NAME&quot;)</formula>
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpAddresses"/>
     <filter>&quot;ADR_KIND&quot; in ('LTX_ADD','LTX_AD2','XXDefault')</filter>
@@ -130,10 +146,6 @@
       <viewAttribute id="PARCELCNT" aggregationType="sum"/>
       <viewAttribute id="TAXESTIMATE" aggregationType="sum"/>
       <viewAttribute id="ADR_KIND"/>
-      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
-      <viewAttribute id="STD_ADDR_LOCALITY"/>
-      <viewAttribute id="STD_ADDR_REGION"/>
-      <viewAttribute id="STD_ADDR_POSTCODE1"/>
       <viewAttribute id="CC_AddressRank" aggregationType="sum"/>
     
       <viewAttribute id="CC_OwnerTypeDescription"/>
@@ -145,6 +157,12 @@
       <viewAttribute id="ADRC_DATE_TO"/>
     
       <viewAttribute id="TAXRATECODE"/>
+    
+      <viewAttribute id="CC_Locality"/>
+      <viewAttribute id="CC_Region"/>
+      <viewAttribute id="CC_Postcode"/>
+    
+      <viewAttribute id="CC_Country"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="NEJ_CV_ContractValues_BPAddresses"/>
@@ -178,10 +196,6 @@
       <viewAttribute id="PARCELCNT" aggregationType="sum"/>
       <viewAttribute id="TAXESTIMATE" aggregationType="sum"/>
       <viewAttribute id="ADR_KIND"/>
-      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
-      <viewAttribute id="STD_ADDR_LOCALITY"/>
-      <viewAttribute id="STD_ADDR_REGION"/>
-      <viewAttribute id="STD_ADDR_POSTCODE1"/>
       <viewAttribute id="CC_AddressRank" aggregationType="sum"/>
       <viewAttribute id="CC_OwnerTypeDescription"/>
       <viewAttribute id="TOTBPRELVNTVAL" aggregationType="sum"/>
@@ -192,6 +206,12 @@
       <viewAttribute id="ADRC_DATE_TO"/>
     
       <viewAttribute id="TAXRATECODE"/>
+    
+      <viewAttribute id="CC_Locality"/>
+      <viewAttribute id="CC_Region"/>
+      <viewAttribute id="CC_Postcode"/>
+    
+      <viewAttribute id="CC_Country"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_CVContractValues">
@@ -223,13 +243,15 @@
     </input>
     <input node="P_CV_BPAddresses">
       <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_AddressRank" source="CC_AddressRank"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADRC_DATE_FROM" source="ADRC_DATE_FROM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADRC_DATE_TO" source="ADRC_DATE_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Locality" source="CC_Locality"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Region" source="CC_Region"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Postcode" source="CC_Postcode"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Country" source="CC_Country"/>
     </input>
     <joinAttribute leftColumn="MANDT" rightColumn="CLIENT" operator="EQ"/>
     <joinAttribute leftColumn="ZZ_PARTNER" rightColumn="PARTNER" operator="EQ"/>
@@ -255,10 +277,6 @@
       <viewAttribute id="PROPERTYCNT" aggregationType="sum"/>
       <viewAttribute id="PARCELCNT" aggregationType="sum"/>
       <viewAttribute id="TAXESTIMATE" aggregationType="sum"/>
-      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
-      <viewAttribute id="STD_ADDR_LOCALITY"/>
-      <viewAttribute id="STD_ADDR_REGION"/>
-      <viewAttribute id="STD_ADDR_POSTCODE1"/>
     
       <viewAttribute id="CC_OwnerTypeDescription"/>
       <viewAttribute id="TOTBPRELVNTVAL" aggregationType="sum"/>
@@ -270,6 +288,12 @@
       <viewAttribute id="ADRC_DATE_TO"/>
     
       <viewAttribute id="TAXRATECODE"/>
+    
+      <viewAttribute id="CC_Locality"/>
+      <viewAttribute id="CC_Region"/>
+      <viewAttribute id="CC_Postcode"/>
+    
+      <viewAttribute id="CC_Country"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="R_One_Address_Per_BP">
@@ -290,10 +314,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PROPERTYCNT" source="PROPERTYCNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARCELCNT" source="PARCELCNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPRELVNTVAL" source="TOTBPRELVNTVAL"/>
@@ -304,6 +324,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ADRC_DATE_TO" source="ADRC_DATE_TO"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Locality" source="CC_Locality"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Region" source="CC_Region"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Postcode" source="CC_Postcode"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Country" source="CC_Country"/>
     </input>
     <input node="P_CV_OwnershipCNRES_HE">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_HomeExemptionParcels" source="CC_HomeExemptionParcels"/>
@@ -379,10 +405,6 @@
       <viewAttribute id="PROPERTYCNT" aggregationType="sum"/>
       <viewAttribute id="PARCELCNT" aggregationType="sum"/>
       <viewAttribute id="TAXESTIMATE" aggregationType="sum"/>
-      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
-      <viewAttribute id="STD_ADDR_LOCALITY"/>
-      <viewAttribute id="STD_ADDR_REGION"/>
-      <viewAttribute id="STD_ADDR_POSTCODE1"/>
       <viewAttribute id="CC_OwnerTypeDescription"/>
       <viewAttribute id="TOTBPRELVNTVAL" aggregationType="sum"/>
       <viewAttribute id="TOTBPCONCESSVAL" aggregationType="sum"/>
@@ -394,6 +416,12 @@
       <viewAttribute id="ADRC_DATE_TO"/>
     
       <viewAttribute id="TAXRATECODE"/>
+    
+      <viewAttribute id="CC_Locality"/>
+      <viewAttribute id="CC_Region"/>
+      <viewAttribute id="CC_Postcode"/>
+    
+      <viewAttribute id="CC_Country"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_Agg_Address_Rank_To_HE_Parcel">
@@ -414,10 +442,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PROPERTYCNT" source="PROPERTYCNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARCELCNT" source="PARCELCNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPRELVNTVAL" source="TOTBPRELVNTVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPCONCESSVAL" source="TOTBPCONCESSVAL"/>
@@ -428,6 +452,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ADRC_DATE_TO" source="ADRC_DATE_TO"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Locality" source="CC_Locality"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Region" source="CC_Region"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Postcode" source="CC_Postcode"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Country" source="CC_Country"/>
     </input>
     <input node="P_CV_OwnershipCNRES_PPE">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PrimaryProductionParcels" source="CC_PrimaryProductionParcels"/>
@@ -473,10 +503,6 @@
       <viewAttribute id="PROPERTYCNT" aggregationType="sum"/>
       <viewAttribute id="PARCELCNT" aggregationType="sum"/>
       <viewAttribute id="TAXESTIMATE" aggregationType="sum"/>
-      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
-      <viewAttribute id="STD_ADDR_LOCALITY"/>
-      <viewAttribute id="STD_ADDR_REGION"/>
-      <viewAttribute id="STD_ADDR_POSTCODE1"/>
       <viewAttribute id="CC_OwnerTypeDescription"/>
       <viewAttribute id="TOTBPRELVNTVAL" aggregationType="sum"/>
       <viewAttribute id="TOTBPCONCESSVAL" aggregationType="sum"/>
@@ -489,6 +515,12 @@
       <viewAttribute id="ADRC_DATE_TO"/>
     
       <viewAttribute id="TAXRATECODE"/>
+    
+      <viewAttribute id="CC_Locality"/>
+      <viewAttribute id="CC_Region"/>
+      <viewAttribute id="CC_Postcode"/>
+    
+      <viewAttribute id="CC_Country"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_Agg_Address_Rank_To_PPE_Parcel">
@@ -509,10 +541,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PROPERTYCNT" source="PROPERTYCNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARCELCNT" source="PARCELCNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPRELVNTVAL" source="TOTBPRELVNTVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPCONCESSVAL" source="TOTBPCONCESSVAL"/>
@@ -524,6 +552,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ADRC_DATE_TO" source="ADRC_DATE_TO"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Locality" source="CC_Locality"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Region" source="CC_Region"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Postcode" source="CC_Postcode"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Country" source="CC_Country"/>
     </input>
     <input node="P_CV_OwnershipCNRES_Subdivdier">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_SubdivderParcels" source="CC_SubdivderParcels"/>
@@ -568,40 +602,44 @@
       <descriptions defaultDescription="Tax Year Start Date"/>
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="TAXYRSTARTDT"/>
     </attribute>
-    <attribute id="STD_ADDR_COUNTRY_NAME" order="21" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
-      <descriptions defaultDescription="Country"/>
-      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="STD_ADDR_COUNTRY_NAME"/>
-    </attribute>
-    <attribute id="STD_ADDR_REGION" order="22" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
-      <descriptions defaultDescription="State"/>
-      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="STD_ADDR_REGION"/>
-    </attribute>
-    <attribute id="STD_ADDR_LOCALITY" order="23" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
-      <descriptions defaultDescription="City"/>
-      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="STD_ADDR_LOCALITY"/>
-    </attribute>
-    <attribute id="STD_ADDR_POSTCODE1" order="24" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
-      <descriptions defaultDescription="Postcode"/>
-      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="STD_ADDR_POSTCODE1"/>
-    </attribute>
-    <attribute id="CC_OwnerTypeDescription" order="25" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true" replaceNullBy="Unclassified">
+    <attribute id="CC_OwnerTypeDescription" order="21" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true" replaceNullBy="No Owner Type">
       <descriptions defaultDescription="Owner Type Subcategory"/>
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_OwnerTypeDescription"/>
     </attribute>
-    <attribute id="ADRC_DATE_FROM" order="39" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
+    <attribute id="ADRC_DATE_FROM" order="35" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Address Date From"/>
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="ADRC_DATE_FROM"/>
     </attribute>
-    <attribute id="ADRC_DATE_TO" order="40" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
+    <attribute id="ADRC_DATE_TO" order="36" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Address Date To"/>
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="ADRC_DATE_TO"/>
     </attribute>
   
-    <attribute id="TAXRATECODE" order="41" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXRATECODE" order="37" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TAXRATECODE"/>
   
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="TAXRATECODE"/>
   
+    </attribute>
+  
+    <attribute id="CC_Region" order="39" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
+      <descriptions defaultDescription="CC_Region"/>
+  
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_Region"/>
+  
+    </attribute>
+  
+    <attribute id="CC_Locality" order="40" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_Locality"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_Locality"/>
+    </attribute>
+    <attribute id="CC_Postcode" order="41" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_Postcode"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_Postcode"/>
+    </attribute>
+    <attribute id="CC_Country" order="42" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_Country"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_Country"/>
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -611,7 +649,7 @@
         <formula>if(&quot;UnissuedAssessmentFlag&quot;='X' or (&quot;CC_LiabilityStatus&quot;='Liable' and isnull(&quot;FBNUM&quot;)),'Unissued',
     If(not isnull(&quot;FBNUM&quot;),'Issued','Not Assessed'))</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
     <calculatedAttribute id="CC_TaxpayerStatus" order="3" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Taxpayer Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
@@ -619,17 +657,17 @@
    if(&quot;ZZ_NOIA_DATE&quot;='00000000' and (&quot;CC_AssessmentStatus&quot;!='Issued' and &quot;CC_AssessmentStatus&quot;!='Unissued'),'',
         if(&quot;ZZ_NOIA_DATE&quot;&gt;=&quot;TAXYRSTARTDT&quot; and &quot;ZZ_NOIA_DATE&quot;&lt;=&quot;TAXYRENDDT&quot;,'First Time Taxpayer',
              if(&quot;ZZ_NOIA_DATE&quot;&lt;&quot;TAXYRSTARTDT&quot;,'Existing Taxpayer',
-                IF(&quot;ZZ_NOIA_DATE&quot;&gt;&quot;TAXYRENDDT&quot;,'Non-Taxpayer','Non-Taxpayer')))))</formula>
+                IF(&quot;ZZ_NOIA_DATE&quot;&gt;&quot;TAXYRENDDT&quot;,'','')))))</formula>
       </keyCalculation>
-    </calculatedAttribute>
-    <calculatedAttribute id="CC_LiabilityStatus" order="27" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_LiabilityStatus" order="23" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liability Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="13">
         <formula>if(&quot;TAXESTIMATE&quot;&gt;0,'Liable','Not liable')</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   
-    <calculatedAttribute id="CC_Reassessment" order="31" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
+    <calculatedAttribute id="CC_Reassessment" order="27" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Reassessment Status"/>
   
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
@@ -637,28 +675,27 @@
         <formula>If(&quot;FN_ReassessmentAmount&quot;!=0 and not isnull(&quot;FN_ReassessmentAmount&quot;),'Reassessed','Not Reassessed')</formula>
   
       </keyCalculation>
-  
-    </calculatedAttribute>
-    <calculatedAttribute id="CC_HomeExemptionFlag" hidden="false" order="32" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_HomeExemptionFlag" hidden="false" order="28" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Home Exemption Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
         <formula>IF(&quot;CC_HomeExemptionParcels&quot;&gt;0,'Home Exemption','No Home Exemption')</formula>
       </keyCalculation>
-    </calculatedAttribute>
-    <calculatedAttribute id="CC_PrimaryProductionFlag" hidden="false" order="33" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_PrimaryProductionFlag" hidden="false" order="29" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Primary Production Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
         <formula>IF(&quot;CC_PrimaryProductionParcels&quot;&gt;0,'Primary Production','No Primary Production')</formula>
       </keyCalculation>
-    </calculatedAttribute>
-    <calculatedAttribute id="CC_SubdividerFlag" hidden="false" order="37" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_SubdividerFlag" hidden="false" order="33" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subdivider Discount Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
         <formula>IF(&quot;CC_SubdivderParcels&quot;&gt;0,'Subdivider Discount','No Subdivider Discount')</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   
-    <calculatedAttribute id="CC_RateType" order="42" semanticType="empty" replaceNull="true" replaceNullBy="Unclassified" displayAttribute="false" attributeHierarchyActive="false">
+    <calculatedAttribute id="CC_RateType" order="38" semanticType="empty" replaceNull="true" replaceNullBy="Unclassified" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rate Type"/>
   
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="30">
@@ -667,9 +704,7 @@
     if(&quot;TAXRATECODE&quot;='C' or &quot;TAXRATECODE&quot;='O', 'Company, Trust &amp; Absentee','Unclassified'))</formula>
   
       </keyCalculation>
-  
-    </calculatedAttribute>
-  </calculatedAttributes>
+      </calculatedAttribute></calculatedAttributes>
   <baseMeasures>
     <measure id="InvoicedAmount" order="7" aggregationType="sum" measureType="simple" replaceNull="true" unconverted="true">
       <descriptions defaultDescription="Invoiced Amount"/>
@@ -707,31 +742,31 @@
       <descriptions defaultDescription="Estimate Tax"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="TAXESTIMATE"/>
     </measure>
-    <measure id="TOTBPRELVNTVAL" order="26" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="TOTBPRELVNTVAL" order="22" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Total Land Value"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="TOTBPRELVNTVAL"/>
     </measure>
-    <measure id="TOTBPCONCESSVAL" order="28" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="TOTBPCONCESSVAL" order="24" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Exempt Land Value"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="TOTBPCONCESSVAL"/>
     </measure>
-    <measure id="TOTBPTAXABLEVAL" order="29" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="TOTBPTAXABLEVAL" order="25" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Taxable Land Value"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="TOTBPTAXABLEVAL"/>
     </measure>
-    <measure id="ABSURCHARGE" order="30" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="ABSURCHARGE" order="26" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Absentee Surcharge"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="ABSURCHARGE"/>
     </measure>
-    <measure id="CC_SubdivderParcels" order="34" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="CC_SubdivderParcels" order="30" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Subdivider Discount Parcels"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_SubdivderParcels"/>
     </measure>
-    <measure id="CC_PrimaryProductionParcels" order="35" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="CC_PrimaryProductionParcels" order="31" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Primary Production Parcels"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_PrimaryProductionParcels"/>
     </measure>
-    <measure id="CC_HomeExemptionParcels" order="36" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="CC_HomeExemptionParcels" order="32" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Home Exemption Parcels"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_HomeExemptionParcels"/>
     </measure></baseMeasures>
@@ -767,12 +802,14 @@
       
       
       
+      
       </measure>
-    <measure id="CC_AssessmentCounter" order="38" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE" replaceNull="true">
+    <measure id="CC_AssessmentCounter" order="34" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE" replaceNull="true">
       <descriptions defaultDescription="Assessments"/>
       <formula>if(&quot;CC_AssessmentStatus&quot;='Issued',1,
 if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
     
+      
       
       </measure>
   </calculatedMeasures>
