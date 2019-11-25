@@ -82,7 +82,9 @@
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_Country" datatype="VARCHAR" length="10" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>if(&quot;STD_ADDR_COUNTRY_NAME&quot;!='Australia' and not isnull(&quot;STD_ADDR_COUNTRY_NAME&quot;) and &quot;STD_ADDR_COUNTRY_NAME&quot;!='','Overseas',&quot;STD_ADDR_COUNTRY_NAME&quot;)</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpAddresses"/>
@@ -631,13 +633,15 @@
   
     <attribute id="CC_Locality" order="40" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CC_Locality"/>
+  
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_Locality"/>
+  
     </attribute>
     <attribute id="CC_Postcode" order="41" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CC_Postcode"/>
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_Postcode"/>
     </attribute>
-    <attribute id="CC_Country" order="42" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_Country" order="42" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="CC_Country"/>
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_Country"/>
     </attribute>
@@ -649,7 +653,7 @@
         <formula>if(&quot;UnissuedAssessmentFlag&quot;='X' or (&quot;CC_LiabilityStatus&quot;='Liable' and isnull(&quot;FBNUM&quot;)),'Unissued',
     If(not isnull(&quot;FBNUM&quot;),'Issued','Not Assessed'))</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="CC_TaxpayerStatus" order="3" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Taxpayer Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
@@ -659,13 +663,13 @@
              if(&quot;ZZ_NOIA_DATE&quot;&lt;&quot;TAXYRSTARTDT&quot;,'Existing Taxpayer',
                 IF(&quot;ZZ_NOIA_DATE&quot;&gt;&quot;TAXYRENDDT&quot;,'','')))))</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="CC_LiabilityStatus" order="23" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liability Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="13">
         <formula>if(&quot;TAXESTIMATE&quot;&gt;0,'Liable','Not liable')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   
     <calculatedAttribute id="CC_Reassessment" order="27" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Reassessment Status"/>
@@ -675,25 +679,26 @@
         <formula>If(&quot;FN_ReassessmentAmount&quot;!=0 and not isnull(&quot;FN_ReassessmentAmount&quot;),'Reassessed','Not Reassessed')</formula>
   
       </keyCalculation>
-      </calculatedAttribute>
+  
+    </calculatedAttribute>
     <calculatedAttribute id="CC_HomeExemptionFlag" hidden="false" order="28" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Home Exemption Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
         <formula>IF(&quot;CC_HomeExemptionParcels&quot;&gt;0,'Home Exemption','No Home Exemption')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="CC_PrimaryProductionFlag" hidden="false" order="29" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Primary Production Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
         <formula>IF(&quot;CC_PrimaryProductionParcels&quot;&gt;0,'Primary Production','No Primary Production')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="CC_SubdividerFlag" hidden="false" order="33" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subdivider Discount Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
         <formula>IF(&quot;CC_SubdivderParcels&quot;&gt;0,'Subdivider Discount','No Subdivider Discount')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   
     <calculatedAttribute id="CC_RateType" order="38" semanticType="empty" replaceNull="true" replaceNullBy="Unclassified" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rate Type"/>
@@ -704,7 +709,8 @@
     if(&quot;TAXRATECODE&quot;='C' or &quot;TAXRATECODE&quot;='O', 'Company, Trust &amp; Absentee','Unclassified'))</formula>
   
       </keyCalculation>
-      </calculatedAttribute></calculatedAttributes>
+  
+    </calculatedAttribute></calculatedAttributes>
   <baseMeasures>
     <measure id="InvoicedAmount" order="7" aggregationType="sum" measureType="simple" replaceNull="true" unconverted="true">
       <descriptions defaultDescription="Invoiced Amount"/>
