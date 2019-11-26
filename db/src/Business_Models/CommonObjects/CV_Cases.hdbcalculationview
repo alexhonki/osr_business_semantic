@@ -5270,7 +5270,14 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="ENDDA"/>
       <viewAttribute id="BEGDA"/>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_NEJBEGDA" datatype="DATE" expressionLanguage="SQL">
+        <formula>BEGDA</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_NEJENDDA" datatype="DATE" expressionLanguage="SQL">
+        <formula>ENDDA</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_REASONOUTC" cardinality="CN_1" joinType="leftOuter">
@@ -11494,6 +11501,10 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <calculatedViewAttribute id="CC_Days_Bt_Creation" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;STATUS_DESC&quot;='Closed' or &quot;STATUS_DESC&quot;='Complete' or &quot;STATUS_DESC&quot;='Completed' or &quot;STATUS_DESC&quot;='Discontinued' or &quot;STATUS_DESC&quot;='Finalised',daysbetween(&quot;CC_DateCreated&quot;, &quot;CC_DateClosed&quot;), daysbetween(&quot;CC_DateCreated&quot;, now()))</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_CloseDateForNEJ" datatype="DATE" expressionLanguage="SQL">
+        <formula>&quot;CC_CloseDateforJoin&quot;</formula>
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="J_CLOSEDUSER_CASES">
       <mapping xsi:type="Calculation:AttributeMapping" target="UserCreatedBy" source="UserCreatedBy"/>
@@ -11814,6 +11825,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     
       <viewAttribute id="OSRQLD_CATEGORY"/>
       <viewAttribute id="OSRQLD_YEAR"/>
+    
+      <viewAttribute id="CC_CloseDateForNEJ"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PROCESSUSER_CASE">
@@ -11970,6 +11983,8 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_CATEGORY" source="OSRQLD_CATEGORY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_YEAR" source="OSRQLD_YEAR"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CloseDateForNEJ" source="CC_CloseDateForNEJ"/>
     </input>
     <input node="P_USER_INFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="UserResponsible" source="NAME_TEXT"/>
@@ -11977,9 +11992,9 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
     </input>
     <joinAttribute leftColumn="MANDT" rightColumn="MANDT" operator="EQ"/>
-    <joinAttribute leftColumn="CC_CloseDateforJoin" rightColumn="ENDDA" operator="LE"/>
-    <joinAttribute leftColumn="CC_CloseDateforJoin" rightColumn="BEGDA" operator="GE"/>
     <joinAttribute leftColumn="RESPONSIBLE" rightColumn="BNAME" operator="EQ"/>
+    <joinAttribute leftColumn="CC_CloseDateForNEJ" rightColumn="CC_NEJENDDA" operator="LE"/>
+    <joinAttribute leftColumn="CC_CloseDateForNEJ" rightColumn="CC_NEJBEGDA" operator="GE"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="NEJ_RESPUSER_CASE">
@@ -13298,11 +13313,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     </shape>
     <shape modelObjectName="J_PROCESSUSER_CASE" modelObjectNameSpace="NEJ_RESPUSER_CASE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
+      <rectangleSize width="220.46533203125"/>
     </shape>
     <shape modelObjectName="P_USER_INFO" modelObjectNameSpace="NEJ_RESPUSER_CASE" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="469" y="1741"/>
-      <rectangleSize width="250"/>
+      <upperLeftCorner x="424" y="382"/>
+      <rectangleSize width="152.0107421875"/>
     </shape></shapes>
 </layout>
 </Calculation:scenario>
