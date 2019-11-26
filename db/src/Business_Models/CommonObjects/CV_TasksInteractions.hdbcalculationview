@@ -430,8 +430,8 @@ if(match(&quot;DESCRIPTION&quot;,'*LT 11*') OR match(&quot;DESCRIPTION&quot;,'*L
     <viewAttributes>
       <viewAttribute id="CLIENT"/>
       <viewAttribute id="GUID"/>
-      <viewAttribute id="PARTNER_FCT"/>
       <viewAttribute id="PARTNER_NO"/>
+      <viewAttribute id="PARTNER_FCT"/>
     
       <viewAttribute id="MAINPARTNER"/>
     </viewAttributes>
@@ -541,6 +541,15 @@ if(match(&quot;DESCRIPTION&quot;,'*LT 11*') OR match(&quot;DESCRIPTION&quot;,'*L
     <calculatedViewAttributes>
       <calculatedViewAttribute id="Revenue_Stream" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
         <formula>IF(&quot;SHORT&quot; = 'Land Tax' OR &quot;SHORT&quot; = 'LT-Comx&amp;Comp' OR &quot;SHORT&quot; = 'LT-Eng&amp;Op' OR &quot;SHORT&quot; = 'LT-Pro&amp;Inn' OR &quot;SHORT&quot; = 'Land Tax' OR &quot;SHORT&quot; = 'Ltax' OR &quot;SHORT&quot; = 'LTAX Sup','Land Tax', 'Other')</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_BEGDADATE" datatype="DATE" expressionLanguage="SQL">
+    
+        <formula>BEGDA</formula>
+    
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_ENDDADATE" datatype="DATE" expressionLanguage="SQL">
+        <formula>ENDDA</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo"/>
@@ -812,6 +821,9 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
       <viewAttribute id="CHANGED_AT" aggregationType="sum"/>
     
       <viewAttribute id="Revenue_Stream"/>
+    
+      <viewAttribute id="CC_BEGDADATE"/>
+      <viewAttribute id="CC_ENDDADATE"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_TASKACTIV_CREAUSER">
@@ -851,11 +863,14 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
       <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="Revenue_Stream" source="Revenue_Stream"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BEGDADATE" source="CC_BEGDADATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ENDDADATE" source="CC_ENDDADATE"/>
     </input>
-    <joinAttribute leftColumn="CC_Last_Changed" rightColumn="ENDDA" operator="LE"/>
-    <joinAttribute leftColumn="CC_Last_Changed" rightColumn="BEGDA" operator="GE"/>
     <joinAttribute leftColumn="CHANGED_BY" rightColumn="BNAME" operator="EQ"/>
     <joinAttribute leftColumn="CLIENT" rightColumn="MANDT" operator="EQ"/>
+    <joinAttribute leftColumn="CC_Last_Changed" rightColumn="CC_BEGDADATE" operator="GE"/>
+    <joinAttribute leftColumn="CC_Last_Changed" rightColumn="CC_ENDDADATE" operator="LE"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_TASKACTIV_STAT">
@@ -997,7 +1012,9 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
   
     <attribute id="Revenue_Stream" order="35" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Revenue Stream"/>
+  
       <keyMapping columnObjectName="J_TASKACTIV_STAT" columnName="Revenue_Stream"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>
