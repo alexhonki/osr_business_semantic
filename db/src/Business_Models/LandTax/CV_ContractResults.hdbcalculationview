@@ -265,10 +265,9 @@
       <viewAttribute id="MIN_VALUE"/>
       <viewAttribute id="MAX_VALUE"/>
       <viewAttribute id="TOP_RATE_IND"/>
-      <viewAttribute id="RATE_CODE"/>
-    </viewAttributes>
+      <viewAttribute id="RATE_CODE"/></viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="TaxBracket" datatype="NVARCHAR" length="25" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="TaxBracket" datatype="NVARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
         <formula>if(
     &quot;TOP_RATE_IND&quot;='X',
     '$' + string(&quot;CC_MinValue&quot;) + ' or greater',
@@ -276,7 +275,8 @@
 )</formula>
       </calculatedViewAttribute>
     
-      <calculatedViewAttribute id="CC_MinValue" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_MinValue" datatype="NVARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>IF(Strlen(STRING(INT(&quot;MIN_VALUE&quot;))) = 1,&quot;MIN_VALUE&quot;,
 (IF(Strlen(STRING(INT(&quot;MIN_VALUE&quot;))) = 2,&quot;MIN_VALUE&quot;,
 (IF(Strlen(STRING(INT(&quot;MIN_VALUE&quot;))) = 3,&quot;MIN_VALUE&quot;,
@@ -286,8 +286,9 @@
 (IF(Strlen(STRING(INT(&quot;MIN_VALUE&quot;))) = 7,(leftstr((STRING(INT(&quot;MIN_VALUE&quot;))),1)+','+midstr((STRING(INT(&quot;MIN_VALUE&quot;))),2,3)+','+rightstr((STRING(INT(&quot;MIN_VALUE&quot;))),3)),
 (IF(Strlen(STRING(INT(&quot;MIN_VALUE&quot;))) = 8,(leftstr((STRING(INT(&quot;MIN_VALUE&quot;))),2)+','+midstr((STRING(INT(&quot;MIN_VALUE&quot;))),3,3)+','+rightstr((STRING(INT(&quot;MIN_VALUE&quot;))),3)),
 (IF(Strlen(STRING(INT(&quot;MIN_VALUE&quot;))) = 9,(leftstr((STRING(INT(&quot;MIN_VALUE&quot;))),3)+','+midstr((STRING(INT(&quot;MIN_VALUE&quot;))),4,3)+','+rightstr((STRING(INT(&quot;MIN_VALUE&quot;))),3)),&quot;MIN_VALUE&quot;)))))))))))))))))</formula>
+    
       </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_MaxValue" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_MaxValue" datatype="NVARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
         <formula>IF(Strlen(STRING(INT(&quot;MAX_VALUE&quot;))) = 1,&quot;MAX_VALUE&quot;,
 (IF(Strlen(STRING(INT(&quot;MAX_VALUE&quot;))) = 2,&quot;MAX_VALUE&quot;,
 (IF(Strlen(STRING(INT(&quot;MAX_VALUE&quot;))) = 3,&quot;MAX_VALUE&quot;,
@@ -339,13 +340,13 @@
       <viewAttribute id="CHTIME"/>
       <viewAttribute id="ABSURCHARGE" aggregationType="sum"/>
       <viewAttribute id="CC_TAX_LIABLE_COUNT" aggregationType="sum"/>
-      <viewAttribute id="TaxBracket"/>
     
       <viewAttribute id="OWNER_CODE_DESC"/>
       <viewAttribute id="CC_OwnerTypeDescription"/>
       <viewAttribute id="Difference_Flag"/>
     
       <viewAttribute id="CC_TAX_ESTIMATE_LIABLE_COUNT" aggregationType="sum"/>
+      <viewAttribute id="TaxBracket"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_BPCONTRACT_CNRES_OWNERDESC">
@@ -413,20 +414,20 @@
       <viewAttribute id="Rank_Column"/>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_NewTaxBracket" datatype="VARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
-        <formula>String(&quot;Rank_Column&quot;) +'. '+ &quot;TaxBracket&quot;</formula>
+      <calculatedViewAttribute id="CC_NewTaxBracket" datatype="NVARCHAR" length="100" expressionLanguage="COLUMN_ENGINE">
+        <formula>String(&quot;Rank_Column&quot;)+String('. ')+ String(&quot;TaxBracket&quot;)</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="R_TAXRATE"/>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_TAXRATE">
     <viewAttributes>
-      <viewAttribute id="CLIENT"/>
-      <viewAttribute id="VALID_FROM"/>
       <viewAttribute id="MIN_VALUE"/>
       <viewAttribute id="MAX_VALUE"/>
-      <viewAttribute id="TOP_RATE_IND"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="VALID_FROM"/>
       <viewAttribute id="RATE_CODE"/>
+      <viewAttribute id="TOP_RATE_IND"/>
       <viewAttribute id="TaxBracket"/>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -541,26 +542,23 @@
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="CHTIME"/>
     </attribute>
   
-    <attribute id="TaxBracket" order="39" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Tax Bracket"/>
-  
-      <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="TaxBracket"/>
-  
-    </attribute>
-  
-    <attribute id="OWNER_CODE_DESC" order="40" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OWNER_CODE_DESC" order="39" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Owner type"/>
   
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="OWNER_CODE_DESC"/>
   
     </attribute>
-    <attribute id="CC_OwnerTypeDescription" order="41" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_OwnerTypeDescription" order="40" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Consolidated Owner Type"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="CC_OwnerTypeDescription"/>
     </attribute>
-    <attribute id="Difference_Flag" order="42" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="Difference_Flag" order="41" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Difference Flag"/>
       <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="Difference_Flag"/>
+    </attribute>
+    <attribute id="TaxBracket" order="43" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TaxBracket"/>
+      <keyMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="TaxBracket"/>
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -620,7 +618,7 @@
       <descriptions defaultDescription="Land Tax - Tax Amount Liable for the Period"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="CC_TAX_LIABLE_COUNT"/>
     </measure>
-    <measure id="CC_TAX_ESTIMATE_LIABLE_COUNT" order="43" aggregationType="sum" measureType="simple">
+    <measure id="CC_TAX_ESTIMATE_LIABLE_COUNT" order="42" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Land Tax - Tax Estimate Liable for the Period"/>
       <measureMapping columnObjectName="NEJ_CONTRACTS_TAXRATES" columnName="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
     </measure>
@@ -632,6 +630,7 @@
         <attribute attributeName="ZZ_PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
