@@ -16,11 +16,11 @@
   <DataSource id="osr.business.semantic.db.synonyms::CRMD_CMG_CASE_AT">
     <resourceUri>osr.business.semantic.db.synonyms::CRMD_CMG_CASE_AT</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo">
-    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo</resourceUri>
-  </DataSource>
   <DataSource id="osr.business.semantic.db.synonyms::CMG_DISC">
     <resourceUri>osr.business.semantic.db.synonyms::CMG_DISC</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo</resourceUri>
   </DataSource>
   <DataSource id="osr.business.semantic.db.synonyms::CMG_RSNT">
     <resourceUri>osr.business.semantic.db.synonyms::CMG_RSNT</resourceUri>
@@ -4946,7 +4946,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_CATEGORY" source="OSRQLD_CATEGORY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_YEAR" source="OSRQLD_YEAR"/>
     </input>
-    <input node="P_USER_INFO">
+    <input node="R_USERINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="UserCreatedBy" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="BNAME"/>
@@ -5260,7 +5260,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     <joinAttribute name="CASE_TYPE"/>
     <joinAttribute name="_OSRQLD_F0007"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_USER_INFO">
+  <calculationView xsi:type="Calculation:RankView" id="R_USERINFO">
     <viewAttributes>
       <viewAttribute id="NAME_TEXT"/>
       <viewAttribute id="MANDT"/>
@@ -5269,16 +5269,18 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="SHORT"/>
       <viewAttribute id="ENDDA"/>
       <viewAttribute id="BEGDA"/>
+      <viewAttribute id="CC_NEJBEGDA"/>
+      <viewAttribute id="CC_NEJENDDA"/>
     </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_NEJBEGDA" datatype="DATE" expressionLanguage="SQL">
-        <formula>BEGDA</formula>
-      </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_NEJENDDA" datatype="DATE" expressionLanguage="SQL">
-        <formula>ENDDA</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
-    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo"/>
+    <calculatedViewAttributes/>
+    <input node="P_USER_INFO"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>BNAME</partitionViewAttributeName>
+      <order byViewAttributeName="CC_NEJENDDA" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_REASONOUTC" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
@@ -5588,6 +5590,26 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <viewAttribute id="DISCLOSURE_KEY"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::CMG_DISC"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_USER_INFO">
+    <viewAttributes>
+      <viewAttribute id="NAME_TEXT"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="BNAME"/>
+      <viewAttribute id="ORGEH"/>
+      <viewAttribute id="SHORT"/>
+      <viewAttribute id="ENDDA"/>
+      <viewAttribute id="BEGDA"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_NEJBEGDA" datatype="DATE" expressionLanguage="SQL">
+        <formula>BEGDA</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_NEJENDDA" datatype="DATE" expressionLanguage="SQL">
+        <formula>ENDDA</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_SUCCESS_OUTC" cardinality="C1_N" joinType="leftOuter">
     <viewAttributes>
@@ -11019,13 +11041,13 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_CATEGORY" source="OSRQLD_CATEGORY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_YEAR" source="OSRQLD_YEAR"/>
     </input>
-    <input node="P_USER_INFO">
+    <input node="R_USERINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="UserChangedBy" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="BNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGED_BY" source="BNAME"/>
     </input>
     <joinAttribute name="MANDT"/>
-    <joinAttribute name="CREATED_BY"/>
+    <joinAttribute name="CHANGED_BY"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_CLOSEDUSER_CASES" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
@@ -11334,7 +11356,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_CATEGORY" source="OSRQLD_CATEGORY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_YEAR" source="OSRQLD_YEAR"/>
     </input>
-    <input node="P_USER_INFO">
+    <input node="R_USERINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="UserClosedBy" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSED_BY" source="BNAME"/>
@@ -11503,7 +11525,9 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_CloseDateForNEJ" datatype="DATE" expressionLanguage="SQL">
+    
         <formula>&quot;CC_CloseDateforJoin&quot;</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="J_CLOSEDUSER_CASES">
@@ -11659,7 +11683,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_CATEGORY" source="OSRQLD_CATEGORY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_YEAR" source="OSRQLD_YEAR"/>
     </input>
-    <input node="P_USER_INFO">
+    <input node="R_USERINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="UserProcessor" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR" source="BNAME"/>
@@ -12638,26 +12662,26 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="1187" y="112"/>
+      <upperLeftCorner x="1387.2482477875742" y="131.9999988079071"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_SCMG_T_CASE_ATTR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="967" y="6976"/>
+      <upperLeftCorner x="1386.4129029277392" y="7056.999947547913"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CASE_INDEX" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1018" y="7406"/>
+      <upperLeftCorner x="956.3576726305512" y="7446.999945163727"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CRMBUT000" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="912" y="5196"/>
+      <upperLeftCorner x="883.596166300749" y="5236.999960660934"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ACTPARTDESC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="986" y="4076"/>
+      <upperLeftCorner x="920.2000252690923" y="4116.999969005585"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_RESPGRDESC" modelObjectNameSpace="J_ACTPARTDESC" modelObjectType="JoinNodeInput">
@@ -12669,7 +12693,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_RESPGRDESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="959" y="4236"/>
+      <upperLeftCorner x="964.6561810614147" y="4276.999967813492"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_FILELOCDESC" modelObjectNameSpace="J_RESPGRDESC" modelObjectType="JoinNodeInput">
@@ -12681,7 +12705,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FILELOCDESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="981" y="4396"/>
+      <upperLeftCorner x="937.9895143947481" y="4436.999966621399"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_INITBUSDESC" modelObjectNameSpace="J_FILELOCDESC" modelObjectType="JoinNodeInput">
@@ -12693,7 +12717,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="J_INITBUSDESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1007" y="4556"/>
+      <upperLeftCorner x="964.6561810614148" y="4596.999965429306"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_EMPRESPDESC" modelObjectNameSpace="J_INITBUSDESC" modelObjectType="JoinNodeInput">
@@ -12705,7 +12729,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="J_EMPRESPDESC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1049" y="4656"/>
+      <upperLeftCorner x="973.0530762648023" y="4696.999964237213"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_OSRDIVDESC" modelObjectNameSpace="J_EMPRESPDESC" modelObjectType="JoinNodeInput">
@@ -12717,7 +12741,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="J_OSRDIVDESC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1022" y="4816"/>
+      <upperLeftCorner x="999.7197429314689" y="4856.99996304512"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_INDEX_PARTNERNAMES" modelObjectNameSpace="J_OSRDIVDESC" modelObjectType="JoinNodeInput">
@@ -12729,7 +12753,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape><shape><upperLeftCorner/><rectangleSize/></shape>
     <shape expanded="true" modelObjectName="J_INDEX_PARTNERNAMES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1043" y="4976"/>
+      <upperLeftCorner x="1014.5961657047025" y="5016.999961853027"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_SELFASSES" modelObjectNameSpace="J_INDEX_PARTNERNAMES" modelObjectType="JoinNodeInput">
@@ -12741,7 +12765,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="J_ATTR_SELFASSES" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1155" y="5196"/>
+      <upperLeftCorner x="1131.023226746593" y="5236.999960660934"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_CORREC" modelObjectNameSpace="J_ATTR_SELFASSES" modelObjectType="JoinNodeInput">
@@ -12753,7 +12777,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="J_ATTR_CORREC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="512" y="5356"/>
+      <upperLeftCorner x="479.799650280243" y="5396.999959468842"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_ACTPART" modelObjectNameSpace="J_ATTR_CORREC" modelObjectType="JoinNodeInput">
@@ -12765,11 +12789,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_SELFASSES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2227" y="6986"/>
+      <upperLeftCorner x="2226.412902927739" y="7066.999947547913"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_ACTPART" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="539" y="5516"/>
+      <upperLeftCorner x="506.4663169469095" y="5556.999958276749"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_RESPG" modelObjectNameSpace="J_ATTR_ACTPART" modelObjectType="JoinNodeInput">
@@ -12781,16 +12805,16 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_CORREC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="6986"/>
+      <upperLeftCorner x="92" y="7066.999947547913"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape modelObjectName="P_SELFASSES" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1942" y="7201"/>
+      <upperLeftCorner x="1883.0483596036192" y="7241.99994635582"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_RESPG" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="565" y="5656"/>
+      <upperLeftCorner x="533.132983613576" y="5716.999957084656"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_FILELOC" modelObjectNameSpace="J_ATTR_RESPG" modelObjectType="JoinNodeInput">
@@ -12802,15 +12826,15 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="P_ACTPART" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="388" y="7201"/>
+      <upperLeftCorner x="326.35767263055163" y="7241.99994635582"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="P_CORREC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="92" y="7201"/>
+      <upperLeftCorner x="92" y="7241.99994635582"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_FILELOC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1245" y="5816"/>
+      <upperLeftCorner x="931.8938664240817" y="5876.999955892563"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_INITBUS" modelObjectNameSpace="J_ATTR_FILELOC" modelObjectType="JoinNodeInput">
@@ -12822,12 +12846,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_RESPGROUP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="337" y="6986"/>
+      <upperLeftCorner x="336.41290292773965" y="7066.999947547913"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape modelObjectName="J_ATTR_INITBUS" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1219" y="5976"/>
+      <upperLeftCorner x="905.2271997574151" y="6036.99995470047"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_EMPRESP" modelObjectNameSpace="J_ATTR_INITBUS" modelObjectType="JoinNodeInput">
@@ -12839,15 +12863,15 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_FILELOC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2017" y="6986"/>
+      <upperLeftCorner x="2016.4129029277392" y="7066.999947547913"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_RESPGROUP" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="598" y="7201"/>
+      <upperLeftCorner x="536.3576726305512" y="7241.99994635582"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_EMPRESP" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="979" y="6136"/>
+      <upperLeftCorner x="931.8938664240818" y="6196.999953508377"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_OSRDIVREP" modelObjectNameSpace="J_ATTR_EMPRESP" modelObjectType="JoinNodeInput">
@@ -12859,15 +12883,15 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_INITBUS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1807" y="6986"/>
+      <upperLeftCorner x="546.4129029277394" y="7066.999947547913"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_FILELOC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1732" y="7201"/>
+      <upperLeftCorner x="1673.0483596036192" y="7241.99994635582"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_OSRDIVREP" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1006" y="6296"/>
+      <upperLeftCorner x="1189.734498952888" y="6356.999952316284"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_CASEP_COUNT" modelObjectNameSpace="J_ATTR_OSRDIVREP" modelObjectType="JoinNodeInput">
@@ -12879,15 +12903,15 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_EMPRESP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="547" y="6986"/>
+      <upperLeftCorner x="756.4129029277391" y="7066.999947547913"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_INITBUS" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1522" y="7201"/>
+      <upperLeftCorner x="746.3576726305512" y="7241.99994635582"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ATTR_CASEP_COUNT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1204" y="6436"/>
+      <upperLeftCorner x="1163.0678322862213" y="6516.999951124191"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ATTRIBUTES_INDEX" modelObjectNameSpace="J_ATTR_CASEP_COUNT" modelObjectType="JoinNodeInput">
@@ -12899,15 +12923,15 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_OSRDIVREP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="757" y="6986"/>
+      <upperLeftCorner x="1806.4129029277392" y="7066.999947547913"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_EMPRESP" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="808" y="7201"/>
+      <upperLeftCorner x="956.3576726305512" y="7241.99994635582"/>
       <rectangleSize width="160"/>
     </shape>
    <shape expanded="true" modelObjectName="J_ATTRIBUTES_INDEX" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1178" y="6596"/>
+      <upperLeftCorner x="1224.2339827934998" y="6676.999949932098"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ATTRIBUTES" modelObjectNameSpace="J_ATTRIBUTES_INDEX" modelObjectType="JoinNodeInput">
@@ -12919,17 +12943,17 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_COUNT_CASEP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1597" y="6986"/>
+      <upperLeftCorner x="966.4129029277391" y="7066.999947547913"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape modelObjectName="P_OSRDIVREP" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1018" y="7201"/>
+      <upperLeftCorner x="1463.0483596036192" y="7241.99994635582"/>
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_ATTRIBUTES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="994" y="6756"/>
+      <upperLeftCorner x="1408.2313553717504" y="6836.9999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CRMD_CMGCASE_AT" modelObjectNameSpace="J_ATTRIBUTES" modelObjectType="JoinNodeInput">
@@ -12941,36 +12965,36 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_CASEP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1294" y="6774"/>
+      <upperLeftCorner x="1197.5673161268332" y="6854.4999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape modelObjectName="P_CASEP" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1259" y="7201"/>
+      <upperLeftCorner x="1199.4408502651604" y="7241.99994635582"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CRMD_CMGCASE_AT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1177" y="6976"/>
+      <upperLeftCorner x="1596.4129029277392" y="7056.999947547913"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CASEP_MAIN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1387" y="6976"/>
+      <upperLeftCorner x="1176.4129029277394" y="7056.999947547913"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CREATEDUSER_CASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1277" y="856"/>
+      <upperLeftCorner x="1278.3423240639568" y="896.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_SUCCESS_DISCTYPE" modelObjectNameSpace="J_CREATEDUSER_CASE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_USER_INFO" modelObjectNameSpace="J_CREATEDUSER_CASE" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="322" y="753"/>
-      <rectangleSize width="250"/>
+    <shape modelObjectName="R_USERINFO" modelObjectNameSpace="J_CREATEDUSER_CASE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="319" y="328"/>
+      <rectangleSize width="167"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SUCCESS_DISCTYPE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1410" y="1036"/>
+      <upperLeftCorner x="1008.5391249181542" y="1076.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_REASONOUTC" modelObjectNameSpace="J_SUCCESS_DISCTYPE" modelObjectType="JoinNodeInput">
@@ -12981,12 +13005,13 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <upperLeftCorner x="309" y="1990"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="P_USER_INFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1174" y="1036"/>
+    <shape expanded="true" modelObjectName="R_USERINFO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1328.2872838606816" y="1083.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+  
     <shape expanded="true" modelObjectName="J_REASONOUTC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1550" y="1196"/>
+      <upperLeftCorner x="981.8724582514876" y="1236.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_SUCCESS_OUTC" modelObjectNameSpace="J_REASONOUTC" modelObjectType="JoinNodeInput">
@@ -12999,11 +13024,15 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     </shape>
   
     <shape expanded="true" modelObjectName="P_DISCTYPE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1340" y="1196"/>
+      <upperLeftCorner x="1191.8724582514878" y="1236.9999904632568"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_USER_INFO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1401.8724582514876" y="1236.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SUCCESS_OUTC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1653" y="1356"/>
+      <upperLeftCorner x="1199.4448269263403" y="1396.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_DISCTYPE_OUTCOME" modelObjectNameSpace="J_SUCCESS_OUTC" modelObjectType="JoinNodeInput">
@@ -13015,11 +13044,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_OUTCOME_REASON" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1443" y="1356"/>
+      <upperLeftCorner x="955.205791584821" y="1396.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_DISCTYPE_OUTCOME" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1475" y="1516"/>
+      <upperLeftCorner x="1016.1114935930068" y="1556.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_DISCTYPE_SUCCESS" modelObjectNameSpace="J_DISCTYPE_OUTCOME" modelObjectType="JoinNodeInput">
@@ -13032,11 +13061,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     </shape>
   
     <shape expanded="true" modelObjectName="P_CMG_OUTC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1686" y="1516"/>
+      <upperLeftCorner x="1226.1114935930068" y="1556.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_DISCTYPE_SUCCESS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1488" y="1676"/>
+      <upperLeftCorner x="1264.2378790436173" y="1716.9999868869781"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_SUCCESSDESC" modelObjectNameSpace="J_DISCTYPE_SUCCESS" modelObjectType="JoinNodeInput">
@@ -13048,12 +13077,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_DD07T" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1385" y="1996"/>
+      <upperLeftCorner x="1102.700238564567" y="2036.9999845027924"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_SUCCESSDESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1514" y="1836"/>
+      <upperLeftCorner x="1290.9045457102839" y="1876.9999856948853"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CAMPAIGN_CGPLTEXT" modelObjectNameSpace="J_SUCCESSDESC" modelObjectType="JoinNodeInput">
@@ -13066,7 +13095,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     </shape>
   
     <shape expanded="true" modelObjectName="J_CAMPAIGN_CGPLTEXT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1595" y="1996"/>
+      <upperLeftCorner x="1317.5712123769506" y="2036.9999845027924"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CAMPAIGN_PROJECT" modelObjectNameSpace="J_CAMPAIGN_CGPLTEXT" modelObjectType="JoinNodeInput">
@@ -13078,7 +13107,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CAMPAIGN_PROJECT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1712" y="2156"/>
+      <upperLeftCorner x="1450.6216693207211" y="2196.9999833106995"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CAMPAIGN_DESC" modelObjectNameSpace="J_CAMPAIGN_PROJECT" modelObjectType="JoinNodeInput">
@@ -13090,11 +13119,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CGPL_TEXT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1502" y="2156"/>
+      <upperLeftCorner x="1240.6216693207211" y="2196.9999833106995"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CAMPAIGN_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1807" y="2316"/>
+      <upperLeftCorner x="1258.4689988150092" y="2356.9999821186066"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_PARTNERFUNCT_DESC" modelObjectNameSpace="J_CAMPAIGN_DESC" modelObjectType="JoinNodeInput">
@@ -13106,14 +13135,14 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CAMPAIGN_PROJECT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1597" y="2316"/>
+      <upperLeftCorner x="1527.7861404244586" y="2356.9999821186066"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
   
     <shape expanded="true" modelObjectName="J_PARTNERFUNCT_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1859" y="2476"/>
+      <upperLeftCorner x="1441.8023321483424" y="2516.9999809265137"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_SECURITY_DESC" modelObjectNameSpace="J_PARTNERFUNCT_DESC" modelObjectType="JoinNodeInput">
@@ -13125,11 +13154,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CAMPAIGN_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1649" y="2476"/>
+      <upperLeftCorner x="1231.8023321483424" y="2516.9999809265137"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SECURITY_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1574" y="2636"/>
+      <upperLeftCorner x="1215.8948804203596" y="2676.999979734421"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_PRIORITY_DESC" modelObjectNameSpace="J_SECURITY_DESC" modelObjectType="JoinNodeInput">
@@ -13141,12 +13170,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PARTNER_FUNCT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1870" y="2636"/>
+      <upperLeftCorner x="1505.7053819288953" y="2676.999979734421"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_PRIORITY_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1347" y="2796"/>
+      <upperLeftCorner x="1399.2282137536931" y="2836.999978542328"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ESCALE_REASON" modelObjectNameSpace="J_PRIORITY_DESC" modelObjectType="JoinNodeInput">
@@ -13158,11 +13187,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_SECURITY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1586" y="2796"/>
+      <upperLeftCorner x="1189.228213753693" y="2836.999978542328"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ESCALE_REASON" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="951" y="2956"/>
+      <upperLeftCorner x="1217.9091230467325" y="2996.999977350235"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_REASON_DESC" modelObjectNameSpace="J_ESCALE_REASON" modelObjectType="JoinNodeInput">
@@ -13174,11 +13203,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PRIORITY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1374" y="2956"/>
+      <upperLeftCorner x="1427.9091230467325" y="2996.999977350235"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_REASON_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="924" y="3116"/>
+      <upperLeftCorner x="727.9518591327408" y="3156.999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CASESTATUS_DESC" modelObjectNameSpace="J_REASON_DESC" modelObjectType="JoinNodeInput">
@@ -13190,12 +13219,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ESCALATION" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1212" y="3116"/>
+      <upperLeftCorner x="1254.4666591248017" y="3156.999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_CASESTATUS_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1129" y="3276"/>
+      <upperLeftCorner x="701.285192466074" y="3316.999974966049"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CATEGORY_DESC" modelObjectNameSpace="J_CASESTATUS_DESC" modelObjectType="JoinNodeInput">
@@ -13207,11 +13236,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
    <shape expanded="true" modelObjectName="P_REASONS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="898" y="3276"/>
+      <upperLeftCorner x="1095.017430858406" y="3316.999974966049"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CATEGORY_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="785" y="3436"/>
+      <upperLeftCorner x="674.6185257994075" y="3476.9999737739563"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CASETYPE_DESC" modelObjectNameSpace="J_CATEGORY_DESC" modelObjectType="JoinNodeInput">
@@ -13223,12 +13252,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CASESTATUS_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1155" y="3436"/>
+      <upperLeftCorner x="958.6767985365508" y="3476.9999737739563"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_CASETYPE_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="758" y="3596"/>
+      <upperLeftCorner x="647.951859132741" y="3636.9999725818634"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_SELFASSESD" modelObjectNameSpace="J_CASETYPE_DESC" modelObjectType="JoinNodeInput">
@@ -13240,11 +13269,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CATEGORY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1023" y="3596"/>
+      <upperLeftCorner x="860.9174063275784" y="3636.9999725818634"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_SELFASSESD" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="732" y="3756"/>
+      <upperLeftCorner x="621.2851924660742" y="3796.9999713897705"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_CORRECDESC" modelObjectNameSpace="J_SELFASSESD" modelObjectType="JoinNodeInput">
@@ -13256,11 +13285,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CASETYPE_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="942" y="3756"/>
+      <upperLeftCorner x="831.285192466074" y="3796.9999713897705"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CORRECDESC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="959" y="3916"/>
+      <upperLeftCorner x="946.866691935759" y="3956.9999701976776"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ACTPARTDESC" modelObjectNameSpace="J_CORRECDESC" modelObjectType="JoinNodeInput">
@@ -13272,52 +13301,52 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CHANGEDUSER_CASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1257" y="696"/>
+      <upperLeftCorner x="1282.2200191486502" y="736.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CREATEDUSER_CASE" modelObjectNameSpace="J_CHANGEDUSER_CASE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_USER_INFO" modelObjectNameSpace="J_CHANGEDUSER_CASE" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="308" y="848"/>
-      <rectangleSize width="250"/>
+    <shape modelObjectName="R_USERINFO" modelObjectNameSpace="J_CHANGEDUSER_CASE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="368" y="317"/>
+      <rectangleSize width="167"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CLOSEDUSER_CASES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1284" y="536"/>
+      <upperLeftCorner x="1255.5533524819834" y="576.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CHANGEDUSER_CASE" modelObjectNameSpace="J_CLOSEDUSER_CASES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_USER_INFO" modelObjectNameSpace="J_CLOSEDUSER_CASES" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="424" y="801"/>
-      <rectangleSize width="250"/>
+    <shape modelObjectName="R_USERINFO" modelObjectNameSpace="J_CLOSEDUSER_CASES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="334" y="401"/>
+      <rectangleSize width="167.296875"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PROCESSUSER_CASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1257" y="376"/>
+      <upperLeftCorner x="1282.2200191486502" y="416.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CLOSEDUSER_CASES" modelObjectNameSpace="J_PROCESSUSER_CASE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="267"/>
     </shape>
-    <shape modelObjectName="P_USER_INFO" modelObjectNameSpace="J_PROCESSUSER_CASE" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="R_USERINFO" modelObjectNameSpace="J_PROCESSUSER_CASE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="313" y="921"/>
-      <rectangleSize width="250"/>
+      <rectangleSize width="167"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_RESPUSER_CASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1187" y="217"/>
+      <upperLeftCorner x="1386.8881192498286" y="256.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_PROCESSUSER_CASE" modelObjectNameSpace="NEJ_RESPUSER_CASE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="220.46533203125"/>
+      <rectangleSize width="220"/>
     </shape>
     <shape modelObjectName="P_USER_INFO" modelObjectNameSpace="NEJ_RESPUSER_CASE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="424" y="382"/>
-      <rectangleSize width="152.0107421875"/>
+      <rectangleSize width="152"/>
     </shape></shapes>
 </layout>
 </Calculation:scenario>
