@@ -2133,19 +2133,42 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_CATEGORY" source="OSRQLD_CATEGORY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_YEAR" source="OSRQLD_YEAR"/>
     </input>
-    <input node="P_UserInfo">
+    <input node="R_USERINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="A_ACS_CR_NAME" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="A_CREA_UNAME" source="BNAME"/>
     </input>
     <joinAttribute name="A_CREA_UNAME"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_USERINFO">
+    <viewAttributes>
+      <viewAttribute id="NAME_TEXT"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="BNAME"/>
+      <viewAttribute id="CC_ENDDADATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_UserInfo"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>BNAME</partitionViewAttributeName>
+      <order byViewAttributeName="CC_ENDDADATE" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_UserInfo">
     <viewAttributes>
       <viewAttribute id="NAME_TEXT" keepFlag="true"/>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="BNAME" keepFlag="true"/>
+    
+      <viewAttribute id="ENDDA"/>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_ENDDADATE" datatype="DATE" expressionLanguage="SQL">
+        <formula>ENDDA</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_ACS_CASES_LCHUSER" cardinality="CN_1" joinType="leftOuter">
@@ -2695,7 +2718,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_CATEGORY" source="OSRQLD_CATEGORY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_YEAR" source="OSRQLD_YEAR"/>
     </input>
-    <input node="P_UserInfo">
+    <input node="R_USERINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="A_ACS_LCH_NAME" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="A_LCHG_UNAME" source="BNAME"/>
     </input>
@@ -3250,7 +3273,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_CATEGORY" source="OSRQLD_CATEGORY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_YEAR" source="OSRQLD_YEAR"/>
     </input>
-    <input node="P_UserInfo">
+    <input node="R_USERINFO">
       <mapping xsi:type="Calculation:AttributeMapping" target="A_ACS_RSP_NAME" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="A_RESP_PERSON" source="BNAME"/>
     </input>
@@ -4986,18 +5009,18 @@ if(&quot;FiscalMonth&quot;='12','12-Jun','0'))))))))))))</formula>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="466" y="112"/>
+      <upperLeftCorner x="392.6768846433887" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_PrtCases" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="1156"/>
+      <upperLeftCorner x="436.80243627135826" y="1216.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_Cases_CMGALRT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="275" y="996"/>
+      <upperLeftCorner x="533.2595299157203" y="1056.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_PrtCases" modelObjectNameSpace="J_Cases_CMGALRT" modelObjectType="JoinNodeInput">
@@ -5009,12 +5032,12 @@ if(&quot;FiscalMonth&quot;='12','12-Jun','0'))))))))))))</formula>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CMGALRT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="1156"/>
+      <upperLeftCorner x="646.8024362713583" y="1216.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_Cases_ACS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="836"/>
+      <upperLeftCorner x="387.93767350247356" y="896.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_Cases_CMGALRT" modelObjectNameSpace="J_Cases_ACS" modelObjectType="JoinNodeInput">
@@ -5027,58 +5050,64 @@ if(&quot;FiscalMonth&quot;='12','12-Jun','0'))))))))))))</formula>
     </shape>
   
     <shape expanded="true" modelObjectName="R_ACS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="512" y="1014"/>
+      <upperLeftCorner x="301.9999999999999" y="1074.4999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_ACS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="512" y="1156"/>
+      <upperLeftCorner x="226.80243627135812" y="1216.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_ACS_CASES_CRUSER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="411" y="676"/>
+      <upperLeftCorner x="361.2710068358068" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_Cases_ACS" modelObjectNameSpace="J_ACS_CASES_CRUSER" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="283"/>
     </shape>
-    <shape modelObjectName="P_UserInfo" modelObjectNameSpace="J_ACS_CASES_CRUSER" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="341" y="404"/>
-      <rectangleSize width="152"/>
+    <shape modelObjectName="R_USERINFO" modelObjectNameSpace="J_ACS_CASES_CRUSER" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="328" y="2786"/>
+      <rectangleSize width="250"/>
     </shape>
+  
+    <shape expanded="true" modelObjectName="R_USERINFO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="905.7499952316284"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="P_UserInfo" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="542" y="836"/>
+      <upperLeftCorner x="92" y="1056.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ACS_CASES_LCHUSER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="438" y="516"/>
+      <upperLeftCorner x="334.6043401691402" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ACS_CASES_CRUSER" modelObjectNameSpace="J_ACS_CASES_LCHUSER" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_UserInfo" modelObjectNameSpace="J_ACS_CASES_LCHUSER" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="371" y="2938"/>
-      <rectangleSize width="250"/>
+    <shape modelObjectName="R_USERINFO" modelObjectNameSpace="J_ACS_CASES_LCHUSER" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="301" y="308"/>
+      <rectangleSize width="175.03125"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ACS_CASES_RESPUSER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="571" y="356"/>
+      <upperLeftCorner x="191.4630434114805" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ACS_CASES_LCHUSER" modelObjectNameSpace="J_ACS_CASES_RESPUSER" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="283"/>
     </shape>
-    <shape modelObjectName="P_UserInfo" modelObjectNameSpace="J_ACS_CASES_RESPUSER" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="321" y="411"/>
-      <rectangleSize width="152.0107421875"/>
+    <shape modelObjectName="R_USERINFO" modelObjectNameSpace="J_ACS_CASES_RESPUSER" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="324" y="393"/>
+      <rectangleSize width="175.03125"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_ACSCASES_CAL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="466" y="217"/>
+      <upperLeftCorner x="392.6768846433887" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ACS_CASES_RESPUSER" modelObjectNameSpace="J_ACSCASES_CAL" modelObjectType="JoinNodeInput">
@@ -5090,9 +5119,8 @@ if(&quot;FiscalMonth&quot;='12','12-Jun','0'))))))))))))</formula>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_Calendar" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="357" y="356"/>
+      <upperLeftCorner x="440.63837508277396" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
