@@ -58,12 +58,7 @@
     
       <viewAttribute id="CC_Country"/>
     </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_AssessmentCount" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;CC_AssessmentStatus&quot;='Issued',1,
-if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+    <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Tables::LTExplorer"/>
   </calculationView>
 </calculationViews>
@@ -171,7 +166,14 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       <keyMapping columnObjectName="P_T_LTExplorer" columnName="CC_Postcode"/>
     </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_AssessmentCounter" order="41" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <keyCalculation datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;CC_AssessmentStatus&quot;='Issued',1,
+if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures>
     <measure id="PROPERTYCNT" order="15" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Properties"/>
@@ -239,12 +241,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
     <measure id="ReassessmentAmountCleared" order="33" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Reassessment Amount Cleared"/>
       <measureMapping columnObjectName="P_T_LTExplorer" columnName="ReassessmentAmountCleared"/>
-    </measure>
-    <measure id="CC_AssessmentCount" order="41" aggregationType="sum" measureType="simple" replaceNull="true">
-      <descriptions defaultDescription="Assessments"/>
-      <measureMapping columnObjectName="P_T_LTExplorer" columnName="CC_AssessmentCount"/>
-    </measure>
-  </baseMeasures>
+    </measure></baseMeasures>
   <calculatedMeasures>
     <measure id="CC_BPCount" order="40" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Count of BPs"/>
@@ -252,6 +249,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         <attribute attributeName="ZZ_PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
