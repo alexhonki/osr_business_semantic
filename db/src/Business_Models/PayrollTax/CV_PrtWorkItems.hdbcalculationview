@@ -716,6 +716,7 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief ', 'Non Client Total',
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_WorkGroupOrder" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
+    
         <formula>if(&quot;WorkItemType&quot; = 'WM - 1 Registration (paper)', '1',
 if(&quot;WorkItemType&quot; = 'WM - 1 Registration (e-reg)', '1',
 if(&quot;WorkItemType&quot; = 'WF - Rego Check - e-reg  (BT)', '1',
@@ -785,6 +786,7 @@ if(&quot;WorkItemType&quot; = 'WM - 1 2nd Requests/Urgent', '7',
 if(&quot;WorkItemType&quot; = 'WM - 1 Objection', '7',
 if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief ', '7',
 ''))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="U_PrtTasksInteractions_Workflow">
@@ -868,6 +870,11 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief ', '7',
       <viewAttribute id="CC_BusinessDaysOpen" aggregationType="sum"/>
       <viewAttribute id="CC_TotalGroup"/>
       <viewAttribute id="CC_ABN"/>
+    
+      <viewAttribute id="CC_WorkItemOrder" aggregationType="sum"/>
+      <viewAttribute id="CC_TotalsGroupName"/>
+      <viewAttribute id="CC_ClientGroup"/>
+      <viewAttribute id="CC_WorkGroupOrder" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_AGGNonBusDays_WorkItems">
@@ -900,6 +907,11 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief ', '7',
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_OSS" source="CC_OSS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_BusinessDaysOpen" source="CC_BusinessDaysOpen"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TotalGroup" source="CC_TotalGroupOrder"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WorkItemOrder" source="CC_WorkItemOrder"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TotalsGroupName" source="CC_TotalsGroupName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ClientGroup" source="CC_ClientGroup"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WorkGroupOrder" source="CC_WorkGroupOrder"/>
     </input>
     <input node="P_BpIdRoles">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
@@ -1017,6 +1029,31 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief ', '7',
       <descriptions defaultDescription="Responsible Person"/>
       <keyMapping columnObjectName="J_WorkItem_ABN" columnName="CC_ResponsiblePerson"/>
     </attribute>
+  
+    <attribute id="CC_WorkItemOrder" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Work Item Order"/>
+      <keyMapping columnObjectName="J_WorkItem_ABN" columnName="CC_WorkItemOrder"/>
+    </attribute>
+    <attribute id="CC_TotalsGroupName" order="30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Totals Group Name"/>
+      <keyMapping columnObjectName="J_WorkItem_ABN" columnName="CC_TotalsGroupName"/>
+    </attribute>
+    <attribute id="CC_ClientGroup" order="31" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client Group"/>
+      <keyMapping columnObjectName="J_WorkItem_ABN" columnName="CC_ClientGroup"/>
+    </attribute>
+    <attribute id="CC_WorkGroupOrder" order="32" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Work Group Order"/>
+      <keyMapping columnObjectName="J_WorkItem_ABN" columnName="CC_WorkGroupOrder"/>
+    </attribute>
+    <attribute id="CC_TotalGroup" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Total Group"/>
+      <keyMapping columnObjectName="J_WorkItem_ABN" columnName="CC_TotalGroup"/>
+    </attribute>
+    <attribute id="CC_ABN" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ABN"/>
+      <keyMapping columnObjectName="J_WorkItem_ABN" columnName="CC_ABN"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -1067,11 +1104,13 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief ', '7',
       
       
       
+      
       </measure>
   
     <measure id="CC_WorkItemDurationAvg" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Workflow Item (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
+      
       
       
       
