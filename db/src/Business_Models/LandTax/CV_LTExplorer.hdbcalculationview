@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.LandTax::CV_LTExplorer" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.business.semantic.db.Business_Models.LandTax::CV_LTExplorer" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="LTExplorer"/>
 <localVariables/>
 <variableMappings/>
@@ -299,11 +299,10 @@
       <viewAttribute id="CC_Postcode"/>
     
       <viewAttribute id="CC_Country"/>
-      <viewAttribute id="INTRENOPL"/>
-      <viewAttribute id="NANO"/>
+      <viewAttribute id="Rank_Column" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="J_Agg_Address_Rank_To_OWNERSHIPCNRESP">
+    <input node="R_Agg_Address_Rank_To_OWNERSHIPCNRESP">
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYR" source="TAXYR"/>
@@ -337,8 +336,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Postcode" source="CC_Postcode"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Country" source="CC_Country"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
     </input>
     <input node="P_CV_OwnershipCNRES_HE">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_HomeExemptionParcels" source="CC_HomeExemptionParcels"/>
@@ -347,6 +345,73 @@
     </input>
     <joinAttribute name="ZZ_PARTNER"/>
     <joinAttribute name="TAXYR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_Agg_Address_Rank_To_OWNERSHIPCNRESP">
+    <viewAttributes>
+      <viewAttribute id="ZZ_NOIA_DATE"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="TAXYR"/>
+      <viewAttribute id="InvoicedAmount" aggregationType="sum"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="UnpostedAmount" aggregationType="sum"/>
+      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
+      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum"/>
+      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum"/>
+      <viewAttribute id="TaxBracket"/>
+      <viewAttribute id="UnissuedAssessmentFlag"/>
+      <viewAttribute id="TAXYRENDDT"/>
+      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="PROPERTYCNT" aggregationType="sum"/>
+      <viewAttribute id="PARCELCNT" aggregationType="sum"/>
+      <viewAttribute id="TAXESTIMATE" aggregationType="sum"/>
+      <viewAttribute id="CC_OwnerTypeDescription"/>
+      <viewAttribute id="TOTBPRELVNTVAL" aggregationType="sum"/>
+      <viewAttribute id="TOTBPCONCESSVAL" aggregationType="sum"/>
+      <viewAttribute id="TOTBPTAXABLEVAL" aggregationType="sum"/>
+      <viewAttribute id="ABSURCHARGE" aggregationType="sum"/>
+      <viewAttribute id="ADRC_DATE_FROM"/>
+      <viewAttribute id="ADRC_DATE_TO"/>
+      <viewAttribute id="TAXRATECODE"/>
+      <viewAttribute id="CC_Locality"/>
+      <viewAttribute id="CC_Region"/>
+      <viewAttribute id="CC_Postcode"/>
+      <viewAttribute id="CC_Country"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="ADR_KIND"/>
+      <viewAttribute id="CC_AddressRank" aggregationType="sum"/>
+      <viewAttribute id="INTRENOPL"/>
+      <viewAttribute id="NANO"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_Agg_Address_Rank_To_OWNERSHIPCNRESP"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>ZZ_PARTNER</partitionViewAttributeName>
+      <partitionViewAttributeName>TAXYR</partitionViewAttributeName>
+      <partitionViewAttributeName>INTRENOPL</partitionViewAttributeName>
+      <order byViewAttributeName="TAXYRSTARTDT" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+      <rankViewAttributeName>Rank_Column</rankViewAttributeName>
+    </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_OwnershipCNRES_HE" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="TAXYR"/>
+    
+      <viewAttribute id="CONCESSCODE"/>
+      <viewAttribute id="HEParcels"/></viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_HomeExemptionParcels" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>&quot;HEParcels&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Agg_CV_OwnershipCNRES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="HEParcels" source="ParcelCounter"/>
+    </input>
+    <filter>&quot;CONCESSCODE&quot;='R'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_Agg_Address_Rank_To_OWNERSHIPCNRESP" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
@@ -379,12 +444,13 @@
       <viewAttribute id="CC_Region"/>
       <viewAttribute id="CC_Postcode"/>
       <viewAttribute id="CC_Country"/>
-      <viewAttribute id="INTRENOPL"/>
-      <viewAttribute id="NANO"/>
     
       <viewAttribute id="MANDT"/>
       <viewAttribute id="ADR_KIND"/>
-      <viewAttribute id="CC_AddressRank" aggregationType="sum"/></viewAttributes>
+      <viewAttribute id="CC_AddressRank" aggregationType="sum"/>
+      <viewAttribute id="INTRENOPL"/>
+      <viewAttribute id="NANO"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <input node="R_One_Address_Per_BP">
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
@@ -402,8 +468,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROPERTYCNT" source="PROPERTYCNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARCELCNT" source="PARCELCNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_AddressRank" source="CC_AddressRank"/>
@@ -421,6 +485,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Country" source="CC_Country"/>
     </input>
     <input node="P_CV_OwnershipCNRES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROPERTYCNT" source="PropertyCounter"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARCELCNT" source="ParcelCounter"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
@@ -429,31 +495,19 @@
     <joinAttribute name="ZZ_PARTNER"/>
     <joinAttribute name="TAXYR"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_OwnershipCNRES_HE" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:AggregationView" id="P_CV_OwnershipCNRES">
     <viewAttributes>
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYR"/>
-    
-      <viewAttribute id="CONCESSCODE"/>
-      <viewAttribute id="HEParcels"/></viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_HomeExemptionParcels" datatype="INTEGER" expressionLanguage="SQL">
-        <formula>&quot;HEParcels&quot;</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
-    <input node="Agg_CV_OwnershipCNRES">
-      <mapping xsi:type="Calculation:AttributeMapping" target="HEParcels" source="ParcelCounter"/>
-    </input>
-    <filter>&quot;CONCESSCODE&quot;='R'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_OwnershipCNRES">
-    <viewAttributes>
+      <viewAttribute id="PropertyCounter" aggregationType="sum"/>
+      <viewAttribute id="ParcelCounter" aggregationType="sum"/>
       <viewAttribute id="INTRENOPL"/>
       <viewAttribute id="NANO"/>
+    
+    
     
       <viewAttribute id="ZZ_PARTNER"/>
       <viewAttribute id="TAXYR"/></viewAttributes>
     <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
     <input node="P_CV_OwnershipCNRES$$$$osr.business.semantic.db.Business_Models.LandTax::CV_OwnershipCnresp$$"/>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="Agg_CV_OwnershipCNRES">
@@ -522,8 +576,7 @@
       <viewAttribute id="CC_Postcode"/>
     
       <viewAttribute id="CC_Country"/>
-      <viewAttribute id="INTRENOPL"/>
-      <viewAttribute id="NANO"/>
+      <viewAttribute id="Rank_Column" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_Agg_Address_Rank_To_HE_Parcel">
@@ -560,8 +613,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Postcode" source="CC_Postcode"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Country" source="CC_Country"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
     </input>
     <input node="P_CV_OwnershipCNRES_PPE">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PrimaryProductionParcels" source="CC_PrimaryProductionParcels"/>
@@ -625,8 +677,7 @@
       <viewAttribute id="CC_Postcode"/>
     
       <viewAttribute id="CC_Country"/>
-      <viewAttribute id="INTRENOPL"/>
-      <viewAttribute id="NANO"/>
+      <viewAttribute id="Rank_Column" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_Agg_Address_Rank_To_PPE_Parcel">
@@ -664,8 +715,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Postcode" source="CC_Postcode"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Country" source="CC_Country"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
     </input>
     <input node="P_CV_OwnershipCNRES_Subdivdier">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_SubdivderParcels" source="CC_SubdivderParcels"/>
@@ -751,16 +801,9 @@
       <descriptions defaultDescription="CC_Country"/>
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_Country"/>
     </attribute>
-  
-    <attribute id="INTRENOPL" order="43" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="INTRENOPL"/>
-  
-      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="INTRENOPL"/>
-  
-    </attribute>
-    <attribute id="NANO" order="44" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="NANO"/>
-      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="NANO"/>
+    <attribute id="Rank_Column" order="57">
+      <descriptions defaultDescription="Rank_Column"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="Rank_Column"/>
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -784,7 +827,7 @@
     <calculatedAttribute id="CC_LiabilityStatus" order="21" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liability Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="13">
-        <formula>if(&quot;TAXESTIMATE&quot;&gt;0,'Liable','Not liable')</formula>
+        <formula>if(&quot;TAXESTIMATEAll&quot;&gt;0,'Liable','Not liable')</formula>
       </keyCalculation>
       </calculatedAttribute>
   
@@ -793,26 +836,26 @@
   
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
   
-        <formula>If(&quot;FN_ReassessmentAmount&quot;!=0 and not isnull(&quot;FN_ReassessmentAmount&quot;),'Reassessed','Not Reassessed')</formula>
+        <formula>If(&quot;FN_ReassessmentAmountAll&quot;!=0 and not isnull(&quot;FN_ReassessmentAmountAll&quot;),'Reassessed','Not Reassessed')</formula>
   
       </keyCalculation>
       </calculatedAttribute>
     <calculatedAttribute id="CC_HomeExemptionFlag" hidden="false" order="26" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Home Exemption Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
-        <formula>IF(&quot;CC_HomeExemptionParcels&quot;&gt;0,'Home Exemption','No Home Exemption')</formula>
+        <formula>IF(&quot;CC_HomeExemptionParcelsAll&quot;&gt;0,'Home Exemption','No Home Exemption')</formula>
       </keyCalculation>
       </calculatedAttribute>
     <calculatedAttribute id="CC_PrimaryProductionFlag" hidden="false" order="27" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Primary Production Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
-        <formula>IF(&quot;CC_PrimaryProductionParcels&quot;&gt;0,'Primary Production','No Primary Production')</formula>
+        <formula>IF(&quot;CC_PrimaryProductionParcelsAll&quot;&gt;0,'Primary Production','No Primary Production')</formula>
       </keyCalculation>
       </calculatedAttribute>
     <calculatedAttribute id="CC_SubdividerFlag" hidden="false" order="31" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subdivider Discount Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
-        <formula>IF(&quot;CC_SubdivderParcels&quot;&gt;0,'Subdivider Discount','No Subdivider Discount')</formula>
+        <formula>IF(&quot;CC_SubdivderParcelsAll&quot;&gt;0,'Subdivider Discount','No Subdivider Discount')</formula>
       </keyCalculation>
       </calculatedAttribute>
   
@@ -827,62 +870,71 @@
       </keyCalculation>
       </calculatedAttribute></calculatedAttributes>
   <baseMeasures>
-    <measure id="InvoicedAmount" order="7" aggregationType="sum" measureType="simple" replaceNull="true" unconverted="true">
+    <measure id="InvoicedAmountAll" order="7" aggregationType="sum" measureType="simple" replaceNull="true" unconverted="true">
       <descriptions defaultDescription="Invoiced Amount"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="InvoicedAmount"/>
     </measure>
-    <measure id="UnpostedAmount" order="9" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="UnpostedAmountAll" order="9" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Unposted Amount"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="UnpostedAmount"/>
     </measure>
-    <measure id="AssessmentAmount" order="10" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="AssessmentAmountAll" order="10" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Assessment Amount"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="AssessmentAmount"/>
     </measure>
-    <measure id="FN_ReassessmentAmount" order="11" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="FN_ReassessmentAmountAll" order="11" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Reassessment Amount"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="FN_ReassessmentAmount"/>
     </measure>
-    <measure id="ReassessmentAmountCleared" order="12" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="ReassessmentAmountClearedAll" order="12" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Reassessment Amount Cleared"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="ReassessmentAmountCleared"/>
     </measure>
-    <measure id="AssessmentAmountCleared" order="16" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="AssessmentAmountClearedAll" order="16" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Assessment Amount Cleared"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="AssessmentAmountCleared"/>
     </measure>
-    <measure id="TAXESTIMATE" order="18" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="TAXESTIMATEAll" order="18" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Estimate Tax"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="TAXESTIMATE"/>
     </measure>
-    <measure id="TOTBPRELVNTVAL" order="20" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="TOTBPRELVNTVALAll" order="20" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Total Land Value"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="TOTBPRELVNTVAL"/>
     </measure>
-    <measure id="TOTBPCONCESSVAL" order="22" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="TOTBPCONCESSVALAll" order="22" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Exempt Land Value"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="TOTBPCONCESSVAL"/>
     </measure>
-    <measure id="TOTBPTAXABLEVAL" order="23" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="TOTBPTAXABLEVALAll" order="23" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Taxable Land Value"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="TOTBPTAXABLEVAL"/>
     </measure>
-    <measure id="ABSURCHARGE" order="24" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="ABSURCHARGEAll" order="24" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Absentee Surcharge"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="ABSURCHARGE"/>
     </measure>
-    <measure id="CC_SubdivderParcels" order="28" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="CC_SubdivderParcelsAll" order="28" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Subdivider Discount Parcels"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_SubdivderParcels"/>
     </measure>
-    <measure id="CC_PrimaryProductionParcels" order="29" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="CC_PrimaryProductionParcelsAll" order="29" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Primary Production Parcels"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_PrimaryProductionParcels"/>
     </measure>
-    <measure id="CC_HomeExemptionParcels" order="30" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="CC_HomeExemptionParcelsAll" order="30" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Home Exemption Parcels"/>
       <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_HomeExemptionParcels"/>
-    </measure></baseMeasures>
+    </measure>
+    <measure id="PROPERTYCNT" order="41" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Properties"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="PROPERTYCNT"/>
+    </measure>
+    <measure id="PARCELCNT" order="42" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Parcels"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="PARCELCNT"/>
+    </measure>
+  </baseMeasures>
   <calculatedMeasures>
     <measure id="CC_BPCount" order="2" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Count of BPs"/>
@@ -890,6 +942,9 @@
         <attribute attributeName="ZZ_PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
+      
       
       
       
@@ -932,28 +987,140 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       
       
       
+      
+      
+      
+      </measure></calculatedMeasures>
+  <restrictedMeasures>
+    <measure id="InvoicedAmount" order="43" aggregationType="sum" datatype="DECIMAL" length="17" scale="2" baseMeasure="InvoicedAmountAll">
+      <descriptions defaultDescription=""/>
+      
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
       </measure>
   
-    <measure id="PARCELCNT" order="41" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
-      <descriptions defaultDescription="Parcels"/>
-      <exceptionAggregation>
-        <attribute attributeName="INTRENOPL"/>
-      </exceptionAggregation>
-      <formula>1</formula>
-      
-      
+    <measure id="UnpostedAmount" order="44" aggregationType="sum" datatype="DECIMAL" length="17" scale="2" baseMeasure="UnpostedAmountAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
       </measure>
-    <measure id="PROPERTYCNT" order="42" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
-      <descriptions defaultDescription="Properties"/>
-      <exceptionAggregation>
-        <attribute attributeName="NANO"/>
-      </exceptionAggregation>
-      <formula>1</formula>
-      
-      
+    <measure id="AssessmentAmount" order="45" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AssessmentAmountAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
       </measure>
-  </calculatedMeasures>
-  <restrictedMeasures/>
+    <measure id="FN_ReassessmentAmount" order="46" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="FN_ReassessmentAmountAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
+      </measure>
+    <measure id="ReassessmentAmountCleared" order="47" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="ReassessmentAmountClearedAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
+      </measure>
+    <measure id="AssessmentAmountCleared" order="48" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AssessmentAmountClearedAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
+      </measure>
+    <measure id="TAXESTIMATE" order="49" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TAXESTIMATEAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
+      </measure>
+    <measure id="TOTBPRELVNTVAL" order="50" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TOTBPRELVNTVALAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
+      </measure>
+    <measure id="TOTBPCONCESSVAL" order="51" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TOTBPCONCESSVALAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
+      </measure>
+    <measure id="TOTBPTAXABLEVAL" order="52" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TOTBPTAXABLEVALAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
+      </measure>
+    <measure id="ABSURCHARGE" order="53" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="ABSURCHARGEAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
+      </measure>
+    <measure id="CC_SubdivderParcels" order="54" aggregationType="sum" datatype="INTEGER" baseMeasure="CC_SubdivderParcelsAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
+      </measure>
+    <measure id="CC_PrimaryProductionParcels" order="55" aggregationType="sum" datatype="INTEGER" baseMeasure="CC_PrimaryProductionParcelsAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
+      </measure>
+    <measure id="CC_HomeExemptionParcels" order="56" aggregationType="sum" datatype="INTEGER" baseMeasure="CC_HomeExemptionParcelsAll">
+      <descriptions defaultDescription=""/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </filter>
+        <attributeName>Rank_Column</attributeName>
+      </restriction>
+      </measure>
+  </restrictedMeasures>
   <sortAttributes>
     <sortAttribute id="ZZ_PARTNER" direction="ASC"/>
     <sortAttribute id="TAXYR" direction="ASC"/>
@@ -962,29 +1129,29 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="620" y="112"/>
+      <upperLeftCorner x="471" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CV_OwnershipCNRES_FILTERED" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="613" y="986"/>
+      <upperLeftCorner x="286" y="1021"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_BPAddresses" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="373" y="1146"/>
+      <upperLeftCorner x="608" y="1306"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CVContractValues" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="1146"/>
+      <upperLeftCorner x="327" y="1306"/>
       <rectangleSize height="30" width="231"/>
     </shape>
     <shape expanded="true" modelObjectName="R_One_Address_Per_BP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="109" y="861"/>
+      <upperLeftCorner x="497" y="1031"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_CV_ContractValues_BPAddresses" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="154" y="986"/>
+      <upperLeftCorner x="497" y="1146"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CVContractValues" modelObjectNameSpace="NEJ_CV_ContractValues_BPAddresses" modelObjectType="JoinNodeInput">
@@ -998,10 +1165,10 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
   
   
     <shape expanded="true" modelObjectName="J_Agg_Address_Rank_To_HE_Parcel" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="361" y="556"/>
+      <upperLeftCorner x="538" y="556"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP" modelObjectNameSpace="J_Agg_Address_Rank_To_HE_Parcel" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" modelObjectNameSpace="J_Agg_Address_Rank_To_HE_Parcel" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="-19" y="-14"/>
       <rectangleSize width="235"/>
     </shape>
@@ -1009,8 +1176,18 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       <upperLeftCorner x="371" y="18"/>
       <rectangleSize width="229"/>
     </shape>
+    <shape expanded="true" modelObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="722" y="726"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+  
+    <shape expanded="true" modelObjectName="P_CV_OwnershipCNRES_HE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="512" y="716"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
     <shape expanded="true" modelObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="136" y="720"/>
+      <upperLeftCorner x="523" y="861"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_One_Address_Per_BP" modelObjectNameSpace="J_Agg_Address_Rank_To_OWNERSHIPCNRESP" modelObjectType="JoinNodeInput">
@@ -1021,26 +1198,21 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="136"/>
     </shape>
-  
-    <shape expanded="true" modelObjectName="P_CV_OwnershipCNRES_HE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="402" y="716"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
     <shape expanded="true" modelObjectName="P_CV_OwnershipCNRES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="319" y="861"/>
+      <upperLeftCorner x="707" y="1021"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Agg_CV_OwnershipCNRES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="613" y="861"/>
+      <upperLeftCorner x="286" y="870"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_OwnershipCNRES_PPE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="612" y="716"/>
+      <upperLeftCorner x="302" y="716"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_Agg_Address_Rank_To_PPE_Parcel" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="387" y="396"/>
+      <upperLeftCorner x="419" y="396"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_Agg_Address_Rank_To_HE_Parcel" modelObjectNameSpace="J_Agg_Address_Rank_To_PPE_Parcel" modelObjectType="JoinNodeInput">
@@ -1052,11 +1224,11 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       <rectangleSize width="213"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_OwnershipCNRES_Subdivdier" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="822" y="716"/>
+      <upperLeftCorner x="92" y="716"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_Agg_Address_Rank_To_SDD_Parcel" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="623" y="236"/>
+      <upperLeftCorner x="393" y="236"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_Agg_Address_Rank_To_PPE_Parcel" modelObjectNameSpace="J_Agg_Address_Rank_To_SDD_Parcel" modelObjectType="JoinNodeInput">
