@@ -2355,10 +2355,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="CC_CurrentFBN"/>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_DefualtAssessments" datatype="NVARCHAR" length="25" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_DefaultAssessments" datatype="NVARCHAR" length="25" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;ERNAM&quot;='APP_BATCH' AND &quot;TRANSACTION_TYPE&quot;='DEFAULT','Automatic Default',
     if(&quot;ERNAM&quot;!='WSSRVUSER' AND &quot;ERNAM&quot;!='APP_BATCH' AND &quot;TRANSACTION_TYPE&quot;='DEFAULT','Manual Default',
-        if(&quot;TRANSACTION_TYPE&quot;='DEFUALT','Other Default','Not Default'
+        if(&quot;TRANSACTION_TYPE&quot;='DEFAULT','Other Default','Not Default'
         )
     )
 )</formula>
@@ -2656,7 +2656,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="A_MOBILE_NO"/>
       <viewAttribute id="A_TITLE"/>
       <viewAttribute id="C_PAYABLE_TXN" aggregationType="sum"/>
-      <viewAttribute id="CC_DefualtAssessments"/>
+      <viewAttribute id="CC_DefaultAssessments"/>
       <viewAttribute id="CC_LiabDueDate"/>
       <viewAttribute id="CC_UTIStartDate"/>
       <viewAttribute id="CC_ConfirmDate"/>
@@ -2804,7 +2804,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="A_MOBILE_NO" source="A_MOBILE_NO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="A_TITLE" source="A_TITLE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_PAYABLE_TXN" source="C_PAYABLE_TXN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DefualtAssessments" source="CC_DefualtAssessments"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DefaultAssessments" source="CC_DefaultAssessments"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_LiabDueDate" source="CC_LiabDueDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_UTIStartDate" source="CC_UTIStartDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ConfirmDate" source="CC_ConfirmDate"/>
@@ -2973,7 +2973,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="A_MOBILE_NO"/>
       <viewAttribute id="A_TITLE"/>
       <viewAttribute id="C_PAYABLE_TXN" aggregationType="sum"/>
-      <viewAttribute id="CC_DefualtAssessments"/>
+      <viewAttribute id="CC_DefaultAssessments"/>
       <viewAttribute id="CC_LiabDueDate"/>
       <viewAttribute id="CC_UTIStartDate"/>
       <viewAttribute id="CC_ConfirmDate"/>
@@ -3013,7 +3013,9 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_FullYearTR" datatype="VARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(daysbetween(DATE(&quot;APPLY_FROM&quot;),DATE(&quot;APPLY_TO&quot;))&gt;=364,'Full Year Assessment','Partial Year Assesment')</formula>
+        <formula>if(daysbetween(DATE(&quot;APPLY_FROM&quot;),DATE(&quot;APPLY_TO&quot;))&gt;=364,'Full Year Assessment',
+    if(&quot;FBTYP&quot;='ZPTM' and (rightstr(&quot;PERIOD_KEY&quot;,2)='12' or rightstr(&quot;PERIOD_KEY&quot;,2)='H2' or rightstr(&quot;PERIOD_KEY&quot;,2)='Q4'),'Full Year Assessment',
+    'Partial Year Assesment'))</formula>
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_SplitPeriodTotalAmount" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
@@ -3153,7 +3155,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="A_MOBILE_NO" source="A_MOBILE_NO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="A_TITLE" source="A_TITLE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_PAYABLE_TXN" source="C_PAYABLE_TXN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DefualtAssessments" source="CC_DefualtAssessments"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DefaultAssessments" source="CC_DefaultAssessments"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_LiabDueDate" source="CC_LiabDueDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_UTIStartDate" source="CC_UTIStartDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ConfirmDate" source="CC_ConfirmDate"/>
@@ -3491,10 +3493,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TITLE"/>
     </attribute>
   
-    <attribute id="CC_DefualtAssessments" order="113" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_DefaultAssessments" order="113" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Default Assessment"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_DefualtAssessments"/>
+      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_DefaultAssessments"/>
   
     </attribute>
     <attribute id="CC_LiabDueDate" order="114" displayAttribute="false" attributeHierarchyActive="false">
@@ -3866,6 +3868,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
         <attribute attributeName="FBNUM"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
