@@ -600,11 +600,11 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Cancellations (AN)', 'Registration Cancell
 if(&quot;WorkItemType&quot; = 'WM - 1 Cancellations (CI)', 'Registration Cancellation',
 if(&quot;WorkItemType&quot; = 'WF - BP Status Change – Annual', 'Status Change',
 if(&quot;WorkItemType&quot; = 'WF - BP Status Change – Final', 'Status Change',
-if(&quot;WorkItemType&quot; = 'WM - 1 Status change (Phone)', 'Status Change',
+if(&quot;WorkItemType&quot; = 'WM - 1 Status Change (Phone)', 'Status Change',
 if(&quot;WorkItemType&quot; = 'WM -  1 Status Change (P9)', 'Status Change',
-if(&quot;WorkItemType&quot; = 'WM - 1 Status change (MO)', 'Status Change',
-if(&quot;WorkItemType&quot; = 'WM - 1 Status change (HF)', 'Status Change',
-if(&quot;WorkItemType&quot; = 'WM - 1 Status change (AN)', 'Status Change',
+if(&quot;WorkItemType&quot; = 'WM - 1 Status Change (MO)', 'Status Change',
+if(&quot;WorkItemType&quot; = 'WM - 1 Status Change (HF)', 'Status Change',
+if(&quot;WorkItemType&quot; = 'WM - 1 Status Change (AN)', 'Status Change',
 if(&quot;WorkItemType&quot; = 'WF - Default Assmt Failed (BP_Cancelled)', 'Default Assessments Workflows',
 if(&quot;WorkItemType&quot; = 'WF - Default Assmt Failed (Illegal_Fin_Status)', 'Default Assessments Workflows',
 if(&quot;WorkItemType&quot; = 'WF - Default Assmt Failed (No_FormB_Type)', 'Default Assessments Workflows',
@@ -783,7 +783,7 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Returned Refund Cheques', 7,
 if(&quot;WorkItemType&quot; = 'WM - 1 Miscellaneous', 7,
 if(&quot;WorkItemType&quot; = 'WM - 1 2nd Requests/Urgent', 7,
 if(&quot;WorkItemType&quot; = 'WM - 1 Objection', 7,
-if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief ', 7,
+if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief', 7,
 99))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))</formula>
     
       </calculatedViewAttribute>
@@ -916,13 +916,33 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief ', 7,
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ClientGroup" source="CC_ClientGroup"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_WorkGroupOrder" source="CC_WorkGroupOrder"/>
     </input>
-    <input node="P_BpIdRoles">
+    <input node="Rank_1">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="PARTNER"/>
     </input>
     <joinAttribute name="CLIENT"/>
     <joinAttribute name="ACTIVITY_PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="Rank_1">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="ID_TYPE"/>
+      <viewAttribute id="IDNUMBER"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="BUT0ID_VALID_FROM"/>
+      <viewAttribute id="BUT0ID_VALID_TO"/>
+      <viewAttribute id="CC_ABN"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_BpIdRoles"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="IDNUMBER" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_WorkItem_ABN">
@@ -1151,31 +1171,31 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief ', 7,
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="342" y="112"/>
+      <upperLeftCorner x="290.19272989223975" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="784"/>
+      <upperLeftCorner x="118.66666666666666" y="844.4999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PRT_TI" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91" y="926"/>
+      <upperLeftCorner x="91.99999999999997" y="986.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_PRT_WF" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="926"/>
+      <upperLeftCorner x="302.0000000000001" y="986.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_Calendar" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="392" y="781"/>
+      <upperLeftCorner x="409.84881924557453" y="841.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_CalendarWorkItems" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="290" y="621"/>
+      <upperLeftCorner x="355.523891941196" y="661.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="NEJ_CalendarWorkItems" modelObjectType="JoinNodeInput">
@@ -1187,11 +1207,11 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief ', 7,
       <rectangleSize width="257"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_SumNonBusDays" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="290" y="516"/>
+      <upperLeftCorner x="355.5238919411959" y="546.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_AGGNonBusDays_WorkItems" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="356"/>
+      <upperLeftCorner x="336.61917245131775" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="U_PrtTasksInteractions_Workflow" modelObjectNameSpace="J_AGGNonBusDays_WorkItems" modelObjectType="JoinNodeInput">
@@ -1204,20 +1224,25 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief ', 7,
     </shape>
   
     <shape expanded="true" modelObjectName="P_BpIdRoles" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="418" y="356"/>
+      <upperLeftCorner x="115.60394709899629" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_WorkItem_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="342" y="217"/>
+      <upperLeftCorner x="290.19272989223975" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_AGGNonBusDays_WorkItems" modelObjectNameSpace="J_WorkItem_ABN" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_BpIdRoles" modelObjectNameSpace="J_WorkItem_ABN" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="Rank_1" modelObjectNameSpace="J_WorkItem_ABN" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="144"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="115.60394709899629" y="394.4999988079071"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
 </layout>
