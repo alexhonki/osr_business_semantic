@@ -495,6 +495,19 @@
     <joinAttribute name="ZZ_PARTNER"/>
     <joinAttribute name="TAXYR"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Agg_CV_OwnershipCNRES">
+    <viewAttributes>
+      <viewAttribute id="ParcelCounter" aggregationType="sum"/>
+    
+    
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="TAXYR"/>
+    
+      <viewAttribute id="CONCESSCODE"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CV_OwnershipCNRES_FILTERED"/>
+  </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="P_CV_OwnershipCNRES">
     <viewAttributes>
       <viewAttribute id="PropertyCounter" aggregationType="sum"/>
@@ -509,19 +522,6 @@
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_CV_OwnershipCNRES$$$$osr.business.semantic.db.Business_Models.LandTax::CV_OwnershipCnresp$$"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="Agg_CV_OwnershipCNRES">
-    <viewAttributes>
-      <viewAttribute id="ParcelCounter" aggregationType="sum"/>
-    
-    
-      <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="TAXYR"/>
-    
-      <viewAttribute id="CONCESSCODE"/></viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="P_CV_OwnershipCNRES_FILTERED"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CV_OwnershipCNRES_PPE" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -801,7 +801,7 @@
       <descriptions defaultDescription="CC_Country"/>
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="CC_Country"/>
     </attribute>
-    <attribute id="Rank_Column" order="57">
+    <attribute id="Rank_Column" order="57" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rank_Column"/>
       <keyMapping columnObjectName="J_Agg_Address_Rank_To_SDD_Parcel" columnName="Rank_Column"/>
     </attribute>
@@ -813,7 +813,7 @@
         <formula>if(&quot;UnissuedAssessmentFlag&quot;='X' or (&quot;CC_LiabilityStatus&quot;='Liable' and isnull(&quot;FBNUM&quot;)),'Unissued',
     If(not isnull(&quot;FBNUM&quot;),'Issued','Not Assessed'))</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="CC_TaxpayerStatus" order="3" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Taxpayer Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
@@ -823,13 +823,13 @@
              if(&quot;ZZ_NOIA_DATE&quot;&lt;&quot;TAXYRSTARTDT&quot;,'Existing Taxpayer',
                 IF(&quot;ZZ_NOIA_DATE&quot;&gt;&quot;TAXYRENDDT&quot;,'','')))))</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="CC_LiabilityStatus" order="21" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liability Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="13">
         <formula>if(&quot;TAXESTIMATEAll&quot;&gt;0,'Liable','Not liable')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   
     <calculatedAttribute id="CC_Reassessment" order="25" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Reassessment Status"/>
@@ -839,25 +839,26 @@
         <formula>If(&quot;FN_ReassessmentAmountAll&quot;!=0 and not isnull(&quot;FN_ReassessmentAmountAll&quot;),'Reassessed','Not Reassessed')</formula>
   
       </keyCalculation>
-      </calculatedAttribute>
+  
+    </calculatedAttribute>
     <calculatedAttribute id="CC_HomeExemptionFlag" hidden="false" order="26" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Home Exemption Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
         <formula>IF(&quot;CC_HomeExemptionParcelsAll&quot;&gt;0,'Home Exemption','No Home Exemption')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="CC_PrimaryProductionFlag" hidden="false" order="27" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Primary Production Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
         <formula>IF(&quot;CC_PrimaryProductionParcelsAll&quot;&gt;0,'Primary Production','No Primary Production')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="CC_SubdividerFlag" hidden="false" order="31" semanticType="empty" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subdivider Discount Status"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="24">
         <formula>IF(&quot;CC_SubdivderParcelsAll&quot;&gt;0,'Subdivider Discount','No Subdivider Discount')</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   
     <calculatedAttribute id="CC_RateType" order="36" semanticType="empty" replaceNull="true" replaceNullBy="Unclassified" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rate Type"/>
@@ -868,7 +869,8 @@
     if(&quot;TAXRATECODE&quot;='C' or &quot;TAXRATECODE&quot;='O', 'Company, Trust &amp; Absentee','Unclassified'))</formula>
   
       </keyCalculation>
-      </calculatedAttribute></calculatedAttributes>
+  
+    </calculatedAttribute></calculatedAttributes>
   <baseMeasures>
     <measure id="InvoicedAmountAll" order="7" aggregationType="sum" measureType="simple" replaceNull="true" unconverted="true">
       <descriptions defaultDescription="Invoiced Amount"/>
@@ -994,24 +996,28 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
   <restrictedMeasures>
     <measure id="InvoicedAmount" order="43" aggregationType="sum" datatype="DECIMAL" length="17" scale="2" baseMeasure="InvoicedAmountAll">
       <descriptions defaultDescription=""/>
-      
       <restriction logicalOperator="AND">
         <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
           <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
   
     <measure id="UnpostedAmount" order="44" aggregationType="sum" datatype="DECIMAL" length="17" scale="2" baseMeasure="UnpostedAmountAll">
       <descriptions defaultDescription=""/>
+  
       <restriction logicalOperator="AND">
+  
         <filter xsi:type="Privilege:AttributeFilter" attributeName="Rank_Column">
           <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
         </filter>
+  
         <attributeName>Rank_Column</attributeName>
+  
       </restriction>
-      </measure>
+  
+    </measure>
     <measure id="AssessmentAmount" order="45" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AssessmentAmountAll">
       <descriptions defaultDescription=""/>
       <restriction logicalOperator="AND">
@@ -1020,7 +1026,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="FN_ReassessmentAmount" order="46" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="FN_ReassessmentAmountAll">
       <descriptions defaultDescription=""/>
       <restriction logicalOperator="AND">
@@ -1029,7 +1035,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="ReassessmentAmountCleared" order="47" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="ReassessmentAmountClearedAll">
       <descriptions defaultDescription=""/>
       <restriction logicalOperator="AND">
@@ -1038,7 +1044,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="AssessmentAmountCleared" order="48" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AssessmentAmountClearedAll">
       <descriptions defaultDescription=""/>
       <restriction logicalOperator="AND">
@@ -1047,7 +1053,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="TAXESTIMATE" order="49" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TAXESTIMATEAll">
       <descriptions defaultDescription=""/>
       <restriction logicalOperator="AND">
@@ -1056,7 +1062,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="TOTBPRELVNTVAL" order="50" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TOTBPRELVNTVALAll">
       <descriptions defaultDescription=""/>
       <restriction logicalOperator="AND">
@@ -1065,7 +1071,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="TOTBPCONCESSVAL" order="51" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TOTBPCONCESSVALAll">
       <descriptions defaultDescription=""/>
       <restriction logicalOperator="AND">
@@ -1074,7 +1080,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="TOTBPTAXABLEVAL" order="52" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TOTBPTAXABLEVALAll">
       <descriptions defaultDescription=""/>
       <restriction logicalOperator="AND">
@@ -1083,7 +1089,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="ABSURCHARGE" order="53" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="ABSURCHARGEAll">
       <descriptions defaultDescription=""/>
       <restriction logicalOperator="AND">
@@ -1092,7 +1098,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="CC_SubdivderParcels" order="54" aggregationType="sum" datatype="INTEGER" baseMeasure="CC_SubdivderParcelsAll">
       <descriptions defaultDescription=""/>
       <restriction logicalOperator="AND">
@@ -1101,7 +1107,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="CC_PrimaryProductionParcels" order="55" aggregationType="sum" datatype="INTEGER" baseMeasure="CC_PrimaryProductionParcelsAll">
       <descriptions defaultDescription=""/>
       <restriction logicalOperator="AND">
@@ -1110,7 +1116,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="CC_HomeExemptionParcels" order="56" aggregationType="sum" datatype="INTEGER" baseMeasure="CC_HomeExemptionParcelsAll">
       <descriptions defaultDescription=""/>
       <restriction logicalOperator="AND">
@@ -1119,7 +1125,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
   </restrictedMeasures>
   <sortAttributes>
     <sortAttribute id="ZZ_PARTNER" direction="ASC"/>
@@ -1187,7 +1193,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="523" y="861"/>
+      <upperLeftCorner x="688" y="870"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_One_Address_Per_BP" modelObjectNameSpace="J_Agg_Address_Rank_To_OWNERSHIPCNRESP" modelObjectType="JoinNodeInput">
@@ -1198,13 +1204,13 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="136"/>
     </shape>
-    <shape expanded="true" modelObjectName="P_CV_OwnershipCNRES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="707" y="1021"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
   
     <shape expanded="true" modelObjectName="Agg_CV_OwnershipCNRES" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="286" y="870"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CV_OwnershipCNRES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="768" y="1021"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_OwnershipCNRES_PPE" modelObjectNameSpace="CalculationView">
