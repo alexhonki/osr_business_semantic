@@ -64,6 +64,9 @@
   <DataSource id="osr.business.semantic.db.synonyms::SCMGCASETYPET">
     <resourceUri>osr.business.semantic.db.synonyms::SCMGCASETYPET</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_SCMG_T_CASE_ATTR" filterExpressionLanguage="COLUMN_ENGINE">
@@ -11521,7 +11524,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Days_Bt_Creation" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;STATUS_DESC&quot;='Closed' or &quot;STATUS_DESC&quot;='Complete' or &quot;STATUS_DESC&quot;='Completed' or &quot;STATUS_DESC&quot;='Discontinued' or &quot;STATUS_DESC&quot;='Finalised',daysbetween(&quot;CC_DateCreated&quot;, &quot;CC_DateClosed&quot;), daysbetween(&quot;CC_DateCreated&quot;, now()))</formula>
+        <formula>if(&quot;PROFILE_ID&quot; = 'ZIPTSP' AND &quot;STAT_ORDERNO&quot; = '50', daysbetween(&quot;CC_DateCreated&quot;, &quot;CC_DateClosed&quot;),
+
+if(&quot;STATUS_DESC&quot;='Closed' or &quot;STATUS_DESC&quot;='Complete' or &quot;STATUS_DESC&quot;='Completed' or &quot;STATUS_DESC&quot;='Discontinued' or 
+&quot;STATUS_DESC&quot;='Finalised',daysbetween(&quot;CC_DateCreated&quot;, &quot;CC_DateClosed&quot;), daysbetween(&quot;CC_DateCreated&quot;, now())))
+</formula>
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_CloseDateForNEJ" datatype="DATE" expressionLanguage="SQL">
@@ -12020,541 +12027,889 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     <joinAttribute leftColumn="CC_CloseDateForNEJ" rightColumn="CC_NEJENDDA" operator="LE"/>
     <joinAttribute leftColumn="CC_CloseDateForNEJ" rightColumn="CC_NEJBEGDA" operator="GE"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CASES_CALENDAR" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="UserCreatedBy"/>
+      <viewAttribute id="UserChangedBy"/>
+      <viewAttribute id="UserClosedBy"/>
+      <viewAttribute id="UserProcessor"/>
+      <viewAttribute id="UserResponsible"/>
+      <viewAttribute id="ORGEH"/>
+      <viewAttribute id="SHORT"/>
+      <viewAttribute id="PARTNERFUNC_DESC"/>
+      <viewAttribute id="CASETYPE_DESC"/>
+      <viewAttribute id="CATEGORY_DESC"/>
+      <viewAttribute id="STATUS_DESC"/>
+      <viewAttribute id="REASON_DESC"/>
+      <viewAttribute id="SECURITYLVL_DESC"/>
+      <viewAttribute id="ESCALATION_DESC"/>
+      <viewAttribute id="PRIORITY_DESC"/>
+      <viewAttribute id="CAMP_TYPETX"/>
+      <viewAttribute id="SuccessEst"/>
+      <viewAttribute id="CC_CasePartner"/>
+      <viewAttribute id="CAMPAIGN_DESC"/>
+      <viewAttribute id="CLOSE_REASON_TEXT"/>
+      <viewAttribute id="DISCLOSURE_TEXT"/>
+      <viewAttribute id="OUTCOME_REASN_TEXT"/>
+      <viewAttribute id="ZZ_DISCTYPE_DESC"/>
+      <viewAttribute id="ZZFLD00003I_DESC"/>
+      <viewAttribute id="CC_Days_Bt_Creation" aggregationType="sum"/>
+      <viewAttribute id="PARTNER_NO_CORRECDESC"/>
+      <viewAttribute id="CRM_SCH_REF_TIME" aggregationType="sum"/>
+      <viewAttribute id="CRM_BUS_REF_TIME" aggregationType="sum"/>
+      <viewAttribute id="CRM_SCHEMA_ID"/>
+      <viewAttribute id="CRM_CATEGORY_ID"/>
+      <viewAttribute id="PROD_CAT_ID"/>
+      <viewAttribute id="CATEGORY_TEXT"/>
+      <viewAttribute id="ZZQAREQ"/>
+      <viewAttribute id="ZZRECVDATE"/>
+      <viewAttribute id="ZZ_CROWN_DATE"/>
+      <viewAttribute id="ZZ_ACK_DATE"/>
+      <viewAttribute id="ZZ_ALL_INFO"/>
+      <viewAttribute id="ZZ_APB_DATE"/>
+      <viewAttribute id="ZZ_APPREF_DATE"/>
+      <viewAttribute id="ZZ_BUS_NOTIFY"/>
+      <viewAttribute id="ZZ_PLD_DATE"/>
+      <viewAttribute id="ZZJUDGEDATE"/>
+      <viewAttribute id="ZZ_HEAR_DATE"/>
+      <viewAttribute id="ZZ_INV_DEC"/>
+      <viewAttribute id="ZZ_PLNCLS_DATE"/>
+      <viewAttribute id="ZZ_REG_ISSUE"/>
+      <viewAttribute id="ZZDISCTYPE"/>
+      <viewAttribute id="ZZ_EXGRATIA_AMT" aggregationType="sum"/>
+      <viewAttribute id="ZZ_CONT_LIAB" aggregationType="sum"/>
+      <viewAttribute id="ZZ_JUDICAL"/>
+      <viewAttribute id="ZZCAMPAIGN"/>
+      <viewAttribute id="ZZCAMPTYPE"/>
+      <viewAttribute id="ZZTOTASSMT" aggregationType="sum"/>
+      <viewAttribute id="ZZTOTPRIMTAX" aggregationType="sum"/>
+      <viewAttribute id="ZZTOTUTI" aggregationType="sum"/>
+      <viewAttribute id="ZZTOTPENALTY" aggregationType="sum"/>
+      <viewAttribute id="ZZCOURTCOSTS" aggregationType="sum"/>
+      <viewAttribute id="ZZTOTCASEDEPT" aggregationType="sum"/>
+      <viewAttribute id="ZZTOTCASEDEPT2" aggregationType="sum"/>
+      <viewAttribute id="ZZTOTCOLL" aggregationType="sum"/>
+      <viewAttribute id="ZZTOTWO" aggregationType="sum"/>
+      <viewAttribute id="ZZTOTREC" aggregationType="sum"/>
+      <viewAttribute id="ZZJUDGEAMT" aggregationType="sum"/>
+      <viewAttribute id="ZZFLD00003I"/>
+      <viewAttribute id="ZZCURRENT_ACTION"/>
+      <viewAttribute id="ZZSUCCESS_EST"/>
+      <viewAttribute id="ZZFLD00008I"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="CRM_CASE_TITLE"/>
+      <viewAttribute id="CASE_TYPE"/>
+      <viewAttribute id="EXT_KEY"/>
+      <viewAttribute id="EXT_REF"/>
+      <viewAttribute id="CREATED_BY"/>
+      <viewAttribute id="CREATE_TIME" aggregationType="sum"/>
+      <viewAttribute id="CHANGED_BY"/>
+      <viewAttribute id="CHANGE_TIME" aggregationType="sum"/>
+      <viewAttribute id="CLOSED_BY"/>
+      <viewAttribute id="CLOSING_TIME" aggregationType="sum"/>
+      <viewAttribute id="PLAN_END_DATE"/>
+      <viewAttribute id="PROCESSOR"/>
+      <viewAttribute id="RESPONSIBLE"/>
+      <viewAttribute id="CASE_TITLE"/>
+      <viewAttribute id="ESCAL_REASON"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="PRIORITY"/>
+      <viewAttribute id="SECURE_LEVEL"/>
+      <viewAttribute id="PROFILE_ID"/>
+      <viewAttribute id="STAT_ORDERNO"/>
+      <viewAttribute id="STAT_PARA"/>
+      <viewAttribute id="STAT_OBJNR"/>
+      <viewAttribute id="STAT_LINE"/>
+      <viewAttribute id="STAT_USER_LINE"/>
+      <viewAttribute id="REASON_CODE"/>
+      <viewAttribute id="PARTNER_NO"/>
+      <viewAttribute id="PARTNER_FCT"/>
+      <viewAttribute id="STAT_OPEN"/>
+      <viewAttribute id="STAT_PROCESS"/>
+      <viewAttribute id="STAT_EX_PROCESS"/>
+      <viewAttribute id="STAT_F_RELEASE"/>
+      <viewAttribute id="STAT_RELEASE"/>
+      <viewAttribute id="STAT_REJECT"/>
+      <viewAttribute id="STAT_CLOSED"/>
+      <viewAttribute id="STAT_CONFIRMED"/>
+      <viewAttribute id="STAT_DELETED"/>
+      <viewAttribute id="CC_DateClosed"/>
+      <viewAttribute id="CC_CloseDateforJoin"/>
+      <viewAttribute id="CC_DatePlanClose"/>
+      <viewAttribute id="CC_DateAcknowledge"/>
+      <viewAttribute id="CC_DateRec"/>
+      <viewAttribute id="CC_DateAllInfoRec"/>
+      <viewAttribute id="CC_DateAPB"/>
+      <viewAttribute id="CC_DateAppRef"/>
+      <viewAttribute id="CC_DatePLD"/>
+      <viewAttribute id="CC_DateJudge"/>
+      <viewAttribute id="CC_DateHear"/>
+      <viewAttribute id="CC_DateInv"/>
+      <viewAttribute id="CC_DateRegIssue"/>
+      <viewAttribute id="CC_DateCrown"/>
+      <viewAttribute id="CC_CurrentAction"/>
+      <viewAttribute id="CC_DateBusNot"/>
+      <viewAttribute id="_OSRQLD_F0005"/>
+      <viewAttribute id="_OSRQLD_F0007"/>
+      <viewAttribute id="_OSRQLD_ALRTID"/>
+      <viewAttribute id="_OSRQLD_F009L"/>
+      <viewAttribute id="_OSRQLD_REFUND" aggregationType="sum"/>
+      <viewAttribute id="TYPE"/>
+      <viewAttribute id="CC_BP_Type"/>
+      <viewAttribute id="CC_DateCreated"/>
+      <viewAttribute id="CC_DateChanged"/>
+      <viewAttribute id="PARTNER_NO_OSRDIVRESP"/>
+      <viewAttribute id="CC_OSRDivRespPDesc"/>
+      <viewAttribute id="PARTNER_NO_EMPRESP"/>
+      <viewAttribute id="PARTNER_NO_EMPRESDESC"/>
+      <viewAttribute id="PARTNER_NO_INITBUS"/>
+      <viewAttribute id="PARTNER_NO_INITBUSDESC"/>
+      <viewAttribute id="PARTNER_NO_FILELOCDESC"/>
+      <viewAttribute id="PARTNER_NO_FILELOC"/>
+      <viewAttribute id="PARTNER_NO_RESPG"/>
+      <viewAttribute id="PARTNER_NO_RESPGDESC"/>
+      <viewAttribute id="PARTNER_NO_CORREC"/>
+      <viewAttribute id="PARTNER_NO_SELFASSES"/>
+      <viewAttribute id="PARTNER_NO_SELFASSESSDESC"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="CC_COUNT" aggregationType="sum"/>
+      <viewAttribute id="CRM_MAIN_PARTNER"/>
+      <viewAttribute id="OSRQLD_CATEGORY"/>
+      <viewAttribute id="OSRQLD_YEAR"/>
+      <viewAttribute id="CC_CloseDateForNEJ"/>
+      <viewAttribute id="CC_FinYear"/>
+      <viewAttribute id="FiscalMonth"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_FiscalMonthDesc" datatype="VARCHAR" length="6" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;FiscalMonth&quot;='1','01-Jul',
+if(&quot;FiscalMonth&quot;='2','02-Aug',
+if(&quot;FiscalMonth&quot;='3','03-Sep',
+if(&quot;FiscalMonth&quot;='4','04-Oct',
+if(&quot;FiscalMonth&quot;='5','05-Nov',
+if(&quot;FiscalMonth&quot;='6','06-Dec',
+if(&quot;FiscalMonth&quot;='7','07-Jan',
+if(&quot;FiscalMonth&quot;='8','08-Feb',
+if(&quot;FiscalMonth&quot;='9','09-Mar',
+if(&quot;FiscalMonth&quot;='10','10-Apr',
+if(&quot;FiscalMonth&quot;='11','11-May',
+if(&quot;FiscalMonth&quot;='12','12-Jun','0'))))))))))))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="NEJ_RESPUSER_CASE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="UserCreatedBy" source="UserCreatedBy"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UserChangedBy" source="UserChangedBy"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UserClosedBy" source="UserClosedBy"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UserProcessor" source="UserProcessor"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UserResponsible" source="UserResponsible"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORGEH" source="ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERFUNC_DESC" source="PARTNERFUNC_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASETYPE_DESC" source="CASETYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY_DESC" source="CATEGORY_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_DESC" source="STATUS_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_DESC" source="REASON_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURITYLVL_DESC" source="SECURITYLVL_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCALATION_DESC" source="ESCALATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESC" source="PRIORITY_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CAMP_TYPETX" source="CAMP_TYPETX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SuccessEst" source="SuccessEst"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CasePartner" source="CC_CasePartner"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CAMPAIGN_DESC" source="CAMPAIGN_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSE_REASON_TEXT" source="CLOSE_REASON_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISCLOSURE_TEXT" source="DISCLOSURE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OUTCOME_REASN_TEXT" source="OUTCOME_REASN_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_DISCTYPE_DESC" source="ZZ_DISCTYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZFLD00003I_DESC" source="ZZFLD00003I_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Days_Bt_Creation" source="CC_Days_Bt_Creation"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_CORRECDESC" source="PARTNER_NO_CORRECDESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CRM_SCH_REF_TIME" source="CRM_SCH_REF_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CRM_BUS_REF_TIME" source="CRM_BUS_REF_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CRM_SCHEMA_ID" source="CRM_SCHEMA_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CRM_CATEGORY_ID" source="CRM_CATEGORY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_CAT_ID" source="PROD_CAT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY_TEXT" source="CATEGORY_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZQAREQ" source="ZZQAREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZRECVDATE" source="ZZRECVDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_CROWN_DATE" source="ZZ_CROWN_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ACK_DATE" source="ZZ_ACK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ALL_INFO" source="ZZ_ALL_INFO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_APB_DATE" source="ZZ_APB_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_APPREF_DATE" source="ZZ_APPREF_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BUS_NOTIFY" source="ZZ_BUS_NOTIFY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PLD_DATE" source="ZZ_PLD_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZJUDGEDATE" source="ZZJUDGEDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_HEAR_DATE" source="ZZ_HEAR_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_INV_DEC" source="ZZ_INV_DEC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PLNCLS_DATE" source="ZZ_PLNCLS_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_REG_ISSUE" source="ZZ_REG_ISSUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZDISCTYPE" source="ZZDISCTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_EXGRATIA_AMT" source="ZZ_EXGRATIA_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_CONT_LIAB" source="ZZ_CONT_LIAB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_JUDICAL" source="ZZ_JUDICAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZCAMPAIGN" source="ZZCAMPAIGN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZCAMPTYPE" source="ZZCAMPTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTASSMT" source="ZZTOTASSMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTPRIMTAX" source="ZZTOTPRIMTAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTUTI" source="ZZTOTUTI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTPENALTY" source="ZZTOTPENALTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZCOURTCOSTS" source="ZZCOURTCOSTS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTCASEDEPT" source="ZZTOTCASEDEPT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTCASEDEPT2" source="ZZTOTCASEDEPT2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTCOLL" source="ZZTOTCOLL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTWO" source="ZZTOTWO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOTREC" source="ZZTOTREC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZJUDGEAMT" source="ZZJUDGEAMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZFLD00003I" source="ZZFLD00003I"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZCURRENT_ACTION" source="ZZCURRENT_ACTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSUCCESS_EST" source="ZZSUCCESS_EST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZFLD00008I" source="ZZFLD00008I"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CRM_CASE_TITLE" source="CRM_CASE_TITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="CREATED_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGED_BY" source="CHANGED_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSED_BY" source="CLOSED_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_END_DATE" source="PLAN_END_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR" source="PROCESSOR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE" source="RESPONSIBLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TITLE" source="CASE_TITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON" source="ESCAL_REASON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY" source="PRIORITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL" source="SECURE_LEVEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROFILE_ID" source="PROFILE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDERNO" source="STAT_ORDERNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_PARA" source="STAT_PARA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_OBJNR" source="STAT_OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_LINE" source="STAT_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_USER_LINE" source="STAT_USER_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE" source="REASON_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO" source="PARTNER_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_FCT" source="PARTNER_FCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_OPEN" source="STAT_OPEN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_PROCESS" source="STAT_PROCESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_EX_PROCESS" source="STAT_EX_PROCESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_F_RELEASE" source="STAT_F_RELEASE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_RELEASE" source="STAT_RELEASE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_REJECT" source="STAT_REJECT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_CLOSED" source="STAT_CLOSED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_CONFIRMED" source="STAT_CONFIRMED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_DELETED" source="STAT_DELETED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateClosed" source="CC_DateClosed"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CloseDateforJoin" source="CC_CloseDateforJoin"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DatePlanClose" source="CC_DatePlanClose"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateAcknowledge" source="CC_DateAcknowledge"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateRec" source="CC_DateRec"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateAllInfoRec" source="CC_DateAllInfoRec"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateAPB" source="CC_DateAPB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateAppRef" source="CC_DateAppRef"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DatePLD" source="CC_DatePLD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateJudge" source="CC_DateJudge"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateHear" source="CC_DateHear"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateInv" source="CC_DateInv"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateRegIssue" source="CC_DateRegIssue"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateCrown" source="CC_DateCrown"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CurrentAction" source="CC_CurrentAction"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateBusNot" source="CC_DateBusNot"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F0005" source="_OSRQLD_F0005"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F0007" source="_OSRQLD_F0007"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_ALRTID" source="_OSRQLD_ALRTID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_F009L" source="_OSRQLD_F009L"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="_OSRQLD_REFUND" source="_OSRQLD_REFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_Type" source="CC_BP_Type"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateCreated" source="CC_DateCreated"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateChanged" source="CC_DateChanged"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_OSRDIVRESP" source="PARTNER_NO_OSRDIVRESP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OSRDivRespPDesc" source="CC_OSRDivRespPDesc"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_EMPRESP" source="PARTNER_NO_EMPRESP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_EMPRESDESC" source="PARTNER_NO_EMPRESDESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_INITBUS" source="PARTNER_NO_INITBUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_INITBUSDESC" source="PARTNER_NO_INITBUSDESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_FILELOCDESC" source="PARTNER_NO_FILELOCDESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_FILELOC" source="PARTNER_NO_FILELOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_RESPG" source="PARTNER_NO_RESPG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_RESPGDESC" source="PARTNER_NO_RESPGDESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_CORREC" source="PARTNER_NO_CORREC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_SELFASSES" source="PARTNER_NO_SELFASSES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_NO_SELFASSESSDESC" source="PARTNER_NO_SELFASSESSDESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CRM_MAIN_PARTNER" source="CRM_MAIN_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_CATEGORY" source="OSRQLD_CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_YEAR" source="OSRQLD_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CloseDateForNEJ" source="CC_CloseDateForNEJ"/>
+    </input>
+    <input node="P_CALENDAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FinYear" source="CC_FinYear"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DateClosed" source="DATE_SQL"/>
+    </input>
+    <joinAttribute name="CC_DateClosed"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CALENDAR">
+    <viewAttributes>
+      <viewAttribute id="DATE_SQL"/>
+      <viewAttribute id="CC_FinYear"/>
+      <viewAttribute id="FiscalMonth"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar"/>
+  </calculationView>
 </calculationViews>
-<logicalModel id="NEJ_RESPUSER_CASE">
+<logicalModel id="J_CASES_CALENDAR">
   <attributes>
     <attribute id="UserCreatedBy" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Created By"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="UserCreatedBy"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="UserCreatedBy"/>
     </attribute>
     <attribute id="UserChangedBy" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Changed By"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="UserChangedBy"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="UserChangedBy"/>
     </attribute>
     <attribute id="UserClosedBy" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Closed By"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="UserClosedBy"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="UserClosedBy"/>
     </attribute>
     <attribute id="UserProcessor" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Processor"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="UserProcessor"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="UserProcessor"/>
     </attribute>
     <attribute id="UserResponsible" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Responsible"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="UserResponsible"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="UserResponsible"/>
     </attribute>
     <attribute id="ORGEH" order="7" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="SHORT">
       <descriptions defaultDescription="Org. Unit (Team)"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ORGEH"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ORGEH"/>
     </attribute>
     <attribute id="SHORT" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team) Name"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="SHORT"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="SHORT"/>
     </attribute>
   
     <attribute id="PARTNERFUNC_DESC" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Parties Involved BP Functions"/>
   
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNERFUNC_DESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNERFUNC_DESC"/>
   
     </attribute>
     <attribute id="CASETYPE_DESC" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Type Description"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CASETYPE_DESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CASETYPE_DESC"/>
     </attribute>
     <attribute id="CATEGORY_DESC" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Category Description"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CATEGORY_DESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CATEGORY_DESC"/>
     </attribute>
     <attribute id="STATUS_DESC" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Status Description"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STATUS_DESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STATUS_DESC"/>
     </attribute>
     <attribute id="REASON_DESC" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Result Description"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="REASON_DESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="REASON_DESC"/>
     </attribute>
     <attribute id="SECURITYLVL_DESC" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Authorisation Level Desc"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="SECURITYLVL_DESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="SECURITYLVL_DESC"/>
     </attribute>
     <attribute id="ESCALATION_DESC" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Escalation Desc"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ESCALATION_DESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ESCALATION_DESC"/>
     </attribute>
     <attribute id="PRIORITY_DESC" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Priority Desc"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PRIORITY_DESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PRIORITY_DESC"/>
     </attribute>
     <attribute id="CAMP_TYPETX" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Campaign Type Description"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CAMP_TYPETX"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CAMP_TYPETX"/>
     </attribute>
   
     <attribute id="SuccessEst" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Success Estimate"/>
   
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="SuccessEst"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="SuccessEst"/>
   
     </attribute>
     <attribute id="CC_CasePartner" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Activity or Case Partner Desc"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_CasePartner"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_CasePartner"/>
     </attribute>
   
     <attribute id="CAMPAIGN_DESC" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Campaign Description"/>
   
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CAMPAIGN_DESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CAMPAIGN_DESC"/>
   
     </attribute>
     <attribute id="CLOSE_REASON_TEXT" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Generic Outcome"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CLOSE_REASON_TEXT"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CLOSE_REASON_TEXT"/>
     </attribute>
   
     <attribute id="DISCLOSURE_TEXT" order="22" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Generic Disclosure"/>
   
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="DISCLOSURE_TEXT"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="DISCLOSURE_TEXT"/>
   
     </attribute>
     <attribute id="OUTCOME_REASN_TEXT" order="23" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Outcome Reason"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="OUTCOME_REASN_TEXT"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="OUTCOME_REASN_TEXT"/>
     </attribute>
     <attribute id="ZZ_DISCTYPE_DESC" order="24" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Disclosure Type"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_DISCTYPE_DESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_DISCTYPE_DESC"/>
     </attribute>
     <attribute id="ZZFLD00003I_DESC" order="25" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Outcome Status"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZFLD00003I_DESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZFLD00003I_DESC"/>
     </attribute>
     <attribute id="PARTNER_NO_CORRECDESC" order="27" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
       <descriptions defaultDescription="Correspondence Recipient Desc"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_CORRECDESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_CORRECDESC"/>
     </attribute>
     <attribute id="CRM_SCHEMA_ID" order="28" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CRM Case Mgt - Schema ID"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CRM_SCHEMA_ID"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CRM_SCHEMA_ID"/>
     </attribute>
     <attribute id="CRM_CATEGORY_ID" order="29" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CRM Case Mgt - Ref Category ID"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CRM_CATEGORY_ID"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CRM_CATEGORY_ID"/>
     </attribute>
     <attribute id="PROD_CAT_ID" order="30" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Product Category"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PROD_CAT_ID"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PROD_CAT_ID"/>
     </attribute>
     <attribute id="CATEGORY_TEXT" order="31" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Category Description"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CATEGORY_TEXT"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CATEGORY_TEXT"/>
     </attribute>
     <attribute id="ZZQAREQ" order="32" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="QA required indicator"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZQAREQ"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZQAREQ"/>
     </attribute>
     <attribute id="ZZRECVDATE" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Received, replaced by CC_DateRec"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZRECVDATE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZRECVDATE"/>
     </attribute>
     <attribute id="ZZ_CROWN_DATE" order="34" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Crown Law Instructed, replaced by CC_DateCrown"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_CROWN_DATE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_CROWN_DATE"/>
     </attribute>
     <attribute id="ZZ_ACK_DATE" order="35" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Acknowledged, replaced by CC_DateAcknowledge"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_ACK_DATE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_ACK_DATE"/>
     </attribute>
     <attribute id="ZZ_ALL_INFO" order="36" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date All Info Received, replaced by CC_DateAllInfoRec"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_ALL_INFO"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_ALL_INFO"/>
     </attribute>
     <attribute id="ZZ_APB_DATE" order="37" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Received by APB, replaced by CC_DateAPB"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_APB_DATE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_APB_DATE"/>
     </attribute>
     <attribute id="ZZ_APPREF_DATE" order="38" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date of Approval/Refusal, replaced by CC_DateAppRef"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_APPREF_DATE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_APPREF_DATE"/>
     </attribute>
     <attribute id="ZZ_BUS_NOTIFY" order="39" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Business Notified, replaced by CC_DateBusNot"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_BUS_NOTIFY"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_BUS_NOTIFY"/>
     </attribute>
     <attribute id="ZZ_PLD_DATE" order="40" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Received by PLD, replaced by CC_DatePLD"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_PLD_DATE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_PLD_DATE"/>
     </attribute>
     <attribute id="ZZJUDGEDATE" order="41" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date of Judgement, replaced by CC_DateJudge"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZJUDGEDATE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZJUDGEDATE"/>
     </attribute>
     <attribute id="ZZ_HEAR_DATE" order="42" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date of Hearing, replaced by CC_DateHear "/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_HEAR_DATE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_HEAR_DATE"/>
     </attribute>
     <attribute id="ZZ_INV_DEC" order="43" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date of Investigation Decision, replaced by CC_DateInv"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_INV_DEC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_INV_DEC"/>
     </attribute>
     <attribute id="ZZ_PLNCLS_DATE" order="44" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Planned Close, not used"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_PLNCLS_DATE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_PLNCLS_DATE"/>
     </attribute>
     <attribute id="ZZ_REG_ISSUE" order="45" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Registration Notice Issued, replaced by CC_DateRegIssue"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_REG_ISSUE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_REG_ISSUE"/>
     </attribute>
     <attribute id="ZZDISCTYPE" order="46" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="ZZ_DISCTYPE_DESC">
       <descriptions defaultDescription="Disclosure type"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZDISCTYPE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZDISCTYPE"/>
     </attribute>
     <attribute id="ZZ_JUDICAL" order="49" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Date of Judgement, replaced by CC_DateJudge"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_JUDICAL"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_JUDICAL"/>
     </attribute>
     <attribute id="ZZCAMPAIGN" order="50" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CAMPAIGN_DESC">
       <descriptions defaultDescription="Case Campaign  "/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZCAMPAIGN"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZCAMPAIGN"/>
     </attribute>
     <attribute id="ZZCAMPTYPE" order="51" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CAMP_TYPETX">
       <descriptions defaultDescription="Case Campaign Description"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZCAMPTYPE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZCAMPTYPE"/>
     </attribute>
     <attribute id="ZZFLD00003I" order="63" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="ZZFLD00003I_DESC">
       <descriptions defaultDescription="Case Outcome"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZFLD00003I"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZFLD00003I"/>
     </attribute>
     <attribute id="ZZCURRENT_ACTION" order="64" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Current Action"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZCURRENT_ACTION"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZCURRENT_ACTION"/>
     </attribute>
     <attribute id="ZZSUCCESS_EST" order="65" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="SuccessEst">
       <descriptions defaultDescription="Success Estimate"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZSUCCESS_EST"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZSUCCESS_EST"/>
     </attribute>
     <attribute id="ZZFLD00008I" order="66" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Current Action"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZFLD00008I"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZFLD00008I"/>
     </attribute>
     <attribute id="MANDT" order="67" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAP Client"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="MANDT"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="MANDT"/>
     </attribute>
     <attribute id="CRM_CASE_TITLE" order="68" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Title CAPS"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CRM_CASE_TITLE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CRM_CASE_TITLE"/>
     </attribute>
     <attribute id="CASE_TYPE" order="69" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CASETYPE_DESC">
       <descriptions defaultDescription="Case Type"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CASE_TYPE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CASE_TYPE"/>
     </attribute>
     <attribute id="EXT_KEY" order="70" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case ID"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="EXT_KEY"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="EXT_KEY"/>
     </attribute>
     <attribute id="EXT_REF" order="71" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="EXT_REF"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="EXT_REF"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="EXT_REF"/>
     </attribute>
     <attribute id="CREATED_BY" order="72" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="UserCreatedBy">
       <descriptions defaultDescription="User Created By"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CREATED_BY"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CREATED_BY"/>
     </attribute>
     <attribute id="CREATE_TIME" order="73" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Created"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CREATE_TIME"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CREATE_TIME"/>
     </attribute>
     <attribute id="CHANGED_BY" order="74" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="UserChangedBy">
       <descriptions defaultDescription="User Changed By"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CHANGED_BY"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CHANGED_BY"/>
     </attribute>
     <attribute id="CHANGE_TIME" order="75" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Changed Date"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CHANGE_TIME"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CHANGE_TIME"/>
     </attribute>
     <attribute id="CLOSED_BY" order="76" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="UserClosedBy">
       <descriptions defaultDescription="User Closed By"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CLOSED_BY"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CLOSED_BY"/>
     </attribute>
     <attribute id="CLOSING_TIME" order="77" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Closed"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CLOSING_TIME"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CLOSING_TIME"/>
     </attribute>
     <attribute id="PLAN_END_DATE" order="78" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Plan End Date, replaced by CC_DatePlanClose"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PLAN_END_DATE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PLAN_END_DATE"/>
     </attribute>
     <attribute id="PROCESSOR" order="79" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="UserProcessor">
       <descriptions defaultDescription="Case User Processor, replaced by UserProcessor"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PROCESSOR"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PROCESSOR"/>
     </attribute>
     <attribute id="RESPONSIBLE" order="80" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="UserResponsible">
       <descriptions defaultDescription="Case User Responsible, replaced by UserResponsible"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="RESPONSIBLE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="RESPONSIBLE"/>
     </attribute>
     <attribute id="CASE_TITLE" order="81" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Title"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CASE_TITLE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CASE_TITLE"/>
     </attribute>
     <attribute id="ESCAL_REASON" order="82" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="ESCALATION_DESC">
       <descriptions defaultDescription="Case Escalation Reason"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ESCAL_REASON"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="ESCAL_REASON"/>
     </attribute>
     <attribute id="CATEGORY" order="83" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CATEGORY_DESC">
       <descriptions defaultDescription="Case Category Description"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CATEGORY"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CATEGORY"/>
     </attribute>
     <attribute id="PRIORITY" order="84" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="PRIORITY_DESC">
       <descriptions defaultDescription="Case Priority Description"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PRIORITY"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PRIORITY"/>
     </attribute>
     <attribute id="SECURE_LEVEL" order="85" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="SECURITYLVL_DESC">
       <descriptions defaultDescription="Case Auth Level Description"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="SECURE_LEVEL"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="SECURE_LEVEL"/>
     </attribute>
     <attribute id="PROFILE_ID" order="86" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PROFILE_ID"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PROFILE_ID"/>
     </attribute>
     <attribute id="STAT_ORDERNO" order="87" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_ORDERNO"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_ORDERNO"/>
     </attribute>
     <attribute id="STAT_PARA" order="88" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_PARA"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_PARA"/>
     </attribute>
     <attribute id="STAT_OBJNR" order="89" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_OBJNR"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_OBJNR"/>
     </attribute>
     <attribute id="STAT_LINE" order="90" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_LINE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_LINE"/>
     </attribute>
     <attribute id="STAT_USER_LINE" order="91" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_USER_LINE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_USER_LINE"/>
     </attribute>
     <attribute id="REASON_CODE" order="92" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="REASON_DESC">
       <descriptions defaultDescription="Case Result Description"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="REASON_CODE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="REASON_CODE"/>
     </attribute>
     <attribute id="PARTNER_NO" order="93" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_CasePartner">
       <descriptions defaultDescription="BP NO - Activity or Case Partner "/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO"/>
     </attribute>
     <attribute id="PARTNER_FCT" order="94" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="PARTNERFUNC_DESC">
       <descriptions defaultDescription="Partner Function"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_FCT"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_FCT"/>
     </attribute>
     <attribute id="STAT_OPEN" order="95" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_OPEN"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_OPEN"/>
     </attribute>
     <attribute id="STAT_PROCESS" order="96" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_PROCESS"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_PROCESS"/>
     </attribute>
     <attribute id="STAT_EX_PROCESS" order="97" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_EX_PROCESS"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_EX_PROCESS"/>
     </attribute>
     <attribute id="STAT_F_RELEASE" order="98" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_F_RELEASE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_F_RELEASE"/>
     </attribute>
     <attribute id="STAT_RELEASE" order="99" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_RELEASE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_RELEASE"/>
     </attribute>
     <attribute id="STAT_REJECT" order="100" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_REJECT"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_REJECT"/>
     </attribute>
     <attribute id="STAT_CLOSED" order="101" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_CLOSED"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_CLOSED"/>
     </attribute>
     <attribute id="STAT_CONFIRMED" order="102" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_CONFIRMED"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_CONFIRMED"/>
     </attribute>
     <attribute id="STAT_DELETED" order="103" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Status Profile"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="STAT_DELETED"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="STAT_DELETED"/>
     </attribute>
     <attribute id="CC_DateClosed" order="104" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CC_DateClosed"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateClosed"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateClosed"/>
     </attribute>
     <attribute id="CC_DatePlanClose" order="105" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Planned Close"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DatePlanClose"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DatePlanClose"/>
     </attribute>
     <attribute id="CC_DateAcknowledge" order="106" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Acknowledged"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateAcknowledge"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateAcknowledge"/>
     </attribute>
     <attribute id="CC_DateRec" order="107" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Received"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateRec"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateRec"/>
     </attribute>
     <attribute id="CC_DateAllInfoRec" order="108" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date All Info Received"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateAllInfoRec"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateAllInfoRec"/>
     </attribute>
     <attribute id="CC_DateAPB" order="109" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Received by APB"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateAPB"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateAPB"/>
     </attribute>
     <attribute id="CC_DateAppRef" order="110" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date of Approval/Refusal"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateAppRef"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateAppRef"/>
     </attribute>
     <attribute id="CC_DatePLD" order="111" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Received by PLD"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DatePLD"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DatePLD"/>
     </attribute>
     <attribute id="CC_DateJudge" order="112" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date of Judgement"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateJudge"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateJudge"/>
     </attribute>
     <attribute id="CC_DateHear" order="113" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date of Hearing"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateHear"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateHear"/>
     </attribute>
     <attribute id="CC_DateInv" order="114" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date of Investigation Decision"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateInv"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateInv"/>
     </attribute>
     <attribute id="CC_DateRegIssue" order="115" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Registration Notice Issued"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateRegIssue"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateRegIssue"/>
     </attribute>
     <attribute id="CC_DateCrown" order="116" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Crown Law Instructed"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateCrown"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateCrown"/>
     </attribute>
     <attribute id="CC_CurrentAction" order="117" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Current Action"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_CurrentAction"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_CurrentAction"/>
     </attribute>
     <attribute id="CC_DateBusNot" order="118" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Business Notified"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateBusNot"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateBusNot"/>
     </attribute>
     <attribute id="_OSRQLD_F0005" order="119" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CLOSE_REASON_TEXT">
       <descriptions defaultDescription="Case Generic Outcome"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="_OSRQLD_F0005"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="_OSRQLD_F0005"/>
     </attribute>
     <attribute id="_OSRQLD_F0007" order="120" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="DISCLOSURE_TEXT">
       <descriptions defaultDescription="Generic Disclosure"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="_OSRQLD_F0007"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="_OSRQLD_F0007"/>
     </attribute>
     <attribute id="_OSRQLD_ALRTID" order="121" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fraud Management: Alert ID"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="_OSRQLD_ALRTID"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="_OSRQLD_ALRTID"/>
     </attribute>
     <attribute id="_OSRQLD_F009L" order="122" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case Outcome Reason"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="_OSRQLD_F009L"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="_OSRQLD_F009L"/>
     </attribute>
     <attribute id="TYPE" order="124" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_BP_Type">
       <descriptions defaultDescription="Case BP Type"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="TYPE"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="TYPE"/>
     </attribute>
     <attribute id="CC_BP_Type" order="125" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case BP Type"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_BP_Type"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_BP_Type"/>
     </attribute>
     <attribute id="CC_DateCreated" order="126" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Created"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateCreated"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateCreated"/>
     </attribute>
     <attribute id="CC_DateChanged" order="127" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Date Changed"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_DateChanged"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_DateChanged"/>
     </attribute>
     <attribute id="PARTNER_NO_OSRDIVRESP" order="128" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_OSRDivRespPDesc">
       <descriptions defaultDescription="BP NO - OSR Div Resp"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_OSRDIVRESP"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_OSRDIVRESP"/>
     </attribute>
     <attribute id="CC_OSRDivRespPDesc" order="129" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OSR Div Resp Partner Desc"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_OSRDivRespPDesc"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_OSRDivRespPDesc"/>
     </attribute>
     <attribute id="PARTNER_NO_EMPRESP" order="130" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="PARTNER_NO_EMPRESDESC">
       <descriptions defaultDescription="BP NO - Employee Responsible"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_EMPRESP"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_EMPRESP"/>
     </attribute>
     <attribute id="PARTNER_NO_EMPRESDESC" order="131" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Employee Responsible Partner Desc"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_EMPRESDESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_EMPRESDESC"/>
     </attribute>
     <attribute id="PARTNER_NO_INITBUS" order="132" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="PARTNER_NO_INITBUSDESC">
       <descriptions defaultDescription="BP NO - Initiating Business Area"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_INITBUS"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_INITBUS"/>
     </attribute>
     <attribute id="PARTNER_NO_INITBUSDESC" order="133" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Initiating Business Area Desc"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_INITBUSDESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_INITBUSDESC"/>
     </attribute>
     <attribute id="PARTNER_NO_FILELOCDESC" order="134" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="File Located With Desc"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_FILELOCDESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_FILELOCDESC"/>
     </attribute>
     <attribute id="PARTNER_NO_FILELOC" order="135" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="PARTNER_NO_FILELOCDESC">
       <descriptions defaultDescription="BP NO - File Located With"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_FILELOC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_FILELOC"/>
     </attribute>
     <attribute id="PARTNER_NO_RESPG" order="136" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="PARTNER_NO_RESPGDESC">
       <descriptions defaultDescription="BP NO - Responsible Group"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_RESPG"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_RESPG"/>
     </attribute>
     <attribute id="PARTNER_NO_RESPGDESC" order="137" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Responsible Group Desc"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_RESPGDESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_RESPGDESC"/>
     </attribute>
     <attribute id="PARTNER_NO_CORREC" order="138" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="PARTNER_NO_CORRECDESC">
       <descriptions defaultDescription="BP NO - Correspondence Recipient"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_CORREC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_CORREC"/>
     </attribute>
   
     <attribute id="PARTNER_NO_SELFASSES" order="139" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="PARTNER_NO_SELFASSESSDESC">
       <descriptions defaultDescription="BP NO - Self Assessor"/>
   
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_SELFASSES"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_SELFASSES"/>
   
     </attribute>
   
     <attribute id="PARTNER_NO_SELFASSESSDESC" order="140" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Self Assessor Desc"/>
   
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="PARTNER_NO_SELFASSESSDESC"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="PARTNER_NO_SELFASSESSDESC"/>
   
     </attribute>
     <attribute id="CASE_GUID" order="141" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case GUID"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CASE_GUID"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CASE_GUID"/>
     </attribute>
     <attribute id="CRM_MAIN_PARTNER" order="143" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CRM Main Partner"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CRM_MAIN_PARTNER"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CRM_MAIN_PARTNER"/>
     </attribute>
   
     <attribute id="OSRQLD_CATEGORY" order="144" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case ACS Alert Category"/>
   
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="OSRQLD_CATEGORY"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="OSRQLD_CATEGORY"/>
   
     </attribute>
     <attribute id="OSRQLD_YEAR" order="145" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Case ACS Alert Fiscal Year"/>
-      <keyMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="OSRQLD_YEAR"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="OSRQLD_YEAR"/>
+    </attribute>
+  
+    <attribute id="CC_FiscalMonthDesc" order="146" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fiscal Month Desc"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_FiscalMonthDesc"/>
+    </attribute>
+    <attribute id="CC_FinYear" order="147" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Financial Year"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_FinYear"/>
+    </attribute>
+    <attribute id="FiscalMonth" order="148" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FiscalMonth"/>
+      <keyMapping columnObjectName="J_CASES_CALENDAR" columnName="FiscalMonth"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -12562,68 +12917,68 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
   
     <measure id="CC_Days_Bt_Creation" order="26" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Days Between Creation"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_Days_Bt_Creation"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_Days_Bt_Creation"/>
     </measure>
     <measure id="ZZ_EXGRATIA_AMT" order="47" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount of Ex Gratia"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_EXGRATIA_AMT"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_EXGRATIA_AMT"/>
     </measure>
     <measure id="ZZ_CONT_LIAB" order="48" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Contingent Liability"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZ_CONT_LIAB"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZ_CONT_LIAB"/>
     </measure>
     <measure id="ZZTOTASSMT" order="52" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Assessments"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTASSMT"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZTOTASSMT"/>
     </measure>
     <measure id="ZZTOTPRIMTAX" order="53" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Primary Tax"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTPRIMTAX"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZTOTPRIMTAX"/>
     </measure>
     <measure id="ZZTOTUTI" order="54" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total UTI"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTUTI"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZTOTUTI"/>
     </measure>
     <measure id="ZZTOTPENALTY" order="55" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Penalties"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTPENALTY"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZTOTPENALTY"/>
     </measure>
     <measure id="ZZCOURTCOSTS" order="56" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Court Costs"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZCOURTCOSTS"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZCOURTCOSTS"/>
     </measure>
     <measure id="ZZTOTCASEDEPT" order="57" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Case Debt"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTCASEDEPT"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZTOTCASEDEPT"/>
     </measure>
     <measure id="ZZTOTCASEDEPT2" order="58" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Case Debt"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTCASEDEPT2"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZTOTCASEDEPT2"/>
     </measure>
     <measure id="ZZTOTCOLL" order="59" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Collected"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTCOLL"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZTOTCOLL"/>
     </measure>
     <measure id="ZZTOTWO" order="60" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Written Off Value"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTWO"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZTOTWO"/>
     </measure>
     <measure id="ZZTOTREC" order="61" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total of Open Receivables"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZTOTREC"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZTOTREC"/>
     </measure>
     <measure id="ZZJUDGEAMT" order="62" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Judgement Amount"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="ZZJUDGEAMT"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="ZZJUDGEAMT"/>
     </measure>
     <measure id="_OSRQLD_REFUND" order="123" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Refund"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="_OSRQLD_REFUND"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="_OSRQLD_REFUND"/>
     </measure>
   
     <measure id="CC_COUNT" order="142" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Case Partner Counter"/>
-      <measureMapping columnObjectName="NEJ_RESPUSER_CASE" columnName="CC_COUNT"/>
+      <measureMapping columnObjectName="J_CASES_CALENDAR" columnName="CC_COUNT"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
@@ -12654,6 +13009,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       
       
       
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -12662,26 +13018,26 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="1387" y="131"/>
+      <upperLeftCorner x="1131.0319785845763" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_SCMG_T_CASE_ATTR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1386" y="7056"/>
+      <upperLeftCorner x="770.6494764114553" y="7256.9999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CASE_INDEX" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="956" y="7446"/>
+      <upperLeftCorner x="1087.9954662917426" y="7706.99994635582"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CRMBUT000" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="883" y="5236"/>
+      <upperLeftCorner x="1126.469611436874" y="5416.999961853027"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ACTPARTDESC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="920" y="4116"/>
+      <upperLeftCorner x="1101.4641221901209" y="4236.999970197678"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_RESPGRDESC" modelObjectNameSpace="J_ACTPARTDESC" modelObjectType="JoinNodeInput">
@@ -12693,7 +13049,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_RESPGRDESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="964" y="4276"/>
+      <upperLeftCorner x="1128.1307888567876" y="4396.999969005585"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_FILELOCDESC" modelObjectNameSpace="J_RESPGRDESC" modelObjectType="JoinNodeInput">
@@ -12705,7 +13061,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FILELOCDESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="937" y="4436"/>
+      <upperLeftCorner x="1101.4641221901209" y="4556.999967813492"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_INITBUSDESC" modelObjectNameSpace="J_FILELOCDESC" modelObjectType="JoinNodeInput">
@@ -12717,7 +13073,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="J_INITBUSDESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="964" y="4596"/>
+      <upperLeftCorner x="1074.7974555234541" y="4716.999966621399"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_EMPRESPDESC" modelObjectNameSpace="J_INITBUSDESC" modelObjectType="JoinNodeInput">
@@ -12729,7 +13085,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="J_EMPRESPDESC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="973" y="4696"/>
+      <upperLeftCorner x="1106.9029446649056" y="4836.999965429306"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_OSRDIVDESC" modelObjectNameSpace="J_EMPRESPDESC" modelObjectType="JoinNodeInput">
@@ -12741,7 +13097,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="J_OSRDIVDESC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="999" y="4856"/>
+      <upperLeftCorner x="1080.236277998239" y="4996.999964237213"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_INDEX_PARTNERNAMES" modelObjectNameSpace="J_OSRDIVDESC" modelObjectType="JoinNodeInput">
@@ -12753,7 +13109,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape><shape><upperLeftCorner/><rectangleSize/></shape>
     <shape expanded="true" modelObjectName="J_INDEX_PARTNERNAMES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1014" y="5016"/>
+      <upperLeftCorner x="1067.8029447702072" y="5156.99996304512"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_SELFASSES" modelObjectNameSpace="J_INDEX_PARTNERNAMES" modelObjectType="JoinNodeInput">
@@ -12765,7 +13121,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="J_ATTR_SELFASSES" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1131" y="5236"/>
+      <upperLeftCorner x="765.9698624195497" y="5416.999961853027"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_CORREC" modelObjectNameSpace="J_ATTR_SELFASSES" modelObjectType="JoinNodeInput">
@@ -12777,7 +13133,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="J_ATTR_CORREC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="479" y="5396"/>
+      <upperLeftCorner x="792.6365290862163" y="5576.999960660934"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_ACTPART" modelObjectNameSpace="J_ATTR_CORREC" modelObjectType="JoinNodeInput">
@@ -12789,11 +13145,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_SELFASSES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2226" y="7066"/>
+      <upperLeftCorner x="92" y="7266.9999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_ACTPART" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="506" y="5556"/>
+      <upperLeftCorner x="765.9698624195497" y="5736.999959468842"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_RESPG" modelObjectNameSpace="J_ATTR_ACTPART" modelObjectType="JoinNodeInput">
@@ -12805,16 +13161,16 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_CORREC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="7066"/>
+      <upperLeftCorner x="2240.6494764114555" y="7266.9999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape modelObjectName="P_SELFASSES" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1883" y="7241"/>
+      <upperLeftCorner x="91.99999999999977" y="7501.999947547913"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_RESPG" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="533" y="5716"/>
+      <upperLeftCorner x="937.7080123569507" y="5896.999958276749"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_FILELOC" modelObjectNameSpace="J_ATTR_RESPG" modelObjectType="JoinNodeInput">
@@ -12826,15 +13182,15 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="P_ACTPART" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="326" y="7241"/>
+      <upperLeftCorner x="439.8759378703162" y="7501.999947547913"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="P_CORREC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="92" y="7241"/>
+      <upperLeftCorner x="1981.545468044119" y="7501.999947547913"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_FILELOC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="931" y="5876"/>
+      <upperLeftCorner x="911.0413456902841" y="6056.999957084656"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_INITBUS" modelObjectNameSpace="J_ATTR_FILELOC" modelObjectType="JoinNodeInput">
@@ -12846,12 +13202,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_RESPGROUP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="336" y="7066"/>
+      <upperLeftCorner x="2030.6494764114555" y="7266.9999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape modelObjectName="J_ATTR_INITBUS" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="905" y="6036"/>
+      <upperLeftCorner x="1016.0110773830996" y="6216.999955892563"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_EMPRESP" modelObjectNameSpace="J_ATTR_INITBUS" modelObjectType="JoinNodeInput">
@@ -12863,15 +13219,15 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_FILELOC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2016" y="7066"/>
+      <upperLeftCorner x="350.64947641145545" y="7266.9999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_RESPGROUP" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="536" y="7241"/>
+      <upperLeftCorner x="1771.545468044119" y="7501.999947547913"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_EMPRESP" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="931" y="6196"/>
+      <upperLeftCorner x="989.344410716433" y="6376.99995470047"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_OSRDIVREP" modelObjectNameSpace="J_ATTR_EMPRESP" modelObjectType="JoinNodeInput">
@@ -12883,15 +13239,15 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_INITBUS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="546" y="7066"/>
+      <upperLeftCorner x="1820.6494764114552" y="7266.9999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_FILELOC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1673" y="7241"/>
+      <upperLeftCorner x="649.8759378703164" y="7501.999947547913"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_OSRDIVREP" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1189" y="6356"/>
+      <upperLeftCorner x="1155.7174091094405" y="6536.999953508377"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ATTR_CASEP_COUNT" modelObjectNameSpace="J_ATTR_OSRDIVREP" modelObjectType="JoinNodeInput">
@@ -12903,15 +13259,15 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_EMPRESP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="756" y="7066"/>
+      <upperLeftCorner x="560.6494764114553" y="7266.9999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_INITBUS" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="746" y="7241"/>
+      <upperLeftCorner x="1561.545468044119" y="7501.999947547913"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ATTR_CASEP_COUNT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1163" y="6516"/>
+      <upperLeftCorner x="1129.050742442774" y="6696.999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ATTRIBUTES_INDEX" modelObjectNameSpace="J_ATTR_CASEP_COUNT" modelObjectType="JoinNodeInput">
@@ -12923,15 +13279,15 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_OSRDIVREP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1806" y="7066"/>
+      <upperLeftCorner x="1610.649476411455" y="7266.9999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_EMPRESP" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="956" y="7241"/>
+      <upperLeftCorner x="859.8759378703166" y="7501.999947547913"/>
       <rectangleSize width="160"/>
     </shape>
    <shape expanded="true" modelObjectName="J_ATTRIBUTES_INDEX" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1224" y="6676"/>
+      <upperLeftCorner x="1083.6500352242322" y="6856.999951124191"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ATTRIBUTES" modelObjectNameSpace="J_ATTRIBUTES_INDEX" modelObjectType="JoinNodeInput">
@@ -12943,17 +13299,17 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_COUNT_CASEP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="966" y="7066"/>
+      <upperLeftCorner x="1400.6494764114552" y="7266.9999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape modelObjectName="P_OSRDIVREP" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1463" y="7241"/>
+      <upperLeftCorner x="1351.545468044119" y="7501.999947547913"/>
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_ATTRIBUTES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1408" y="6836"/>
+      <upperLeftCorner x="900.0884967933864" y="7016.999949932098"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CRMD_CMGCASE_AT" modelObjectNameSpace="J_ATTRIBUTES" modelObjectType="JoinNodeInput">
@@ -12965,24 +13321,24 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_CASEP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1197" y="6854"/>
+      <upperLeftCorner x="1110.316701890899" y="7034.499949932098"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape modelObjectName="P_CASEP" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="1199" y="7241"/>
+      <upperLeftCorner x="1087.9954662917426" y="7501.999947547913"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CRMD_CMGCASE_AT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1596" y="7056"/>
+      <upperLeftCorner x="980.649476411455" y="7256.9999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CASEP_MAIN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1176" y="7056"/>
+      <upperLeftCorner x="1190.649476411455" y="7256.9999487400055"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CREATEDUSER_CASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1278" y="896"/>
+      <upperLeftCorner x="1308.7682093113206" y="1016.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_SUCCESS_DISCTYPE" modelObjectNameSpace="J_CREATEDUSER_CASE" modelObjectType="JoinNodeInput">
@@ -12994,7 +13350,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="167"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SUCCESS_DISCTYPE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1008" y="1076"/>
+      <upperLeftCorner x="1387.7136888982807" y="1176.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_REASONOUTC" modelObjectNameSpace="J_SUCCESS_DISCTYPE" modelObjectType="JoinNodeInput">
@@ -13006,12 +13362,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_USERINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1328" y="1083"/>
+      <upperLeftCorner x="1164.3565221861447" y="1183.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_REASONOUTC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="981" y="1236"/>
+      <upperLeftCorner x="1527.9128787853956" y="1336.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_SUCCESS_OUTC" modelObjectNameSpace="J_REASONOUTC" modelObjectType="JoinNodeInput">
@@ -13024,15 +13380,15 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     </shape>
   
     <shape expanded="true" modelObjectName="P_DISCTYPE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1191" y="1236"/>
+      <upperLeftCorner x="1317.9128787853956" y="1336.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_USER_INFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1401" y="1236"/>
+      <upperLeftCorner x="1036.4087955773548" y="1336.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SUCCESS_OUTC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1199" y="1396"/>
+      <upperLeftCorner x="1645.3958719653078" y="1496.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_DISCTYPE_OUTCOME" modelObjectNameSpace="J_SUCCESS_OUTC" modelObjectType="JoinNodeInput">
@@ -13044,11 +13400,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_OUTCOME_REASON" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="955" y="1396"/>
+      <upperLeftCorner x="1435.3958719653078" y="1496.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_DISCTYPE_OUTCOME" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1016" y="1556"/>
+      <upperLeftCorner x="1722.4927950604858" y="1656.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_DISCTYPE_SUCCESS" modelObjectNameSpace="J_DISCTYPE_OUTCOME" modelObjectType="JoinNodeInput">
@@ -13061,11 +13417,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     </shape>
   
     <shape expanded="true" modelObjectName="P_CMG_OUTC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1226" y="1556"/>
+      <upperLeftCorner x="1509.071295035571" y="1656.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_DISCTYPE_SUCCESS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1264" y="1716"/>
+      <upperLeftCorner x="1554.274761929019" y="1836.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_SUCCESSDESC" modelObjectNameSpace="J_DISCTYPE_SUCCESS" modelObjectType="JoinNodeInput">
@@ -13077,12 +13433,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_DD07T" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1102" y="2036"/>
+      <upperLeftCorner x="1571.5324761033207" y="2156.9999856948853"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_SUCCESSDESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1290" y="1876"/>
+      <upperLeftCorner x="1452.3399295743639" y="1996.9999868869781"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CAMPAIGN_CGPLTEXT" modelObjectNameSpace="J_SUCCESSDESC" modelObjectType="JoinNodeInput">
@@ -13095,7 +13451,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     </shape>
   
     <shape expanded="true" modelObjectName="J_CAMPAIGN_CGPLTEXT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1317" y="2036"/>
+      <upperLeftCorner x="1359.4059412179977" y="2156.9999856948853"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CAMPAIGN_PROJECT" modelObjectNameSpace="J_CAMPAIGN_CGPLTEXT" modelObjectType="JoinNodeInput">
@@ -13107,7 +13463,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CAMPAIGN_PROJECT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1450" y="2196"/>
+      <upperLeftCorner x="1473.8208441959712" y="2316.9999845027924"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CAMPAIGN_DESC" modelObjectNameSpace="J_CAMPAIGN_PROJECT" modelObjectType="JoinNodeInput">
@@ -13119,11 +13475,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CGPL_TEXT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1240" y="2196"/>
+      <upperLeftCorner x="1263.8208441959712" y="2316.9999845027924"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CAMPAIGN_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1258" y="2356"/>
+      <upperLeftCorner x="1565.8601510561443" y="2476.9999833106995"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_PARTNERFUNCT_DESC" modelObjectNameSpace="J_CAMPAIGN_DESC" modelObjectType="JoinNodeInput">
@@ -13135,14 +13491,14 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CAMPAIGN_PROJECT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1527" y="2356"/>
+      <upperLeftCorner x="1355.860151056144" y="2476.9999833106995"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
   
     <shape expanded="true" modelObjectName="J_PARTNERFUNCT_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1441" y="2516"/>
+      <upperLeftCorner x="1402.8628467631274" y="2636.9999821186066"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_SECURITY_DESC" modelObjectNameSpace="J_PARTNERFUNCT_DESC" modelObjectType="JoinNodeInput">
@@ -13154,11 +13510,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CAMPAIGN_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1231" y="2516"/>
+      <upperLeftCorner x="1617.6130473964863" y="2636.9999821186066"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SECURITY_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1215" y="2676"/>
+      <upperLeftCorner x="1527.8375129966912" y="2796.9999809265137"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_PRIORITY_DESC" modelObjectNameSpace="J_SECURITY_DESC" modelObjectType="JoinNodeInput">
@@ -13170,12 +13526,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PARTNER_FUNCT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1505" y="2676"/>
+      <upperLeftCorner x="1317.8375129966912" y="2796.9999809265137"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_PRIORITY_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1399" y="2836"/>
+      <upperLeftCorner x="1646.9492188332774" y="2956.999979734421"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ESCALE_REASON" modelObjectNameSpace="J_PRIORITY_DESC" modelObjectType="JoinNodeInput">
@@ -13187,11 +13543,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_SECURITY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1189" y="2836"/>
+      <upperLeftCorner x="1436.9492188332774" y="2956.999979734421"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ESCALE_REASON" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1217" y="2996"/>
+      <upperLeftCorner x="1756.80425973484" y="3116.999978542328"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_REASON_DESC" modelObjectNameSpace="J_ESCALE_REASON" modelObjectType="JoinNodeInput">
@@ -13203,11 +13559,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PRIORITY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1427" y="2996"/>
+      <upperLeftCorner x="1546.8042597348403" y="3116.999978542328"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_REASON_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="727" y="3156"/>
+      <upperLeftCorner x="1851.3009913552755" y="3276.999977350235"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CASESTATUS_DESC" modelObjectNameSpace="J_REASON_DESC" modelObjectType="JoinNodeInput">
@@ -13219,12 +13575,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ESCALATION" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1254" y="3156"/>
+      <upperLeftCorner x="1641.3009913552755" y="3276.999977350235"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_CASESTATUS_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="701" y="3316"/>
+      <upperLeftCorner x="1918.627409027998" y="3436.999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CATEGORY_DESC" modelObjectNameSpace="J_CASESTATUS_DESC" modelObjectType="JoinNodeInput">
@@ -13236,11 +13592,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
    <shape expanded="true" modelObjectName="P_REASONS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1095" y="3316"/>
+      <upperLeftCorner x="1708.6274090279985" y="3436.999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CATEGORY_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="674" y="3476"/>
+      <upperLeftCorner x="1934.369446691449" y="3596.999974966049"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CASETYPE_DESC" modelObjectNameSpace="J_CATEGORY_DESC" modelObjectType="JoinNodeInput">
@@ -13252,12 +13608,12 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CASESTATUS_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="958" y="3476"/>
+      <upperLeftCorner x="1724.369446691449" y="3596.999974966049"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_CASETYPE_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="647" y="3636"/>
+      <upperLeftCorner x="1543.9131824046199" y="3756.9999737739563"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_SELFASSESD" modelObjectNameSpace="J_CASETYPE_DESC" modelObjectType="JoinNodeInput">
@@ -13269,11 +13625,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CATEGORY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="860" y="3636"/>
+      <upperLeftCorner x="1938.8245424811184" y="3756.9999737739563"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_SELFASSESD" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="621" y="3796"/>
+      <upperLeftCorner x="1213.1043945438164" y="3916.9999725818634"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_CORRECDESC" modelObjectNameSpace="J_SELFASSESD" modelObjectType="JoinNodeInput">
@@ -13285,11 +13641,11 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CASETYPE_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="831" y="3796"/>
+      <upperLeftCorner x="1555.179881984655" y="3916.9999725818634"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CORRECDESC" modelObjectNameSpace="CalculationView" expanded="true">
-      <upperLeftCorner x="946" y="3956"/>
+      <upperLeftCorner x="1239.7710612104831" y="4076.9999713897705"/>
       <rectangleSize width="160"/>
     </shape>
     <shape modelObjectName="J_ACTPARTDESC" modelObjectNameSpace="J_CORRECDESC" modelObjectType="JoinNodeInput">
@@ -13301,7 +13657,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CHANGEDUSER_CASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1282" y="736"/>
+      <upperLeftCorner x="1282.101542644654" y="856.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CREATEDUSER_CASE" modelObjectNameSpace="J_CHANGEDUSER_CASE" modelObjectType="JoinNodeInput">
@@ -13313,7 +13669,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="167"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CLOSEDUSER_CASES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1255" y="576"/>
+      <upperLeftCorner x="1255.4348759779873" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CHANGEDUSER_CASE" modelObjectNameSpace="J_CLOSEDUSER_CASES" modelObjectType="JoinNodeInput">
@@ -13325,7 +13681,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="167"/>
     </shape>
     <shape expanded="true" modelObjectName="J_PROCESSUSER_CASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1282" y="416"/>
+      <upperLeftCorner x="1228.7682093113206" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CLOSEDUSER_CASES" modelObjectNameSpace="J_PROCESSUSER_CASE" modelObjectType="JoinNodeInput">
@@ -13337,7 +13693,7 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
       <rectangleSize width="167"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_RESPUSER_CASE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1386" y="256"/>
+      <upperLeftCorner x="1007.2116868597641" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_PROCESSUSER_CASE" modelObjectNameSpace="NEJ_RESPUSER_CASE" modelObjectType="JoinNodeInput">
@@ -13347,6 +13703,23 @@ if(match(&quot;ZZCURRENT_ACTION&quot;,'*NOACTIONRE*') , 'No Action Required',
     <shape modelObjectName="P_USER_INFO" modelObjectNameSpace="NEJ_RESPUSER_CASE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="424" y="382"/>
       <rectangleSize width="152"/>
-    </shape></shapes>
+    </shape>
+    <shape expanded="true" modelObjectName="J_CASES_CALENDAR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1131.0319785845763" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="NEJ_RESPUSER_CASE" modelObjectNameSpace="J_CASES_CALENDAR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CALENDAR" modelObjectNameSpace="J_CASES_CALENDAR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136.0234375"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CALENDAR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1221.2553802563305" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
