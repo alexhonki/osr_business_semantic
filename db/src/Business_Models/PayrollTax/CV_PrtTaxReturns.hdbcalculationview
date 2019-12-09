@@ -28,14 +28,14 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpInfo</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts</resourceUri>
+  </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar</resourceUri>
   </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtFinancials">
     <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtFinancials</resourceUri>
-  </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts">
-    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -2676,8 +2676,8 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="A_ADMIN_CEASE"/>
       <viewAttribute id="A_ADMIN_CEASE_DATE"/>
       <viewAttribute id="CC_CurrentFBN"/>
-      <viewAttribute id="CC_CreatedAt"/>
       <viewAttribute id="FT_BPGroupingType"/>
+      <viewAttribute id="CC_CreatedAt"/>
       <viewAttribute id="ERDAT"/>
       <viewAttribute id="CC_ValidTo"/>
       <viewAttribute id="CC_ValidFrom"/>
@@ -2828,9 +2828,9 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="A_ADMIN_CEASE"/>
       <viewAttribute id="A_ADMIN_CEASE_DATE"/>
       <viewAttribute id="CC_CurrentFBN"/>
+      <viewAttribute id="FT_BPGroupingType"/>
     
       <viewAttribute id="CC_CreatedAt"/>
-      <viewAttribute id="FT_BPGroupingType"/>
       <viewAttribute id="ERDAT"/>
       <viewAttribute id="CC_ValidTo"/>
       <viewAttribute id="CC_ValidFrom"/>
@@ -3130,6 +3130,31 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
         <value>1</value>
       </rankThreshold>
     </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPFacts" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="FT_BPGroupingType"/>
+      <viewAttribute id="ERDAT"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="VALID_TO"/>
+      <viewAttribute id="VALID_FROM"/>
+      <viewAttribute id="FACT_SET"/>
+      <viewAttribute id="FACT_TYPE"/>
+      <viewAttribute id="FACT_CATEGORY"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_ValidTo" datatype="DATE" expressionLanguage="SQL">
+        <formula>TO_DATE(&quot;VALID_TO&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_ValidFrom" datatype="DATE" expressionLanguage="SQL">
+        <formula>TO_DATE(&quot;VALID_FROM&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="VALUE_GENERIC"/>
+    </input>
+    <filter>&quot;FACT_SET&quot;='ZPTX' and &quot;FACT_TYPE&quot;='ZPRE' and &quot;FACT_CATEGORY&quot;='Z011'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_FiscalDate">
     <viewAttributes>
@@ -3822,31 +3847,6 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     <restrictedViewAttributes/>
     <input node="P_PTFinancials"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPFacts" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="FT_BPGroupingType"/>
-      <viewAttribute id="ERDAT"/>
-      <viewAttribute id="CLIENT"/>
-      <viewAttribute id="PARTNER"/>
-      <viewAttribute id="VALID_TO"/>
-      <viewAttribute id="VALID_FROM"/>
-      <viewAttribute id="FACT_SET"/>
-      <viewAttribute id="FACT_TYPE"/>
-      <viewAttribute id="FACT_CATEGORY"/>
-    </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_ValidTo" datatype="DATE" expressionLanguage="SQL">
-        <formula>TO_DATE(&quot;VALID_TO&quot;)</formula>
-      </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_ValidFrom" datatype="DATE" expressionLanguage="SQL">
-        <formula>TO_DATE(&quot;VALID_FROM&quot;)</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
-    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts">
-      <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="VALUE_GENERIC"/>
-    </input>
-    <filter>&quot;FACT_SET&quot;='ZPTX' and &quot;FACT_TYPE&quot;='ZPRE' and &quot;FACT_CATEGORY&quot;='Z011'</filter>
-  </calculationView>
 </calculationViews>
 <logicalModel id="J_TAXRETURN_FINANCIALS">
   <attributes>
@@ -4042,11 +4042,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_DueDate"/>
     </attribute>
     <attribute id="RELTYP" order="79" descriptionColumnName="RTITL" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BP Grouping Type"/>
+      <descriptions defaultDescription="Rel. BP Grouping Type"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RELTYP"/>
     </attribute>
     <attribute id="RTITL" order="80" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BP Grouping Type (Text)"/>
+      <descriptions defaultDescription="Rel. BP Grouping Type (Text)"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RTITL"/>
     </attribute>
     <attribute id="FT_BPGroupingType" order="81" displayAttribute="false" attributeHierarchyActive="false">
@@ -4523,17 +4523,17 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="363.8344291681916" y="112"/>
+      <upperLeftCorner x="363" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_FormBundles" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="169.9192472750685" y="2226.9999856948853"/>
+      <upperLeftCorner x="169" y="2226"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXR_RETURNDETAIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="410.8270076836568" y="2066.999986886978"/>
+      <upperLeftCorner x="410" y="2066"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_FormBundles" modelObjectNameSpace="J_TAXR_RETURNDETAIL" modelObjectType="JoinNodeInput">
@@ -4546,26 +4546,26 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     </shape>
   
     <shape expanded="true" modelObjectName="U_TR_DETAILS_A_P" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="437.49367435032343" y="2230.3333190282187"/>
+      <upperLeftCorner x="437" y="2230"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="R_RETURN_DETAILS_P" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="335.6482309274635" y="2371.9999845027924"/>
+      <upperLeftCorner x="335" y="2371"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_RETURN_DETAILS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="545.6482309274635" y="2371.9999845027924"/>
+      <upperLeftCorner x="545" y="2371"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_PeriodData" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="328.66666666666663" y="1586.9999904632568"/>
+      <upperLeftCorner x="328" y="1586"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXR_PERIOD" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="145.3333333333333" y="1426.9999916553497"/>
+      <upperLeftCorner x="145" y="1426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXRET_LIABILITY" modelObjectNameSpace="J_TAXR_PERIOD" modelObjectType="JoinNodeInput">
@@ -4577,7 +4577,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRET_LIABILITY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118.66666666666666" y="1586.9999904632568"/>
+      <upperLeftCorner x="118" y="1586"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXRETURN_STATCHANGE" modelObjectNameSpace="J_TAXRET_LIABILITY" modelObjectType="JoinNodeInput">
@@ -4589,7 +4589,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <rectangleSize width="259"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRETURN_STATCHANGE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="369.8146708579838" y="1746.999989271164"/>
+      <upperLeftCorner x="369" y="1746"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXRET_FBNCURRFLAG" modelObjectNameSpace="J_TAXRETURN_STATCHANGE" modelObjectType="JoinNodeInput">
@@ -4603,11 +4603,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
   
   
     <shape expanded="true" modelObjectName="R_LIABILITY_LATEST_VER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92.00000000000003" y="1746.999989271164"/>
+      <upperLeftCorner x="92" y="1746"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRET_FBNCURRFLAG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="169.91924727506844" y="1906.999988079071"/>
+      <upperLeftCorner x="169" y="1906"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_RETURNDETAIL" modelObjectNameSpace="J_TAXRET_FBNCURRFLAG" modelObjectType="JoinNodeInput">
@@ -4621,19 +4621,19 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
   
   
     <shape expanded="true" modelObjectName="R_STATCHANGE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="396.4813375246505" y="1906.999988079071"/>
+      <upperLeftCorner x="396" y="1906"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_CURRENT_FBN_PER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="143.25258060840181" y="2084.499986886978"/>
+      <upperLeftCorner x="143" y="2084"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BpRelantionship" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="467.58556542156566" y="1266.9999928474426"/>
+      <upperLeftCorner x="467" y="1266"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_TAXR_BPGROUP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="440.9188987548989" y="1106.9999940395355"/>
+      <upperLeftCorner x="440" y="1106"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_BPNAME" modelObjectNameSpace="NEJ_TAXR_BPGROUP" modelObjectType="JoinNodeInput">
@@ -4646,7 +4646,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     </shape>
   
     <shape expanded="true" modelObjectName="J_TAXR_BPNAME" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="171.99999999999997" y="1266.9999928474426"/>
+      <upperLeftCorner x="171" y="1266"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_PERIOD" modelObjectNameSpace="J_TAXR_BPNAME" modelObjectType="JoinNodeInput">
@@ -4658,11 +4658,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BpInfo" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="435.4624887115108" y="1426.9999916553497"/>
+      <upperLeftCorner x="435" y="1426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXR_PRTGROUPNAM" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="600.3309561674262" y="536.9999976158142"/>
+      <upperLeftCorner x="600" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_FactGroupType_Creation" modelObjectNameSpace="J_TAXR_PRTGROUPNAM" modelObjectType="JoinNodeInput">
@@ -4675,12 +4675,12 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     </shape>
   
     <shape expanded="true" modelObjectName="R_FactGroupType_Creation" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="439.7992831597612" y="696.9999964237213"/>
+      <upperLeftCorner x="439" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="NEJ_GroupType_BPFacts" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="439.7992831597612" y="801.9999964237213"/>
+      <upperLeftCorner x="439" y="801"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_GroupType_Creation_Date" modelObjectNameSpace="NEJ_GroupType_BPFacts" modelObjectType="JoinNodeInput">
@@ -4692,15 +4692,20 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_GroupType_Creation_Date" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="466.46594982642785" y="971.9999952316284"/>
+      <upperLeftCorner x="466" y="971"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+    <shape expanded="true" modelObjectName="P_BPFacts" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="162" y="941"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="P_FiscalDate" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="387.5307597288036" y="536.9999976158142"/>
+      <upperLeftCorner x="387" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRETURN_FISCALPERIOD" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="455.39804047670583" y="376.9999988079071"/>
+      <upperLeftCorner x="455" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_PRTGROUPNAM" modelObjectNameSpace="J_TAXRETURN_FISCALPERIOD" modelObjectType="JoinNodeInput">
@@ -4713,11 +4718,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     </shape>
   
     <shape expanded="true" modelObjectName="P_PTFinancials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="177.53075972880364" y="536.9999976158142"/>
+      <upperLeftCorner x="177" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRETURN_FINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="363.8344291681916" y="217"/>
+      <upperLeftCorner x="363" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXRETURN_FISCALPERIOD" modelObjectNameSpace="J_TAXRETURN_FINANCIALS" modelObjectType="JoinNodeInput">
@@ -4729,13 +4734,8 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_PTFinancialsFBN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="177.5307597288037" y="394.4999988079071"/>
+      <upperLeftCorner x="177" y="394"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_BPFacts" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="195.46594982642796" y="951.9999952316284"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
