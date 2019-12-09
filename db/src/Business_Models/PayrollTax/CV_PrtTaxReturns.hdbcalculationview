@@ -186,6 +186,10 @@
       <viewAttribute id="A_FRINGE_BENEFIT" aggregationType="sum"/>
     
       <viewAttribute id="C_CALC_RATE"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_FormBundles">
@@ -279,6 +283,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="A_DIRECTOR_FEE" source="A_DIRECTOR_FEE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="A_FRINGE_BENEFIT" source="A_FRINGE_BENEFIT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_CALC_RATE" source="C_CALC_RATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="BUNDLE_ID"/>
     </input>
     <joinAttribute name="CASE_GUID"/>
@@ -330,7 +336,11 @@
       <viewAttribute id="A_DIRECTOR_FEE" aggregationType="sum"/>
       <viewAttribute id="A_FRINGE_BENEFIT" aggregationType="sum"/>
       <viewAttribute id="C_CALC_RATE"/>
-      <viewAttribute id="BUNDLE_ID"/></viewAttributes>
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+      <viewAttribute id="BUNDLE_ID"/>
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <input node="R_RETURN_DETAILS_P" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="BUNDLE_ID" source="BUNDLE_ID"/>
@@ -366,7 +376,7 @@
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="C_F_RESID_START" null="true" value=""/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_TAX_AMOUNT" source="C_TAX_AMNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_BASE_TAX" source="C_BASE_TAX_AMNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="C_REBATE_NETT" source="A_REBATE_WAGES"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="C_REBATE_NETT" null="true"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="C_PAY_TAX_AMOUNT" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="C_TOT_PAID_PAYABLE" null="true" value=""/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_PAY_TAX_LIAB_CREDIT" source="C_PAYROLL_TAX"/>
@@ -380,6 +390,10 @@
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="A_FRINGE_BENEFIT" null="true" value=""/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="C_CALC_RATE" source="C_CALC_RATE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="A_REBATE_WAGES"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" null="true" value=""/>
     </input>
   
     <input node="R_RETURN_DETAILS" emptyUnionBehavior="NO_ROW">
@@ -429,6 +443,14 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="A_FRINGE_BENEFIT" source="A_FRINGE_BENEFIT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_CALC_RATE" source="C_CALC_RATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BUNDLE_ID" source="BUNDLE_ID"/>
+    
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+  
+    
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
+  
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_RETURN_DETAILS_P">
@@ -440,7 +462,6 @@
       <viewAttribute id="C_REBATE_CALC"/>
       <viewAttribute id="C_TAX_AMNT"/>
       <viewAttribute id="C_BASE_TAX_AMNT"/>
-      <viewAttribute id="A_REBATE_WAGES"/>
       <viewAttribute id="C_PAYROLL_TAX"/>
       <viewAttribute id="A_PT_CALC"/>
       <viewAttribute id="A_ENTERED_PERIODIC_LIAB"/>
@@ -449,6 +470,7 @@
       <viewAttribute id="A_FIXED_DEDUCTION"/>
       <viewAttribute id="C_DEDUCTION_ALLOWED"/>
       <viewAttribute id="C_CALC_RATE"/>
+      <viewAttribute id="A_REBATE_WAGES"/>
     
       <viewAttribute id="CLIENT"/></viewAttributes>
     <calculatedViewAttributes/>
@@ -505,7 +527,15 @@
       <viewAttribute id="C_CALC_RATE"/>
     
       <viewAttribute id="BUNDLE_ID"/></viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+        <formula>&quot;A_APPRENT_PMT&quot;+&quot;A_TRAINEES_PMT&quot;</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_APPRENTICE_TRAINEE_FLAG" datatype="VARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;C_REBATE_CALC&quot;&gt;0,'Rebate Claimed','No Rebate')</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <input node="osr.business.semantic.db.synonyms::CV_3PYA_M_LV">
       <mapping xsi:type="Calculation:AttributeMapping" target="BUNDLE_ID" source="CASE_GUID"/></input>
   </calculationView>
@@ -656,6 +686,10 @@
       <viewAttribute id="A_ADMIN_CEASE_DATE"/>
     
       <viewAttribute id="CC_CurrentFBN"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_Overdue" datatype="VARCHAR" length="1" expressionLanguage="COLUMN_ENGINE">
@@ -812,6 +846,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="A_ADMIN_CEASE_DATE" source="A_ADMIN_CEASE_DATE"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CurrentFBN" source="CC_CurrentFBN"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
     </input>
     <input node="P_PeriodData">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PeriodCycle" source="CC_PeriodCycle"/>
@@ -952,6 +990,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="A_ADMIN_CEASE_DATE"/>
     
       <viewAttribute id="CC_CurrentFBN"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_TAXRETURN_STATCHANGE">
@@ -1056,6 +1098,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="A_ADMIN_CEASE_DATE" source="A_ADMIN_CEASE_DATE"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CurrentFBN" source="CC_CurrentFBN"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
     </input>
     <input node="R_LIABILITY_LATEST_VER">
       <mapping xsi:type="Calculation:AttributeMapping" target="C_PAY_RECEIVED" source="C_PAY_RECEIVED"/>
@@ -1192,6 +1238,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="A_ADMIN_CEASE_DATE"/>
     
       <viewAttribute id="CC_CurrentFBN"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_TAXRET_FBNCURRFLAG">
@@ -1284,6 +1334,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="C_CALC_RATE" source="C_CALC_RATE"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CurrentFBN" source="CC_CurrentFBN"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
     </input>
     <input node="R_STATCHANGE">
       <mapping xsi:type="Calculation:AttributeMapping" target="A_CEASE_EMPL" source="A_CEASE_EMPL"/>
@@ -1435,6 +1489,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="A_FRINGE_BENEFIT" aggregationType="sum"/>
       <viewAttribute id="C_CALC_RATE" aggregationType="sum"/>
       <viewAttribute id="CC_CurrentFBN"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_TAXR_RETURNDETAIL">
@@ -1525,6 +1583,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="A_DIRECTOR_FEE" source="A_DIRECTOR_FEE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="A_FRINGE_BENEFIT" source="A_FRINGE_BENEFIT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_CALC_RATE" source="C_CALC_RATE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
     </input>
     <input node="R_CURRENT_FBN_PER">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CurrentFBN" source="CC_CurrentFBN"/>
@@ -1606,15 +1668,18 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="PARTNER2"/>
       <viewAttribute id="RELTYP"/>
       <viewAttribute id="RTITL"/>
-      <viewAttribute id="CC_ValidFrom"/>
-      <viewAttribute id="CC_Validto"/>
+      <viewAttribute id="CC_RelValidFrom"/>
+      <viewAttribute id="CC_RelValidto"/>
     
       <viewAttribute id="PARTNER1"/>
     
       <viewAttribute id="CC_CreatedAt"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpRelationships"/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpRelationships">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidFrom" source="CC_ValidFrom"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidto" source="CC_Validto"/>
+    </input>
     <filter>&quot;RELTYP&quot; = 'ZDGE' OR &quot;RELTYP&quot; = 'ZGRM' OR &quot;RELTYP&quot; = 'ZIGM'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_TAXR_BPGROUP" cardinality="CN_1" joinType="leftOuter">
@@ -1762,6 +1827,13 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="CC_CurrentFBN"/>
     
       <viewAttribute id="CC_CreatedAt"/>
+    
+      <viewAttribute id="CC_RelValidFrom"/>
+      <viewAttribute id="CC_RelValidTo"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_TAXR_BPNAME">
@@ -1903,6 +1975,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="A_ADMIN_CEASE_DATE" source="A_ADMIN_CEASE_DATE"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CurrentFBN" source="CC_CurrentFBN"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
     </input>
     <input node="P_BpRelantionship">
       <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP" source="RELTYP"/>
@@ -1911,10 +1987,13 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedAt" source="CC_CreatedAt"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidFrom" source="CC_RelValidFrom"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidTo" source="CC_RelValidto"/>
     </input>
     <joinAttribute leftColumn="MANDT" rightColumn="CLIENT" operator="EQ"/>
-    <joinAttribute leftColumn="CC_DueDate" rightColumn="CC_ValidFrom" operator="GE"/>
-    <joinAttribute leftColumn="CC_DueDate" rightColumn="CC_Validto" operator="LE"/>
+    <joinAttribute leftColumn="CC_DueDate" rightColumn="CC_RelValidFrom" operator="GE"/>
+    <joinAttribute leftColumn="CC_DueDate" rightColumn="CC_RelValidto" operator="LE"/>
     <joinAttribute leftColumn="TAXPAYER" rightColumn="PARTNER2" operator="EQ"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_TAXR_BPNAME" cardinality="C1_1" joinType="leftOuter">
@@ -2054,6 +2133,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="A_ADMIN_CEASE_DATE"/>
     
       <viewAttribute id="CC_CurrentFBN"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_TAXR_PERIOD">
@@ -2191,6 +2274,10 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="A_ADMIN_CEASE_DATE" source="A_ADMIN_CEASE_DATE"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CurrentFBN" source="CC_CurrentFBN"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
     </input>
     <input node="P_BpInfo">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxPayerFullName" source="CC_FullName"/>
@@ -2363,6 +2450,15 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     
       <viewAttribute id="CC_CurrentFBN"/>
       <viewAttribute id="FT_BPGroupingType"/>
+    
+      <viewAttribute id="CC_ValidTo"/>
+      <viewAttribute id="CC_RelValidFrom"/>
+      <viewAttribute id="CC_RelValidTo"/>
+      <viewAttribute id="CC_ValidFromAdj"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_DefaultAssessments" datatype="NVARCHAR" length="25" expressionLanguage="COLUMN_ENGINE">
@@ -2532,6 +2628,15 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CurrentFBN" source="CC_CurrentFBN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="FT_BPGroupingType"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidTo" source="CC_ValidTo"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidFrom" source="CC_RelValidFrom"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidTo" source="CC_RelValidTo"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFromAdj" source="CC_ValidFromAdj"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
     </input>
     <input node="P_BpInfo">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PrtGroupFullName" source="CC_FullName"/>
@@ -2677,10 +2782,16 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="A_ADMIN_CEASE_DATE"/>
       <viewAttribute id="CC_CurrentFBN"/>
       <viewAttribute id="FT_BPGroupingType"/>
+      <viewAttribute id="CC_ValidTo"/>
+      <viewAttribute id="CC_RelValidFrom"/>
+      <viewAttribute id="CC_RelValidTo"/>
+      <viewAttribute id="CC_ValidFromAdj"/>
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+    
       <viewAttribute id="CC_CreatedAt"/>
       <viewAttribute id="ERDAT"/>
-      <viewAttribute id="CC_ValidTo"/>
-      <viewAttribute id="CC_ValidFrom"/>
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="NEJ_GroupType_BPFacts"/>
@@ -2829,11 +2940,17 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="A_ADMIN_CEASE_DATE"/>
       <viewAttribute id="CC_CurrentFBN"/>
       <viewAttribute id="FT_BPGroupingType"/>
+      <viewAttribute id="CC_ValidTo"/>
+      <viewAttribute id="CC_RelValidFrom"/>
+      <viewAttribute id="CC_RelValidTo"/>
+      <viewAttribute id="CC_ValidFromAdj"/>
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+    
     
       <viewAttribute id="CC_CreatedAt"/>
       <viewAttribute id="ERDAT"/>
-      <viewAttribute id="CC_ValidTo"/>
-      <viewAttribute id="CC_ValidFrom"/>
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="R_GroupType_Creation_Date">
@@ -2971,17 +3088,24 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="A_ADMIN_CEASE_DATE" source="A_ADMIN_CEASE_DATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CurrentFBN" source="CC_CurrentFBN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedAt" source="CC_CreatedAt"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidFrom" source="CC_RelValidFrom"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidTo" source="CC_RelValidTo"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
     </input>
     <input node="P_BPFacts">
       <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="FT_BPGroupingType"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidTo" source="CC_ValidTo"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFromAdj" source="CC_ValidFromAdj"/>
     </input>
     <joinAttribute leftColumn="MANDT" rightColumn="CLIENT" operator="EQ"/>
     <joinAttribute leftColumn="TAXPAYER" rightColumn="PARTNER" operator="EQ"/>
     <joinAttribute leftColumn="CC_DueDate" rightColumn="CC_ValidTo" operator="LE"/>
-    <joinAttribute leftColumn="CC_DueDate" rightColumn="CC_ValidFrom" operator="GE"/>
+    <joinAttribute leftColumn="CC_DueDate" rightColumn="CC_ValidFromAdj" operator="GE"/>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_GroupType_Creation_Date">
     <viewAttributes>
@@ -3119,6 +3243,13 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="A_ADMIN_CEASE_DATE"/>
       <viewAttribute id="CC_CurrentFBN"/>
       <viewAttribute id="CC_CreatedAt"/>
+    
+      <viewAttribute id="CC_RelValidFrom"/>
+      <viewAttribute id="CC_RelValidTo"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="NEJ_TAXR_BPGROUP"/>
@@ -3144,13 +3275,21 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="FACT_CATEGORY"/>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_ValidTo" datatype="DATE" expressionLanguage="SQL">
+      <calculatedViewAttribute id="CC_ValidTo" datatype="NVARCHAR" expressionLanguage="SQL" length="10">
         <formula>TO_DATE(&quot;VALID_TO&quot;)</formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_ValidFrom" datatype="DATE" expressionLanguage="SQL">
-        <formula>TO_DATE(&quot;VALID_FROM&quot;)</formula>
+    
+      <calculatedViewAttribute id="CC_ValidFromAdj" datatype="NVARCHAR" length="10" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>if(leftstr(&quot;CC_ValidFrom&quot;,1)='9','1900-01-01',&quot;CC_ValidFrom&quot;)</formula>
+    
       </calculatedViewAttribute>
-    </calculatedViewAttributes>
+    
+      <calculatedViewAttribute id="CC_ValidFrom" datatype="NVARCHAR" expressionLanguage="SQL" length="10">
+    
+        <formula>TO_DATE(&quot;VALID_FROM&quot;)</formula>
+    
+      </calculatedViewAttribute></calculatedViewAttributes>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts">
       <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="VALUE_GENERIC"/>
     </input>
@@ -3313,6 +3452,15 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     
       <viewAttribute id="CC_CurrentFBN"/>
       <viewAttribute id="FT_BPGroupingType"/>
+    
+      <viewAttribute id="CC_ValidTo"/>
+      <viewAttribute id="CC_RelValidFrom"/>
+      <viewAttribute id="CC_RelValidTo"/>
+      <viewAttribute id="CC_ValidFromAdj"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_TAXR_PRTGROUPNAM">
@@ -3460,6 +3608,15 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CurrentFBN" source="CC_CurrentFBN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="FT_BPGroupingType"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidTo" source="CC_ValidTo"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidFrom" source="CC_RelValidFrom"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidTo" source="CC_RelValidTo"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFromAdj" source="CC_ValidFromAdj"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
     </input>
     <input node="P_FiscalDate">
       <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
@@ -3639,6 +3796,15 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     
       <viewAttribute id="CC_CurrentFBN"/>
       <viewAttribute id="FT_BPGroupingType"/>
+    
+      <viewAttribute id="CC_ValidTo"/>
+      <viewAttribute id="CC_RelValidFrom"/>
+      <viewAttribute id="CC_RelValidTo"/>
+      <viewAttribute id="CC_ValidFromAdj"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_FullYearTR" datatype="VARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
@@ -3814,6 +3980,15 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_CurrentFBN" source="CC_CurrentFBN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="FT_BPGroupingType"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidTo" source="CC_ValidTo"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidFrom" source="CC_RelValidFrom"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidTo" source="CC_RelValidTo"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFromAdj" source="CC_ValidFromAdj"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
     </input>
     <input node="AGG_PTFinancialsFBN">
       <mapping xsi:type="Calculation:AttributeMapping" target="RC_APT_Raised" source="RC_APT_Raised"/>
@@ -3850,19 +4025,19 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
 </calculationViews>
 <logicalModel id="J_TAXRETURN_FINANCIALS">
   <attributes>
-    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false" key="true">
       <descriptions defaultDescription="SAP Client"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="MANDT"/>
     </attribute>
-    <attribute id="CASE_GUID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CASE_GUID" order="2" displayAttribute="false" attributeHierarchyActive="false" key="true">
       <descriptions defaultDescription="GUID"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CASE_GUID"/>
     </attribute>
-    <attribute id="FBNUM" order="3" semanticType="empty" descriptionColumnName="FBNUM" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FBNUM" order="3" semanticType="empty" descriptionColumnName="FBNUM" displayAttribute="false" attributeHierarchyActive="false" key="true">
       <descriptions defaultDescription="Form Bundle Number"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FBNUM"/>
     </attribute>
-    <attribute id="TAXPAYER" order="4" semanticType="empty" descriptionColumnName="CC_TaxPayerFullName" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXPAYER" order="4" semanticType="empty" descriptionColumnName="CC_TaxPayerFullName" displayAttribute="false" attributeHierarchyActive="false" key="true">
       <descriptions defaultDescription="Business Partner"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="TAXPAYER"/>
     </attribute>
@@ -4006,246 +4181,266 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <descriptions defaultDescription="Revenue Type Text"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="REVENUE_TYPE_TEXT"/>
     </attribute>
-    <attribute id="VERSION" order="41" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="VERSION" order="41" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
       <descriptions defaultDescription="Version"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="VERSION"/>
     </attribute>
-    <attribute id="A_INT_WAGES_Q" order="42" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_INT_WAGES_Q" order="42" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
       <descriptions defaultDescription="Interstate Wages Flag"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_INT_WAGES_Q"/>
     </attribute>
-    <attribute id="C_F_LAST_PER_START" order="67" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_APPRENTICE_TRAINEE_FLAG" order="51" replaceNull="false" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="App/Trainee Rebate Flag"/>
+      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_APPRENTICE_TRAINEE_FLAG"/>
+    </attribute>
+    <attribute id="C_F_LAST_PER_START" order="70" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Period Start"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_F_LAST_PER_START"/>
     </attribute>
-    <attribute id="C_F_TOTAL_PER_END" order="68" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="C_F_TOTAL_PER_END" order="71" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Total Periodic Amount"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_F_TOTAL_PER_END"/>
     </attribute>
-    <attribute id="C_P_AND_P_END_DATE" order="69" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="C_P_AND_P_END_DATE" order="72" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Periodic End "/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_P_AND_P_END_DATE"/>
     </attribute>
-    <attribute id="C_F_RESID_START" order="70" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="C_F_RESID_START" order="73" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Residual Start"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_F_RESID_START"/>
     </attribute>
   
-    <attribute id="CC_PeriodCycle" order="77" semanticType="empty" descriptionColumnName="CC_PeriodCycle" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_PeriodCycle" order="79" semanticType="empty" descriptionColumnName="CC_PeriodCycle" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Cycle"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_PeriodCycle"/>
   
     </attribute>
-    <attribute id="CC_DueDate" order="78" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_DueDate" order="80" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Due Date"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_DueDate"/>
     </attribute>
-    <attribute id="RELTYP" order="79" descriptionColumnName="RTITL" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="RELTYP" order="81" descriptionColumnName="RTITL" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rel. BP Grouping Type"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RELTYP"/>
     </attribute>
-    <attribute id="RTITL" order="80" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="RTITL" order="82" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rel. BP Grouping Type (Text)"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RTITL"/>
     </attribute>
-    <attribute id="FT_BPGroupingType" order="81" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_RelValidFrom" order="83" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Rel. BP Grouping Type Valid From"/>
+      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_RelValidFrom"/>
+    </attribute>
+    <attribute id="CC_RelValidTo" order="84" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Rel. BP Grouping Type Valid To"/>
+      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_RelValidTo"/>
+    </attribute>
+    <attribute id="FT_BPGroupingType" order="85" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fact BP Grouping Type"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FT_BPGroupingType"/>
     </attribute>
+    <attribute id="CC_ValidFromAdj" order="86" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fact BP Grouping Type Valid From"/>
+      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_ValidFromAdj"/>
+    </attribute>
+    <attribute id="CC_ValidTo" order="87" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fact BP Grouping Type Valid To"/>
+      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_ValidTo"/>
+    </attribute>
   
-    <attribute id="CC_CREATE_DATE" order="83" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_CREATE_DATE" order="89" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Creation Date"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_CREATE_DATE"/>
   
     </attribute>
-    <attribute id="CC_UPDATE_DATE" order="84" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_UPDATE_DATE" order="90" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Modified/Closed Date"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_UPDATE_DATE"/>
     </attribute>
-    <attribute id="CC_Overdue" order="85" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_Overdue" order="91" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Overdue"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_Overdue"/>
     </attribute>
   
-    <attribute id="CC_OverdueDays" order="86" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_OverdueDays" order="92" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Days Overdue"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_OverdueDays"/>
   
     </attribute>
   
-    <attribute id="PARTNER1" order="87" descriptionColumnName="CC_PrtGroupFullName" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="PARTNER1" order="93" descriptionColumnName="CC_PrtGroupFullName" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PRT/Floating Group"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="PARTNER1"/>
   
     </attribute>
-    <attribute id="CC_TaxPayerFullName" order="88" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_TaxPayerFullName" order="94" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Name"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_TaxPayerFullName"/>
     </attribute>
-    <attribute id="CC_PrtGroupFullName" order="89" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_PrtGroupFullName" order="95" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PRT Group Name"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_PrtGroupFullName"/>
     </attribute>
-    <attribute id="C_NO_OF_UTI_DAYS" order="95" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="C_NO_OF_UTI_DAYS" order="101" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - UTI Days Overdue"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_NO_OF_UTI_DAYS"/>
     </attribute>
-    <attribute id="A_UTI_REASON" order="98" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_UTI_REASON" order="104" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - UTI Remit Reason"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_UTI_REASON"/>
     </attribute>
-    <attribute id="A_PT_REASON" order="101" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_PT_REASON" order="107" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Penalty Tax Reason"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_PT_REASON"/>
     </attribute>
-    <attribute id="A_CONT_NAME" order="106" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_CONT_NAME" order="112" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Name"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_CONT_NAME"/>
     </attribute>
-    <attribute id="A_CONT_NO" order="107" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_CONT_NO" order="113" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Phone"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_CONT_NO"/>
     </attribute>
-    <attribute id="A_CONFIRM" order="108" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_CONFIRM" order="114" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Flag"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_CONFIRM"/>
     </attribute>
-    <attribute id="A_EMAIL_ADDRESS" order="110" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_EMAIL_ADDRESS" order="116" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Email"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_EMAIL_ADDRESS"/>
     </attribute>
-    <attribute id="A_MOBILE_NO" order="111" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_MOBILE_NO" order="117" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Mobile"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_MOBILE_NO"/>
     </attribute>
-    <attribute id="A_TITLE" order="112" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_TITLE" order="118" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Title"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TITLE"/>
     </attribute>
   
-    <attribute id="CC_DefaultAssessments" order="114" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_DefaultAssessments" order="120" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Default Assessment"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_DefaultAssessments"/>
   
     </attribute>
-    <attribute id="CC_LiabDueDate" order="115" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_LiabDueDate" order="121" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Transaction Due Date"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_LiabDueDate"/>
     </attribute>
-    <attribute id="CC_UTIStartDate" order="116" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_UTIStartDate" order="122" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - UTI Start Date"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_UTIStartDate"/>
     </attribute>
-    <attribute id="CC_ConfirmDate" order="117" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_ConfirmDate" order="123" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Date"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_ConfirmDate"/>
     </attribute>
   
-    <attribute id="CC_NillAssessment" order="118" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_NillAssessment" order="124" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Nill Assessment"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_NillAssessment"/>
   
     </attribute>
   
-    <attribute id="FiscalMonth" order="119" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FiscalMonth" order="125" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fiscal Period"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FiscalMonth"/>
   
     </attribute>
-    <attribute id="FISCAL_YEAR" order="120" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FISCAL_YEAR" order="126" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fiscal Year"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FISCAL_YEAR"/>
     </attribute>
   
-    <attribute id="A_PT_CALC" order="121" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_PT_CALC" order="127" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Per. - Needs To Calculate PT Liability"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_PT_CALC"/>
   
     </attribute>
-    <attribute id="A_REGIONAL_EMPLOYER" order="125" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_REGIONAL_EMPLOYER" order="131" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Per. - Claimed Regional Employer Disc"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_REGIONAL_EMPLOYER"/>
     </attribute>
-    <attribute id="A_GROUP_AUS_WAGES" order="126" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_GROUP_AUS_WAGES" order="132" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Per. - Will Pay over 6.5M on AUS Wages"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_GROUP_AUS_WAGES"/>
     </attribute>
   
-    <attribute id="C_CALC_RATE" order="137" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="C_CALC_RATE" order="143" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Rate"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_CALC_RATE"/>
   
     </attribute>
   
-    <attribute id="A_CEASE_EMPL" order="138" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_CEASE_EMPL" order="144" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Cease To Employ"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_CEASE_EMPL"/>
   
     </attribute>
-    <attribute id="A_CEASE_EMPL_DATE" order="139" semanticType="date" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_CEASE_EMPL_DATE" order="145" semanticType="date" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Cease To Employ Date"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_CEASE_EMPL_DATE"/>
     </attribute>
-    <attribute id="A_GRP_STAT_ENT" order="140" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_GRP_STAT_ENT" order="146" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Change Employer Status"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_GRP_STAT_ENT"/>
     </attribute>
-    <attribute id="A_STAT_NEXT" order="141" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_STAT_NEXT" order="147" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - New Employer Status"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_STAT_NEXT"/>
     </attribute>
-    <attribute id="A_FIVE_MIL" order="142" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_FIVE_MIL" order="148" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Group Pays Over 5.5M"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_FIVE_MIL"/>
     </attribute>
-    <attribute id="A_ADMIN_APP" order="143" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_ADMIN_APP" order="149" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Admin. Appointed"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ADMIN_APP"/>
     </attribute>
-    <attribute id="A_ADMIN_DATE" order="144" semanticType="date" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_ADMIN_DATE" order="150" semanticType="date" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Admin. Appointed Date"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ADMIN_DATE"/>
     </attribute>
-    <attribute id="A_ADMIN_CEASE" order="145" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_ADMIN_CEASE" order="151" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Admin. Ceased"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ADMIN_CEASE"/>
     </attribute>
-    <attribute id="A_ADMIN_CEASE_DATE" order="146" semanticType="date" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_ADMIN_CEASE_DATE" order="152" semanticType="date" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Admin. Ceased Date"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ADMIN_CEASE_DATE"/>
     </attribute>
   
-    <attribute id="CC_FullYearTR" order="147" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_FullYearTR" order="153" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Full Year Assessment Flag"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_FullYearTR"/>
   
     </attribute>
   
-    <attribute id="A_REFUND_OPTION" order="149" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_REFUND_OPTION" order="155" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
       <descriptions defaultDescription="Liab. - Refund to Be Deposited"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_LiaRefund"/>
   
     </attribute>
   
-    <attribute id="CC_CurrentFBN" order="150" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_CurrentFBN" order="156" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Current Assessment (For Period)"/>
   
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_CurrentFBN"/>
   
     </attribute>
-    <attribute id="CC_ISPRTGROUP" order="151" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_ISPRTGROUP" order="157" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Is PRT Group Flag"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_ISPRTGROUP"/>
     </attribute>
@@ -4288,220 +4483,226 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <descriptions defaultDescription="Shares and Options"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_SHARE_SCHEMES"/>
     </measure>
-    <measure id="A_APPRENT_PMT" order="51" aggregationType="sum" measureType="simple">
+    <measure id="A_APPRENT_PMT" order="52" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Apprentices Wages"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_APPRENT_PMT"/>
     </measure>
-    <measure id="A_TRAINEES_PMT" order="52" aggregationType="sum" measureType="simple">
+    <measure id="A_TRAINEES_PMT" order="53" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Trainees Wages"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TRAINEES_PMT"/>
     </measure>
-    <measure id="A_OTH_NON_TAX_WAGE" order="53" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Other Non-taxable Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_OTH_NON_TAX_WAGE"/>
+  
+    <measure id="CC_APPRENTICE_TRAINEE_WAGES" order="54" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Apprentice and Trainee Wages"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_APPRENTICE_TRAINEE_WAGES"/>
     </measure>
-    <measure id="A_TOT_INT_WAGE" order="54" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Total Interstate Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TOT_INT_WAGE"/>
-    </measure>
-    <measure id="A_TOT_QLD_GM" order="55" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Total QLD Wages (All GM)"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TOT_QLD_GM"/>
-    </measure>
-    <measure id="A_TOT_INT_GM" order="56" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Total Interstate Wages (All GM)"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TOT_INT_GM"/>
-    </measure>
-    <measure id="A_F_P_AND_P_FINAL" order="57" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Split period 2nd amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_F_P_AND_P_FINAL"/>
-    </measure>
-    <measure id="A_F_P_AND_P_RESID" order="58" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Split period 1st amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_F_P_AND_P_RESID"/>
-    </measure>
-    <measure id="A_EXCESS_DEDUCT" order="59" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Excess Deduction"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_EXCESS_DEDUCT"/>
-    </measure>
-    <measure id="A_EXCESS_REB" order="60" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Excess Rebate"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_EXCESS_REB"/>
-    </measure>
-    <measure id="C_TOT_QLD_TXBLE_WAGES" order="61" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Total QLD Taxable Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOT_QLD_TXBLE_WAGES"/>
-    </measure>
-    <measure id="C_TOT_QLD_NON_TAX_WAGE" order="62" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Total QLD Non-taxable Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOT_QLD_NON_TAX_WAGE"/>
-    </measure>
-    <measure id="C_REBATE_CALC" order="63" aggregationType="sum" measureType="simple">
+  
+    <measure id="C_REBATE_CALC" order="55" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="App/Trainee Rebate"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_REBATE_CALC"/>
     </measure>
-    <measure id="C_TOT_GRP_AUST_WAGES" order="64" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Group AU Taxable Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOT_GRP_AUST_WAGES"/>
-    </measure>
-    <measure id="C_F_TOTAL_PER_AMNT" order="65" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Total Periodic Amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_F_TOTAL_PER_AMNT"/>
-    </measure>
-    <measure id="C_F_LAST_PER_AMNT" order="66" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Last Period Amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_F_LAST_PER_AMNT"/>
-    </measure>
-    <measure id="C_TAX_AMOUNT" order="71" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Taxable Amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TAX_AMOUNT"/>
-    </measure>
-    <measure id="C_BASE_TAX" order="72" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Calculated Tax"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_BASE_TAX"/>
-    </measure>
-    <measure id="C_REBATE_NETT" order="73" aggregationType="sum" measureType="simple">
+    <measure id="C_REBATE_NETT" order="56" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Net Rebate"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_REBATE_NETT"/>
     </measure>
-    <measure id="C_PAY_TAX_AMOUNT" order="74" aggregationType="sum" measureType="simple">
+    <measure id="A_OTH_NON_TAX_WAGE" order="57" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Other Non-taxable Wages"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_OTH_NON_TAX_WAGE"/>
+    </measure>
+    <measure id="A_TOT_INT_WAGE" order="58" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total Interstate Wages"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TOT_INT_WAGE"/>
+    </measure>
+    <measure id="A_TOT_QLD_GM" order="59" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total QLD Wages (All GM)"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TOT_QLD_GM"/>
+    </measure>
+    <measure id="A_TOT_INT_GM" order="60" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total Interstate Wages (All GM)"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TOT_INT_GM"/>
+    </measure>
+    <measure id="A_F_P_AND_P_FINAL" order="61" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Split period 2nd amount"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_F_P_AND_P_FINAL"/>
+    </measure>
+    <measure id="A_F_P_AND_P_RESID" order="62" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Split period 1st amount"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_F_P_AND_P_RESID"/>
+    </measure>
+    <measure id="A_EXCESS_DEDUCT" order="63" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Excess Deduction"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_EXCESS_DEDUCT"/>
+    </measure>
+    <measure id="A_EXCESS_REB" order="64" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Excess Rebate"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_EXCESS_REB"/>
+    </measure>
+    <measure id="C_TOT_QLD_TXBLE_WAGES" order="65" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total QLD Taxable Wages"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOT_QLD_TXBLE_WAGES"/>
+    </measure>
+    <measure id="C_TOT_QLD_NON_TAX_WAGE" order="66" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total QLD Non-taxable Wages"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOT_QLD_NON_TAX_WAGE"/>
+    </measure>
+    <measure id="C_TOT_GRP_AUST_WAGES" order="67" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Group AU Taxable Wages"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOT_GRP_AUST_WAGES"/>
+    </measure>
+    <measure id="C_F_TOTAL_PER_AMNT" order="68" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total Periodic Amount"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_F_TOTAL_PER_AMNT"/>
+    </measure>
+    <measure id="C_F_LAST_PER_AMNT" order="69" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Last Period Amount"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_F_LAST_PER_AMNT"/>
+    </measure>
+    <measure id="C_TAX_AMOUNT" order="74" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Taxable Amount"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TAX_AMOUNT"/>
+    </measure>
+    <measure id="C_BASE_TAX" order="75" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Calculated Tax"/>
+      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_BASE_TAX"/>
+    </measure>
+    <measure id="C_PAY_TAX_AMOUNT" order="76" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Payroll Tax Amount"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_PAY_TAX_AMOUNT"/>
     </measure>
-    <measure id="C_TOT_PAID_PAYABLE" order="75" aggregationType="sum" measureType="simple">
+    <measure id="C_TOT_PAID_PAYABLE" order="77" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Paid Periodic Amount"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOT_PAID_PAYABLE"/>
     </measure>
-    <measure id="C_PAY_TAX_LIAB_CREDIT" order="76" aggregationType="sum" measureType="simple">
+    <measure id="C_PAY_TAX_LIAB_CREDIT" order="78" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Final Tax Liability/Credit"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_PAY_TAX_LIAB_CREDIT"/>
     </measure>
-    <measure id="C_PAY_RECEIVED" order="90" aggregationType="sum" measureType="simple">
+    <measure id="C_PAY_RECEIVED" order="96" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Payments/Credits Received"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_PAY_RECEIVED"/>
     </measure>
-    <measure id="C_UTI_TOTAL" order="91" aggregationType="sum" measureType="simple">
+    <measure id="C_UTI_TOTAL" order="97" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Total UTI"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_UTI_TOTAL"/>
     </measure>
-    <measure id="C_PENALTY_TAX" order="92" aggregationType="sum" measureType="simple">
+    <measure id="C_PENALTY_TAX" order="98" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Penalty Tax"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_PENALTY_TAX"/>
     </measure>
-    <measure id="C_PENALTY_TOTAL" order="93" aggregationType="sum" measureType="simple">
+    <measure id="C_PENALTY_TOTAL" order="99" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Total Penalty Tax"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_PENALTY_TOTAL"/>
     </measure>
-    <measure id="C_TOTAL_LIABILITY" order="94" aggregationType="sum" measureType="simple">
+    <measure id="C_TOTAL_LIABILITY" order="100" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Total Liability"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOTAL_LIABILITY"/>
     </measure>
-    <measure id="C_DAILY_UTI_AMNT" order="96" aggregationType="sum" measureType="simple">
+    <measure id="C_DAILY_UTI_AMNT" order="102" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Daily UTI"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_DAILY_UTI_AMT"/>
     </measure>
-    <measure id="A_UTI_REMITT" order="97" aggregationType="sum" measureType="simple">
+    <measure id="A_UTI_REMITT" order="103" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - UTI Remit"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_UTI_REMITT"/>
     </measure>
-    <measure id="A_PT_INCREASE" order="99" aggregationType="sum" measureType="simple">
+    <measure id="A_PT_INCREASE" order="105" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Penalty tax Increase"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_PT_INCREASE"/>
     </measure>
-    <measure id="A_PT_REMITT" order="100" aggregationType="sum" measureType="simple">
+    <measure id="A_PT_REMITT" order="106" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Penalty Tax Remit"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_PT_REMITT"/>
     </measure>
-    <measure id="A_ORIG_TOT_DUTY" order="102" aggregationType="sum" measureType="simple">
+    <measure id="A_ORIG_TOT_DUTY" order="108" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Original tax/duty Payable"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ORIG_TOT_DUTY"/>
     </measure>
-    <measure id="A_ORIG_UTI" order="103" aggregationType="sum" measureType="simple">
+    <measure id="A_ORIG_UTI" order="109" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Original UTI"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ORIG_UTI"/>
     </measure>
-    <measure id="A_ORIG_PENALTY" order="104" aggregationType="sum" measureType="simple">
+    <measure id="A_ORIG_PENALTY" order="110" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Original Penalty"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ORIG_PENALTY"/>
     </measure>
-    <measure id="A_LOW_AMT_PAY" order="105" aggregationType="sum" measureType="simple">
+    <measure id="A_LOW_AMT_PAY" order="111" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Lowest Amount Payable"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_LOW_AMT_PAY"/>
     </measure>
-    <measure id="C_TOTAL_ORIG" order="109" aggregationType="sum" measureType="simple">
+    <measure id="C_TOTAL_ORIG" order="115" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Total Of Original"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOTAL_ORIG"/>
     </measure>
-    <measure id="C_PAYABLE_TXN" order="113" aggregationType="sum" measureType="simple">
+    <measure id="C_PAYABLE_TXN" order="119" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Total Duty Payable"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_PAYABLE_TXN"/>
     </measure>
   
-    <measure id="A_ENTERED_PERIODIC_LIAB" order="122" aggregationType="sum" measureType="simple">
+    <measure id="A_ENTERED_PERIODIC_LIAB" order="128" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Per. - Calculated periodic liability "/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ENTERED_PERIODIC_LIAB"/>
     </measure>
-    <measure id="A_FIXED_DEDUCTION" order="123" aggregationType="sum" measureType="simple">
+    <measure id="A_FIXED_DEDUCTION" order="129" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Per. - Fixed Deduction"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_FIXED_DEDUCTION"/>
     </measure>
-    <measure id="C_DEDUCTION_ALLOWED" order="124" aggregationType="sum" measureType="simple">
+    <measure id="C_DEDUCTION_ALLOWED" order="130" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Per. - Deduction allowed"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_DEDUCTION_ALLOWED"/>
     </measure>
-    <measure id="RC_APT_Raised" order="127" aggregationType="sum" measureType="simple">
+    <measure id="RC_APT_Raised" order="133" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - Payroll Assessments Tax Raised"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_APT_Raised"/>
     </measure>
-    <measure id="RC_APT_Cleared" order="128" aggregationType="sum" measureType="simple">
+    <measure id="RC_APT_Cleared" order="134" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - Payroll Assessments Tax Cleared"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_APT_Cleared"/>
     </measure>
-    <measure id="RC_LTI_Raised" order="129" aggregationType="sum" measureType="simple">
+    <measure id="RC_LTI_Raised" order="135" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - LTI Raised"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_LTI_Raised"/>
     </measure>
-    <measure id="RC_LTI_Cleared" order="130" aggregationType="sum" measureType="simple">
+    <measure id="RC_LTI_Cleared" order="136" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - LTI Cleared"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_LTI_Cleared"/>
     </measure>
-    <measure id="RC_PTX_Raised" order="131" aggregationType="sum" measureType="simple">
+    <measure id="RC_PTX_Raised" order="137" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - Penalty Tax Raised"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_PTX_Raised"/>
     </measure>
-    <measure id="RC_PTX_Cleared" order="132" aggregationType="sum" measureType="simple">
+    <measure id="RC_PTX_Cleared" order="138" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - Penalty Tax Cleared"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_PTX_Cleared"/>
     </measure>
-    <measure id="RC_UTI_Raised" order="133" aggregationType="sum" measureType="simple">
+    <measure id="RC_UTI_Raised" order="139" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - UTI Raised"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_UTI_Raised"/>
     </measure>
-    <measure id="RC_UTI_Cleared" order="134" aggregationType="sum" measureType="simple">
+    <measure id="RC_UTI_Cleared" order="140" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - UTI Cleared"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_UTI_Cleared"/>
     </measure>
-    <measure id="A_DIRECTOR_FEE" order="135" aggregationType="sum" measureType="simple">
+    <measure id="A_DIRECTOR_FEE" order="141" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Director&apos;s Fees"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_DIRECTOR_FEE"/>
     </measure>
-    <measure id="A_FRINGE_BENEFIT" order="136" aggregationType="sum" measureType="simple">
+    <measure id="A_FRINGE_BENEFIT" order="142" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fringe Benefits"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_FRINGE_BENEFIT"/>
     </measure>
   
-    <measure id="CC_SplitPeriodTotalAmount" order="148" aggregationType="sum" measureType="simple">
+    <measure id="CC_SplitPeriodTotalAmount" order="154" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Split period total amount"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_SplitPeriodTotalAmount"/>
-    </measure>
-  </baseMeasures>
+    </measure></baseMeasures>
   <calculatedMeasures>
-    <measure id="CO_TaxReturns" order="82" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+    <measure id="CO_TaxReturns" order="88" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Tax Returns Counter"/>
       <exceptionAggregation>
         <attribute attributeName="FBNUM"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -4696,7 +4897,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPFacts" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="162" y="941"/>
+      <upperLeftCorner x="200" y="971"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
