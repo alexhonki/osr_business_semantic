@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorkItemsStatic" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_Prt Work Items Static"/>
-<localVariables/>
+<localVariables>
+  <variable id="VA_ReportinDate">
+    <descriptions defaultDescription="Reporting Date"/>
+    <variableProperties datatype="DATE" length="10" scale="NaN" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <attribute name="Reporting_Date"/>
+      </valueDomain>
+      <selection multiLine="true" type="SingleValue"/>
+      <defaultRange lowValue="date(leftstr(string(now()),10))" lowExpression="true" highExpression="true" operator="EQ" including="true"/>
+    </variableProperties>
+  </variable>
+</localVariables>
 <variableMappings/>
 <dataSources>
   <DataSource id="osr.business.semantic.db.Tables::T_PrtWorkItems">
@@ -50,6 +61,8 @@
       <viewAttribute id="CC_WorkItemOrder"/>
       <viewAttribute id="CC_TotalGroupOrder"/>
       <viewAttribute id="CC_ABN"/>
+    
+      <viewAttribute id="Reporting_Date"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Tables::T_PrtWorkItems"/>
@@ -57,178 +70,171 @@
 </calculationViews>
 <logicalModel id="P_T_PrtWorkItemsStatic">
   <attributes>
-    <attribute id="CLIENT" hidden="true" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CLIENT" hidden="true" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAP Client"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CLIENT"/>
     </attribute>
-    <attribute id="CreatedDate" order="3" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CreatedDate" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Created Date"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CreatedDate"/>
     </attribute>
-    <attribute id="Change_CompletedDate" order="4" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="Change_CompletedDate" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Change/Completed Date"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="Change_CompletedDate"/>
     </attribute>
-    <attribute id="CreatedByName" order="5" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CreatedByName" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Created by name - hide in SAC"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CreatedByName"/>
     </attribute>
-    <attribute id="Changed_CompletedName" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="Changed_CompletedName" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Changed by name - hide in SAC"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="Changed_CompletedName"/>
     </attribute>
-    <attribute id="ORGEH" order="7" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="SHORT">
+    <attribute id="ORGEH" order="6" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="SHORT">
       <descriptions defaultDescription="Org. Unit (Team)"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="ORGEH"/>
     </attribute>
-    <attribute id="SHORT" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SHORT" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team) Name - hide in SAC"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="SHORT"/>
     </attribute>
-    <attribute id="Source" order="9" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="Source" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Source of Work Item"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="Source"/>
     </attribute>
-    <attribute id="WorkItemDescription" order="11" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="WorkItemDescription" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Work Item Description - hide in SAC"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="WorkItemDescription"/>
     </attribute>
-    <attribute id="Status" order="12" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="Status" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Status - Original"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="Status"/>
     </attribute>
-    <attribute id="WorkItemID" order="13" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="WorkItemDescription">
+    <attribute id="WorkItemID" order="12" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="WorkItemDescription">
       <descriptions defaultDescription="Work Item ID"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="WorkItemID"/>
     </attribute>
-    <attribute id="CC_Status" order="14" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_Status" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Status - Open or Closed"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_Status"/>
     </attribute>
-    <attribute id="CC_WorkItemGroup" order="15" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_WorkItemGroup" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Work Item Group"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_WorkItemGroup"/>
     </attribute>
   
-    <attribute id="BP" order="18" descriptionColumnName="BPName" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BP" order="17" descriptionColumnName="BPName" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Bus. Partner"/>
   
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="BP"/>
   
     </attribute>
-    <attribute id="BPName" order="19" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BPName" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BP Full Name - hide in SAC"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="BPName"/>
     </attribute>
   
-    <attribute id="CC_SixtyDays" order="20" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_SixtyDays" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Open for 60 Calendar Days +"/>
   
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_SixtyDays"/>
   
     </attribute>
-    <attribute id="CC_Days_Bt_Creation_Mod_ROW" order="21" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_Days_Bt_Creation_Mod_ROW" order="20" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Days Between Creation (not agg.)"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_Days_Bt_Creation_Mod_ROW"/>
     </attribute>
-    <attribute id="WorkItemType" order="22" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="WorkItemType" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="WorkItemType"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="WorkItemType"/>
     </attribute>
-    <attribute id="CC_ThirtyDays" order="23" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_ThirtyDays" order="22" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Open for 30 Calendar Days +"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_ThirtyDays"/>
     </attribute>
   
-    <attribute id="CHANGED_BY" order="24" descriptionColumnName="Changed_CompletedName" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CHANGED_BY" order="23" descriptionColumnName="Changed_CompletedName" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Changed by"/>
   
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CHANGED_BY"/>
   
     </attribute>
-    <attribute id="CREATED_BY" order="25" descriptionColumnName="CreatedByName" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CREATED_BY" order="24" descriptionColumnName="CreatedByName" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Created by"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CREATED_BY"/>
     </attribute>
   
-    <attribute id="CC_OSS" order="26" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_OSS" order="25" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Over Service Standard (20 Business Days)"/>
   
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_OSS"/>
   
     </attribute>
   
-    <attribute id="CC_BusinessDaysOpen" order="27" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_BusinessDaysOpen" order="26" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Days Open"/>
   
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_BusinessDaysOpen"/>
   
     </attribute>
   
-    <attribute id="CC_ResponsiblePerson" order="28" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_ResponsiblePerson" order="27" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Responsible Person"/>
   
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_ResponsiblePerson"/>
   
     </attribute>
   
-    <attribute id="CC_WorkGroupOrder" order="29" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_WorkGroupOrder" order="28" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Work Group Order"/>
   
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_WorkGroupOrder"/>
   
     </attribute>
-    <attribute id="CC_ClientGroup" order="30" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_ClientGroup" order="29" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription=" Client Group"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_ClientGroup"/>
     </attribute>
-    <attribute id="CC_TotalsGroupName" order="31" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_TotalsGroupName" order="30" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription=" Total Group Name"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_TotalsGroupName"/>
     </attribute>
-    <attribute id="CC_WorkItemOrder" order="32" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_WorkItemOrder" order="31" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription=" Work Item Order"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_WorkItemOrder"/>
     </attribute>
-    <attribute id="CC_TotalGroupOrder" order="33" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_TotalGroupOrder" order="32" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Total Group Order"/>
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_TotalGroupOrder"/>
     </attribute>
   
-    <attribute id="CC_ABN" order="34" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_ABN" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABN"/>
   
       <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_ABN"/>
   
     </attribute>
+  
+    <attribute id="Reporting_Date" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Reporting_Date"/>
+      <localVariable>VA_ReportinDate</localVariable>
+  
+      <keyMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="Reporting_Date"/>
+  
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="CC_Days_Bt_Creation_Mod" order="10" aggregationType="sum" measureType="simple">
+    <measure id="CC_Days_Bt_Creation_Mod" order="9" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Days Between Creation"/>
       <measureMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_Days_Bt_Creation_Mod"/>
     </measure>
-    <measure id="CC_RowCount" order="16" aggregationType="sum" measureType="simple">
+    <measure id="CC_RowCount" order="15" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Row Count"/>
       <measureMapping columnObjectName="P_T_PrtWorkItemsStatic" columnName="CC_RowCount"/>
     </measure></baseMeasures>
   <calculatedMeasures>
-    <measure id="Counter" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
-      <descriptions defaultDescription="Counter"/>
-      <exceptionAggregation>
-        <attribute attributeName="WorkItemID"/>
-      </exceptionAggregation>
-      <formula>1</formula>
-      
-      
-      
-      
-      
-      
-      
-      
-      </measure>
-    <measure id="CC_WorkItemDurationAvg" order="17" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
+    <measure id="CC_WorkItemDurationAvg" order="16" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Workflow Item (Aggr. Avg.)"/>
       <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
       
@@ -240,6 +246,11 @@
       
       
       </measure>
+  
+    <measure id="Counter" order="35" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="SQL">
+      <descriptions defaultDescription="Counter"/>
+      <formula>&quot;CC_RowCount&quot;</formula>
+    </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>

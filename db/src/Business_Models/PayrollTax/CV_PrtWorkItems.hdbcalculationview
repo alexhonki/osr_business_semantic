@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:DataFoundation="http://www.sap.com/ndb/BiModelDataFoundation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtWorkItems" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_PrtWorkItems"/>
-<localVariables/>
+<localVariables>
+  <variable id="IP_KeyDate" parameter="true">
+    <descriptions defaultDescription="Key Date"/>
+    <variableProperties datatype="NVARCHAR" mandatory="false" length="8">
+      <valueDomain type="Date"/>
+      <selection multiLine="false" type="SingleValue"/>
+      <defaultRange lowValue="date(leftstr(string(now()),10))" lowExpression="true"/>
+    </variableProperties>
+  </variable>
+</localVariables>
 <variableMappings/>
 <dataSources>
   <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTasksInteractions">
@@ -65,7 +74,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Annual Return*') , 'Assessment/Reasses
 if(match(&quot;WorkItemType&quot;,'WM - 1 Reassessment') , 'Assessment/Reassessment',
 if(match(&quot;WorkItemType&quot;,'WM - 1 Refund') , 'Assessment/Reassessment',
 if(match(&quot;WorkItemType&quot;,'WM - 1 Excess Deduction') , 'Assessment/Reassessment',
-if(match(&quot;WorkItemType&quot;,'WM - 1 Payment Slips received') , 'Assessment/Reassessment',
+if(match(&quot;WorkItemType&quot;,'WM - 1 Payment Slip') , 'Assessment/Reassessment',
 if(match(&quot;WorkItemType&quot;,'WM - RTI Request') , 'Assessment/Reassessment',
 if(match(&quot;WorkItemType&quot;,'WM - 1 P9 Exemption Request') , 'Assessment/Reassessment',
 if(match(&quot;WorkItemType&quot;,'WM - 1 UTI &amp; Penalty Tax Review') , 'Defaults &amp; UTI &amp; Penalty Tax Reviews',
@@ -107,7 +116,7 @@ if(match(&quot;WorkItemType&quot;,'WF - Registration check - Update Group Relati
 if(match(&quot;WorkItemType&quot;,'WF - Rego check - BP is trying to change their applicant type') , 'Other Workflows',
 if(match(&quot;WorkItemType&quot;,'WF - Update DGE Status') , 'Other Workflows',
 if(match(&quot;WorkItemType&quot;,'WF - Registration check - ABN Manual Check Required') , 'Other Workflows',
-if(match(&quot;WorkItemType&quot;,'WF - Acknowledge - Request for Reassessment') , 'Other Workflows',
+if(match(&quot;WorkItemType&quot;,'WF - Acknowledge - Request for Reassessment') , 'Assessment/Reassessment',
 if(match(&quot;WorkItemType&quot;,'WM - 1 Returned Refund Cheques') , 'Other Whitemail',
 if(match(&quot;WorkItemType&quot;,'WM - 1 Miscellaneous') , 'Other Whitemail',
 if(match(&quot;WorkItemType&quot;,'WM - 1 2nd Requests/Urgent') , 'Other Whitemail',
@@ -139,7 +148,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*'), 'Other Whitemail',
     
       <calculatedViewAttribute id="CC_PivotCloseDate" datatype="DATE" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>if(&quot;CC_Status&quot;='Open Status',now(),&quot;Change_CompletedDate&quot;)</formula>
+        <formula>if(&quot;CC_Status&quot;='Open Status',daydate('$$IP_KeyDate$$'),&quot;Change_CompletedDate&quot;)</formula>
     
       </calculatedViewAttribute>
     
@@ -263,12 +272,19 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*'), 'Other Whitemail',
         <formula>1</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Days_Bt_Creation_ModTI" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;TXT30&quot;='Completed' or &quot;TXT30&quot;='Finalised',daysbetween(&quot;CC_Created_Date&quot;, &quot;CC_Last_Changed&quot;),daysbetween(&quot;CC_Created_Date&quot;, now()))</formula>
+        <formula>if(
+    &quot;CC_TI_Status&quot; = 'Closed Status',
+    daysbetween(&quot;CC_Created_Date&quot;, &quot;CC_Last_Changed&quot;),
+    daysbetween(&quot;CC_Created_Date&quot;, daydate('$$IP_KeyDate$$')))</formula>
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_TI_Status" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>if(&quot;TXT30&quot; = 'Completed' OR &quot;TXT30&quot; = 'Finalised', 'Closed Status', 'Open Status')</formula>
+        <formula>if(
+    (&quot;TXT30&quot; = 'Completed' OR &quot;TXT30&quot; = 'Finalised') AND daydate(&quot;CC_Last_Changed&quot;) &lt; daydate('$$IP_KeyDate$$'), 
+    'Closed Status', 
+    'Open Status'
+)</formula>
     
       </calculatedViewAttribute>
     </calculatedViewAttributes>
@@ -304,12 +320,20 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*'), 'Other Whitemail',
         <formula>1</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Days_Bt_Creation_ModWF" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(&quot;WI_STAT&quot;='COMPLETED' or &quot;WI_STAT&quot;='CANCELLED',daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;),daysbetween(&quot;CC_CreatedDate&quot;, now()))</formula>
+        <formula>if(
+    &quot;CC_StatusWF&quot; = 'Closed Status',
+    daysbetween(&quot;CC_CreatedDate&quot;, &quot;CC_CompletedDate&quot;),
+    daysbetween(&quot;CC_CreatedDate&quot;, daydate('$$IP_KeyDate$$'))
+)</formula>
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_StatusWF" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
     
-        <formula>if(&quot;WI_STAT&quot; = 'COMPLETED' OR &quot;WI_STAT&quot; = 'FINALISED' OR &quot;WI_STAT&quot; = 'CANCELLED', 'Closed Status', 'Open Status')</formula>
+        <formula>if(
+    (&quot;WI_STAT&quot; = 'COMPLETED' OR &quot;WI_STAT&quot; = 'FINALISED' OR &quot;WI_STAT&quot; = 'CANCELLED') AND daydate(&quot;CC_CompletedDate&quot;) &lt; daydate('$$IP_KeyDate$$'), 
+    'Closed Status', 
+    'Open Status'
+)</formula>
     
       </calculatedViewAttribute>
     </calculatedViewAttributes>
@@ -327,7 +351,7 @@ if(match(&quot;WorkItemType&quot;,'WM - 1 Disaster Relief*'), 'Other Whitemail',
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar"/>
-    <filter>&quot;DATE_SQL&quot; BETWEEN '2009-01-01' AND ADD_DAYS(now(),14)</filter>
+    <filter>&quot;DATE_SQL&quot; BETWEEN '2009-01-01' AND ADD_DAYS('$$IP_KeyDate$$',14)</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_CalendarWorkItems" cardinality="CN_1" joinType="inner">
     <viewAttributes>
@@ -440,7 +464,7 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Annual Return (Current)', 3,
 if(&quot;WorkItemType&quot; = 'WM - 1 Reassessment', 3,
 if(&quot;WorkItemType&quot; = 'WM - 1 Refund', 3,
 if(&quot;WorkItemType&quot; = 'WM - 1 Excess Deduction', 3,
-if(&quot;WorkItemType&quot; = 'WM - 1 Payment Slips received', 3,
+if(&quot;WorkItemType&quot; = 'WM - 1 Payment Slip', 3,
 if(&quot;WorkItemType&quot; = 'WM - RTI Request', 3,
 if(&quot;WorkItemType&quot; = 'WM - 1 P9 Exemption Request', 3,
 if(&quot;WorkItemType&quot; = 'WM - 1 UTI &amp; Penalty Tax Review', 4,
@@ -513,7 +537,7 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Annual Return (Current)', 7,
 if(&quot;WorkItemType&quot; = 'WM - 1 Reassessment', 8,
 if(&quot;WorkItemType&quot; = 'WM - 1 Refund', 9,
 if(&quot;WorkItemType&quot; = 'WM - 1 Excess Deduction', 10,
-if(&quot;WorkItemType&quot; = 'WM - 1 Payment Slips received', 11,
+if(&quot;WorkItemType&quot; = 'WM - 1 Payment Slip', 11,
 if(&quot;WorkItemType&quot; = 'WM - RTI Request', 12,
 if(&quot;WorkItemType&quot; = 'WM - 1 P9 Exemption Request', 13,
 if(&quot;WorkItemType&quot; = 'WM - 1 UTI &amp; Penalty Tax Review', 1,
@@ -559,7 +583,7 @@ if(&quot;WorkItemType&quot; = 'WF - Registration check - Update Group Relationsh
 if(&quot;WorkItemType&quot; = 'WF - Rego check - BP is trying to change their applicant type', 6,
 if(&quot;WorkItemType&quot; = 'WF - Update DGE Status', 7,
 if(&quot;WorkItemType&quot; = 'WF - Registration check - ABN Manual Check Required', 8,
-if(&quot;WorkItemType&quot; = 'WF - Acknowledge - Request for Reassessment', 5,
+if(&quot;WorkItemType&quot; = 'WF - Acknowledge - Request for Reassessment', 9,
 if(&quot;WorkItemType&quot; = 'WM - 1 Returned Refund Cheques', 1,
 if(&quot;WorkItemType&quot; = 'WM - 1 Miscellaneous', 2,
 if(&quot;WorkItemType&quot; = 'WM - 1 2nd Requests/Urgent', 3,
@@ -587,7 +611,7 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Annual Return (Current)', 'Assessment/Reas
 if(&quot;WorkItemType&quot; = 'WM - 1 Reassessment', 'Assessment/Reassessment',
 if(&quot;WorkItemType&quot; = 'WM - 1 Refund', 'Assessment/Reassessment',
 if(&quot;WorkItemType&quot; = 'WM - 1 Excess Deduction', 'Assessment/Reassessment',
-if(&quot;WorkItemType&quot; = 'WM - 1 Payment Slips received', 'Assessment/Reassessment',
+if(&quot;WorkItemType&quot; = 'WM - 1 Payment Slip', 'Assessment/Reassessment',
 if(&quot;WorkItemType&quot; = 'WM - RTI Request', 'Assessment/Reassessment',
 if(&quot;WorkItemType&quot; = 'WM - 1 P9 Exemption Request', 'Assessment/Reassessment',
 if(&quot;WorkItemType&quot; = 'WM - 1 UTI &amp; Penalty Tax Review', 'UTI &amp; Penalty Tax Reviews',
@@ -659,7 +683,7 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Annual Return (Current)', 'Client Total',
 if(&quot;WorkItemType&quot; = 'WM - 1 Reassessment', 'Client Total',
 if(&quot;WorkItemType&quot; = 'WM - 1 Refund', 'Client Total',
 if(&quot;WorkItemType&quot; = 'WM - 1 Excess Deduction', 'Client Total',
-if(&quot;WorkItemType&quot; = 'WM - 1 Payment Slips received', 'Client Total',
+if(&quot;WorkItemType&quot; = 'WM - 1 Payment Slip', 'Client Total',
 if(&quot;WorkItemType&quot; = 'WM - RTI Request', 'Client Total',
 if(&quot;WorkItemType&quot; = 'WM - 1 P9 Exemption Request', 'Client Total',
 if(&quot;WorkItemType&quot; = 'WM - 1 UTI &amp; Penalty Tax Review', 'Client Total',
@@ -732,7 +756,7 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Annual Return (Current)', 3,
 if(&quot;WorkItemType&quot; = 'WM - 1 Reassessment', 3,
 if(&quot;WorkItemType&quot; = 'WM - 1 Refund', 3,
 if(&quot;WorkItemType&quot; = 'WM - 1 Excess Deduction', 3,
-if(&quot;WorkItemType&quot; = 'WM - 1 Payment Slips received', 3,
+if(&quot;WorkItemType&quot; = 'WM - 1 Payment Slip', 3,
 if(&quot;WorkItemType&quot; = 'WM - RTI Request', 3,
 if(&quot;WorkItemType&quot; = 'WM - 1 P9 Exemption Request', 3,
 if(&quot;WorkItemType&quot; = 'WM - 1 UTI &amp; Penalty Tax Review', 4,
@@ -770,7 +794,7 @@ if(&quot;WorkItemType&quot; = 'WM - Insolvency: Ready to Default', 10,
 if(&quot;WorkItemType&quot; = 'WM - Insolvency: Liquidators Appointed', 10,
 if(&quot;WorkItemType&quot; = 'WM - Insolvency: R &amp; M Appointed', 10,
 if(&quot;WorkItemType&quot; = 'WM - Insolvency: Administrators Appointed', 10,
-if(&quot;WorkItemType&quot; = 'WF - Registration check - Pre-Liability Wages', 5,
+if(&quot;WorkItemType&quot; = 'WF - Registration check - Pre-Liability Wages', 2,
 if(&quot;WorkItemType&quot; = 'WF - Rego check - Assessment for Past Periods Required', 2,
 if(&quot;WorkItemType&quot; = 'WF - Registration check - PT-Date Exceeded Threshold', 2,
 if(&quot;WorkItemType&quot; = 'WF - Registration check - Update Group Member Relationship', 2,
@@ -778,7 +802,7 @@ if(&quot;WorkItemType&quot; = 'WF - Registration check - Update Group Relationsh
 if(&quot;WorkItemType&quot; = 'WF - Rego check - BP is trying to change their applicant type', 2,
 if(&quot;WorkItemType&quot; = 'WF - Update DGE Status', 2,
 if(&quot;WorkItemType&quot; = 'WF - Registration check - ABN Manual Check Required', 2,
-if(&quot;WorkItemType&quot; = 'WF - Acknowledge - Request for Reassessment', 3,
+if(&quot;WorkItemType&quot; = 'WF - Acknowledge - Request for Reassessment', 2,
 if(&quot;WorkItemType&quot; = 'WM - 1 Returned Refund Cheques', 7,
 if(&quot;WorkItemType&quot; = 'WM - 1 Miscellaneous', 7,
 if(&quot;WorkItemType&quot; = 'WM - 1 2nd Requests/Urgent', 7,
@@ -916,7 +940,7 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief', 7,
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ClientGroup" source="CC_ClientGroup"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_WorkGroupOrder" source="CC_WorkGroupOrder"/>
     </input>
-    <input node="Rank_1">
+    <input node="R_ABN">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_PARTNER" source="PARTNER"/>
@@ -924,7 +948,7 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief', 7,
     <joinAttribute name="CLIENT"/>
     <joinAttribute name="ACTIVITY_PARTNER"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="Rank_1">
+  <calculationView xsi:type="Calculation:RankView" id="R_ABN">
     <viewAttributes>
       <viewAttribute id="CC_ABN"/>
     
@@ -1235,12 +1259,12 @@ if(&quot;WorkItemType&quot; = 'WM - 1 Disaster Relief', 7,
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="Rank_1" modelObjectNameSpace="J_WorkItem_ABN" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="R_ABN" modelObjectNameSpace="J_WorkItem_ABN" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="144"/>
     </shape>
   
-    <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
+    <shape expanded="true" modelObjectName="R_ABN" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="115" y="394"/>
       <rectangleSize height="30" width="160"/>
     </shape>
