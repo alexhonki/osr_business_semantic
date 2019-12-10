@@ -587,6 +587,8 @@
       <viewAttribute id="UnissuedReassessment"/>
     
       <viewAttribute id="TAXYRENDDT"/>
+    
+      <viewAttribute id="UnissuedAssessmentFlag"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="FBNUMCount" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
@@ -612,17 +614,19 @@
     
       <viewAttribute id="FBNUM"/>
       <viewAttribute id="TAXYRENDDT"/>
+    
+      <viewAttribute id="UnissuedAssessmentFlag"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="EXTG" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
         <formula>if(
-    &quot;ZZ_NOIA_DATE&quot;= '00000000' and isnull(&quot;FBNUM&quot;),
+    &quot;ZZ_NOIA_DATE&quot;= '00000000' and isnull(&quot;FBNUM&quot;) and (&quot;UnissuedAssessmentFlag&quot; = '' or isnull(&quot;UnissuedAssessmentFlag&quot;)),
     '',
     if(
-        &quot;ZZ_NOIA_DATE&quot;= '00000000' and &quot;FBNUM&quot;!='' and &quot;FBNUMCount&quot; &lt;1,
+        &quot;ZZ_NOIA_DATE&quot;= '00000000' and &quot;UnissuedAssessmentFlag&quot; = 'X',
         'FTTP',
         If(
-            &quot;ZZ_NOIA_DATE&quot;&gt;=&quot;TAXYRSTARTDT&quot; and &quot;ZZ_NOIA_DATE&quot;&lt;=&quot;TAXYRENDDT&quot; and &quot;FBNUMCount&quot; &lt;1,
+            &quot;ZZ_NOIA_DATE&quot;&gt;=&quot;TAXYRSTARTDT&quot; and &quot;ZZ_NOIA_DATE&quot;&lt;=&quot;TAXYRENDDT&quot;,
             'FTTP',
             If(
                 &quot;ZZ_NOIA_DATE&quot;&lt;&quot;TAXYRSTARTDT&quot;,'EXTP',
@@ -1091,10 +1095,10 @@
       <viewAttribute id="Difference_Flag"/>
       <viewAttribute id="CC_TAX_ESTIMATE_LIABLE_COUNT" aggregationType="sum"/>
       <viewAttribute id="DNIS"/>
-      <viewAttribute id="UnissuedReassessment" aggregationType="sum"/>
       <viewAttribute id="ZZ_NOIA_DATE"/>
       <viewAttribute id="FBNUM"/>
-      <viewAttribute id="TAXYRENDDT"/></viewAttributes>
+      <viewAttribute id="TAXYRENDDT"/>
+      <viewAttribute id="UnissuedReassessment" aggregationType="sum"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="AGG_FTTP_V_EXTP_FTTP"/>
     <windowFunction dynamicPartitionAttributes="false">
@@ -1115,18 +1119,20 @@
       <viewAttribute id="Difference_Flag"/>
       <viewAttribute id="CC_TAX_ESTIMATE_LIABLE_COUNT" aggregationType="sum"/>
       <viewAttribute id="DNIS"/>
-      <viewAttribute id="UnissuedReassessment" aggregationType="sum"/>
       <viewAttribute id="ZZ_NOIA_DATE"/>
       <viewAttribute id="FBNUM"/>
       <viewAttribute id="TAXYRENDDT"/>
+    
+      <viewAttribute id="UnissuedReassessment" aggregationType="sum"/>
+      <viewAttribute id="UnissuedAssessmentFlag"/>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="FTTP" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="FTTP" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
         <formula>if(
-    &quot;ZZ_NOIA_DATE&quot;= '00000000' and isnull(&quot;FBNUM&quot;),
+    &quot;ZZ_NOIA_DATE&quot;= '00000000' and isnull(&quot;FBNUM&quot;) and (&quot;UnissuedAssessmentFlag&quot; = '' or isnull(&quot;UnissuedAssessmentFlag&quot;)),
     '',
     if(
-        &quot;ZZ_NOIA_DATE&quot;= '00000000' and &quot;FBNUM&quot;!='',
+        &quot;ZZ_NOIA_DATE&quot;= '00000000' and &quot;UnissuedAssessmentFlag&quot; = 'X',
         'FTTP',
         If(
             &quot;ZZ_NOIA_DATE&quot;&gt;=&quot;TAXYRSTARTDT&quot; and &quot;ZZ_NOIA_DATE&quot;&lt;=&quot;TAXYRENDDT&quot;,
