@@ -340,7 +340,7 @@
       <viewAttribute id="BUNDLE_ID"/></viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_APPRENTICE_TRAINEE_FLAG" datatype="VARCHAR" length="15" expressionLanguage="COLUMN_ENGINE">
-        <formula>if((&quot;C_REBATE_NETT&quot;&gt;0 or &quot;C_REBATE_CALC&quot;&gt;0),'Rebate','No Rebate')</formula>
+        <formula>if((&quot;CC_APPRENTICE_TRAINEE_WAGES&quot;&gt;0),'X','')</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="R_RETURN_DETAILS_P" emptyUnionBehavior="NO_ROW">
@@ -2429,10 +2429,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="CC_ValidTo"/>
       <viewAttribute id="CC_RelValidFrom"/>
       <viewAttribute id="CC_RelValidTo"/>
-      <viewAttribute id="CC_ValidFromAdj"/>
     
       <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
       <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
+    
+      <viewAttribute id="CC_ValidFrom"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_DefaultAssessments" datatype="NVARCHAR" length="25" expressionLanguage="COLUMN_ENGINE">
@@ -2606,10 +2607,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidTo" source="CC_ValidTo"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidFrom" source="CC_RelValidFrom"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidTo" source="CC_RelValidTo"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFromAdj" source="CC_ValidFromAdj"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
     </input>
     <input node="P_BpInfo">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PrtGroupFullName" source="CC_FullName"/>
@@ -2758,20 +2760,21 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="CC_ValidTo"/>
       <viewAttribute id="CC_RelValidFrom"/>
       <viewAttribute id="CC_RelValidTo"/>
-      <viewAttribute id="CC_ValidFromAdj"/>
       <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
       <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     
     
     
       <viewAttribute id="CC_CreatedAt"/>
-      <viewAttribute id="ERDAT"/></viewAttributes>
+      <viewAttribute id="ERDAT"/>
+      <viewAttribute id="CC_ValidFrom"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <input node="NEJ_GroupType_BPFacts"/>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>TAXPAYER</partitionViewAttributeName>
       <partitionViewAttributeName>APPLY_TO</partitionViewAttributeName>
-      <order byViewAttributeName="ERDAT" direction="DESC"/>
+      <order byViewAttributeName="CC_ValidFrom" direction="DESC"/>
       <rankThreshold>
         <value>1</value>
       </rankThreshold>
@@ -2916,7 +2919,6 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="CC_ValidTo"/>
       <viewAttribute id="CC_RelValidFrom"/>
       <viewAttribute id="CC_RelValidTo"/>
-      <viewAttribute id="CC_ValidFromAdj"/>
       <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
       <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
     
@@ -2924,7 +2926,9 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     
     
       <viewAttribute id="CC_CreatedAt"/>
-      <viewAttribute id="ERDAT"/></viewAttributes>
+      <viewAttribute id="ERDAT"/>
+      <viewAttribute id="CC_ValidFrom"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <input node="R_GroupType_Creation_Date">
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
@@ -3073,12 +3077,12 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="FT_BPGroupingType"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidTo" source="CC_ValidTo"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFromAdj" source="CC_ValidFromAdj"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
     </input>
     <joinAttribute leftColumn="MANDT" rightColumn="CLIENT" operator="EQ"/>
     <joinAttribute leftColumn="TAXPAYER" rightColumn="PARTNER" operator="EQ"/>
     <joinAttribute leftColumn="CC_DueDate" rightColumn="CC_ValidTo" operator="LE"/>
-    <joinAttribute leftColumn="CC_DueDate" rightColumn="CC_ValidFromAdj" operator="GE"/>
+    <joinAttribute leftColumn="CC_DueDate" rightColumn="CC_ValidFrom" operator="GE"/>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_GroupType_Creation_Date">
     <viewAttributes>
@@ -3245,16 +3249,12 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="FACT_SET"/>
       <viewAttribute id="FACT_TYPE"/>
       <viewAttribute id="FACT_CATEGORY"/>
+    
+      <viewAttribute id="XOBSL"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_ValidTo" datatype="NVARCHAR" expressionLanguage="SQL" length="10">
         <formula>TO_DATE(&quot;VALID_TO&quot;)</formula>
-      </calculatedViewAttribute>
-    
-      <calculatedViewAttribute id="CC_ValidFromAdj" datatype="NVARCHAR" length="10" expressionLanguage="COLUMN_ENGINE">
-    
-        <formula>if(leftstr(&quot;CC_ValidFrom&quot;,1)='9','1900-01-01',&quot;CC_ValidFrom&quot;)</formula>
-    
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_ValidFrom" datatype="NVARCHAR" expressionLanguage="SQL" length="10">
@@ -3265,7 +3265,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpFacts">
       <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="VALUE_GENERIC"/>
     </input>
-    <filter>&quot;FACT_SET&quot;='ZPTX' and &quot;FACT_TYPE&quot;='ZPRE' and &quot;FACT_CATEGORY&quot;='Z011'</filter>
+    <filter>&quot;FACT_SET&quot;='ZPTX' and &quot;FACT_TYPE&quot;='ZPRE' and &quot;FACT_CATEGORY&quot;='Z011' and &quot;XOBSL&quot;!='X'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_FiscalDate">
     <viewAttributes>
@@ -3428,10 +3428,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="CC_ValidTo"/>
       <viewAttribute id="CC_RelValidFrom"/>
       <viewAttribute id="CC_RelValidTo"/>
-      <viewAttribute id="CC_ValidFromAdj"/>
     
       <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
       <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
+    
+      <viewAttribute id="CC_ValidFrom"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_TAXR_PRTGROUPNAM">
@@ -3583,10 +3584,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidTo" source="CC_ValidTo"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidFrom" source="CC_RelValidFrom"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidTo" source="CC_RelValidTo"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFromAdj" source="CC_ValidFromAdj"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
     </input>
     <input node="P_FiscalDate">
       <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
@@ -3770,10 +3772,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <viewAttribute id="CC_ValidTo"/>
       <viewAttribute id="CC_RelValidFrom"/>
       <viewAttribute id="CC_RelValidTo"/>
-      <viewAttribute id="CC_ValidFromAdj"/>
     
       <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
       <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
+    
+      <viewAttribute id="CC_ValidFrom"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_FullYearTR" datatype="VARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
@@ -3953,10 +3956,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidTo" source="CC_ValidTo"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidFrom" source="CC_RelValidFrom"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidTo" source="CC_RelValidTo"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFromAdj" source="CC_ValidFromAdj"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
     </input>
     <input node="AGG_PTFinancialsFBN">
       <mapping xsi:type="Calculation:AttributeMapping" target="RC_APT_Raised" source="RC_APT_Raised"/>
@@ -4158,7 +4162,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_INT_WAGES_Q"/>
     </attribute>
     <attribute id="CC_APPRENTICE_TRAINEE_FLAG" key="true" order="53" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="A&amp;T Rebate Flag"/>
+      <descriptions defaultDescription="A&amp;T Wages Flag"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_APPRENTICE_TRAINEE_FLAG"/>
     </attribute>
     <attribute id="C_F_LAST_PER_START" order="70" displayAttribute="false" attributeHierarchyActive="false">
@@ -4208,9 +4212,9 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <descriptions defaultDescription="Fact BP Grouping Type"/>
       <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FT_BPGroupingType"/>
     </attribute>
-    <attribute id="CC_ValidFromAdj" order="86" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_ValidFrom" order="86" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fact BP Grouping Type Valid From"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_ValidFromAdj"/>
+      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_ValidFrom"/>
     </attribute>
     <attribute id="CC_ValidTo" order="87" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fact BP Grouping Type Valid To"/>
@@ -4470,7 +4474,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_REBATE_CALC"/>
     </measure>
     <measure id="C_REBATE_NETT" order="56" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Net Rebates"/>
+      <descriptions defaultDescription="Applied Rebate"/>
       <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_REBATE_NETT"/>
     </measure>
     <measure id="A_OTH_NON_TAX_WAGE" order="57" aggregationType="sum" measureType="simple">
