@@ -49,8 +49,8 @@
       <viewAttribute id="CC_Postcode"/>
     
       <viewAttribute id="CC_Country"/>
-      <viewAttribute id="PROPERTYCNT"/>
-      <viewAttribute id="PARCELCNT"/>
+      <viewAttribute id="INTRENOPL"/>
+      <viewAttribute id="NANO"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Tables::LTExplorer"/>
@@ -146,7 +146,16 @@
     <attribute id="CC_Postcode" order="31" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Postcode"/>
       <keyMapping columnObjectName="P_T_LTExplorer" columnName="CC_Postcode"/>
-    </attribute></attributes>
+    </attribute>
+    <attribute id="INTRENOPL" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="INTRENOPL"/>
+      <keyMapping columnObjectName="P_T_LTExplorer" columnName="INTRENOPL"/>
+    </attribute>
+    <attribute id="NANO" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NANO"/>
+      <keyMapping columnObjectName="P_T_LTExplorer" columnName="NANO"/>
+    </attribute>
+  </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="CC_AssessmentCounter" order="33" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Assessment Counter"/>
@@ -154,7 +163,7 @@
         <formula>if(&quot;CC_AssessmentStatus&quot;='Issued',1,
 if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
   
@@ -203,16 +212,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
     <measure id="ReassessmentAmountCleared" order="25" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Reassessment Amount Cleared"/>
       <measureMapping columnObjectName="P_T_LTExplorer" columnName="ReassessmentAmountCleared"/>
-    </measure>
-    <measure id="PROPERTYCNT" order="34" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Properties"/>
-      <measureMapping columnObjectName="P_T_LTExplorer" columnName="PROPERTYCNT"/>
-    </measure>
-    <measure id="PARCELCNT" order="35" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Parcels"/>
-      <measureMapping columnObjectName="P_T_LTExplorer" columnName="PARCELCNT"/>
-    </measure>
-  </baseMeasures>
+    </measure></baseMeasures>
   <calculatedMeasures>
     <measure id="CC_BPCount" order="32" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Count of BPs"/>
@@ -226,7 +226,23 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       
       
       
-      </measure></calculatedMeasures>
+      
+      </measure>
+    <measure id="PARCELCNT" order="36" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="PARCELCNT"/>
+      <exceptionAggregation>
+        <attribute attributeName="INTRENOPL"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+    <measure id="PROPERTYCNT" order="37" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="PROPERTYCNT"/>
+      <exceptionAggregation>
+        <attribute attributeName="NANO"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
   <restrictedMeasures/>
   <sortAttributes>
     <sortAttribute id="ZZ_PARTNER" direction="ASC"/>
