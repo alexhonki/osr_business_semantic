@@ -188,7 +188,7 @@
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="P_Financials_Dut" filterExpressionLanguage="COLUMN_ENGINE">
+  <calculationView xsi:type="Calculation:AggregationView" id="P_Financials_Dut" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="HVORG"/>
@@ -197,15 +197,20 @@
       <viewAttribute id="FBNUM"/>
       <viewAttribute id="DFKK_H_GPART"/>
       <viewAttribute id="KOFIZ"/>
+    
+      <viewAttribute id="VKTYP_TEXT"/>
+      <viewAttribute id="FISCAL_YEAR"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_Financials_Dut$$$$osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials$$"/>
-    <filter>IN(&quot;HVORG&quot;,'4000') 
-AND in(&quot;TVORG&quot;, '0100','0140','0146','0160','0180','0580','0581','0584')
-AND &quot;PERSL&quot; != '' 
-AND &quot;PERSL&quot; &gt; '2010' 
-AND &quot;KOFIZ&quot; = 'TD'</filter>
+    <filter>&quot;VKTYP_TEXT&quot; in ('Insurance Duty Returns','Motor Vehicle Duty Returns',
+'Other Duties','Transfer Duty Returns')
+and &quot;HVORG&quot; = '4000'
+and &quot;FISCAL_YEAR&quot; &gt;= 2010
+and &quot;TVORG&quot; in ('100','140','143','146','148','152','154','156','160','172','174',
+'180','183','186','188','192','194','196','580','581','584','1000','1001','1002')
+</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_Financials_Financials_Dut" cardinality="C1_N" joinType="inner">
     <viewAttributes>
@@ -562,8 +567,6 @@ AND &quot;KOFIZ&quot; = 'TD'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_Financials_DFKKZP" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
-      <viewAttribute id="MANDT_1"/>
-      <viewAttribute id="OPBEL_1"/>
       <viewAttribute id="BLART_1"/>
       <viewAttribute id="TFK001AT_TXT50"/>
       <viewAttribute id="MANDT"/>
@@ -898,8 +901,6 @@ AND &quot;KOFIZ&quot; = 'TD'</filter>
       <mapping xsi:type="Calculation:AttributeMapping" target="FormBundleValueCategory" source="FormBundleValueCategory"/>
     </input>
     <input node="P_DFKKZP">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT_1" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL_1" source="OPBEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BLART_1" source="BLART"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
@@ -921,10 +922,7 @@ AND &quot;KOFIZ&quot; = 'TD'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_Financials_TFK003T" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
-      <viewAttribute id="MANDT_1"/>
-      <viewAttribute id="OPBEL_1"/>
       <viewAttribute id="BLART_1"/>
-      <viewAttribute id="APPLK"/>
       <viewAttribute id="LTEXT"/>
       <viewAttribute id="TFK001AT_TXT50"/>
       <viewAttribute id="MANDT"/>
@@ -1093,8 +1091,6 @@ AND &quot;KOFIZ&quot; = 'TD'</filter>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_Financials_DFKKZP">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT_1" source="MANDT_1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL_1" source="OPBEL_1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BLART_1" source="BLART_1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TFK001AT_TXT50" source="TFK001AT_TXT50"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -1262,7 +1258,6 @@ AND &quot;KOFIZ&quot; = 'TD'</filter>
       <mapping xsi:type="Calculation:AttributeMapping" target="FormBundleValueCategory" source="FormBundleValueCategory"/>
     </input>
     <input node="P_TFK003T">
-      <mapping xsi:type="Calculation:AttributeMapping" target="APPLK" source="APPLK"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BLART_1" source="BLART"/>
@@ -1817,6 +1812,17 @@ AND &quot;KOFIZ&quot; = 'TD'</filter>
       <descriptions defaultDescription="FormBundleValueCategory"/>
       <keyMapping columnObjectName="J_Financials_TFK003T" columnName="FormBundleValueCategory"/>
     </attribute>
+  
+    <attribute id="BLART_1" order="166" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BLART_1"/>
+  
+      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="BLART_1"/>
+  
+    </attribute>
+    <attribute id="LTEXT" order="167" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LTEXT"/>
+      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="LTEXT"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -1940,6 +1946,7 @@ AND &quot;KOFIZ&quot; = 'TD'</filter>
         <attribute attributeName="MANDT"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
