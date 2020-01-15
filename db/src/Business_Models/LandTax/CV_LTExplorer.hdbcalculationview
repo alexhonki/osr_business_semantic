@@ -292,7 +292,7 @@
       <partitionViewAttributeName>TAXYR</partitionViewAttributeName>
       <order byViewAttributeName="TAXYRSTARTDT" direction="DESC"/>
       <rankThreshold>
-        <value>1000</value>
+        <value>1</value>
       </rankThreshold>
       <rankViewAttributeName>Rank_Column</rankViewAttributeName>
     </windowFunction>
@@ -356,8 +356,7 @@
     
         <formula>if(&quot;TAXESTIMATE&quot;&gt;0,'Liable','Not liable')</formula>
     
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+      </calculatedViewAttribute></calculatedViewAttributes>
     <input node="R_One_Address_Per_BP">
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
@@ -407,6 +406,10 @@
       <viewAttribute id="INTRENOPL"/>
       <viewAttribute id="NANO"/>
       <viewAttribute id="CONCESSCODE"/>
+      <viewAttribute id="BPRELVNTVAL"/>
+      <viewAttribute id="BPCONCESSVAL"/>
+      <viewAttribute id="BPTAXABLEVAL"/>
+      <viewAttribute id="ABSURCHARGE"/>
     
     
     
@@ -421,9 +424,6 @@
       <viewAttribute id="OWNERPERCENT"/>
       <viewAttribute id="ZEROVALPL"/>
       <viewAttribute id="VALTYPECN"/>
-      <viewAttribute id="BPRELVNTVAL"/>
-      <viewAttribute id="BPCONCESSVAL"/>
-      <viewAttribute id="BPTAXABLEVAL"/>
       <viewAttribute id="PROPTAXAMT"/>
       <viewAttribute id="CONCESSPCT"/>
       <viewAttribute id="LANDUSECODE"/>
@@ -437,7 +437,6 @@
       <viewAttribute id="CHDATE"/>
       <viewAttribute id="CHTIME"/>
       <viewAttribute id="PLNO"/>
-      <viewAttribute id="ABSURCHARGE"/>
       <viewAttribute id="ParcelCounter"/>
       <viewAttribute id="ExemptCounter"/>
       <viewAttribute id="OWNERTYPE"/>
@@ -454,123 +453,218 @@
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.LandTax::CV_OwnershipCnresp"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="ZZ_NOIA_DATE"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="TAXYR"/>
+      <viewAttribute id="InvoicedAmount" aggregationType="sum"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="UnpostedAmount" aggregationType="sum"/>
+      <viewAttribute id="AssessmentAmount" aggregationType="sum"/>
+      <viewAttribute id="FN_ReassessmentAmount" aggregationType="sum"/>
+      <viewAttribute id="ReassessmentAmountCleared" aggregationType="sum"/>
+      <viewAttribute id="TaxBracket"/>
+      <viewAttribute id="UnissuedAssessmentFlag"/>
+      <viewAttribute id="TAXYRENDDT"/>
+      <viewAttribute id="AssessmentAmountCleared" aggregationType="sum"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="TAXESTIMATE" aggregationType="sum"/>
+      <viewAttribute id="CC_OwnerTypeDescription"/>
+      <viewAttribute id="TOTBPRELVNTVAL" aggregationType="sum"/>
+      <viewAttribute id="TOTBPCONCESSVAL" aggregationType="sum"/>
+      <viewAttribute id="TOTBPTAXABLEVAL" aggregationType="sum"/>
+      <viewAttribute id="ABSURCHARGE" aggregationType="sum"/>
+      <viewAttribute id="ADRC_DATE_FROM"/>
+      <viewAttribute id="ADRC_DATE_TO"/>
+      <viewAttribute id="TAXRATECODE"/>
+      <viewAttribute id="CC_Locality"/>
+      <viewAttribute id="CC_Region"/>
+      <viewAttribute id="CC_Postcode"/>
+      <viewAttribute id="CC_Country"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="ADR_KIND"/>
+      <viewAttribute id="CC_AddressRank" aggregationType="sum"/>
+      <viewAttribute id="INTRENOPL"/>
+      <viewAttribute id="NANO"/>
+      <viewAttribute id="CONCESSCODE"/>
+      <viewAttribute id="All_FTTPs"/>
+      <viewAttribute id="CC_ConcessionType"/>
+      <viewAttribute id="CC_LiabilityStatus"/>
+      <viewAttribute id="Rank_Column" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$TAXYR$TAXYR"/>
+      <viewAttribute hidden="true" id="JOIN$ZZ_PARTNER$ZZ_PARTNER"/>
+      <viewAttribute hidden="true" id="JOIN$INTRENOPL$INTRENOPL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_Agg_Address_Rank_To_OWNERSHIPCNRESP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYR" source="TAXYR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENOPL" source="INTRENOPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Postcode" source="CC_Postcode"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UnpostedAmount" source="UnpostedAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="InvoicedAmount" source="InvoicedAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmount" source="AssessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FN_ReassessmentAmount" source="FN_ReassessmentAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ReassessmentAmountCleared" source="ReassessmentAmountCleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TaxBracket" source="TaxBracket"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UnissuedAssessmentFlag" source="UnissuedAssessmentFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AssessmentAmountCleared" source="AssessmentAmountCleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OwnerTypeDescription" source="CC_OwnerTypeDescription"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPRELVNTVAL" source="TOTBPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPCONCESSVAL" source="TOTBPCONCESSVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE" source="ABSURCHARGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADRC_DATE_FROM" source="ADRC_DATE_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADRC_DATE_TO" source="ADRC_DATE_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Locality" source="CC_Locality"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Region" source="CC_Region"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Country" source="CC_Country"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AddressRank" source="CC_AddressRank"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NANO" source="NANO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSCODE" source="CONCESSCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="All_FTTPs" source="All_FTTPs"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ConcessionType" source="CC_ConcessionType"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LiabilityStatus" source="CC_LiabilityStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TAXYR$TAXYR" source="TAXYR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZZ_PARTNER$ZZ_PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENOPL$INTRENOPL" source="INTRENOPL"/>
+    </input>
+    <input node="R_Agg_Address_Rank_To_OWNERSHIPCNRESP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TAXYR$TAXYR" source="TAXYR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZZ_PARTNER$ZZ_PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENOPL$INTRENOPL" source="INTRENOPL"/>
+    </input>
+    <joinAttribute name="JOIN$TAXYR$TAXYR"/>
+    <joinAttribute name="JOIN$ZZ_PARTNER$ZZ_PARTNER"/>
+    <joinAttribute name="JOIN$INTRENOPL$INTRENOPL"/>
+  </calculationView>
 </calculationViews>
-<logicalModel id="R_Agg_Address_Rank_To_OWNERSHIPCNRESP">
+<logicalModel id="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R">
   <attributes>
     <attribute id="ZZ_NOIA_DATE" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="NOIA Date"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="ZZ_NOIA_DATE"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="ZZ_NOIA_DATE"/>
     </attribute>
     <attribute id="ZZ_PARTNER" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BP no."/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="ZZ_PARTNER"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="ZZ_PARTNER"/>
     </attribute>
     <attribute id="TAXYR" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liability Year"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="TAXYR"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="TAXYR"/>
     </attribute>
     <attribute id="FBNUM" order="7" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
       <descriptions defaultDescription="Form Bundle Number"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="FBNUM"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="FBNUM"/>
     </attribute>
     <attribute id="TaxBracket" order="12" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true" replaceNullBy="Under Threshold">
       <descriptions defaultDescription="Tax Bracket"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="TaxBracket"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="TaxBracket"/>
     </attribute>
     <attribute id="UnissuedAssessmentFlag" order="13" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Unissued Assessment Flag"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="UnissuedAssessmentFlag"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="UnissuedAssessmentFlag"/>
     </attribute>
     <attribute id="TAXYRENDDT" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Year End Date"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="TAXYRENDDT"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="TAXYRENDDT"/>
     </attribute>
     <attribute id="TAXYRSTARTDT" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Year Start Date"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="TAXYRSTARTDT"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="TAXYRSTARTDT"/>
     </attribute>
     <attribute id="CC_OwnerTypeDescription" order="18" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true" replaceNullBy="No Owner Type">
       <descriptions defaultDescription="Owner Type Subcategory"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="CC_OwnerTypeDescription"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="CC_OwnerTypeDescription"/>
     </attribute>
     <attribute id="ADRC_DATE_FROM" order="25" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Address Date From"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="ADRC_DATE_FROM"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="ADRC_DATE_FROM"/>
     </attribute>
     <attribute id="ADRC_DATE_TO" order="26" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Address Date To"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="ADRC_DATE_TO"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="ADRC_DATE_TO"/>
     </attribute>
   
     <attribute id="TAXRATECODE" order="27" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Rate Code"/>
   
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="TAXRATECODE"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="TAXRATECODE"/>
   
     </attribute>
   
     <attribute id="CC_Region" order="29" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Region"/>
   
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="CC_Region"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="CC_Region"/>
   
     </attribute>
   
     <attribute id="CC_Locality" order="30" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Locality"/>
   
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="CC_Locality"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="CC_Locality"/>
   
     </attribute>
     <attribute id="CC_Postcode" order="31" replaceNull="true" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Postcode"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="CC_Postcode"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="CC_Postcode"/>
     </attribute>
     <attribute id="CC_Country" order="32" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Country"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="CC_Country"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="CC_Country"/>
     </attribute>
     <attribute id="Rank_Column" order="40" displayAttribute="false" attributeHierarchyActive="false" hidden="true">
       <descriptions defaultDescription="Rank_Column"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="Rank_Column"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="Rank_Column"/>
     </attribute>
   
     <attribute id="INTRENOPL" order="42" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="INTRENOPL"/>
   
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="INTRENOPL"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="INTRENOPL"/>
   
     </attribute>
     <attribute id="NANO" order="43" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="NANO"/>
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="NANO"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="NANO"/>
     </attribute>
   
     <attribute id="CONCESSCODE" hidden="true" order="45" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Concession Code"/>
   
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="CONCESSCODE"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="CONCESSCODE"/>
   
     </attribute>
   
     <attribute id="All_FTTPs" order="46" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Taxpayer Status"/>
   
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="All_FTTPs"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="All_FTTPs"/>
   
     </attribute>
   
     <attribute id="CC_ConcessionType" order="47" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Concession Type"/>
   
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="CC_ConcessionType"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="CC_ConcessionType"/>
   
     </attribute>
   
     <attribute id="CC_LiabilityStatus" order="48" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liability Status"/>
   
-      <keyMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="CC_LiabilityStatus"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="CC_LiabilityStatus"/>
   
     </attribute>
   </attributes>
@@ -581,7 +675,7 @@
         <formula>if(&quot;UnissuedAssessmentFlag&quot;='X' or (&quot;CC_LiabilityStatus&quot;='Liable' and isnull(&quot;FBNUM&quot;)),'Unissued',
     If(not isnull(&quot;FBNUM&quot;),'Issued','Not Assessed'))</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   
     <calculatedAttribute id="CC_Reassessment" order="23" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Reassessment Status"/>
@@ -591,7 +685,8 @@
         <formula>If(&quot;FN_ReassessmentAmountAll&quot;!=0 and not isnull(&quot;FN_ReassessmentAmountAll&quot;),'Reassessed','Not Reassessed')</formula>
   
       </keyCalculation>
-      </calculatedAttribute>
+  
+    </calculatedAttribute>
   
     <calculatedAttribute id="CC_RateType" order="28" semanticType="empty" replaceNull="true" replaceNullBy="Unclassified" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rate Type"/>
@@ -602,51 +697,52 @@
     if(&quot;TAXRATECODE&quot;='C' or &quot;TAXRATECODE&quot;='O', 'Company, Trust &amp; Absentee','Unclassified'))</formula>
   
       </keyCalculation>
-      </calculatedAttribute></calculatedAttributes>
+  
+    </calculatedAttribute></calculatedAttributes>
   <baseMeasures>
     <measure id="InvoicedAmountAll" order="6" aggregationType="sum" measureType="simple" replaceNull="true" unconverted="true">
       <descriptions defaultDescription="Invoiced Amount"/>
-      <measureMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="InvoicedAmount"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="InvoicedAmount"/>
     </measure>
     <measure id="UnpostedAmountAll" order="8" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Unposted Amount"/>
-      <measureMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="UnpostedAmount"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="UnpostedAmount"/>
     </measure>
     <measure id="AssessmentAmountAll" order="9" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Assessment Amount"/>
-      <measureMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="AssessmentAmount"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="AssessmentAmount"/>
     </measure>
     <measure id="FN_ReassessmentAmountAll" order="10" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Reassessment Amount"/>
-      <measureMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="FN_ReassessmentAmount"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="FN_ReassessmentAmount"/>
     </measure>
     <measure id="ReassessmentAmountClearedAll" order="11" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Reassessment Amount Cleared"/>
-      <measureMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="ReassessmentAmountCleared"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="ReassessmentAmountCleared"/>
     </measure>
     <measure id="AssessmentAmountClearedAll" order="15" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Assessment Amount Cleared"/>
-      <measureMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="AssessmentAmountCleared"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="AssessmentAmountCleared"/>
     </measure>
     <measure id="TAXESTIMATEAll" order="17" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Estimate Tax"/>
-      <measureMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="TAXESTIMATE"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="TAXESTIMATE"/>
     </measure>
     <measure id="TOTBPRELVNTVAL" order="19" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Total Land Value"/>
-      <measureMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="TOTBPRELVNTVAL"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="TOTBPRELVNTVAL"/>
     </measure>
     <measure id="TOTBPCONCESSVAL" order="20" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Exempt Land Value"/>
-      <measureMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="TOTBPCONCESSVAL"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="TOTBPCONCESSVAL"/>
     </measure>
     <measure id="TOTBPTAXABLEVAL" order="21" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Taxable Land Value"/>
-      <measureMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="TOTBPTAXABLEVAL"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="TOTBPTAXABLEVAL"/>
     </measure>
     <measure id="ABSURCHARGE" order="22" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Absentee Surcharge"/>
-      <measureMapping columnObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" columnName="ABSURCHARGE"/>
+      <measureMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="ABSURCHARGE"/>
     </measure></baseMeasures>
   <calculatedMeasures>
     <measure id="CC_BPCount" order="2" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
@@ -761,7 +857,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
   
     <measure id="UnpostedAmount" order="34" aggregationType="sum" datatype="DECIMAL" length="17" scale="2" baseMeasure="UnpostedAmountAll">
       <descriptions defaultDescription="Unposted Amount"/>
@@ -775,7 +871,8 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         <attributeName>Rank_Column</attributeName>
   
       </restriction>
-      </measure>
+  
+    </measure>
     <measure id="AssessmentAmount" order="35" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AssessmentAmountAll">
       <descriptions defaultDescription="Assessment Amount"/>
       <restriction logicalOperator="AND">
@@ -784,7 +881,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="FN_ReassessmentAmount" order="36" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="FN_ReassessmentAmountAll">
       <descriptions defaultDescription="Reassessment Amount"/>
       <restriction logicalOperator="AND">
@@ -793,7 +890,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="ReassessmentAmountCleared" order="37" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="ReassessmentAmountClearedAll">
       <descriptions defaultDescription="Reassessment Amount Cleared"/>
       <restriction logicalOperator="AND">
@@ -802,7 +899,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="AssessmentAmountCleared" order="38" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AssessmentAmountClearedAll">
       <descriptions defaultDescription="Assessment Amount Cleared"/>
       <restriction logicalOperator="AND">
@@ -811,7 +908,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure>
+    </measure>
     <measure id="TAXESTIMATE" order="39" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TAXESTIMATEAll">
       <descriptions defaultDescription="Estimate Tax"/>
       <restriction logicalOperator="AND">
@@ -820,7 +917,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-      </measure></restrictedMeasures>
+    </measure></restrictedMeasures>
   <sortAttributes>
     <sortAttribute id="ZZ_PARTNER" direction="ASC"/>
     <sortAttribute id="TAXYR" direction="ASC"/>
@@ -829,24 +926,24 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
 <layout>
   <shapes>
    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="275" y="112"/>
+      <upperLeftCorner x="267.8913392561102" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_BPAddresses" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="786"/>
+      <upperLeftCorner x="92" y="926.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CVContractValues" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="786"/>
+      <upperLeftCorner x="302" y="926.9999940395355"/>
       <rectangleSize height="30" width="231"/>
     </shape>
     <shape expanded="true" modelObjectName="R_One_Address_Per_BP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="315" y="501"/>
+      <upperLeftCorner x="313.18389546752474" y="641.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_CV_ContractValues_BPAddresses" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="626"/>
+      <upperLeftCorner x="118.66666666666666" y="766.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CVContractValues" modelObjectNameSpace="NEJ_CV_ContractValues_BPAddresses" modelObjectType="JoinNodeInput">
@@ -858,11 +955,11 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="252" y="236"/>
+      <upperLeftCorner x="382.7642261943104" y="350.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="252" y="341"/>
+      <upperLeftCorner x="209.43089345702356" y="481.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_One_Address_Per_BP" modelObjectNameSpace="J_Agg_Address_Rank_To_OWNERSHIPCNRESP" modelObjectType="JoinNodeInput">
@@ -874,8 +971,21 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_OwnershipCNRESP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="105" y="501"/>
+      <upperLeftCorner x="103.18389546752476" y="641.9999964237213"/>
       <rectangleSize height="30" width="160"/>
-    </shape></shapes>
+    </shape>
+    <shape expanded="true" modelObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="267.8913392561102" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP" modelObjectNameSpace="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="279" y="30"/>
+      <rectangleSize width="342.513671875"/>
+    </shape>
+    <shape modelObjectName="R_Agg_Address_Rank_To_OWNERSHIPCNRESP" modelObjectNameSpace="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="704" y="30"/>
+      <rectangleSize width="344.505859375"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
