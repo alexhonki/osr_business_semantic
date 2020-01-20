@@ -1,0 +1,130 @@
+{
+  "description": "Non-Critical Central Scheduler",
+  "responsible": {
+    "email": "dwfalerts@gmail.com"
+  },
+  "maxParallelExecution": 4,
+  "resumeBehavior": "NO_RESUME",
+  "taskList": {
+    "1": {
+      "inline": {
+        "type": "START",
+        "taskGroup": "com.sap.dwf.toe.executionControl"
+      }
+    },
+    "2": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Contract Values",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "osr.business.semantic#TC_PrtTaxReturnLoad"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "1",
+          "status": "NEUTRAL"
+        }
+      ]
+    },
+    "3": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Tasks And Interactions",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "osr.business.semantic#TC_PrtClientOverviewLoad"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "2",
+          "status": "NEUTRAL"
+        }
+      ]
+    },
+    "4": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "BP Overview",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "osr.business.semantic#TC_PrtCasesACSLoad"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "3",
+          "status": "NEUTRAL"
+        }
+      ]
+    },
+    "5": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Tax Year Preview",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "osr.business.semantic#TC_FnDebitContractAcctsAnalysisLoad"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "4",
+          "status": "NEUTRAL"
+        }
+      ]
+    },
+    "6": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Tax Year Preview",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "osr.business.semantic#TC_ContractValuesStaticLoad"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "5",
+          "status": "NEUTRAL"
+        }
+      ]
+    },
+    "7": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Tax Year Preview",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "osr.business.semantic#TC_BpOverviewStaticLoad"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "6",
+          "status": "NEUTRAL"
+        }
+      ]
+    }
+  }
+}
