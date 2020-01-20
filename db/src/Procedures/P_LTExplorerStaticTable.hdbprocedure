@@ -1,0 +1,61 @@
+PROCEDURE "osr.business.semantic.db.Procedures::P_LTExplorerStaticTable"( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+	output_table =
+	SELECT
+	"TAXYR" AS "TAXYR",
+	"TAXYRSTARTDT" AS "TAXYRSTARTDT",
+	"TAXYRENDDT" AS "TAXYRENDDT",
+	"ZZ_PARTNER" AS "ZZ_PARTNER",
+	"CC_OwnerTypeDescription" AS "CC_OwnerTypeDescription",
+	"CC_RateType" AS "CC_RateType",
+	"ZZ_NOIA_DATE" AS "ZZ_NOIA_DATE",
+	"CC_LiabilityStatus" AS "CC_LiabilityStatus",
+	"FBNUM" AS "FBNUM",
+	"TaxBracket" AS "TaxBracket",
+	"UnissuedAssessmentFlag" AS "UnissuedAssessmentFlag",
+	"CC_AssessmentStatus" AS "CC_AssessmentStatus",
+	"ADRC_DATE_FROM" AS "ADRC_DATE_FROM",
+	"ADRC_DATE_TO" AS "ADRC_DATE_TO" ,
+	"TAXRATECODE",
+	"CC_Country" AS "CC_Country",
+	"CC_Locality" AS "CC_Locality",
+	"CC_Region" AS "CC_Region",
+	"CC_Postcode" AS "CC_Postcode",
+	"CC_Reassessment" AS "CC_Reassessment",
+	SUM("CC_AssessmentCounter") AS "CC_AssessmentCounter",
+	SUM("CC_BPCount") AS "CC_BPCount",
+	SUM("TOTBPRELVNTVAL") AS "TOTBPRELVNTVAL",
+	SUM("TOTBPCONCESSVAL") AS "TOTBPCONCESSVAL",
+	SUM("TOTBPTAXABLEVAL") AS "TOTBPTAXABLEVAL",
+	SUM("TAXESTIMATE") AS "TAXESTIMATE",
+	SUM("ABSURCHARGE") AS "ABSURCHARGE",
+	SUM("UnpostedAmount") AS "UnpostedAmount",
+	SUM("AssessmentAmount") AS "AssessmentAmount",
+	SUM("FN_ReassessmentAmount") AS "FN_ReassessmentAmount",
+	SUM("ReassessmentAmountCleared") AS "ReassessmentAmountCleared",
+	SUM("AssessmentAmountCleared") AS "AssessmentAmountCleared",
+	SUM("InvoicedAmount") AS "InvoicedAmount",
+	SUM("PROPERTYCNT") AS "PROPERTYCNT",
+	"INTRENOPL",
+	"NANO",
+	SUM("PARCELCNT") AS "PARCELCNT",
+	"Rank_Column",
+	"CONCESSCODE",
+	"All_FTTPs",
+	"CC_ConcessionType"
+	
+FROM  "osr.business.semantic.db.Business_Models.LandTax::CV_LTExplorer"
+GROUP BY "TAXYR","TAXYRSTARTDT","TAXYRENDDT","ZZ_PARTNER","CC_OwnerTypeDescription","ZZ_NOIA_DATE","CC_LiabilityStatus","FBNUM","TaxBracket","UnissuedAssessmentFlag","CC_AssessmentStatus","ADRC_DATE_FROM","ADRC_DATE_TO","TAXRATECODE","CC_Country","CC_Locality","CC_Region","CC_Postcode","CC_Reassessment","CC_RateType","INTRENOPL","NANO","Rank_Column","CONCESSCODE","All_FTTPs","CC_ConcessionType";	
+
+	DELETE FROM "osr.business.semantic.db.Tables::LTExplorer";
+	
+	INSERT INTO "osr.business.semantic.db.Tables::LTExplorer"
+	SELECT * FROM :output_table;
+
+END
+
+
