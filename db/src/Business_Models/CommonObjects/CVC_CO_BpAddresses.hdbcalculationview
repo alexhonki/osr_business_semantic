@@ -1,0 +1,943 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVC_CO_BpAddresses" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="Business Partners&apos; Addresses"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.TFunctions::TF_BpExcludingRoyaltyOnly" type="TABLE_FUNCTION">
+    <resourceUri>osr.business.semantic.db.TFunctions::TF_BpExcludingRoyaltyOnly</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BUT021_FS">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BUT021_FS</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_TB010">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_TB010</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_ADRC">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_ADRC</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BUT021_FS_BUT100" cardinality="C1_N" joinType="inner" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="VALID_TO"/>
+      <viewAttribute id="ADR_KIND"/>
+      <viewAttribute id="ADDRNUMBER"/>
+      <viewAttribute id="VALID_FROM"/>
+      <viewAttribute id="XDFADU"/>
+      <viewAttribute hidden="true" id="JOIN$PARTNER$PARTNER"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.TFunctions::TF_BpExcludingRoyaltyOnly">
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER$PARTNER" source="PARTNER"/>
+    </input>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BUT021_FS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDRNUMBER" source="ADDRNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XDFADU" source="XDFADU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER$PARTNER" source="PARTNER"/>
+    </input>
+    <filter>&quot;ADR_KIND&quot; != 'ROY_AHA' and &quot;ADR_KIND&quot; != 'ROY_BUS' and &quot;ADR_KIND&quot; != 'ROY_DEF' and &quot;ADR_KIND&quot; != 'ROY_REG'</filter>
+    <joinAttribute name="JOIN$PARTNER$PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BUT021_FS_BUT100_TB010" cardinality="C1_1" joinType="textTable" languageColumn="SPRAS">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="VALID_TO" aggregationType="sum"/>
+      <viewAttribute id="ADR_KIND"/>
+      <viewAttribute id="ADDRNUMBER"/>
+      <viewAttribute id="VALID_FROM" aggregationType="sum"/>
+      <viewAttribute id="XDFADU"/>
+      <viewAttribute id="TEXTSHORT"/>
+      <viewAttribute id="TEXTLONG"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_BUT021_FS_BUT100">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDRNUMBER" source="ADDRNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XDFADU" source="XDFADU"/>
+    </input>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_TB010">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TEXTSHORT" source="TEXTSHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TEXTLONG" source="TEXTLONG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="ADR_KIND"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_ONE_ADRN_VALIDTO">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="ADDRNUMBER"/>
+      <viewAttribute id="DATE_FROM"/>
+      <viewAttribute id="DATE_TO"/>
+      <viewAttribute id="TITLE"/>
+      <viewAttribute id="NAME1"/>
+      <viewAttribute id="NAME2"/>
+      <viewAttribute id="NAME3"/>
+      <viewAttribute id="NAME4"/>
+      <viewAttribute id="NAME_CO"/>
+      <viewAttribute id="CITY1"/>
+      <viewAttribute id="CITY2"/>
+      <viewAttribute id="HOME_CITY"/>
+      <viewAttribute id="POST_CODE1"/>
+      <viewAttribute id="PO_BOX"/>
+      <viewAttribute id="PO_BOX_NUM"/>
+      <viewAttribute id="PO_BOX_LOC"/>
+      <viewAttribute id="PO_BOX_REG"/>
+      <viewAttribute id="PO_BOX_CTY"/>
+      <viewAttribute id="STREET"/>
+      <viewAttribute id="DONT_USE_S"/>
+      <viewAttribute id="HOUSE_NUM1"/>
+      <viewAttribute id="HOUSE_NUM2"/>
+      <viewAttribute id="STR_SUPPL1"/>
+      <viewAttribute id="STR_SUPPL2"/>
+      <viewAttribute id="STR_SUPPL3"/>
+      <viewAttribute id="LOCATION"/>
+      <viewAttribute id="BUILDING"/>
+      <viewAttribute id="FLOOR"/>
+      <viewAttribute id="ROOMNUMBER"/>
+      <viewAttribute id="COUNTRY"/>
+      <viewAttribute id="LANGU"/>
+      <viewAttribute id="REGION"/>
+      <viewAttribute id="ADDR_GROUP"/>
+      <viewAttribute id="PERS_ADDR"/>
+      <viewAttribute id="SORT1"/>
+      <viewAttribute id="SORT2"/>
+      <viewAttribute id="DEFLT_COMM"/>
+      <viewAttribute id="TEL_NUMBER"/>
+      <viewAttribute id="TEL_EXTENS"/>
+      <viewAttribute id="FAX_NUMBER"/>
+      <viewAttribute id="FAX_EXTENS"/>
+      <viewAttribute id="FLAGCOMM2"/>
+      <viewAttribute id="FLAGCOMM3"/>
+      <viewAttribute id="FLAGCOMM12"/>
+      <viewAttribute id="FLAGCOMM13"/>
+      <viewAttribute id="MC_NAME1"/>
+      <viewAttribute id="MC_CITY1"/>
+      <viewAttribute id="MC_STREET"/>
+      <viewAttribute id="EXTENSION1"/>
+      <viewAttribute id="EXTENSION2"/>
+      <viewAttribute id="TIME_ZONE"/>
+      <viewAttribute id="TAXJURCODE"/>
+      <viewAttribute id="LANGU_CREA"/>
+      <viewAttribute id="PO_BOX_LOBBY"/>
+      <viewAttribute id="DELI_SERV_TYPE"/>
+      <viewAttribute id="DELI_SERV_NUMBER"/>
+      <viewAttribute id="STD_ADDR_COUNTRY_2CHAR"/>
+      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
+      <viewAttribute id="STD_ADDR_BUILDING_NAME"/>
+      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY"/>
+      <viewAttribute id="STD_ADDR_PRIM_ADDRESS"/>
+      <viewAttribute id="STD_ADDR_PRIM_NAME_FULL"/>
+      <viewAttribute id="STD_ADDR_PRIM_NAME"/>
+      <viewAttribute id="STD_ADDR_PRIM_TYPE"/>
+      <viewAttribute id="STD_ADDR_PRIM_PREFIX"/>
+      <viewAttribute id="STD_ADDR_PRIM_POSTFIX"/>
+      <viewAttribute id="STD_ADDR_PRIM_NUMBER"/>
+      <viewAttribute id="STD_ADDR_LOCALITY"/>
+      <viewAttribute id="STD_ADDR_REGION"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="STD_ADDR_POSTCODE2"/>
+      <viewAttribute id="ADDR_INFO_CODE"/>
+      <viewAttribute id="ADDR_ASMT_INFO"/>
+      <viewAttribute id="ADDR_ASMT_TYPE"/>
+      <viewAttribute id="ADDR_ASMT_LEVEL"/>
+      <viewAttribute id="MATCH_ADDR_COUNTRY"/>
+      <viewAttribute id="MATCH_ADDR_POSTCODE1"/>
+      <viewAttribute id="MATCH_ADDR_REGION"/>
+      <viewAttribute id="MATCH_ADDR_LOCALITY"/>
+      <viewAttribute id="MATCH_ADDR_LOCALITY2"/>
+      <viewAttribute id="MATCH_ADDR_BUILDING"/>
+      <viewAttribute id="MATCH_ADDR_PRIM_NAME"/>
+      <viewAttribute id="MATCH_ADDR_PRIM_NAME2"/>
+      <viewAttribute id="MATCH_ADDR_PRIM_TYPE"/>
+      <viewAttribute id="MATCH_ADDR_PRIM_DIR"/>
+      <viewAttribute id="MATCH_ADDR_PRIM_NUMBER"/>
+      <viewAttribute id="MATCH_ADDR_BLOCK"/>
+      <viewAttribute id="MATCH_ADDR_STAIRWELL"/>
+      <viewAttribute id="MATCH_ADDR_FLOOR"/>
+      <viewAttribute id="MATCH_ADDR_UNIT"/>
+      <viewAttribute id="ADDR_SCRIPT_CODE"/>
+      <viewAttribute id="STD_PHONE"/>
+      <viewAttribute id="STD_PHONE2"/>
+      <viewAttribute id="PHONE_INFO_CODE"/>
+      <viewAttribute id="MATCH_PHONE"/>
+      <viewAttribute id="MATCH_PHONE2"/>
+      <viewAttribute id="ADDR_LATITUDE"/>
+      <viewAttribute id="ADDR_LONGITUDE"/>
+      <viewAttribute id="GEO_SIDE_OF_STREET"/>
+      <viewAttribute id="GEO_INFO_CODE"/>
+      <viewAttribute id="GEO_ASMT_LEVEL"/>
+      <viewAttribute id="FLAGCOMM6"/>
+      <viewAttribute id="Z_RUN_SEQ_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_ADRC"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>ADDRNUMBER</partitionViewAttributeName>
+      <order byViewAttributeName="Z_RUN_SEQ_ID" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BUT021_FS_ADRC" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="VALID_TO" aggregationType="sum"/>
+      <viewAttribute id="ADR_KIND"/>
+      <viewAttribute id="ADDRNUMBER"/>
+      <viewAttribute id="VALID_FROM" aggregationType="sum"/>
+      <viewAttribute id="XDFADU"/>
+      <viewAttribute id="TEXTSHORT"/>
+      <viewAttribute id="TEXTLONG"/>
+    
+      <viewAttribute id="DATE_FROM"/>
+      <viewAttribute id="DATE_TO"/>
+      <viewAttribute id="TITLE"/>
+      <viewAttribute id="NAME1"/>
+      <viewAttribute id="NAME2"/>
+      <viewAttribute id="NAME3"/>
+      <viewAttribute id="NAME4"/>
+      <viewAttribute id="NAME_CO"/>
+      <viewAttribute id="CITY1"/>
+      <viewAttribute id="CITY2"/>
+      <viewAttribute id="HOME_CITY"/>
+      <viewAttribute id="POST_CODE1"/>
+      <viewAttribute id="PO_BOX"/>
+      <viewAttribute id="PO_BOX_NUM"/>
+      <viewAttribute id="PO_BOX_LOC"/>
+      <viewAttribute id="PO_BOX_REG"/>
+      <viewAttribute id="PO_BOX_CTY"/>
+      <viewAttribute id="STREET"/>
+      <viewAttribute id="DONT_USE_S"/>
+      <viewAttribute id="HOUSE_NUM1"/>
+      <viewAttribute id="HOUSE_NUM2"/>
+      <viewAttribute id="STR_SUPPL1"/>
+      <viewAttribute id="STR_SUPPL2"/>
+      <viewAttribute id="STR_SUPPL3"/>
+      <viewAttribute id="LOCATION"/>
+      <viewAttribute id="BUILDING"/>
+      <viewAttribute id="FLOOR"/>
+      <viewAttribute id="ROOMNUMBER"/>
+      <viewAttribute id="COUNTRY"/>
+      <viewAttribute id="LANGU"/>
+      <viewAttribute id="REGION"/>
+      <viewAttribute id="ADDR_GROUP"/>
+      <viewAttribute id="PERS_ADDR"/>
+      <viewAttribute id="SORT1"/>
+      <viewAttribute id="SORT2"/>
+      <viewAttribute id="DEFLT_COMM"/>
+      <viewAttribute id="TEL_NUMBER"/>
+      <viewAttribute id="TEL_EXTENS"/>
+      <viewAttribute id="FAX_NUMBER"/>
+      <viewAttribute id="FAX_EXTENS"/>
+      <viewAttribute id="FLAGCOMM2"/>
+      <viewAttribute id="FLAGCOMM3"/>
+      <viewAttribute id="FLAGCOMM12"/>
+      <viewAttribute id="FLAGCOMM13"/>
+      <viewAttribute id="MC_NAME1"/>
+      <viewAttribute id="MC_CITY1"/>
+      <viewAttribute id="MC_STREET"/>
+      <viewAttribute id="EXTENSION1"/>
+      <viewAttribute id="EXTENSION2"/>
+      <viewAttribute id="TIME_ZONE"/>
+      <viewAttribute id="TAXJURCODE"/>
+      <viewAttribute id="LANGU_CREA"/>
+      <viewAttribute id="PO_BOX_LOBBY"/>
+      <viewAttribute id="DELI_SERV_TYPE"/>
+      <viewAttribute id="DELI_SERV_NUMBER"/>
+      <viewAttribute id="STD_ADDR_COUNTRY_2CHAR"/>
+      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
+      <viewAttribute id="STD_ADDR_BUILDING_NAME"/>
+      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY"/>
+      <viewAttribute id="STD_ADDR_PRIM_ADDRESS"/>
+      <viewAttribute id="STD_ADDR_PRIM_NAME_FULL"/>
+      <viewAttribute id="STD_ADDR_PRIM_NAME"/>
+      <viewAttribute id="STD_ADDR_PRIM_TYPE"/>
+      <viewAttribute id="STD_ADDR_PRIM_PREFIX"/>
+      <viewAttribute id="STD_ADDR_PRIM_POSTFIX"/>
+      <viewAttribute id="STD_ADDR_PRIM_NUMBER"/>
+      <viewAttribute id="STD_ADDR_LOCALITY"/>
+      <viewAttribute id="STD_ADDR_REGION"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="STD_ADDR_POSTCODE2"/>
+      <viewAttribute id="ADDR_INFO_CODE"/>
+      <viewAttribute id="ADDR_ASMT_INFO"/>
+      <viewAttribute id="ADDR_ASMT_TYPE"/>
+      <viewAttribute id="ADDR_ASMT_LEVEL"/>
+      <viewAttribute id="MATCH_ADDR_COUNTRY"/>
+      <viewAttribute id="MATCH_ADDR_POSTCODE1"/>
+      <viewAttribute id="MATCH_ADDR_REGION"/>
+      <viewAttribute id="MATCH_ADDR_LOCALITY"/>
+      <viewAttribute id="MATCH_ADDR_LOCALITY2"/>
+      <viewAttribute id="MATCH_ADDR_BUILDING"/>
+      <viewAttribute id="MATCH_ADDR_PRIM_NAME"/>
+      <viewAttribute id="MATCH_ADDR_PRIM_NAME2"/>
+      <viewAttribute id="MATCH_ADDR_PRIM_TYPE"/>
+      <viewAttribute id="MATCH_ADDR_PRIM_DIR"/>
+      <viewAttribute id="MATCH_ADDR_PRIM_NUMBER"/>
+      <viewAttribute id="MATCH_ADDR_BLOCK"/>
+      <viewAttribute id="MATCH_ADDR_STAIRWELL"/>
+      <viewAttribute id="MATCH_ADDR_FLOOR"/>
+      <viewAttribute id="MATCH_ADDR_UNIT"/>
+      <viewAttribute id="ADDR_SCRIPT_CODE"/>
+      <viewAttribute id="STD_PHONE"/>
+      <viewAttribute id="STD_PHONE2"/>
+      <viewAttribute id="PHONE_INFO_CODE"/>
+      <viewAttribute id="MATCH_PHONE"/>
+      <viewAttribute id="MATCH_PHONE2"/>
+      <viewAttribute id="ADDR_LATITUDE" aggregationType="sum"/>
+      <viewAttribute id="ADDR_LONGITUDE" aggregationType="sum"/>
+      <viewAttribute id="GEO_SIDE_OF_STREET"/>
+      <viewAttribute id="GEO_INFO_CODE"/>
+      <viewAttribute id="GEO_ASMT_LEVEL"/>
+      <viewAttribute id="FLAGCOMM6"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_BUT021_FS_BUT100_TB010">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDRNUMBER" source="ADDRNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XDFADU" source="XDFADU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TEXTSHORT" source="TEXTSHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TEXTLONG" source="TEXTLONG"/>
+    </input>
+    <input node="R_ONE_ADRN_VALIDTO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_FROM" source="DATE_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_TO" source="DATE_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TITLE" source="TITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME1" source="NAME1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME2" source="NAME2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME3" source="NAME3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME4" source="NAME4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME_CO" source="NAME_CO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CITY1" source="CITY1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CITY2" source="CITY2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HOME_CITY" source="HOME_CITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POST_CODE1" source="POST_CODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_BOX" source="PO_BOX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_BOX_NUM" source="PO_BOX_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_BOX_LOC" source="PO_BOX_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_BOX_REG" source="PO_BOX_REG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_BOX_CTY" source="PO_BOX_CTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STREET" source="STREET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DONT_USE_S" source="DONT_USE_S"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HOUSE_NUM1" source="HOUSE_NUM1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HOUSE_NUM2" source="HOUSE_NUM2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STR_SUPPL1" source="STR_SUPPL1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STR_SUPPL2" source="STR_SUPPL2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STR_SUPPL3" source="STR_SUPPL3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION" source="LOCATION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUILDING" source="BUILDING"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FLOOR" source="FLOOR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ROOMNUMBER" source="ROOMNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY" source="COUNTRY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LANGU" source="LANGU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_GROUP" source="ADDR_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERS_ADDR" source="PERS_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SORT1" source="SORT1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SORT2" source="SORT2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEFLT_COMM" source="DEFLT_COMM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TEL_NUMBER" source="TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TEL_EXTENS" source="TEL_EXTENS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FAX_NUMBER" source="FAX_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FAX_EXTENS" source="FAX_EXTENS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FLAGCOMM2" source="FLAGCOMM2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FLAGCOMM3" source="FLAGCOMM3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FLAGCOMM12" source="FLAGCOMM12"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FLAGCOMM13" source="FLAGCOMM13"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MC_NAME1" source="MC_NAME1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MC_CITY1" source="MC_CITY1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MC_STREET" source="MC_STREET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXTENSION1" source="EXTENSION1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXTENSION2" source="EXTENSION2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TIME_ZONE" source="TIME_ZONE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXJURCODE" source="TAXJURCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LANGU_CREA" source="LANGU_CREA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_BOX_LOBBY" source="PO_BOX_LOBBY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DELI_SERV_TYPE" source="DELI_SERV_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DELI_SERV_NUMBER" source="DELI_SERV_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_BUILDING_NAME" source="STD_ADDR_BUILDING_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME_FULL" source="STD_ADDR_PRIM_NAME_FULL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME" source="STD_ADDR_PRIM_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_TYPE" source="STD_ADDR_PRIM_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_PREFIX" source="STD_ADDR_PRIM_PREFIX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_POSTFIX" source="STD_ADDR_PRIM_POSTFIX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE2" source="STD_ADDR_POSTCODE2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_INFO_CODE" source="ADDR_INFO_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_INFO" source="ADDR_ASMT_INFO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_TYPE" source="ADDR_ASMT_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_LEVEL" source="ADDR_ASMT_LEVEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_COUNTRY" source="MATCH_ADDR_COUNTRY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BUILDING" source="MATCH_ADDR_BUILDING"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME" source="MATCH_ADDR_PRIM_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME2" source="MATCH_ADDR_PRIM_NAME2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_TYPE" source="MATCH_ADDR_PRIM_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_DIR" source="MATCH_ADDR_PRIM_DIR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BLOCK" source="MATCH_ADDR_BLOCK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_STAIRWELL" source="MATCH_ADDR_STAIRWELL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_FLOOR" source="MATCH_ADDR_FLOOR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_UNIT" source="MATCH_ADDR_UNIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_SCRIPT_CODE" source="ADDR_SCRIPT_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PHONE" source="STD_PHONE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PHONE2" source="STD_PHONE2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PHONE_INFO_CODE" source="PHONE_INFO_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE" source="MATCH_PHONE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE2" source="MATCH_PHONE2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GEO_SIDE_OF_STREET" source="GEO_SIDE_OF_STREET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GEO_INFO_CODE" source="GEO_INFO_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GEO_ASMT_LEVEL" source="GEO_ASMT_LEVEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FLAGCOMM6" source="FLAGCOMM6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDRNUMBER" source="ADDRNUMBER"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="ADDRNUMBER"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_BUT021_FS_ADRC">
+  <attributes>
+    <attribute id="CLIENT" order="1" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="CLIENT" key="true">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="PARTNER" key="true">
+      <descriptions defaultDescription="Business Partner Number"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="PARTNER"/>
+    </attribute>
+    <attribute id="VALID_TO" order="3" semanticType="empty" descriptionColumnName="VALID_TO" displayAttribute="false" attributeHierarchyActive="false" key="true">
+      <descriptions defaultDescription="Validity End of a Business Partner Address Usage"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="VALID_TO"/>
+    </attribute>
+    <attribute id="ADR_KIND" order="4" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="ADR_KIND" key="true">
+      <descriptions defaultDescription="Address Type"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="ADR_KIND"/>
+    </attribute>
+    <attribute id="ADDRNUMBER" order="5" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="ADDRNUMBER" key="true">
+      <descriptions defaultDescription="Address number"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="ADDRNUMBER"/>
+    </attribute>
+    <attribute id="VALID_FROM" order="6" semanticType="empty" descriptionColumnName="VALID_FROM" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Validity Start of a Business Partner Address Usage"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="VALID_FROM"/>
+    </attribute>
+    <attribute id="XDFADU" order="7" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="XDFADU">
+      <descriptions defaultDescription="Indicator: Standard Address Usage"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="XDFADU"/>
+    </attribute>
+    <attribute id="TEXTSHORT" order="8" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="TEXTSHORT">
+      <descriptions defaultDescription="Short name of address type"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="TEXTSHORT"/>
+    </attribute>
+    <attribute id="TEXTLONG" order="9" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="TEXTLONG">
+      <descriptions defaultDescription="Name of address type"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="TEXTLONG"/>
+    </attribute>
+    <attribute id="DATE_FROM" order="10" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="DATE_FROM">
+      <descriptions defaultDescription="Valid-from date - in current Release only 00010101 possible"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="DATE_FROM"/>
+    </attribute>
+    <attribute id="DATE_TO" order="11" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="DATE_TO">
+      <descriptions defaultDescription="Valid-to date in current Release only 99991231 possible"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="DATE_TO"/>
+    </attribute>
+    <attribute id="TITLE" order="12" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="TITLE">
+      <descriptions defaultDescription="Form-of-Address Key"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="TITLE"/>
+    </attribute>
+    <attribute id="NAME1" order="13" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="NAME1">
+      <descriptions defaultDescription="NAME1"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="NAME1"/>
+    </attribute>
+    <attribute id="NAME2" order="14" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="NAME2">
+      <descriptions defaultDescription="NAME2"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="NAME2"/>
+    </attribute>
+    <attribute id="NAME3" order="15" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="NAME3">
+      <descriptions defaultDescription="NAME3"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="NAME3"/>
+    </attribute>
+    <attribute id="NAME4" order="16" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="NAME4">
+      <descriptions defaultDescription="NAME4"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="NAME4"/>
+    </attribute>
+    <attribute id="NAME_CO" order="17" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="NAME_CO">
+      <descriptions defaultDescription="c/o name"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="NAME_CO"/>
+    </attribute>
+    <attribute id="CITY1" order="18" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="CITY1">
+      <descriptions defaultDescription="City"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="CITY1"/>
+    </attribute>
+    <attribute id="CITY2" order="19" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="CITY2">
+      <descriptions defaultDescription="District"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="CITY2"/>
+    </attribute>
+    <attribute id="HOME_CITY" order="20" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="HOME_CITY">
+      <descriptions defaultDescription="City (different from postal city)"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="HOME_CITY"/>
+    </attribute>
+    <attribute id="POST_CODE1" order="21" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="POST_CODE1">
+      <descriptions defaultDescription="City postal code"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="POST_CODE1"/>
+    </attribute>
+    <attribute id="PO_BOX" order="22" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="PO_BOX">
+      <descriptions defaultDescription="PO Box"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="PO_BOX"/>
+    </attribute>
+    <attribute id="PO_BOX_NUM" order="23" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="PO_BOX_NUM">
+      <descriptions defaultDescription="Flag: PO Box Without Number"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="PO_BOX_NUM"/>
+    </attribute>
+    <attribute id="PO_BOX_LOC" order="24" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="PO_BOX_LOC">
+      <descriptions defaultDescription="PO Box city"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="PO_BOX_LOC"/>
+    </attribute>
+    <attribute id="PO_BOX_REG" order="25" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="PO_BOX_REG">
+      <descriptions defaultDescription="Region for PO Box (Country, State, Province, ...)"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="PO_BOX_REG"/>
+    </attribute>
+    <attribute id="PO_BOX_CTY" order="26" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="PO_BOX_CTY">
+      <descriptions defaultDescription="PO box country"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="PO_BOX_CTY"/>
+    </attribute>
+    <attribute id="STREET" order="27" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STREET">
+      <descriptions defaultDescription="Street"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STREET"/>
+    </attribute>
+    <attribute id="DONT_USE_S" order="28" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="DONT_USE_S">
+      <descriptions defaultDescription="Street Address Undeliverable Flag"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="DONT_USE_S"/>
+    </attribute>
+    <attribute id="HOUSE_NUM1" order="29" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="HOUSE_NUM1">
+      <descriptions defaultDescription="House Number"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="HOUSE_NUM1"/>
+    </attribute>
+    <attribute id="HOUSE_NUM2" order="30" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="HOUSE_NUM2">
+      <descriptions defaultDescription="ouse number supplement"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="HOUSE_NUM2"/>
+    </attribute>
+    <attribute id="STR_SUPPL1" order="31" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STR_SUPPL1">
+      <descriptions defaultDescription="Street 2"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STR_SUPPL1"/>
+    </attribute>
+    <attribute id="STR_SUPPL2" order="32" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STR_SUPPL2">
+      <descriptions defaultDescription="Street 3"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STR_SUPPL2"/>
+    </attribute>
+    <attribute id="STR_SUPPL3" order="33" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STR_SUPPL3">
+      <descriptions defaultDescription="Street 4"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STR_SUPPL3"/>
+    </attribute>
+    <attribute id="LOCATION" order="34" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="LOCATION">
+      <descriptions defaultDescription="Street 5"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="LOCATION"/>
+    </attribute>
+    <attribute id="BUILDING" order="35" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="BUILDING">
+      <descriptions defaultDescription="Building (Number or Code)"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="BUILDING"/>
+    </attribute>
+    <attribute id="FLOOR" order="36" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="FLOOR">
+      <descriptions defaultDescription="Floor in building"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="FLOOR"/>
+    </attribute>
+    <attribute id="ROOMNUMBER" order="37" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="ROOMNUMBER">
+      <descriptions defaultDescription="Room or Appartment Number"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="ROOMNUMBER"/>
+    </attribute>
+    <attribute id="COUNTRY" order="38" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="COUNTRY">
+      <descriptions defaultDescription="Country Key"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="COUNTRY"/>
+    </attribute>
+    <attribute id="LANGU" order="39" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="LANGU">
+      <descriptions defaultDescription="Language Key"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="LANGU"/>
+    </attribute>
+    <attribute id="REGION" order="40" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="REGION">
+      <descriptions defaultDescription="Region (State, Province, County)"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="REGION"/>
+    </attribute>
+    <attribute id="ADDR_GROUP" order="41" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="ADDR_GROUP">
+      <descriptions defaultDescription="Address Group (Key) (Business Address Services)"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="ADDR_GROUP"/>
+    </attribute>
+    <attribute id="PERS_ADDR" order="42" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="PERS_ADDR">
+      <descriptions defaultDescription="PERS_ADDR"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="PERS_ADDR"/>
+    </attribute>
+    <attribute id="SORT1" order="43" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="SORT1">
+      <descriptions defaultDescription="Search Term 1"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="SORT1"/>
+    </attribute>
+    <attribute id="SORT2" order="44" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="SORT2">
+      <descriptions defaultDescription="Search Term 2"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="SORT2"/>
+    </attribute>
+    <attribute id="DEFLT_COMM" order="45" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="DEFLT_COMM">
+      <descriptions defaultDescription="Communication Method (Key) (Business Address Services)"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="DEFLT_COMM"/>
+    </attribute>
+    <attribute id="TEL_NUMBER" order="46" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="TEL_NUMBER">
+      <descriptions defaultDescription="First telephone no.: dialling code+number"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="TEL_NUMBER"/>
+    </attribute>
+    <attribute id="TEL_EXTENS" order="47" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="TEL_EXTENS">
+      <descriptions defaultDescription="First Telephone No.: Extension"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="TEL_EXTENS"/>
+    </attribute>
+    <attribute id="FAX_NUMBER" order="48" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="FAX_NUMBER">
+      <descriptions defaultDescription="First fax no.: dialling code+number"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="FAX_NUMBER"/>
+    </attribute>
+    <attribute id="FAX_EXTENS" order="49" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="FAX_EXTENS">
+      <descriptions defaultDescription="First fax no.: extension"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="FAX_EXTENS"/>
+    </attribute>
+    <attribute id="FLAGCOMM2" order="50" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="FLAGCOMM2">
+      <descriptions defaultDescription="Flag: Telephone number(s) defined"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="FLAGCOMM2"/>
+    </attribute>
+    <attribute id="FLAGCOMM3" order="51" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="FLAGCOMM3">
+      <descriptions defaultDescription="Flag: Fax number(s) defined"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="FLAGCOMM3"/>
+    </attribute>
+    <attribute id="FLAGCOMM12" order="52" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="FLAGCOMM12">
+      <descriptions defaultDescription="Flag: URI/FTP address defined"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="FLAGCOMM12"/>
+    </attribute>
+    <attribute id="FLAGCOMM13" order="53" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="FLAGCOMM13">
+      <descriptions defaultDescription="Flag: Pager address defined"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="FLAGCOMM13"/>
+    </attribute>
+    <attribute id="MC_NAME1" order="54" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MC_NAME1">
+      <descriptions defaultDescription="Name (Field NAME1) in Uppercase for Search Help"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MC_NAME1"/>
+    </attribute>
+    <attribute id="MC_CITY1" order="55" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MC_CITY1">
+      <descriptions defaultDescription="City name in Uppercase for Search Help"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MC_CITY1"/>
+    </attribute>
+    <attribute id="MC_STREET" order="56" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MC_STREET">
+      <descriptions defaultDescription="Street Name in Uppercase for Search Help"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MC_STREET"/>
+    </attribute>
+    <attribute id="EXTENSION1" order="57" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="EXTENSION1">
+      <descriptions defaultDescription="Extension (only for data conversion) (e.g. data line)"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="EXTENSION1"/>
+    </attribute>
+    <attribute id="EXTENSION2" order="58" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="EXTENSION2">
+      <descriptions defaultDescription="Extension (only for data conversion) (e.g. telebox)"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="EXTENSION2"/>
+    </attribute>
+    <attribute id="TIME_ZONE" order="59" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="TIME_ZONE">
+      <descriptions defaultDescription="Address time zone"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="TIME_ZONE"/>
+    </attribute>
+    <attribute id="TAXJURCODE" order="60" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="TAXJURCODE">
+      <descriptions defaultDescription="Tax Jurisdiction"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="TAXJURCODE"/>
+    </attribute>
+    <attribute id="LANGU_CREA" order="61" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="LANGU_CREA">
+      <descriptions defaultDescription="Address record creation original language"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="LANGU_CREA"/>
+    </attribute>
+    <attribute id="PO_BOX_LOBBY" order="62" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="PO_BOX_LOBBY">
+      <descriptions defaultDescription="PO Box Lobby"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="PO_BOX_LOBBY"/>
+    </attribute>
+    <attribute id="DELI_SERV_TYPE" order="63" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="DELI_SERV_TYPE">
+      <descriptions defaultDescription="Type of Delivery Service"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="DELI_SERV_TYPE"/>
+    </attribute>
+    <attribute id="DELI_SERV_NUMBER" order="64" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="DELI_SERV_NUMBER">
+      <descriptions defaultDescription="Number of Delivery Service"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="DELI_SERV_NUMBER"/>
+    </attribute>
+    <attribute id="STD_ADDR_COUNTRY_2CHAR" order="65" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_COUNTRY_2CHAR">
+      <descriptions defaultDescription="Standard Address Country"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_COUNTRY_2CHAR"/>
+    </attribute>
+    <attribute id="STD_ADDR_COUNTRY_NAME" order="66" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_COUNTRY_NAME">
+      <descriptions defaultDescription="Standard Address Country Name"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_COUNTRY_NAME"/>
+    </attribute>
+    <attribute id="STD_ADDR_BUILDING_NAME" order="67" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_BUILDING_NAME">
+      <descriptions defaultDescription="Standard Address Building Name"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_BUILDING_NAME"/>
+    </attribute>
+    <attribute id="STD_ADDR_ADDRESS_DELIVERY" order="68" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_ADDRESS_DELIVERY">
+      <descriptions defaultDescription="Standard Address Address Delivery"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_ADDRESS_DELIVERY"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_ADDRESS" order="69" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_PRIM_ADDRESS">
+      <descriptions defaultDescription="Standard Address Primary Address"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_PRIM_ADDRESS"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_NAME_FULL" order="70" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_PRIM_NAME_FULL">
+      <descriptions defaultDescription="Standard Address Primary Name Full"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_PRIM_NAME_FULL"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_NAME" order="71" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_PRIM_NAME">
+      <descriptions defaultDescription="Standard Address Primary Name"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_PRIM_NAME"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_TYPE" order="72" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_PRIM_TYPE">
+      <descriptions defaultDescription="Standard Address Primary Type"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_PRIM_TYPE"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_PREFIX" order="73" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_PRIM_PREFIX">
+      <descriptions defaultDescription="Standard Address Primary Prefix"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_PRIM_PREFIX"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_POSTFIX" order="74" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_PRIM_POSTFIX">
+      <descriptions defaultDescription="Standard Address Primary Postfix"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_PRIM_POSTFIX"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_NUMBER" order="75" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_PRIM_NUMBER">
+      <descriptions defaultDescription="Standard Address Primary Number"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_PRIM_NUMBER"/>
+    </attribute>
+    <attribute id="STD_ADDR_LOCALITY" order="76" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_LOCALITY">
+      <descriptions defaultDescription="Standard Address Locality"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_LOCALITY"/>
+    </attribute>
+    <attribute id="STD_ADDR_REGION" order="77" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_REGION">
+      <descriptions defaultDescription="Standard Address Region"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_REGION"/>
+    </attribute>
+    <attribute id="STD_ADDR_POSTCODE1" order="78" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_POSTCODE1">
+      <descriptions defaultDescription="Standard Address Postcode 1"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_POSTCODE1"/>
+    </attribute>
+    <attribute id="STD_ADDR_POSTCODE2" order="79" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_ADDR_POSTCODE2">
+      <descriptions defaultDescription="Standard Address Postcode 2"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_ADDR_POSTCODE2"/>
+    </attribute>
+    <attribute id="ADDR_INFO_CODE" order="80" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="ADDR_INFO_CODE">
+      <descriptions defaultDescription="Address Info Code"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="ADDR_INFO_CODE"/>
+    </attribute>
+    <attribute id="ADDR_ASMT_INFO" order="81" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="ADDR_ASMT_INFO">
+      <descriptions defaultDescription="Address ASMT Info"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="ADDR_ASMT_INFO"/>
+    </attribute>
+    <attribute id="ADDR_ASMT_TYPE" order="82" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="ADDR_ASMT_TYPE">
+      <descriptions defaultDescription="Address ASMT Type"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="ADDR_ASMT_TYPE"/>
+    </attribute>
+    <attribute id="ADDR_ASMT_LEVEL" order="83" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="ADDR_ASMT_LEVEL">
+      <descriptions defaultDescription="Address ASMT Level"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="ADDR_ASMT_LEVEL"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_COUNTRY" order="84" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_COUNTRY">
+      <descriptions defaultDescription="Match Address County"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_COUNTRY"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_POSTCODE1" order="85" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_POSTCODE1">
+      <descriptions defaultDescription="Match Address Postcode"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_POSTCODE1"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_REGION" order="86" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_REGION">
+      <descriptions defaultDescription="Match Address Region"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_REGION"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_LOCALITY" order="87" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_LOCALITY">
+      <descriptions defaultDescription="Match Address Locality"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_LOCALITY"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_LOCALITY2" order="88" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_LOCALITY2">
+      <descriptions defaultDescription="Match Address Locality 2"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_LOCALITY2"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_BUILDING" order="89" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_BUILDING">
+      <descriptions defaultDescription="Match Address Building"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_BUILDING"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_PRIM_NAME" order="90" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_PRIM_NAME">
+      <descriptions defaultDescription="Match Address Primary Name"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_PRIM_NAME"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_PRIM_NAME2" order="91" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_PRIM_NAME2">
+      <descriptions defaultDescription="Match Address Primary Name 2"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_PRIM_NAME2"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_PRIM_TYPE" order="92" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_PRIM_TYPE">
+      <descriptions defaultDescription="Match Address Primary Type"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_PRIM_TYPE"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_PRIM_DIR" order="93" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_PRIM_DIR">
+      <descriptions defaultDescription="Match Address Primary Dir"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_PRIM_DIR"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_PRIM_NUMBER" order="94" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_PRIM_NUMBER">
+      <descriptions defaultDescription="Match Address Primary Number"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_PRIM_NUMBER"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_BLOCK" order="95" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_BLOCK">
+      <descriptions defaultDescription="Match Address Block"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_BLOCK"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_STAIRWELL" order="96" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_STAIRWELL">
+      <descriptions defaultDescription="Match Address Stairwell"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_STAIRWELL"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_FLOOR" order="97" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_FLOOR">
+      <descriptions defaultDescription="Match Address Floor"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_FLOOR"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_UNIT" order="98" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_ADDR_UNIT">
+      <descriptions defaultDescription="Match Address Unit"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_ADDR_UNIT"/>
+    </attribute>
+    <attribute id="ADDR_SCRIPT_CODE" order="99" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="ADDR_SCRIPT_CODE">
+      <descriptions defaultDescription="Address Script Code"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="ADDR_SCRIPT_CODE"/>
+    </attribute>
+    <attribute id="STD_PHONE" order="100" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_PHONE">
+      <descriptions defaultDescription="Standard Phone"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_PHONE"/>
+    </attribute>
+    <attribute id="STD_PHONE2" order="101" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="STD_PHONE2">
+      <descriptions defaultDescription="Standard Phone 2"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="STD_PHONE2"/>
+    </attribute>
+    <attribute id="PHONE_INFO_CODE" order="102" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="PHONE_INFO_CODE">
+      <descriptions defaultDescription="Phone Info Code"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="PHONE_INFO_CODE"/>
+    </attribute>
+    <attribute id="MATCH_PHONE" order="103" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_PHONE">
+      <descriptions defaultDescription="Match Phone"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_PHONE"/>
+    </attribute>
+    <attribute id="MATCH_PHONE2" order="104" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="MATCH_PHONE2">
+      <descriptions defaultDescription="Match Phone 2"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="MATCH_PHONE2"/>
+    </attribute>
+    <attribute id="ADDR_LATITUDE" order="105" semanticType="geoLocation.latitude" descriptionColumnName="ADDR_LATITUDE" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Address Latitude"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="ADDR_LATITUDE"/>
+    </attribute>
+    <attribute id="ADDR_LONGITUDE" order="106" semanticType="geoLocation.longitude" descriptionColumnName="ADDR_LONGITUDE" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Address Longitude"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="ADDR_LONGITUDE"/>
+    </attribute>
+    <attribute id="GEO_SIDE_OF_STREET" order="107" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="GEO_SIDE_OF_STREET">
+      <descriptions defaultDescription="Geo Side of Street"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="GEO_SIDE_OF_STREET"/>
+    </attribute>
+    <attribute id="GEO_INFO_CODE" order="108" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="GEO_INFO_CODE">
+      <descriptions defaultDescription="Geo Info Code"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="GEO_INFO_CODE"/>
+    </attribute>
+    <attribute id="GEO_ASMT_LEVEL" order="109" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="GEO_ASMT_LEVEL">
+      <descriptions defaultDescription="Geo ASMT Level"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="GEO_ASMT_LEVEL"/>
+    </attribute>
+    <attribute id="FLAGCOMM6" order="110" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="FLAGCOMM6">
+      <descriptions defaultDescription="Flag: E-mail address(es) defined"/>
+      <keyMapping columnObjectName="J_BUT021_FS_ADRC" columnName="FLAGCOMM6"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures>
+    <measure id="CC_BP_COUNTER" order="111" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="CC_BP_COUNTER"/>
+      <exceptionAggregation>
+        <attribute attributeName="PARTNER"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+    <measure id="CC_COUNTER" order="112" aggregationType="sum" measureType="simple" aggregatable="true" datatype="INTEGER" expressionLanguage="SQL">
+      <descriptions defaultDescription="Counter"/>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="213" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_BUT021_FS_BUT100" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="516"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.TFunctions::TF_BpExcludingRoyaltyOnly" modelObjectNameSpace="J_BUT021_FS_BUT100" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="453" y="22"/>
+      <rectangleSize width="554"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BUT021_FS" modelObjectNameSpace="J_BUT021_FS_BUT100" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="920" y="30"/>
+      <rectangleSize width="451"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BUT021_FS_BUT100_TB010" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BUT021_FS_BUT100" modelObjectNameSpace="J_BUT021_FS_BUT100_TB010" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="195"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_TB010" modelObjectNameSpace="J_BUT021_FS_BUT100_TB010" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="523"/>
+    </shape>
+    <shape expanded="true" modelObjectName="R_ONE_ADRN_VALIDTO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="301" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BUT021_FS_ADRC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="213" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BUT021_FS_BUT100_TB010" modelObjectNameSpace="J_BUT021_FS_ADRC" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="238"/>
+    </shape>
+    <shape modelObjectName="R_ONE_ADRN_VALIDTO" modelObjectNameSpace="J_BUT021_FS_ADRC" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="204"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
