@@ -1,7 +1,7 @@
 FUNCTION "osr.business.semantic.db.TFunctions::TF_LtFinancials"( )
        RETURNS table (
        	"MANDT" NVARCHAR(3),
-       	"DFKK_H_GPART" NVARCHAR(10),
+		"GPART" NVARCHAR(10),
        	"FBNUM" NVARCHAR(12),
        	"PERSL" NVARCHAR(4),
        	"BETRH" DECIMAL(13,2),
@@ -12,15 +12,15 @@ FUNCTION "osr.business.semantic.db.TFunctions::TF_LtFinancials"( )
 BEGIN 
 
 RETURN
-		SELECT "a"."MANDT", "a"."DFKK_H_GPART", "a"."FBNUM", "b"."PERSL", SUM("a"."BETRH") AS "BETRH", SUM("a"."AUGBT") AS "AUGBT"
-		FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials" AS "a"
+		SELECT "a"."MANDT", "a"."GPART", "a"."FBNUM", "b"."PERSL", SUM("a"."BETRH") AS "BETRH", SUM("a"."AUGBT") AS "AUGBT"
+		FROM "osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_Financials" AS "a"
 			INNER JOIN
 		(
-			SELECT DISTINCT "FBNUM", "DFKK_H_GPART", "PERSL"
-			FROM "osr.business.semantic.db.Business_Models.CommonObjects::CV_Financials"
+			SELECT DISTINCT "FBNUM", "GPART", "PERSL"
+			FROM "osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_Financials"
 			WHERE "HVORG" = '4000' AND "TVORG" = '0150' AND "PERSL" <> '' AND "PERSL" <> '2010' AND "KOFIZ" = 'LT'
 		) AS "b"
-		ON "a"."FBNUM" = "b"."FBNUM" AND "a"."DFKK_H_GPART" = "b"."DFKK_H_GPART"
+		ON "a"."FBNUM" = "b"."FBNUM" AND "a"."GPART" = "b"."GPART"
 		WHERE "a"."HVORG" = '4000'
-		GROUP BY "a"."MANDT", "a"."DFKK_H_GPART", "a"."FBNUM", "b"."PERSL";
+		GROUP BY "a"."MANDT", "a"."GPART", "a"."FBNUM", "b"."PERSL";
 END;

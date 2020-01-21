@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CrmBusinessTransaction" applyPrivilegeType="NONE" dataCategory="DIMENSION" schemaVersion="3.0" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" outputViewType="Projection">
+<descriptions defaultDescription="CRM Business Transaction"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.synonyms::CRMD_ORDERADM_H">
+    <resourceUri>osr.business.semantic.db.synonyms::CRMD_ORDERADM_H</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::CRMC_PROC_TYPE_T">
+    <resourceUri>osr.business.semantic.db.synonyms::CRMC_PROC_TYPE_T</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMD_ORDERADM_H" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="GUID"/>
+      <viewAttribute id="OBJECT_ID"/>
+      <viewAttribute id="PROCESS_TYPE"/>
+      <viewAttribute id="CREATED_AT"/>
+      <viewAttribute id="CREATED_BY"/>
+      <viewAttribute id="CHANGED_AT"/>
+      <viewAttribute id="CHANGED_BY"/>
+      <viewAttribute id="ARCHIVING_FLAG"/>
+      <viewAttribute id="DESCRIPTION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::CRMD_ORDERADM_H"/>
+    <filter>&quot;CLIENT&quot;='400'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMC_PROC_TYPE_T" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="LANGU"/>
+      <viewAttribute id="PROCESS_TYPE"/>
+      <viewAttribute id="P_DESCRIPTION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::CRMC_PROC_TYPE_T"/>
+    <filter>&quot;CLIENT&quot;='400' and &quot;LANGU&quot;='E'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" cardinality="C1_1" joinType="textTable" languageColumn="LANGU">
+    <viewAttributes>
+      <viewAttribute id="GUID"/>
+      <viewAttribute id="OBJECT_ID"/>
+      <viewAttribute id="PROCESS_TYPE"/>
+      <viewAttribute id="CREATED_AT"/>
+      <viewAttribute id="CREATED_BY"/>
+      <viewAttribute id="CHANGED_AT"/>
+      <viewAttribute id="CHANGED_BY"/>
+      <viewAttribute id="ARCHIVING_FLAG"/>
+      <viewAttribute id="DESCRIPTION"/>
+      <viewAttribute id="P_DESCRIPTION"/>
+    
+      <viewAttribute id="CLIENT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CRMD_ORDERADM_H">
+      <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJECT_ID" source="OBJECT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_TYPE" source="PROCESS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_AT" source="CREATED_AT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED_BY" source="CREATED_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGED_AT" source="CHANGED_AT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGED_BY" source="CHANGED_BY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ARCHIVING_FLAG" source="ARCHIVING_FLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <input node="P_CRMC_PROC_TYPE_T">
+      <mapping xsi:type="Calculation:AttributeMapping" target="P_DESCRIPTION" source="P_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_TYPE" source="PROCESS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PROCESS_TYPE"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T">
+  <attributes>
+    <attribute id="CLIENT" key="true" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CLIENT"/>
+      <keyMapping columnObjectName="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="GUID" order="2" displayAttribute="false" attributeHierarchyActive="false" key="true">
+      <descriptions defaultDescription="GUID of a CRM Order Object"/>
+      <keyMapping columnObjectName="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" columnName="GUID"/>
+    </attribute>
+    <attribute id="OBJECT_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Transaction ID"/>
+      <keyMapping columnObjectName="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" columnName="OBJECT_ID"/>
+    </attribute>
+    <attribute id="PROCESS_TYPE" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Transaction Type"/>
+      <keyMapping columnObjectName="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" columnName="PROCESS_TYPE"/>
+    </attribute>
+    <attribute id="CREATED_AT" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Created At (Output in User Time Zone)"/>
+      <keyMapping columnObjectName="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" columnName="CREATED_AT"/>
+    </attribute>
+    <attribute id="CREATED_BY" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="User that Created the Transaction"/>
+      <keyMapping columnObjectName="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" columnName="CREATED_BY"/>
+    </attribute>
+    <attribute id="CHANGED_AT" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Changed At (Output in User Time Zone)"/>
+      <keyMapping columnObjectName="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" columnName="CHANGED_AT"/>
+    </attribute>
+    <attribute id="CHANGED_BY" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Transaction Last Changed By"/>
+      <keyMapping columnObjectName="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" columnName="CHANGED_BY"/>
+    </attribute>
+    <attribute id="ARCHIVING_FLAG" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Indicator Whether the Business Transaction Can Be Archived"/>
+      <keyMapping columnObjectName="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" columnName="ARCHIVING_FLAG"/>
+    </attribute>
+    <attribute id="DESCRIPTION" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Transaction Description"/>
+      <keyMapping columnObjectName="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" columnName="DESCRIPTION"/>
+    </attribute>
+    <attribute id="P_DESCRIPTION" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Transaction Type Description"/>
+      <keyMapping columnObjectName="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" columnName="P_DESCRIPTION"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_Created_Date" order="12" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Created Date"/>
+      <keyCalculation datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+        <formula>leftstr(string(&quot;CREATED_AT&quot;),8)</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+    <calculatedAttribute id="CC_Last_Changed" order="13" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Last Changed Date"/>
+      <keyCalculation datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+        <formula>leftstr(string(&quot;CHANGED_AT&quot;),8)</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+    <calculatedAttribute id="CC_LT_Type" order="14" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Land Tax Type"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="40">
+        <formula>if(match(&quot;DESCRIPTION&quot;,'*LT11*') OR match(&quot;DESCRIPTION&quot;,'*LT_11*') OR match(&quot;DESCRIPTION&quot;,'*LT 11*'), 'LT11',
+if(match(&quot;DESCRIPTION&quot;,'*LT12*') and not match(&quot;DESCRIPTION&quot;,'*First Claim*'), 'LT12',
+if(match(&quot;DESCRIPTION&quot;,'*First Claim*') , 'LT12 First Claim',
+if(match(&quot;DESCRIPTION&quot;,'*LT13*') , 'LT13',
+if(match(&quot;DESCRIPTION&quot;,'*LT15*') , 'LT15',
+if(match(&quot;DESCRIPTION&quot;,'*LT16*') or match(&quot;DESCRIPTION&quot;,'*Absentee*'), 'LT16',
+if(match(&quot;DESCRIPTION&quot;,'*LT18*') , 'LT18',
+if(match(&quot;DESCRIPTION&quot;,'*LT19*') , 'LT19',
+if(match(&quot;DESCRIPTION&quot;,'*LT20*') , 'LT20',
+if(match(&quot;DESCRIPTION&quot;,'*LT21*') , 'LT21',
+if(match(&quot;DESCRIPTION&quot;,'*Complaint*') , 'Complaint',
+if(match(&quot;DESCRIPTION&quot;,'*Complex*') , 'Complex',
+if(match(&quot;DESCRIPTION&quot;,'*Compliance*') or match(&quot;DESCRIPTION&quot;,'*LAN2*') , 'Compliance',
+if(match(&quot;DESCRIPTION&quot;,'*Deceased*') , 'Deceased',
+if(match(&quot;DESCRIPTION&quot;,'*Disaster*') , 'Disaster',
+if(match(&quot;DESCRIPTION&quot;,'*Ownership*') , 'Dispute - Ownership',
+if(match(&quot;DESCRIPTION&quot;,'*Share Interest*') , 'Dispute - Share Interest',
+if(match(&quot;DESCRIPTION&quot;,'*Valuation*') , 'Dispute - Valuation',
+if(match(&quot;DESCRIPTION&quot;,'*Duplicate*') , 'Duplicate',
+if(match(&quot;DESCRIPTION&quot;,'*Email Assessment*') OR match(&quot;DESCRIPTION&quot;,'*Email Assmnt*'), 'Email Assessment',
+if(match(&quot;DESCRIPTION&quot;,'*EPO *') , 'EPO',
+if(match(&quot;DESCRIPTION&quot;,'*EPO*') , 'EPO',
+if(match(&quot;DESCRIPTION&quot;,'*Compliance*') or match(&quot;DESCRIPTION&quot;,'*LAN1*') or match(&quot;DESCRIPTION&quot;,'*LAN2*') or match(&quot;DESCRIPTION&quot;,'*LAN3*') or match(&quot;DESCRIPTION&quot;,'*LAN4*') or match(&quot;DESCRIPTION&quot;,'*LAN5*') or match(&quot;DESCRIPTION&quot;,'*LAN6*'),  'Compliance',
+if(match(&quot;DESCRIPTION&quot;,'*MOSN*') , 'MOSN',
+if(match(&quot;DESCRIPTION&quot;,'*Objection*') , 'Objection',
+if(match(&quot;DESCRIPTION&quot;,'*COA*') , 'Request - COA',
+if(match(&quot;DESCRIPTION&quot;,'*Receipt*') , 'Request - Receipt',
+if(match(&quot;DESCRIPTION&quot;,'*Refund*') , 'Request - Refund',
+if(match(&quot;DESCRIPTION&quot;,'*Reprint*') , 'Request - Reprint',
+if(match(&quot;DESCRIPTION&quot;,'*RTS*') , 'RTS',
+if(match(&quot;DESCRIPTION&quot;,'*Name Change*') or match(&quot;DESCRIPTION&quot;,'*Name Correction*') or match(&quot;DESCRIPTION&quot;,'*Change of Name*') or match(&quot;DESCRIPTION&quot;,'*Bank Detail*') or match(&quot;DESCRIPTION&quot;,'*Bank Account*') or match(&quot;DESCRIPTION&quot;,'*Direct Debit*'), 'Account Details Update',
+if(match(&quot;DESCRIPTION&quot;,'*Clearance*') , 'Clearance',
+if(match(&quot;DESCRIPTION&quot;,'*Reissue*') or match(&quot;DESCRIPTION&quot;,'*Re-issue*') , 'Reissue',
+if(match(&quot;DESCRIPTION&quot;,'*DNRME CORRECTION*') , 'DNRME CORRECTION',
+'Other'))))))))))))))))))))))))))))))))))</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+    <calculatedAttribute id="CC_Pivot_2nd_LT_Type" order="15" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Pivot Secondary Land Tax Type"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="40">
+        <formula>if(match(&quot;DESCRIPTION&quot;,'*DNRME CORRECTION*') , 'DNRME CORRECTION',
+if(match(&quot;DESCRIPTION&quot;,'*Reissue*') or match(&quot;DESCRIPTION&quot;,'*Re-issue*') , 'Reissue',
+if(match(&quot;DESCRIPTION&quot;,'*Clearance*') , 'Clearance',
+if(match(&quot;DESCRIPTION&quot;,'*Name Change*') or match(&quot;DESCRIPTION&quot;,'*Name Correction*') or match(&quot;DESCRIPTION&quot;,'*Change of Name*') or match(&quot;DESCRIPTION&quot;,'*Bank Detail*') or match(&quot;DESCRIPTION&quot;,'*Bank Account*') or match(&quot;DESCRIPTION&quot;,'*Direct Debit*'), 'Account Details Update',
+if(match(&quot;DESCRIPTION&quot;,'*RTS*') , 'RTS',
+if(match(&quot;DESCRIPTION&quot;,'*Reprint*') , 'Request - Reprint',
+if(match(&quot;DESCRIPTION&quot;,'*Refund*') , 'Request - Refund',
+if(match(&quot;DESCRIPTION&quot;,'*Receipt*') , 'Request - Receipt',
+if(match(&quot;DESCRIPTION&quot;,'*COA*') , 'Request - COA',
+if(match(&quot;DESCRIPTION&quot;,'*Objection*') , 'Objection',
+if(match(&quot;DESCRIPTION&quot;,'*MOSN*') , 'MOSN',
+if(match(&quot;DESCRIPTION&quot;,'*Compliance*') or match(&quot;DESCRIPTION&quot;,'*LAN6*') , 'Compliance',
+if(match(&quot;DESCRIPTION&quot;,'*Compliance*') or match(&quot;DESCRIPTION&quot;,'*LAN5*') , 'Compliance',
+if(match(&quot;DESCRIPTION&quot;,'*Compliance*') or match(&quot;DESCRIPTION&quot;,'*LAN4*') , 'Compliance',
+if(match(&quot;DESCRIPTION&quot;,'*Compliance*') or match(&quot;DESCRIPTION&quot;,'*LAN3*') , 'Compliance',
+if(match(&quot;DESCRIPTION&quot;,'*Compliance*') or match(&quot;DESCRIPTION&quot;,'*LAN2*') , 'Compliance',
+if(match(&quot;DESCRIPTION&quot;,'*Compliance*') or match(&quot;DESCRIPTION&quot;,'*LAN1*') , 'Compliance',
+if(match(&quot;DESCRIPTION&quot;,'*EPO*') , 'EPO',
+if(match(&quot;DESCRIPTION&quot;,'*EPO *'), 'EPO',
+if(match(&quot;DESCRIPTION&quot;,'*Email Assessment*') OR match(&quot;DESCRIPTION&quot;,'*Email Assmnt*'), 'Email Assessment',
+if(match(&quot;DESCRIPTION&quot;,'*Duplicate*') , 'Duplicate',
+if(match(&quot;DESCRIPTION&quot;,'*Valuation*') , 'Dispute - Valuation',
+if(match(&quot;DESCRIPTION&quot;,'*Share Interest*') , 'Dispute - Share Interest',
+if(match(&quot;DESCRIPTION&quot;,'*Ownership*') , 'Dispute - Ownership',
+if(match(&quot;DESCRIPTION&quot;,'*Disaster*') , 'Disaster',
+if(match(&quot;DESCRIPTION&quot;,'*Deceased*') , 'Deceased',
+if(match(&quot;DESCRIPTION&quot;,'*Complex*') , 'Complex',
+if(match(&quot;DESCRIPTION&quot;,'*Complaint*') , 'Complaint',
+if(match(&quot;DESCRIPTION&quot;,'*LT21*') , 'LT21',
+if(match(&quot;DESCRIPTION&quot;,'*LT20*') , 'LT20',
+if(match(&quot;DESCRIPTION&quot;,'*LT19*') , 'LT19',
+if(match(&quot;DESCRIPTION&quot;,'*LT18*') , 'LT18',
+if(match(&quot;DESCRIPTION&quot;,'*Absentee*') OR match(&quot;DESCRIPTION&quot;,'*LT16*') , 'LT16',
+if(match(&quot;DESCRIPTION&quot;,'*LT15*') , 'LT15',
+if(match(&quot;DESCRIPTION&quot;,'*LT13*') , 'LT13',
+if(match(&quot;DESCRIPTION&quot;,'*First Claim*') , 'LT12 First Claim',
+if(match(&quot;DESCRIPTION&quot;,'*LT12*') and not match(&quot;DESCRIPTION&quot;,'*First Claim*') , 'LT12',
+if(match(&quot;DESCRIPTION&quot;,'*LT 11*') OR match(&quot;DESCRIPTION&quot;,'*LT_11*') OR match(&quot;DESCRIPTION&quot;,'*LT11*'), 'LT11',
+'Other'))))))))))))))))))))))))))))))))))))))</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+    <calculatedAttribute id="CC_Secondary_LT_Type" order="16" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Secondary Land Tax Type"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
+        <formula>if(&quot;CC_LT_Type&quot;!=&quot;CC_Pivot_2nd_LT_Type&quot;,&quot;CC_Pivot_2nd_LT_Type&quot;,'NA')</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+    <calculatedAttribute id="CC_Created_Date_Time" order="17" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Created Date Time"/>
+      <keyCalculation datatype="TIME" expressionLanguage="COLUMN_ENGINE">
+        <formula>rightstr(string(&quot;CREATED_AT&quot;),6)</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+    <calculatedAttribute id="CC_Last_Changed_Time" order="18" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Last Changed Time"/>
+      <keyCalculation datatype="TIME" expressionLanguage="COLUMN_ENGINE">
+        <formula>rightstr(string(&quot;CHANGED_AT&quot;),6)</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+  </calculatedAttributes>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/></logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="221" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_CRMD_ORDERADM_H" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="396"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CRMC_PROC_TYPE_T" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="396"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="221" y="237"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CRMD_ORDERADM_H" modelObjectNameSpace="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="207"/>
+    </shape>
+    <shape modelObjectName="P_CRMC_PROC_TYPE_T" modelObjectNameSpace="J_CRMD_ORDERADM_H_CRMC_PROC_TYPE_T" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="208"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
