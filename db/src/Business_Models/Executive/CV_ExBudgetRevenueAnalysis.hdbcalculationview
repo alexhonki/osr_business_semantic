@@ -18,7 +18,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_FINANCIALS" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FINANCIALS">
     <viewAttributes>
       <viewAttribute id="FBNUM"/>
       <viewAttribute id="AUGRD"/>
@@ -30,6 +30,8 @@
       <viewAttribute id="OPUPK"/>
       <viewAttribute id="BETRH"/>
       <viewAttribute id="AUGBT"/>
+    
+      <viewAttribute id="AUGDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_Financials"/>
@@ -106,17 +108,17 @@
   <calculationView xsi:type="Calculation:AggregationView" id="P_BASE_ASSTS" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="FBNUM"/>
-      <viewAttribute id="AUGRD" aggregationType="count"/>
-      <viewAttribute id="BLART"/>
-      <viewAttribute id="HVORG"/>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="OPBEL"/>
       <viewAttribute id="OPUPK"/>
-    </viewAttributes>
+    
+      <viewAttribute id="AUGRD" aggregationType="count"/>
+      <viewAttribute id="BLART"/>
+      <viewAttribute id="HVORG"/></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_FINANCIALS"/>
-    <filter>&quot;FBNUM&quot; IS NOT NULL AND
+    <filter>&quot;FBNUM&quot; &lt;&gt; '' AND
 &quot;AUGRD&quot; &lt;&gt; '05' AND
 &quot;BLART&quot; NOT IN ('ZM','TA') AND
 &quot;HVORG&quot; IN ('4000','4010')</filter>
@@ -131,6 +133,8 @@
       <viewAttribute id="HKONT"/>
       <viewAttribute id="BETRH" aggregationType="sum"/>
       <viewAttribute id="AUGBT" aggregationType="sum"/>
+    
+      <viewAttribute id="AUGDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_ASSTS_DOCS">
@@ -144,6 +148,7 @@
     <input node="P_FINANCIALS">
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
@@ -152,7 +157,7 @@
     <joinAttribute name="OPBEL"/>
     <joinAttribute name="OPUPK"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_FIGURES_CALENDAR" cardinality="CN_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_POSTED_IN_FY" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="FBNUM"/>
       <viewAttribute id="MANDT"/>
@@ -185,58 +190,128 @@
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CALENDAR">
     <viewAttributes>
-      <viewAttribute id="DATE_SQL"/>
+      <viewAttribute id="FiscalMonth"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+    
+      <viewAttribute id="DATE_SQL"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CLEARED_IN_FY" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPK"/>
+      <viewAttribute id="HKONT"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+      <viewAttribute id="AUGBT" aggregationType="sum"/>
+      <viewAttribute id="AUGDT"/>
       <viewAttribute id="FiscalMonth"/>
       <viewAttribute id="FISCAL_YEAR"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Calendar"/>
+    <input node="J_BASEDATA_FINFIGURES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+    </input>
+    <input node="P_CALENDAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="DATE_SQL"/>
+    </input>
+    <joinAttribute name="AUGDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="U_FIGURES">
+    <viewAttributes>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPK"/>
+      <viewAttribute id="HKONT"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+      <viewAttribute id="AUGBT" aggregationType="sum"/>
+      <viewAttribute id="FiscalMonth"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="BUDAT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_POSTED_IN_FY">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+    </input>
+    <input node="J_CLEARED_IN_FY">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="AUGDT"/>
+    </input>
   </calculationView>
 </calculationViews>
-<logicalModel id="J_FIGURES_CALENDAR">
+<logicalModel id="U_FIGURES">
   <attributes>
     <attribute id="FBNUM" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Form Bundle Number"/>
-      <keyMapping columnObjectName="J_FIGURES_CALENDAR" columnName="FBNUM"/>
+      <keyMapping columnObjectName="U_FIGURES" columnName="FBNUM"/>
     </attribute>
     <attribute id="BUDAT" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BUDAT"/>
-      <keyMapping columnObjectName="J_FIGURES_CALENDAR" columnName="BUDAT"/>
+      <keyMapping columnObjectName="U_FIGURES" columnName="BUDAT"/>
     </attribute>
     <attribute id="HKONT" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="HKONT"/>
-      <keyMapping columnObjectName="J_FIGURES_CALENDAR" columnName="HKONT"/>
+      <keyMapping columnObjectName="U_FIGURES" columnName="HKONT"/>
     </attribute>
     <attribute id="MANDT" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MANDT"/>
-      <keyMapping columnObjectName="J_FIGURES_CALENDAR" columnName="MANDT"/>
+      <keyMapping columnObjectName="U_FIGURES" columnName="MANDT"/>
     </attribute>
     <attribute id="OPBEL" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OPBEL"/>
-      <keyMapping columnObjectName="J_FIGURES_CALENDAR" columnName="OPBEL"/>
+      <keyMapping columnObjectName="U_FIGURES" columnName="OPBEL"/>
     </attribute>
     <attribute id="OPUPK" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OPUPK"/>
-      <keyMapping columnObjectName="J_FIGURES_CALENDAR" columnName="OPUPK"/>
+      <keyMapping columnObjectName="U_FIGURES" columnName="OPUPK"/>
     </attribute>
     <attribute id="FiscalMonth" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FiscalMonth"/>
-      <keyMapping columnObjectName="J_FIGURES_CALENDAR" columnName="FiscalMonth"/>
+      <keyMapping columnObjectName="U_FIGURES" columnName="FiscalMonth"/>
     </attribute>
     <attribute id="FISCAL_YEAR" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FISCAL_YEAR"/>
-      <keyMapping columnObjectName="J_FIGURES_CALENDAR" columnName="FISCAL_YEAR"/>
+      <keyMapping columnObjectName="U_FIGURES" columnName="FISCAL_YEAR"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="BETRH" order="5" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
-      <measureMapping columnObjectName="J_FIGURES_CALENDAR" columnName="BETRH"/>
+      <measureMapping columnObjectName="U_FIGURES" columnName="BETRH"/>
     </measure>
     <measure id="AUGBT" order="6" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Clearing amount in clearing currency"/>
-      <measureMapping columnObjectName="J_FIGURES_CALENDAR" columnName="AUGBT"/>
+      <measureMapping columnObjectName="U_FIGURES" columnName="AUGBT"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
@@ -255,52 +330,54 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="40" y="85"/>
+      <upperLeftCorner x="238.77876823938217" y="112"/>
+    
+      <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_FINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-112" y="983"/>
+      <upperLeftCorner x="157.0731250864562" y="1016.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_DFKKOPK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="352" y="983"/>
+      <upperLeftCorner x="367.07312508645634" y="1016.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_DFKKKO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="590" y="983"/>
+      <upperLeftCorner x="577.0731250864563" y="1016.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_DOC_DATA" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="475" y="800"/>
+      <upperLeftCorner x="472.48901839610517" y="856.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_DFKKKO" modelObjectNameSpace="J_DOC_DATA" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="130.005859375"/>
+      <rectangleSize width="130"/>
     </shape>
     <shape modelObjectName="P_DFKKOPK" modelObjectNameSpace="J_DOC_DATA" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="138.009765625"/>
+      <rectangleSize width="138"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ASSTS_DOCS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="601"/>
+      <upperLeftCorner x="328.66666666666674" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BASE_ASSTS" modelObjectNameSpace="J_ASSTS_DOCS" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="620" y="30"/>
-      <rectangleSize width="136.0234375"/>
+      <rectangleSize width="136"/>
     </shape>
     <shape modelObjectName="J_DOC_DATA" modelObjectNameSpace="J_ASSTS_DOCS" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="142.234375"/>
+      <rectangleSize width="142"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BASE_ASSTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="800"/>
+      <upperLeftCorner x="262.07231626126986" y="864.4999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BASEDATA_FINFIGURES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="430"/>
+      <upperLeftCorner x="302.00000000000006" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ASSTS_DOCS" modelObjectNameSpace="J_BASEDATA_FINFIGURES" modelObjectType="JoinNodeInput">
@@ -311,20 +388,37 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="J_FIGURES_CALENDAR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="252"/>
+    <shape expanded="true" modelObjectName="J_POSTED_IN_FY" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="356.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_BASEDATA_FINFIGURES" modelObjectNameSpace="J_FIGURES_CALENDAR" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_BASEDATA_FINFIGURES" modelObjectNameSpace="J_POSTED_IN_FY" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_CALENDAR" modelObjectNameSpace="J_FIGURES_CALENDAR" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_CALENDAR" modelObjectNameSpace="J_POSTED_IN_FY" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="136.0234375"/>
+      <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CALENDAR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="478" y="430"/>
+      <upperLeftCorner x="92" y="536.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_CLEARED_IN_FY" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="304.28802577296506" y="356.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BASEDATA_FINFIGURES" modelObjectNameSpace="J_CLEARED_IN_FY" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="221.576171875"/>
+    </shape>
+    <shape modelObjectName="P_CALENDAR" modelObjectNameSpace="J_CLEARED_IN_FY" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="160.5830078125"/>
+    </shape>
+    <shape expanded="true" modelObjectName="U_FIGURES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="238.77876823938217" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
