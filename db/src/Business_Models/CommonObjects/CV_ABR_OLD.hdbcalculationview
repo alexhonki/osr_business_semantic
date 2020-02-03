@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CV_ABR" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CV_ABR_OLD" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_ABR"/>
 <localVariables/>
 <variableMappings/>
@@ -7,8 +7,8 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_ANZSICHier">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_ANZSICHier</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.synonyms::AGENCY_DATA_C">
-    <resourceUri>osr.business.semantic.db.synonyms::AGENCY_DATA_C</resourceUri>
+  <DataSource id="osr.business.semantic.db.synonyms::AGENCY_DATA">
+    <resourceUri>osr.business.semantic.db.synonyms::AGENCY_DATA</resourceUri>
   </DataSource>
   <DataSource id="osr.business.semantic.db.synonyms::CODE_DIVISION_MAPPING">
     <resourceUri>osr.business.semantic.db.synonyms::CODE_DIVISION_MAPPING</resourceUri>
@@ -22,8 +22,8 @@
   <DataSource id="osr.business.semantic.db.synonyms::BUSINESS_LOCATION">
     <resourceUri>osr.business.semantic.db.synonyms::BUSINESS_LOCATION</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpIdRoles">
-    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpIdRoles</resourceUri>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -41,7 +41,7 @@
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_ANZSICHier"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_AGENCY_DATA">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_AGENCY_DATA" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="PID"/>
       <viewAttribute id="ABN"/>
@@ -53,9 +53,16 @@
       <viewAttribute id="GST_CANCN_DT"/>
       <viewAttribute id="MN_INDY_CLSN"/>
       <viewAttribute id="MN_INDY_CLSN_DESCN"/>
-      <viewAttribute id="ACN"/></viewAttributes>
+      <viewAttribute id="ACN"/>
+    
+      <viewAttribute id="Z_CURR_FLAG"/>
+    
+      <viewAttribute id="Z_VALID_FROM"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::AGENCY_DATA_C"/></calculationView>
+    <input node="osr.business.semantic.db.synonyms::AGENCY_DATA"/>
+    <filter>&quot;Z_CURR_FLAG&quot;='1'</filter>
+  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_ANZSIC_DIV_MAP">
     <viewAttributes>
       <viewAttribute id="ANZSIC"/>
@@ -99,7 +106,7 @@
       <viewAttribute id="PARENT_ENTITY_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="P_AGENCY_DATA">
+    <input node="R_ONEABN">
       <mapping xsi:type="Calculation:AttributeMapping" target="PID" source="PID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ENT_TYP_CD" source="ENT_TYP_CD"/>
@@ -119,6 +126,32 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ENT_TYP_CD" source="ENTITY_TYPE_CODE"/>
     </input>
     <joinAttribute name="ENT_TYP_CD"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_ONEABN">
+    <viewAttributes>
+      <viewAttribute id="PID" aggregationType="sum"/>
+      <viewAttribute id="ABN"/>
+      <viewAttribute id="ENT_TYP_CD"/>
+      <viewAttribute id="ORG_NM"/>
+      <viewAttribute id="ABN_REGN_DT"/>
+      <viewAttribute id="ABN_CANCN_DT"/>
+      <viewAttribute id="GST_REGN_DT"/>
+      <viewAttribute id="GST_CANCN_DT"/>
+      <viewAttribute id="MN_INDY_CLSN"/>
+      <viewAttribute id="MN_INDY_CLSN_DESCN"/>
+      <viewAttribute id="ACN"/>
+      <viewAttribute id="Z_CURR_FLAG"/>
+      <viewAttribute id="Z_VALID_FROM"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_AGENCY_DATA"/>
+    <windowFunction dynamicPartitionAttributes="true">
+      <partitionViewAttributeName>ABN</partitionViewAttributeName>
+      <order byViewAttributeName="Z_VALID_FROM" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_ENTITY_TYPE_DESC" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
@@ -308,14 +341,12 @@
       <viewAttribute id="Z_VALID_FROM"/>
     
       <viewAttribute id="Z_CHANGE_TIME" aggregationType="min"/>
-    
-      <viewAttribute id="Z_RUN_SEQ_ID" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_ADDRESSES"/>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>PID</partitionViewAttributeName>
-      <order byViewAttributeName="Z_RUN_SEQ_ID" direction="DESC"/>
+      <order byViewAttributeName="Z_CHANGE_TIME" direction="DESC"/>
       <rankThreshold>
         <value>1</value>
       </rankThreshold>
@@ -333,33 +364,29 @@
       <viewAttribute id="ADDR_LONGITUDE"/>
       <viewAttribute id="PID"/>
       <viewAttribute id="Z_VALID_FROM"/>
-    
-      <viewAttribute id="Z_CHANGE_TIME"/>
-      <viewAttribute id="Z_RUN_SEQ_ID"/>
-    
-    
       <viewAttribute id="Z_CURR_FLAG"/>
     
-      <viewAttribute id="LOCN_TYP_CD"/></viewAttributes>
+      <viewAttribute id="LOCN_TYP_CD"/>
+    
+      <viewAttribute id="Z_CHANGE_TIME"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::BUSINESS_LOCATION"/>
     <filter>&quot;Z_CURR_FLAG&quot;='1' AND &quot;LOCN_TYP_CD&quot; = '010'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_PARTNERABN" filterExpressionLanguage="COLUMN_ENGINE">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PARTNERABN" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="IDNUMBER"/>
       <viewAttribute id="PARTNER"/>
     
       <viewAttribute id="ID_TYPE"/>
-    
-      <viewAttribute id="BUT0ID_VALID_TO"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_ABN" datatype="NVARCHAR" length="20" expressionLanguage="SQL">
         <formula>&quot;IDNUMBER&quot;</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
-    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpIdRoles"/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpIdRoles"/>
     <filter>&quot;ID_TYPE&quot; = 'ZABN'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_ABNDATA_PARTNER" cardinality="C1_N" joinType="leftOuter">
@@ -582,35 +609,35 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="402" y="112"/>
+      <upperLeftCorner x="568" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ANZSIC_Hier" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="344" y="856"/>
+      <upperLeftCorner x="807" y="876"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_AGENCY_DATA" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="554" y="856"/>
+      <upperLeftCorner x="92" y="1036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ANZSIC_DIV_MAP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="134" y="856"/>
+      <upperLeftCorner x="597" y="876"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ENTITY_GROUP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="852" y="1016"/>
+      <upperLeftCorner x="301" y="1036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ENTITY_MAPPING" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="642" y="1016"/>
+      <upperLeftCorner x="511" y="1036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ABNDATA_ENTITYPE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="552" y="696"/>
+      <upperLeftCorner x="439" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="P_AGENCY_DATA" modelObjectNameSpace="J_ABNDATA_ENTITYPE" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="R_ONEABN" modelObjectNameSpace="J_ABNDATA_ENTITYPE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
@@ -619,8 +646,13 @@
       <rectangleSize width="250"/>
     </shape>
   
+    <shape expanded="true" modelObjectName="R_ONEABN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="894"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="J_ENTITY_TYPE_DESC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="764" y="856"/>
+      <upperLeftCorner x="387" y="876"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_ENTITY_MAPPING" modelObjectNameSpace="J_ENTITY_TYPE_DESC" modelObjectType="JoinNodeInput">
@@ -632,7 +664,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ANZSIC_Hier" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="317" y="696"/>
+      <upperLeftCorner x="656" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_ANZSIC_DIV_MAP" modelObjectNameSpace="J_ANZSIC_Hier" modelObjectType="JoinNodeInput">
@@ -644,7 +676,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ABNDATA_ANZSCIHier" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="368" y="536"/>
+      <upperLeftCorner x="622" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ABNDATA_ENTITYPE" modelObjectNameSpace="J_ABNDATA_ANZSCIHier" modelObjectType="JoinNodeInput">
@@ -656,7 +688,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ABNDATA_ADDRES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="376"/>
+      <upperLeftCorner x="596" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ABNDATA_ANZSCIHier" modelObjectNameSpace="J_ABNDATA_ADDRES" modelObjectType="JoinNodeInput">
@@ -668,21 +700,21 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_ADDRESSE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91" y="554"/>
+      <upperLeftCorner x="218" y="554"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ADDRESSES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91" y="696"/>
+      <upperLeftCorner x="218" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_PARTNERABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="456" y="376"/>
+      <upperLeftCorner x="386" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ABNDATA_PARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="402" y="217"/>
+      <upperLeftCorner x="568" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ABNDATA_ADDRES" modelObjectNameSpace="J_ABNDATA_PARTNER" modelObjectType="JoinNodeInput">
