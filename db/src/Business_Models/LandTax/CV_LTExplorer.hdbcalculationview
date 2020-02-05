@@ -497,7 +497,11 @@
       <viewAttribute id="CC_ConcessionType"/>
       <viewAttribute id="CC_LiabilityStatus"/>
       <viewAttribute id="Rank_Column" aggregationType="sum"/></viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_TAXYR" datatype="VARCHAR" length="13" expressionLanguage="SQL">
+        <formula>&quot;TAXYR&quot;-1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <input node="J_Agg_Address_Rank_To_OWNERSHIPCNRESP">
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYR" source="TAXYR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
@@ -558,7 +562,7 @@
     </attribute>
     <attribute id="TAXYR" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liability Year"/>
-      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="TAXYR"/>
+      <keyMapping columnObjectName="J_Agg_Address_Rank_To_OWNERSHIPCNRESP_R" columnName="CC_TAXYR"/>
     </attribute>
     <attribute id="FBNUM" order="7" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
       <descriptions defaultDescription="Form Bundle Number"/>
@@ -672,7 +676,7 @@
         <formula>if(&quot;UnissuedAssessmentFlag&quot;='X' or (&quot;CC_LiabilityStatus&quot;='Liable' and isnull(&quot;FBNUM&quot;)),'Unissued',
     If(not isnull(&quot;FBNUM&quot;),'Issued','Not Assessed'))</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   
     <calculatedAttribute id="CC_Reassessment" order="23" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Reassessment Status"/>
@@ -682,8 +686,7 @@
         <formula>If(&quot;FN_ReassessmentAmountAll&quot;!=0 and not isnull(&quot;FN_ReassessmentAmountAll&quot;),'Reassessed','Not Reassessed')</formula>
   
       </keyCalculation>
-  
-    </calculatedAttribute>
+      </calculatedAttribute>
   
     <calculatedAttribute id="CC_RateType" order="28" semanticType="empty" replaceNull="true" replaceNullBy="Unclassified" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rate Type"/>
@@ -694,8 +697,7 @@
     if(&quot;TAXRATECODE&quot;='C' or &quot;TAXRATECODE&quot;='O', 'Company, Trust &amp; Absentee','Unclassified'))</formula>
   
       </keyCalculation>
-  
-    </calculatedAttribute></calculatedAttributes>
+      </calculatedAttribute></calculatedAttributes>
   <baseMeasures>
     <measure id="InvoicedAmountAll" order="6" aggregationType="sum" measureType="simple" replaceNull="true" unconverted="true">
       <descriptions defaultDescription="Invoiced Amount"/>
@@ -790,12 +792,14 @@
       
       
       
+      
       </measure>
     <measure id="CC_AssessmentCounter" order="24" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE" replaceNull="true">
       <descriptions defaultDescription="Assessments"/>
       <formula>if(&quot;CC_AssessmentStatus&quot;='Issued',1,
 if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
     
+      
       
       
       
@@ -829,6 +833,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
       
       
       
+      
       </measure>
     <measure id="PROPERTYCNT" order="44" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Property Counter"/>
@@ -836,6 +841,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         <attribute attributeName="NANO"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -854,7 +860,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-    </measure>
+      </measure>
   
     <measure id="UnpostedAmount" order="34" aggregationType="sum" datatype="DECIMAL" length="17" scale="2" baseMeasure="UnpostedAmountAll">
       <descriptions defaultDescription="Unposted Amount"/>
@@ -868,8 +874,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         <attributeName>Rank_Column</attributeName>
   
       </restriction>
-  
-    </measure>
+      </measure>
     <measure id="AssessmentAmount" order="35" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AssessmentAmountAll">
       <descriptions defaultDescription="Assessment Amount"/>
       <restriction logicalOperator="AND">
@@ -878,7 +883,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-    </measure>
+      </measure>
     <measure id="FN_ReassessmentAmount" order="36" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="FN_ReassessmentAmountAll">
       <descriptions defaultDescription="Reassessment Amount"/>
       <restriction logicalOperator="AND">
@@ -887,7 +892,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-    </measure>
+      </measure>
     <measure id="ReassessmentAmountCleared" order="37" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="ReassessmentAmountClearedAll">
       <descriptions defaultDescription="Reassessment Amount Cleared"/>
       <restriction logicalOperator="AND">
@@ -896,7 +901,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-    </measure>
+      </measure>
     <measure id="AssessmentAmountCleared" order="38" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AssessmentAmountClearedAll">
       <descriptions defaultDescription="Assessment Amount Cleared"/>
       <restriction logicalOperator="AND">
@@ -905,7 +910,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-    </measure>
+      </measure>
     <measure id="TAXESTIMATE" order="39" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="TAXESTIMATEAll">
       <descriptions defaultDescription="Estimate Tax"/>
       <restriction logicalOperator="AND">
@@ -914,7 +919,7 @@ if(&quot;CC_AssessmentStatus&quot;='Unissued',1,0))</formula>
         </filter>
         <attributeName>Rank_Column</attributeName>
       </restriction>
-    </measure></restrictedMeasures>
+      </measure></restrictedMeasures>
   <sortAttributes>
     <sortAttribute id="ZZ_PARTNER" direction="ASC"/>
     <sortAttribute id="TAXYR" direction="ASC"/>
