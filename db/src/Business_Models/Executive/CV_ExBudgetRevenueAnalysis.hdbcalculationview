@@ -176,7 +176,11 @@
       <viewAttribute id="FiscalMonth"/>
       <viewAttribute id="FISCAL_YEAR"/>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_DATASOURCE" datatype="NVARCHAR" length="20" expressionLanguage="SQL">
+        <formula>'Posted in FY'</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <input node="J_BASEDATA_FINFIGURES">
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -216,7 +220,11 @@
       <viewAttribute id="FiscalMonth"/>
       <viewAttribute id="FISCAL_YEAR"/>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_DATASOURCE" datatype="NVARCHAR" length="20" expressionLanguage="SQL">
+        <formula>'Cleared in FY'</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <input node="J_BASEDATA_FINFIGURES">
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -246,8 +254,8 @@
       <viewAttribute id="FiscalMonth"/>
       <viewAttribute id="FISCAL_YEAR"/>
       <viewAttribute id="BUDAT"/>
-    
-      <viewAttribute datatype="NVARCHAR" length="10" id="DATASOURCE"/>
+      <viewAttribute id="RELEVANT_AMOUNT" aggregationType="sum"/>
+      <viewAttribute id="CC_DATASOURCE"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_POSTED_IN_FY" emptyUnionBehavior="NO_ROW">
@@ -261,8 +269,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
-    
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DATASOURCE" null="false" value="Posted"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELEVANT_AMOUNT" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DATASOURCE" source="CC_DATASOURCE"/>
     </input>
     <input node="J_CLEARED_IN_FY" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
@@ -275,11 +283,11 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="AUGDT"/>
-    
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DATASOURCE" null="false" value="Cleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELEVANT_AMOUNT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DATASOURCE" source="CC_DATASOURCE"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_ASSTS_PERIODS" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_ASSTS_PERIODS">
     <viewAttributes>
       <viewAttribute id="FBNUM"/>
       <viewAttribute id="MANDT"/>
@@ -324,12 +332,9 @@
       <descriptions defaultDescription="FISCAL_YEAR"/>
       <keyMapping columnObjectName="U_FIGURES" columnName="FISCAL_YEAR"/>
     </attribute>
-  
-    <attribute id="DATASOURCE" order="12" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="DATASOURCE"/>
-  
-      <keyMapping columnObjectName="U_FIGURES" columnName="DATASOURCE"/>
-  
+    <attribute id="CC_DATASOURCE" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_DATASOURCE"/>
+      <keyMapping columnObjectName="U_FIGURES" columnName="CC_DATASOURCE"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -342,6 +347,11 @@
       <descriptions defaultDescription="Clearing amount in clearing currency"/>
       <measureMapping columnObjectName="U_FIGURES" columnName="AUGBT"/>
     </measure>
+  
+    <measure id="RELEVANT_AMOUNT" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BETRH_1"/>
+      <measureMapping columnObjectName="U_FIGURES" columnName="RELEVANT_AMOUNT"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures>
     <measure id="COUNTER" order="2" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
@@ -350,6 +360,7 @@
         <attribute attributeName="FBNUM"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       </measure>
