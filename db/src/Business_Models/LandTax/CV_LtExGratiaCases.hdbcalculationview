@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.LandTax::CV_LtExGratiaCases" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_LtExGratiaCases"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_Cases">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_Cases</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_LTEXG_CASES" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CASE_TYPE"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="PARTNER_NO"/>
+      <viewAttribute id="EXT_KEY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_Cases"/>
+    <filter>&quot;CASE_TYPE&quot; = 'ZEXG' AND &quot;CATEGORY&quot; = 'LND'</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="P_LTEXG_CASES">
+  <attributes>
+    <attribute id="PARTNER_NO" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BP NO - Activity or Case Partner "/>
+      <keyMapping columnObjectName="P_LTEXG_CASES" columnName="PARTNER_NO"/>
+    </attribute>
+    <attribute id="EXT_KEY" order="2" semanticType="empty" descriptionColumnName="EXT_KEY" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Case ID"/>
+      <keyMapping columnObjectName="P_LTEXG_CASES" columnName="EXT_KEY"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures>
+    <measure id="CASE_COUNT" order="3" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="Case Count"/>
+      <exceptionAggregation>
+        <attribute attributeName="EXT_KEY"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_LTEXG_CASES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="234"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
