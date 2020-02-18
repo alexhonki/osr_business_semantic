@@ -7,11 +7,11 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpFacts">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpFacts</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank">
-    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank</resourceUri>
-  </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_FinancialsCurrent">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_FinancialsCurrent</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -122,17 +122,6 @@
       <viewAttribute id="CC_OVERDUE_ST"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FULL_NAME" source="CC_FULL_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PORTAL_REG_DATE" source="BUT0ID_ENTRY_DATE"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_HAS_BANK_DETAILS" source="CC_HAS_BANK_DETAILS"/>
-    </input>
     <input node="AGG_CONTACC_BALANCE">
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_VKONT" source="DFKKOP_VKONT"/>
@@ -140,6 +129,17 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_OVERDUE_ST" source="CC_OVERDUE_ST"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="DFKK_H_GPART"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+    </input>
+    <input node="P_BpInfoRolesBank">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FULL_NAME" source="CC_FULL_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PORTAL_REG_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_HAS_BANK_DETAILS" source="CC_HAS_BANK_DETAILS"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
     </input>
     <joinAttribute name="PARTNER"/>
     <joinAttribute name="CLIENT"/>
@@ -163,6 +163,23 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_OPEN_ITEM_FLG" source="OpenItemFlag"/>
     </input>
     <filter>&quot;CC_OPEN_ITEM_FLG&quot; ='X'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BpInfoRolesBank" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="BP_TYPE_DESC"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="ABN"/>
+      <viewAttribute id="ACN"/>
+      <viewAttribute id="CC_FULL_NAME"/>
+      <viewAttribute id="BUT0ID_ENTRY_DATE"/>
+      <viewAttribute id="CC_HAS_BANK_DETAILS"/>
+    
+      <viewAttribute id="BUT000_VALID_TO"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank"/>
+    <filter>&quot;BUT000_VALID_TO&quot; ='99991231235959' and &quot;PARTNER&quot; != 'TREASURY'</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_BPINFO_FREQ">
@@ -307,7 +324,7 @@
       <rectangleSize width="159"/>
     </shape>
     <shape expanded="true" modelObjectName="P_LODGE_FREQ" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="637" y="376"/>
+      <upperLeftCorner x="752" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_FREQ" modelObjectNameSpace="CalculationView">
@@ -323,20 +340,25 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CONTACC_BALANCE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="257" y="376"/>
+      <upperLeftCorner x="356" y="376"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank" modelObjectNameSpace="J_CONTACC_BALANCE" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="AGG_CONTACC_BALANCE" modelObjectNameSpace="J_CONTACC_BALANCE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="620" y="30"/>
       <rectangleSize width="250"/>
     </shape>
+    <shape modelObjectName="P_BpInfoRolesBank" modelObjectNameSpace="J_CONTACC_BALANCE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="920" y="30"/>
+      <rectangleSize width="217"/>
+    </shape>
     <shape expanded="true" modelObjectName="AGG_CONTACC_BALANCE" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="230" y="554"/>
       <rectangleSize height="30" width="160"/>
-    </shape></shapes>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BpInfoRolesBank" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="433" y="554"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
