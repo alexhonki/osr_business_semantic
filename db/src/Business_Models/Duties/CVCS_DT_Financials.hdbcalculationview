@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.business.semantic.db.Business_Models.Duties::CVCS_DT_Financials" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
-<descriptions defaultDescription="DutFinancials"/>
+<descriptions defaultDescription="Duties Financial Model"/>
 <localVariables/>
 <variableMappings/>
 <dataSources>
@@ -9,12 +9,6 @@
   </DataSource>
   <DataSource id="P_Financials_DT$$$$osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials$$">
     <resourceUri>osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials</resourceUri>
-  </DataSource>
-  <DataSource id="osr.business.semantic.db.synonyms::DFKKZP">
-    <resourceUri>osr.business.semantic.db.synonyms::DFKKZP</resourceUri>
-  </DataSource>
-  <DataSource id="osr.business.semantic.db.synonyms::TFK003T">
-    <resourceUri>osr.business.semantic.db.synonyms::TFK003T</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -48,45 +42,48 @@
       <viewAttribute id="DFKKOP_OPUPK"/>
       <viewAttribute id="TFK001AT_TXT50"/>
       <viewAttribute id="TFK003T_LTEXT"/>
+    
+      <viewAttribute id="VKTYP_TEXT"/>
+      <viewAttribute id="AltRevenueTypeGroups"/>
+      <viewAttribute id="KOFIZ"/>
+    
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="FiscalMonth"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="P_Financials_DT" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Financials_DT" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="HVORG"/>
       <viewAttribute id="TVORG"/>
-      <viewAttribute id="PERSL"/>
       <viewAttribute id="FBNUM"/>
       <viewAttribute id="DFKK_H_GPART"/>
-      <viewAttribute id="KOFIZ"/></viewAttributes>
+      <viewAttribute id="KOFIZ"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="FiscalMonth"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
     <input node="P_Financials_DT$$$$osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials$$"/>
     <filter>&quot;HVORG&quot; = '4000' AND 
 &quot;TVORG&quot; in ('0100','0140','0143','0146','0148','0152','0154','0156','0160','0172','0174','0180','0183','0186','0188','0192','0194','0196','0580','0581','0584','1000','1001','1002') AND 
-&quot;PERSL&quot; != '' AND &quot;PERSL&quot; &gt; '2010' AND 
-&quot;KOFIZ&quot; in ('ID', 'MV', 'OD', 'TD')</filter>
+&quot;FISCAL_YEAR&quot; &gt; '2010' AND 
+&quot;KOFIZ&quot; in ('CA','FH','ID', 'MV', 'OD', 'TD')</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_Financials_Financials_DT" cardinality="C1_N" joinType="inner">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
-      <viewAttribute id="PERSL"/>
       <viewAttribute id="DFKK_H_GPART"/>
       <viewAttribute id="FBNUM"/>
-      <viewAttribute id="HVORG"/>
-      <viewAttribute id="TVORG"/>
       <viewAttribute id="BETRH" aggregationType="sum"/>
       <viewAttribute id="AUGBT" aggregationType="sum"/>
-      <viewAttribute id="AUGRD"/>
       <viewAttribute id="AUGBL"/>
       <viewAttribute id="OPBEL"/>
       <viewAttribute id="DFKK_H_BUDAT"/>
       <viewAttribute id="AUGDT"/>
       <viewAttribute id="TFKHVOT_TXT30"/>
       <viewAttribute id="TFKTVOT_TXT30"/>
-      <viewAttribute id="BLART"/>
       <viewAttribute id="OpenItemFlag"/>
       <viewAttribute id="CreditDebitFlag"/>
       <viewAttribute id="OverdueStatus"/>
@@ -94,32 +91,35 @@
       <viewAttribute id="AgeMonthsStatus"/>
       <viewAttribute id="AgeDays" aggregationType="sum"/>
       <viewAttribute id="AgeDaysStatus"/>
-      <viewAttribute id="OPUPZ"/>
-      <viewAttribute id="DFKKOP_OPUPW"/>
-      <viewAttribute id="DFKKOP_OPUPK"/>
       <viewAttribute id="TFK001AT_TXT50"/>
       <viewAttribute id="TFK003T_LTEXT"/>
+    
+      <viewAttribute id="KOFIZ"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="VKTYP_TEXT"/>
+      <viewAttribute id="AltRevenueTypeGroups"/>
+      <viewAttribute id="AUGRD"/>
+      <viewAttribute id="BLART"/>
+      <viewAttribute id="FiscalMonth" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
+      <viewAttribute hidden="true" id="JOIN$DFKK_H_GPART$DFKK_H_GPART"/>
+      <viewAttribute hidden="true" id="JOIN$FBNUM$FBNUM"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_Financials_DT">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DFKK_H_GPART$DFKK_H_GPART" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FBNUM$FBNUM" source="FBNUM"/>
     </input>
     <input node="P_Financials">
-      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TFKHVOT_TXT30" source="TFKHVOT_TXT30"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TFKTVOT_TXT30" source="TFKTVOT_TXT30"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OverdueStatus" source="OverdueStatus"/>
@@ -127,359 +127,153 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonthsStatus" source="AgeMonthsStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TFK001AT_TXT50" source="TFK001AT_TXT50"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TFK003T_LTEXT" source="TFK003T_LTEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
-    </input>
-    <joinAttribute name="MANDT"/>
-    <joinAttribute name="DFKK_H_GPART"/>
-    <joinAttribute name="FBNUM"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKZP" filterExpressionLanguage="COLUMN_ENGINE">
-    <viewAttributes>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="OPBEL"/>
-      <viewAttribute id="BLART"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::DFKKZP"/>
-    <filter>Leftstr(&quot;BLART&quot;,1)='P'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_Financials_DFKKZP" cardinality="CN_N" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="PERSL"/>
-      <viewAttribute id="DFKK_H_GPART"/>
-      <viewAttribute id="FBNUM"/>
-      <viewAttribute id="HVORG"/>
-      <viewAttribute id="TVORG"/>
-      <viewAttribute id="BETRH" aggregationType="sum"/>
-      <viewAttribute id="AUGBT" aggregationType="sum"/>
-      <viewAttribute id="AUGRD"/>
-      <viewAttribute id="AUGBL"/>
-      <viewAttribute id="OPBEL"/>
-      <viewAttribute id="DFKK_H_BUDAT"/>
-      <viewAttribute id="AUGDT"/>
-      <viewAttribute id="TFKHVOT_TXT30"/>
-      <viewAttribute id="TFKTVOT_TXT30"/>
-      <viewAttribute id="BLART"/>
-      <viewAttribute id="OpenItemFlag"/>
-      <viewAttribute id="CreditDebitFlag"/>
-      <viewAttribute id="OverdueStatus"/>
-      <viewAttribute id="AgeMonths" aggregationType="sum"/>
-      <viewAttribute id="AgeMonthsStatus"/>
-      <viewAttribute id="AgeDays" aggregationType="sum"/>
-      <viewAttribute id="AgeDaysStatus"/>
-      <viewAttribute id="OPUPZ"/>
-      <viewAttribute id="DFKKOP_OPUPW"/>
-      <viewAttribute id="DFKKOP_OPUPK"/>
-      <viewAttribute id="TFK001AT_TXT50"/>
-      <viewAttribute id="TFK003T_LTEXT"/>
-      <viewAttribute id="BLART_1"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="J_Financials_Financials_DT">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_TEXT" source="VKTYP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AltRevenueTypeGroups" source="AltRevenueTypeGroups"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TFKHVOT_TXT30" source="TFKHVOT_TXT30"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TFKTVOT_TXT30" source="TFKTVOT_TXT30"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OverdueStatus" source="OverdueStatus"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonths" source="AgeMonths"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonthsStatus" source="AgeMonthsStatus"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TFK001AT_TXT50" source="TFK001AT_TXT50"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TFK003T_LTEXT" source="TFK003T_LTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DFKK_H_GPART$DFKK_H_GPART" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FBNUM$FBNUM" source="FBNUM"/>
     </input>
-    <input node="P_DFKKZP">
-      <mapping xsi:type="Calculation:AttributeMapping" target="BLART_1" source="BLART"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
-    </input>
-    <joinAttribute name="MANDT"/>
-    <joinAttribute name="OPBEL"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_TFK003T" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="SPRAS"/>
-      <viewAttribute id="APPLK"/>
-      <viewAttribute id="BLART"/>
-      <viewAttribute id="LTEXT"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::TFK003T"/>
-    <filter>&quot;SPRAS&quot;='E' AND &quot;APPLK&quot;='P'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_Financials_TFK003T" cardinality="C1_1" joinType="textTable" languageColumn="SPRAS">
-    <viewAttributes>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="PERSL"/>
-      <viewAttribute id="DFKK_H_GPART"/>
-      <viewAttribute id="FBNUM"/>
-      <viewAttribute id="HVORG"/>
-      <viewAttribute id="TVORG"/>
-      <viewAttribute id="BETRH" aggregationType="sum"/>
-      <viewAttribute id="AUGBT" aggregationType="sum"/>
-      <viewAttribute id="AUGRD"/>
-      <viewAttribute id="AUGBL"/>
-      <viewAttribute id="OPBEL"/>
-      <viewAttribute id="DFKK_H_BUDAT"/>
-      <viewAttribute id="AUGDT"/>
-      <viewAttribute id="TFKHVOT_TXT30"/>
-      <viewAttribute id="TFKTVOT_TXT30"/>
-      <viewAttribute id="BLART"/>
-      <viewAttribute id="OpenItemFlag"/>
-      <viewAttribute id="CreditDebitFlag"/>
-      <viewAttribute id="OverdueStatus"/>
-      <viewAttribute id="AgeMonths" aggregationType="sum"/>
-      <viewAttribute id="AgeMonthsStatus"/>
-      <viewAttribute id="AgeDays" aggregationType="sum"/>
-      <viewAttribute id="AgeDaysStatus"/>
-      <viewAttribute id="OPUPZ"/>
-      <viewAttribute id="DFKKOP_OPUPW"/>
-      <viewAttribute id="DFKKOP_OPUPK"/>
-      <viewAttribute id="TFK001AT_TXT50"/>
-      <viewAttribute id="TFK003T_LTEXT"/>
-      <viewAttribute id="BLART_1"/>
-      <viewAttribute id="TFK003T_LTEXT_1"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="J_Financials_DFKKZP">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TFKHVOT_TXT30" source="TFKHVOT_TXT30"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TFKTVOT_TXT30" source="TFKTVOT_TXT30"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OverdueStatus" source="OverdueStatus"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonths" source="AgeMonths"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonthsStatus" source="AgeMonthsStatus"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TFK001AT_TXT50" source="TFK001AT_TXT50"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TFK003T_LTEXT" source="TFK003T_LTEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BLART_1" source="BLART_1"/>
-    </input>
-    <input node="P_TFK003T">
-      <mapping xsi:type="Calculation:AttributeMapping" target="TFK003T_LTEXT_1" source="LTEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
-    </input>
-    <joinAttribute name="MANDT"/>
-    <joinAttribute name="BLART"/>
+    <joinAttribute name="JOIN$MANDT$MANDT"/>
+    <joinAttribute name="JOIN$DFKK_H_GPART$DFKK_H_GPART"/>
+    <joinAttribute name="JOIN$FBNUM$FBNUM"/>
   </calculationView>
 </calculationViews>
-<logicalModel id="J_Financials_TFK003T">
+<logicalModel id="J_Financials_Financials_DT">
   <attributes>
     <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Client"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="MANDT"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="MANDT"/>
     </attribute>
-    <attribute id="PERSL" order="2" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Period Key"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="PERSL"/>
+    <attribute id="DFKK_H_GPART" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Number"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="DFKK_H_GPART"/>
     </attribute>
-    <attribute id="DFKK_H_GPART" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BP No."/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="DFKK_H_GPART"/>
-    </attribute>
-    <attribute id="FBNUM" order="4" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FBNUM" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Form Bundle Number"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="FBNUM"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="FBNUM"/>
     </attribute>
-    <attribute id="HVORG" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Main Transaction"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="HVORG"/>
+    <attribute id="KOFIZ" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Revenue Type"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="KOFIZ"/>
     </attribute>
-    <attribute id="TVORG" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Sub Transaction"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="TVORG"/>
+    <attribute id="AltRevenueTypeGroups" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Revenue Type Group"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="AltRevenueTypeGroups"/>
     </attribute>
-    <attribute id="AUGRD" order="7" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Clearing Reason"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="AUGRD"/>
+    <attribute id="VKTYP_TEXT" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Contract Account Category"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="VKTYP_TEXT"/>
     </attribute>
-    <attribute id="AUGBL" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Clearing Document "/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="AUGBL"/>
+    <attribute id="DFKK_H_BUDAT" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Document Posting Date"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="DFKK_H_BUDAT"/>
     </attribute>
-    <attribute id="OPBEL" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="PSCD Document Number "/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="OPBEL"/>
+    <attribute id="FISCAL_YEAR" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fiscal Year"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="FISCAL_YEAR"/>
     </attribute>
-    <attribute id="DFKK_H_BUDAT" order="10" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Document Posting Document"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="DFKK_H_BUDAT"/>
-    </attribute>
-    <attribute id="AUGDT" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Clearing Date"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="AUGDT"/>
-    </attribute>
-    <attribute id="TFKHVOT_TXT30" order="12" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TFKHVOT_TXT30" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Main Transaction Description"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="TFKHVOT_TXT30"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="TFKHVOT_TXT30"/>
     </attribute>
-    <attribute id="TFKTVOT_TXT30" order="13" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TFKTVOT_TXT30" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Sub Transaction Description"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="TFKTVOT_TXT30"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="TFKTVOT_TXT30"/>
     </attribute>
-    <attribute id="BLART" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Document Type"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="BLART"/>
+    <attribute id="AUGRD" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing Reason"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="AUGRD"/>
     </attribute>
-    <attribute id="OpenItemFlag" order="15" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Open Item Indicator"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="OpenItemFlag"/>
-    </attribute>
-    <attribute id="CreditDebitFlag" order="16" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Debit or Credit Indicator "/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="CreditDebitFlag"/>
-    </attribute>
-    <attribute id="OverdueStatus" order="17" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Finalisation Time"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="OverdueStatus"/>
-    </attribute>
-    <attribute id="AgeMonths" order="18" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Number of Months Overdue"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="AgeMonths"/>
-    </attribute>
-    <attribute id="AgeMonthsStatus" order="19" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Overdue Month Category"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="AgeMonthsStatus"/>
-    </attribute>
-    <attribute id="AgeDays" order="20" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Number of Days Overdue "/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="AgeDays"/>
-    </attribute>
-    <attribute id="AgeDaysStatus" order="21" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Overdue Days Category "/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="AgeDaysStatus"/>
-    </attribute>
-    <attribute id="OPUPZ" order="22" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Subitem for a Partial Clearing in Document"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="OPUPZ"/>
-    </attribute>
-    <attribute id="DFKKOP_OPUPW" order="23" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Repetition Item "/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="DFKKOP_OPUPW"/>
-    </attribute>
-    <attribute id="DFKKOP_OPUPK" order="24" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Items"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="DFKKOP_OPUPK"/>
-    </attribute>
-    <attribute id="TFK001AT_TXT50" order="25" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TFK001AT_TXT50" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Clearing Reason Description"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="TFK001AT_TXT50"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="TFK001AT_TXT50"/>
     </attribute>
-    <attribute id="TFK003T_LTEXT" order="26" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AUGBL" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing Document "/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="AUGBL"/>
+    </attribute>
+    <attribute id="AUGDT" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing Date"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="AUGDT"/>
+    </attribute>
+    <attribute id="OPBEL" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PSCD Document Number "/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="OPBEL"/>
+    </attribute>
+    <attribute id="BLART" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Document Type"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="BLART"/>
+    </attribute>
+    <attribute id="TFK003T_LTEXT" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Document Type Description"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="TFK003T_LTEXT"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="TFK003T_LTEXT"/>
     </attribute>
-    <attribute id="BLART_1" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Clearing Document Number"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="BLART_1"/>
+    <attribute id="OpenItemFlag" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Open Item Indicator"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="OpenItemFlag"/>
     </attribute>
-    <attribute id="TFK003T_LTEXT_1" order="28" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Clearing Document Description"/>
-      <keyMapping columnObjectName="J_Financials_TFK003T" columnName="TFK003T_LTEXT_1"/>
+    <attribute id="CreditDebitFlag" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Debit or Credit Indicator "/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="CreditDebitFlag"/>
     </attribute>
-  </attributes>
+    <attribute id="OverdueStatus" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Finalisation Time"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="OverdueStatus"/>
+    </attribute>
+    <attribute id="AgeMonths" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Number of Months Overdue"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="AgeMonths"/>
+    </attribute>
+    <attribute id="AgeMonthsStatus" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Overdue Month Category"/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="AgeMonthsStatus"/>
+    </attribute>
+    <attribute id="AgeDays" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Number of Days Overdue "/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="AgeDays"/>
+    </attribute>
+    <attribute id="AgeDaysStatus" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Overdue Days Category "/>
+      <keyMapping columnObjectName="J_Financials_Financials_DT" columnName="AgeDaysStatus"/>
+    </attribute></attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="BETRH" order="29" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Amount"/>
-      <measureMapping columnObjectName="J_Financials_TFK003T" columnName="BETRH"/>
+    <measure id="FiscalMonth" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Fiscal Month"/>
+      <measureMapping columnObjectName="J_Financials_Financials_DT" columnName="FiscalMonth"/>
     </measure>
-    <measure id="AUGBT" order="30" aggregationType="sum" measureType="simple">
+    <measure id="BETRH" order="26" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Amount"/>
+      <measureMapping columnObjectName="J_Financials_Financials_DT" columnName="BETRH"/>
+    </measure>
+    <measure id="AUGBT" order="27" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Clearing Amount"/>
-      <measureMapping columnObjectName="J_Financials_TFK003T" columnName="AUGBT"/>
+      <measureMapping columnObjectName="J_Financials_Financials_DT" columnName="AUGBT"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
-    <measure id="CC_ASSMNT_CNT" order="31" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+    <measure id="CC_ASSMNT_CNT" order="30" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Assessment Counter"/>
       <exceptionAggregation>
         <attribute attributeName="FBNUM"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures>
-    <measure id="RC_REVERSED_AMT" order="32" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
-      <descriptions defaultDescription="Reversed Amount"/>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="05"/>
-        </filter>
-        <attributeName>AUGRD</attributeName>
-      </restriction>
-    </measure>
-    <measure id="RC_ASSMNT_AMT" order="33" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
-      <descriptions defaultDescription="Assessment Amount"/>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
-        </filter>
-        <attributeName>AUGRD</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="TA"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="ZM"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4000"/>
-        </filter>
-        <attributeName>HVORG</attributeName>
-      </restriction>
-    </measure>
-    <measure id="RC_TRANS_AMT" order="34" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+    <measure id="RC_TRANS_AMT" order="28" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Transferred Amount"/>
       <restriction logicalOperator="AND">
         <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
@@ -488,178 +282,13 @@
         <attributeName>BLART</attributeName>
       </restriction>
     </measure>
-    <measure id="RC_MISC_AMT" order="35" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
-      <descriptions defaultDescription="Miscellaneous Amount"/>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="ZM"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-    </measure>
-    <measure id="RC_TRANSFER_DUTY_AMT" order="36" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
-      <descriptions defaultDescription="Transfer Duty Amount"/>
+    <measure id="RC_REVERSED_AMT" order="29" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      <descriptions defaultDescription="Reversed Amount"/>
       <restriction logicalOperator="AND">
         <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="05"/>
         </filter>
         <attributeName>AUGRD</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="TA"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="ZM"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4000"/>
-        </filter>
-        <attributeName>HVORG</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="TVORG">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="0140"/>
-        </filter>
-        <attributeName>TVORG</attributeName>
-      </restriction>
-    </measure>
-    <measure id="RC_TRANSFER_DUTY_REASST_AMT" order="37" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
-      <descriptions defaultDescription="Transfer Duty Reasst Amount"/>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
-        </filter>
-        <attributeName>AUGRD</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="TA"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="ZM"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4000"/>
-        </filter>
-        <attributeName>HVORG</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="TVORG">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="0180"/>
-        </filter>
-        <attributeName>TVORG</attributeName>
-      </restriction>
-    </measure>
-    <measure id="RC_TRANSFER_DUTY_DEF_AMT" hidden="false" order="38" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
-      <descriptions defaultDescription="Transfer Duty Def. Amount"/>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
-        </filter>
-        <attributeName>AUGRD</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="TA"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="ZM"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4000"/>
-        </filter>
-        <attributeName>HVORG</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="TVORG">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="0160"/>
-        </filter>
-        <attributeName>TVORG</attributeName>
-      </restriction>
-    </measure>
-    <measure id="RC_INSUR_DUTY_AMT" order="39" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
-      <descriptions defaultDescription="Insurance Duty Amount"/>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
-        </filter>
-        <attributeName>AUGRD</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="TA"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="ZM"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4000"/>
-        </filter>
-        <attributeName>HVORG</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="TVORG">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="0144"/>
-        </filter>
-        <attributeName>TVORG</attributeName>
-      </restriction>
-    </measure>
-    <measure id="RC_MOT_VEH_DUTY_AMT" order="40" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
-      <descriptions defaultDescription="Motor Vehicle Duty Amount"/>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
-        </filter>
-        <attributeName>AUGRD</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="TA"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="ZM"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="HVORG">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="4000"/>
-        </filter>
-        <attributeName>HVORG</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="TVORG">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="0146"/>
-        </filter>
-        <attributeName>TVORG</attributeName>
       </restriction>
     </measure>
   </restrictedMeasures>
@@ -670,22 +299,22 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="422" y="112"/>
+      <upperLeftCorner x="328" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_Financials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="696"/>
+      <upperLeftCorner x="215" y="360"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_Financials_DT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="696"/>
+      <upperLeftCorner x="460" y="360"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_Financials_Financials_DT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="536"/>
+      <upperLeftCorner x="333" y="201"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_Financials_DT" modelObjectNameSpace="J_Financials_Financials_DT" modelObjectType="JoinNodeInput">
@@ -696,44 +325,9 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="148"/>
     </shape>
-  
-    <shape expanded="true" modelObjectName="P_DFKKZP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="384" y="536"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="J_Financials_DFKKZP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="145" y="376"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="J_Financials_Financials_DT" modelObjectNameSpace="J_Financials_DFKKZP" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_Financials_Financials_DT" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="P_DFKKZP" modelObjectNameSpace="J_Financials_DFKKZP" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="136"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="P_TFK003T" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="489" y="376"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="J_Financials_TFK003T" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="422" y="217"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="J_Financials_DFKKZP" modelObjectNameSpace="J_Financials_TFK003T" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="P_TFK003T" modelObjectNameSpace="J_Financials_TFK003T" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="136"/>
-    </shape>
-  
-    <shape modelObjectName="J_Financials_TFK003T" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
+      <rectangleSize width="224"/>
     </shape>
   </shapes>
 </layout>
