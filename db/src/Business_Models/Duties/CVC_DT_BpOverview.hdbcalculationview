@@ -29,6 +29,9 @@
       <viewAttribute id="CC_HAS_BANK_DETAILS"/>
       <viewAttribute id="RC_AMT_OVERDUE" aggregationType="formula"/>
       <viewAttribute id="RC_AMT_NOT_DUE" aggregationType="formula"/>
+    
+      <viewAttribute id="VKTYP_TEXT"/>
+      <viewAttribute id="DFKKOP_VKONT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_BPID_DT">
@@ -45,6 +48,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RC_AMT_OVERDUE" source="RC_AMT_OVERDUE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RC_AMT_NOT_DUE" source="RC_AMT_NOT_DUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_TEXT" source="VKTYP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_VKONT" source="DFKKOP_VKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="DFKK_H_GPART"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
     </input>
@@ -91,20 +96,20 @@
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_CONTACC_BALANCE" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="BETRH" aggregationType="sum"/>
-      <viewAttribute id="KOFIZ"/>
-    
-      <viewAttribute id="CC_OVERDUE_ST"/>
       <viewAttribute id="DFKK_H_GPART"/>
     
       <viewAttribute id="MANDT"/>
+      <viewAttribute id="KOFIZ"/>
     
-      <viewAttribute id="CC_OPEN_ITEM_FLG"/></viewAttributes>
+      <viewAttribute id="CC_OVERDUE_ST"/>
+    
+      <viewAttribute id="CC_OPEN_ITEM_FLG"/>
+      <viewAttribute id="VKTYP_TEXT"/>
+      <viewAttribute id="DFKKOP_VKONT"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes>
       <restrictedViewAttribute id="RC_AMT_OVERDUE" baseViewAttribute="BETRH">
-        <descriptions defaultDescription="">
-          <comment text="Amount Overdue"/>
-        </descriptions>
         <restriction logicalOperator="AND">
           <filter xsi:type="Privilege:AttributeFilter" attributeName="CC_OVERDUE_ST">
             <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Overdue"/>
@@ -113,9 +118,6 @@
         </restriction>
       </restrictedViewAttribute>
       <restrictedViewAttribute id="RC_AMT_NOT_DUE" baseViewAttribute="BETRH">
-        <descriptions defaultDescription="">
-          <comment text="Amount Not Due"/>
-        </descriptions>
         <restriction logicalOperator="AND">
           <filter xsi:type="Privilege:AttributeFilter" attributeName="CC_OVERDUE_ST">
             <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Not due"/>
@@ -153,6 +155,15 @@
 &quot;BUT000_VALID_TO&quot; ='99991231235959' AND 
 &quot;PARTNER&quot; != 'TREASURY'</filter>
   </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Agg_BPFACTS">
+    <viewAttributes>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CLIENT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPFacts"/>
+  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_BPFacts" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="PARTNER"/>
@@ -166,15 +177,6 @@
 &quot;PARTNERACCTYP&quot; in ('TD','MV','CA','ID','FH','OD') AND 
 &quot;XOBSL&quot; &lt;&gt; 'X'
 </filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="Agg_BPFACTS">
-    <viewAttributes>
-      <viewAttribute id="PARTNER"/>
-      <viewAttribute id="CLIENT"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="P_BPFacts"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_CONTACC_BALANCE">
@@ -213,7 +215,16 @@
   
       <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="CC_HAS_BANK_DETAILS"/>
   
-    </attribute></attributes>
+    </attribute>
+    <attribute id="VKTYP_TEXT" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Contract Account Category"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="VKTYP_TEXT"/>
+    </attribute>
+    <attribute id="DFKKOP_VKONT" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Contract Account Number"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="DFKKOP_VKONT"/>
+    </attribute>
+  </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="CC_PORTAL_REG_FLAG" order="7" semanticType="empty" displayAttribute="true" attributeHierarchyActive="false">
       <descriptions defaultDescription="Portal Registration Flag"/>
@@ -226,15 +237,15 @@
       </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
-    <measure id="BETRH" order="10" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="BETRH" order="12" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Open Amount"/>
       <measureMapping columnObjectName="J_CONTACC_BALANCE" columnName="BETRH"/>
     </measure>
-    <measure id="RC_AMT_OVERDUE" order="11" aggregationType="sum" measureType="simple">
+    <measure id="RC_AMT_OVERDUE" order="13" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Open Amount Overdue"/>
       <measureMapping columnObjectName="J_CONTACC_BALANCE" columnName="RC_AMT_OVERDUE"/>
     </measure>
-    <measure id="RC_AMT_NOT_DUE" order="12" aggregationType="sum" measureType="simple">
+    <measure id="RC_AMT_NOT_DUE" order="14" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Open Amount Not Due"/>
       <measureMapping columnObjectName="J_CONTACC_BALANCE" columnName="RC_AMT_NOT_DUE"/>
     </measure>
@@ -246,12 +257,12 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="338.3789298200023" y="112"/>
+      <upperLeftCorner x="338" y="112"/>
     
       <rectangleSize width="159"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CONTACC_BALANCE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="337.8789298200023" y="217"/>
+      <upperLeftCorner x="337" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPID_DT" modelObjectNameSpace="J_CONTACC_BALANCE" modelObjectType="JoinNodeInput">
@@ -263,7 +274,7 @@
       <rectangleSize width="217"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPID_DT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118.66666666666663" y="376.9999988079071"/>
+      <upperLeftCorner x="118" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BpInfoRolesBank" modelObjectNameSpace="J_BPID_DT" modelObjectType="JoinNodeInput">
@@ -276,22 +287,22 @@
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_CONTACC_BALANCE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="405.8784636723663" y="376.9999988079071"/>
+      <upperLeftCorner x="405" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BpInfoRolesBank" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302.0000000000001" y="536.9999976158142"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_BPFacts" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="661.9999976158142"/>
+      <upperLeftCorner x="302" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Agg_BPFACTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="546.9999976158142"/>
+      <upperLeftCorner x="92" y="546"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-  </shapes>
+  
+    <shape expanded="true" modelObjectName="P_BPFacts" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="661"/>
+      <rectangleSize height="30" width="160"/>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
