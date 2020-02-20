@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.business.semantic.db.Business_Models.Duties::CVC_DT_BpOverview" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="Duties BP Overview"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_FinancialsCurrent">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_FinancialsCurrent</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpFacts">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpFacts</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CONTACC_BALANCE" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="BP_TYPE_DESC"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="ABN"/>
+      <viewAttribute id="ACN"/>
+      <viewAttribute id="CC_FULL_NAME"/>
+      <viewAttribute id="PORTAL_REG_DATE"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_HAS_BANK_DETAILS"/>
+      <viewAttribute id="RC_AMT_OVERDUE" aggregationType="formula"/>
+      <viewAttribute id="RC_AMT_NOT_DUE" aggregationType="formula"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_BPID_DT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FULL_NAME" source="CC_FULL_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PORTAL_REG_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_HAS_BANK_DETAILS" source="CC_HAS_BANK_DETAILS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <input node="AGG_CONTACC_BALANCE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_AMT_OVERDUE" source="RC_AMT_OVERDUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_AMT_NOT_DUE" source="RC_AMT_NOT_DUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPID_DT" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="BP_TYPE_DESC"/>
+      <viewAttribute id="ABN"/>
+      <viewAttribute id="ACN"/>
+      <viewAttribute id="CC_FULL_NAME"/>
+      <viewAttribute id="BUT0ID_ENTRY_DATE"/>
+      <viewAttribute id="CC_HAS_BANK_DETAILS"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="BUT000_VALID_TO" aggregationType="sum"/>
+      <viewAttribute id="AUGRP"/>
+      <viewAttribute id="BP_TYPE"/>
+      <viewAttribute id="PARTNER_BK"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_BpInfoRolesBank">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FULL_NAME" source="CC_FULL_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT0ID_ENTRY_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_HAS_BANK_DETAILS" source="CC_HAS_BANK_DETAILS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT000_VALID_TO" source="BUT000_VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRP" source="AUGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE" source="BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_BK" source="PARTNER_BK"/>
+    </input>
+    <input node="Agg_BPFACTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_CONTACC_BALANCE" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+      <viewAttribute id="KOFIZ"/>
+    
+      <viewAttribute id="CC_OVERDUE_ST"/>
+      <viewAttribute id="DFKK_H_GPART"/>
+    
+      <viewAttribute id="MANDT"/>
+    
+      <viewAttribute id="CC_OPEN_ITEM_FLG"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes>
+      <restrictedViewAttribute id="RC_AMT_OVERDUE" baseViewAttribute="BETRH">
+        <descriptions defaultDescription="">
+          <comment text="Amount Overdue"/>
+        </descriptions>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="CC_OVERDUE_ST">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Overdue"/>
+          </filter>
+          <attributeName>CC_OVERDUE_ST</attributeName>
+        </restriction>
+      </restrictedViewAttribute>
+      <restrictedViewAttribute id="RC_AMT_NOT_DUE" baseViewAttribute="BETRH">
+        <descriptions defaultDescription="">
+          <comment text="Amount Not Due"/>
+        </descriptions>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="CC_OVERDUE_ST">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Not due"/>
+          </filter>
+          <attributeName>CC_OVERDUE_ST</attributeName>
+        </restriction>
+      </restrictedViewAttribute>
+    </restrictedViewAttributes>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_FinancialsCurrent">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OVERDUE_ST" source="OverdueStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OPEN_ITEM_FLG" source="OpenItemFlag"/>
+    </input>
+    <filter>&quot;CC_OPEN_ITEM_FLG&quot;='X' and &quot;KOFIZ&quot; in ('CA','FH','ID', 'MV', 'OD', 'TD')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BpInfoRolesBank" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="BP_TYPE_DESC"/>
+      <viewAttribute id="ABN"/>
+      <viewAttribute id="ACN"/>
+      <viewAttribute id="CC_FULL_NAME"/>
+      <viewAttribute id="BUT0ID_ENTRY_DATE"/>
+      <viewAttribute id="CC_HAS_BANK_DETAILS"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CLIENT"/>
+    
+      <viewAttribute id="BUT000_VALID_TO"/>
+    
+      <viewAttribute id="AUGRP"/>
+      <viewAttribute id="BP_TYPE"/>
+      <viewAttribute id="PARTNER_BK"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank"/>
+    <filter>&quot;CLIENT&quot; = '400' AND 
+&quot;BUT000_VALID_TO&quot; ='99991231235959' AND 
+&quot;PARTNER&quot; != 'TREASURY'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BPFacts" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNERACCTYP"/>
+      <viewAttribute id="XOBSL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpFacts"/>
+    <filter>&quot;CLIENT&quot;='400' AND
+&quot;PARTNERACCTYP&quot; in ('TD','MV','CA','ID','FH','OD') AND 
+&quot;XOBSL&quot; &lt;&gt; 'X'
+</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Agg_BPFACTS">
+    <viewAttributes>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CLIENT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_BPFacts"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_CONTACC_BALANCE">
+  <attributes>
+    <attribute id="CLIENT" order="1" displayAttribute="false" attributeHierarchyActive="false" key="true">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Number"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="PARTNER"/>
+    </attribute>
+    <attribute id="CC_FULL_NAME" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Name"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="CC_FULL_NAME"/>
+    </attribute>
+    <attribute id="ABN" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ABN"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="ABN"/>
+    </attribute>
+    <attribute id="ACN" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ACN"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="ACN"/>
+    </attribute>
+    <attribute id="BP_TYPE_DESC" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BP Type Description"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="BP_TYPE_DESC"/>
+    </attribute>
+    <attribute id="PORTAL_REG_DATE" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Portal Registration Date"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="PORTAL_REG_DATE"/>
+    </attribute>
+  
+    <attribute id="CC_HAS_BANK_DETAILS" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Has Bank Details"/>
+  
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="CC_HAS_BANK_DETAILS"/>
+  
+    </attribute></attributes>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_PORTAL_REG_FLAG" order="7" semanticType="empty" displayAttribute="true" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Portal Registration Flag"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="24">
+        <formula>CASE  
+	 WHEN &quot;PORTAL_REG_DATE&quot; is not null then 'Portal Registered' 
+	 ELSE ' ' 
+ END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
+  <baseMeasures>
+    <measure id="BETRH" order="10" aggregationType="sum" measureType="simple" replaceNull="true">
+      <descriptions defaultDescription="Open Amount"/>
+      <measureMapping columnObjectName="J_CONTACC_BALANCE" columnName="BETRH"/>
+    </measure>
+    <measure id="RC_AMT_OVERDUE" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Open Amount Overdue"/>
+      <measureMapping columnObjectName="J_CONTACC_BALANCE" columnName="RC_AMT_OVERDUE"/>
+    </measure>
+    <measure id="RC_AMT_NOT_DUE" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Open Amount Not Due"/>
+      <measureMapping columnObjectName="J_CONTACC_BALANCE" columnName="RC_AMT_NOT_DUE"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="338.3789298200023" y="112"/>
+    
+      <rectangleSize width="159"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_CONTACC_BALANCE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="337.8789298200023" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPID_DT" modelObjectNameSpace="J_CONTACC_BALANCE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="217"/>
+    </shape>
+    <shape modelObjectName="AGG_CONTACC_BALANCE" modelObjectNameSpace="J_CONTACC_BALANCE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="920" y="30"/>
+      <rectangleSize width="217"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPID_DT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118.66666666666663" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_BpInfoRolesBank" modelObjectNameSpace="J_BPID_DT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Agg_BPFACTS" modelObjectNameSpace="J_BPID_DT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="182"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="AGG_CONTACC_BALANCE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="405.8784636723663" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BpInfoRolesBank" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302.0000000000001" y="536.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_BPFacts" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="661.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Agg_BPFACTS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="546.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
