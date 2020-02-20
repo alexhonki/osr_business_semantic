@@ -7,47 +7,31 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpFacts">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpFacts</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_FinancialsCurrent">
-    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_FinancialsCurrent</resourceUri>
-  </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_FinancialsCurrent">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_FinancialsCurrent</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_LODGE_FREQ" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="CLIENT"/>
-      <viewAttribute id="PSOBKEY"/>
       <viewAttribute id="PARTNER"/>
-      <viewAttribute id="PARTNERACCTYP"/>
-      <viewAttribute id="ERNAM"/>
-      <viewAttribute id="ERDAT"/>
       <viewAttribute id="PARTNERACC"/>
       <viewAttribute id="KOFIZ"/>
-      <viewAttribute id="AENAM"/>
-      <viewAttribute id="AEDAT"/>
-      <viewAttribute id="EBVTY"/>
-      <viewAttribute id="ABVTY"/>
-      <viewAttribute id="INDIVIDUAL"/>
-      <viewAttribute id="OBART"/>
-      <viewAttribute id="FACT_TYPE_SEQ"/>
-      <viewAttribute id="FACT_TYPE_REP"/>
-      <viewAttribute id="FACT_CAT_SEQ"/>
-      <viewAttribute id="FACT_CAT_REP"/>
-      <viewAttribute id="VALID_TO"/>
-      <viewAttribute id="VALID_FROM"/>
       <viewAttribute id="FACT_SET"/>
       <viewAttribute id="FACT_TYPE"/>
       <viewAttribute id="FACT_CATEGORY"/>
-      <viewAttribute id="VALUE_GENERIC"/>
-      <viewAttribute id="QUAL_GENERIC"/>
-      <viewAttribute id="OBJNR"/>
       <viewAttribute id="KOFIZ_TEXT"/>
       <viewAttribute id="FACT_SET_TEXT"/>
       <viewAttribute id="FACT_TYPE_TEXT"/>
       <viewAttribute id="CC_CATEGORY_TEXT"/>
-      <viewAttribute id="PARTNERACCTYPE_TEXT"/></viewAttributes>
+      <viewAttribute id="PARTNERACCTYPE_TEXT"/>
+      <viewAttribute id="VALID_TO"/>
+      <viewAttribute id="VALID_FROM"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpFacts"/>
     <filter>in(&quot;FACT_SET&quot;,'ZBTX','ZGMGB','ZGMT','ZIND','ZOFTB','ZPTX','ZVRD') and &quot;FACT_CATEGORY&quot;='0016' and &quot;VALID_TO&quot;&gt;=now() and &quot;VALID_FROM&quot;&lt;=now()</filter>
@@ -66,13 +50,17 @@
       <viewAttribute id="FACT_SET"/>
       <viewAttribute id="FACT_TYPE"/>
       <viewAttribute id="FACT_CATEGORY"/>
-      <viewAttribute id="VALUE_GENERIC"/>
       <viewAttribute id="FACT_SET_TEXT"/>
       <viewAttribute id="FACT_TYPE_TEXT"/>
     
       <viewAttribute id="CC_HAS_BANK_DETAILS"/>
       <viewAttribute id="KOFIZ"/>
       <viewAttribute id="CC_OVERDUE_ST"/>
+    
+      <viewAttribute id="CC_CATEGORY_TEXT"/>
+      <viewAttribute id="PARTNERACCTYPE_TEXT"/>
+      <viewAttribute id="KOFIZ_TEXT"/>
+      <viewAttribute hidden="true" id="JOIN$KOFIZ$KOFIZ"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_CONTACC_BALANCE">
@@ -87,23 +75,28 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_VKONT" source="DFKKOP_VKONT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_HAS_BANK_DETAILS" source="CC_HAS_BANK_DETAILS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_OVERDUE_ST" source="CC_OVERDUE_ST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$KOFIZ$KOFIZ" source="KOFIZ"/>
     </input>
     <input node="P_LODGE_FREQ">
       <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET" source="FACT_SET"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FACT_TYPE" source="FACT_TYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FACT_CATEGORY" source="FACT_CATEGORY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FACT_SET_TEXT" source="FACT_SET_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FACT_TYPE_TEXT" source="FACT_TYPE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CATEGORY_TEXT" source="CC_CATEGORY_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACCTYPE_TEXT" source="PARTNERACCTYPE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ_TEXT" source="KOFIZ_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_VKONT" source="PARTNERACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$KOFIZ$KOFIZ" source="KOFIZ"/>
     </input>
     <joinAttribute name="PARTNER"/>
     <joinAttribute name="CLIENT"/>
     <joinAttribute name="DFKKOP_VKONT"/>
+    <joinAttribute name="JOIN$KOFIZ$KOFIZ"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_CONTACC_BALANCE" cardinality="C1_N" joinType="leftOuter">
     <viewAttributes>
@@ -118,10 +111,20 @@
       <viewAttribute id="DFKKOP_VKONT"/>
     
       <viewAttribute id="CC_HAS_BANK_DETAILS"/>
-      <viewAttribute id="KOFIZ"/>
       <viewAttribute id="CC_OVERDUE_ST"/>
-    </viewAttributes>
+    
+      <viewAttribute id="KOFIZ"/></viewAttributes>
     <calculatedViewAttributes/>
+    <input node="P_BpInfoRolesBank">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FULL_NAME" source="CC_FULL_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PORTAL_REG_DATE" source="BUT0ID_ENTRY_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_HAS_BANK_DETAILS" source="CC_HAS_BANK_DETAILS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+    </input>
     <input node="AGG_CONTACC_BALANCE">
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_VKONT" source="DFKKOP_VKONT"/>
@@ -130,19 +133,25 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="DFKK_H_GPART"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
     </input>
-    <input node="P_BpInfoRolesBank">
-      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FULL_NAME" source="CC_FULL_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PORTAL_REG_DATE" source="BUT0ID_ENTRY_DATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_HAS_BANK_DETAILS" source="CC_HAS_BANK_DETAILS"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-    </input>
     <joinAttribute name="PARTNER"/>
     <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_BpInfoRolesBank" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="BP_TYPE_DESC"/>
+      <viewAttribute id="ABN"/>
+      <viewAttribute id="ACN"/>
+      <viewAttribute id="CC_FULL_NAME"/>
+      <viewAttribute id="BUT0ID_ENTRY_DATE"/>
+      <viewAttribute id="CC_HAS_BANK_DETAILS"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CLIENT"/>
+    
+      <viewAttribute id="BUT000_VALID_TO"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank"/>
+    <filter>&quot;BUT000_VALID_TO&quot; ='99991231235959' and &quot;PARTNER&quot; != 'TREASURY'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_CONTACC_BALANCE" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -164,23 +173,6 @@
     </input>
     <filter>&quot;CC_OPEN_ITEM_FLG&quot; ='X'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_BpInfoRolesBank" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="PARTNER"/>
-      <viewAttribute id="BP_TYPE_DESC"/>
-      <viewAttribute id="CLIENT"/>
-      <viewAttribute id="ABN"/>
-      <viewAttribute id="ACN"/>
-      <viewAttribute id="CC_FULL_NAME"/>
-      <viewAttribute id="BUT0ID_ENTRY_DATE"/>
-      <viewAttribute id="CC_HAS_BANK_DETAILS"/>
-    
-      <viewAttribute id="BUT000_VALID_TO"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpInfoRolesBank"/>
-    <filter>&quot;BUT000_VALID_TO&quot; ='99991231235959' and &quot;PARTNER&quot; != 'TREASURY'</filter>
-  </calculationView>
 </calculationViews>
 <logicalModel id="J_BPINFO_FREQ">
   <attributes>
@@ -188,7 +180,7 @@
       <descriptions defaultDescription="Business Partner Number"/>
       <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="PARTNER"/>
     </attribute>
-    <attribute id="CC_Full_Name" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_FULL_NAME" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Name"/>
       <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="CC_FULL_NAME"/>
     </attribute>
@@ -204,7 +196,7 @@
       <descriptions defaultDescription="BP Type Description"/>
       <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="BP_TYPE_DESC"/>
     </attribute>
-    <attribute id="CLIENT" order="6" displayAttribute="false" attributeHierarchyActive="false" hidden="true">
+    <attribute id="CLIENT" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Client"/>
       <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="CLIENT"/>
     </attribute>
@@ -220,43 +212,63 @@
       <descriptions defaultDescription="Fact Set"/>
       <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="FACT_SET"/>
     </attribute>
-    <attribute id="FACT_TYPE" order="10" displayAttribute="false" attributeHierarchyActive="false" hidden="true">
+    <attribute id="FACT_TYPE" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fact Type"/>
       <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="FACT_TYPE"/>
     </attribute>
-    <attribute id="FACT_CATEGORY" order="11" displayAttribute="false" attributeHierarchyActive="false" hidden="true">
+    <attribute id="FACT_CATEGORY" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fact Category"/>
       <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="FACT_CATEGORY"/>
     </attribute>
-    <attribute id="VALUE_GENERIC" order="12" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Lodgement Frequency"/>
-      <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="VALUE_GENERIC"/>
-    </attribute>
-    <attribute id="FACT_SET_TEXT" order="13" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FACT_SET_TEXT" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fact Set (Text)"/>
       <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="FACT_SET_TEXT"/>
     </attribute>
-    <attribute id="FACT_TYPE_TEXT" order="14" displayAttribute="false" attributeHierarchyActive="false" hidden="true">
+    <attribute id="FACT_TYPE_TEXT" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fact Type (Text)"/>
       <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="FACT_TYPE_TEXT"/>
     </attribute>
   
-    <attribute id="CC_HAS_BANK_DETAILS" order="15" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_HAS_BANK_DETAILS" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Has Bank Details"/>
   
       <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="CC_HAS_BANK_DETAILS"/>
   
     </attribute>
   
-    <attribute id="CC_OVERDUE_ST" order="16" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_OVERDUE_ST" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CC_OVERDUE_ST"/>
   
       <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="CC_OVERDUE_ST"/>
   
     </attribute>
-  </attributes>
+  
+    <attribute id="KOFIZ" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="KOFIZ"/>
+  
+      <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="KOFIZ"/>
+  
+    </attribute>
+    <attribute id="KOFIZ_TEXT" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="KOFIZ_TEXT"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="KOFIZ_TEXT"/>
+    </attribute>
+  
+  
+    <attribute id="CC_CATEGORY_TEXT" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_CATEGORY_TEXT"/>
+  
+  
+      <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="CC_CATEGORY_TEXT"/>
+  
+  
+    </attribute>
+    <attribute id="PARTNERACCTYPE_TEXT" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PARTNERACCTYPE_TEXT"/>
+      <keyMapping columnObjectName="J_BPINFO_FREQ" columnName="PARTNERACCTYPE_TEXT"/>
+    </attribute></attributes>
   <calculatedAttributes>
-    <calculatedAttribute id="CC_PORTAL_REG_FLAG" order="17" semanticType="empty" displayAttribute="true" attributeHierarchyActive="false">
+    <calculatedAttribute id="CC_PORTAL_REG_FLAG" order="16" semanticType="empty" displayAttribute="true" attributeHierarchyActive="false">
       <descriptions defaultDescription="Portal Registration Flag"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="24">
         <formula>CASE  
@@ -264,15 +276,15 @@
 	 ELSE ' ' 
  END</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
-    <measure id="BETRH" order="18" aggregationType="sum" measureType="simple" replaceNull="true">
+    <measure id="BETRH" order="21" aggregationType="sum" measureType="simple" replaceNull="true">
       <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
       <measureMapping columnObjectName="J_BPINFO_FREQ" columnName="BETRH"/>
     </measure></baseMeasures>
   <calculatedMeasures>
-    <measure id="CC_BP_COUNTER" order="19" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+    <measure id="CC_BP_COUNTER" order="22" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="BP Counter"/>
       <exceptionAggregation>
         <attribute attributeName="PARTNER"/>
@@ -292,10 +304,13 @@
       
       
       
+      
+      
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures>
-    <measure id="RC_NOT_DUE_AMT" order="20" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+    <measure id="RC_NOT_DUE_AMT" order="23" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Not Due Amount"/>
       <restriction logicalOperator="AND">
         <filter xsi:type="Privilege:AttributeFilter" attributeName="CC_OVERDUE_ST">
@@ -303,8 +318,8 @@
         </filter>
         <attributeName>CC_OVERDUE_ST</attributeName>
       </restriction>
-    </measure>
-    <measure id="RS_OVERDUE_AMT" order="21" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      </measure>
+    <measure id="RS_OVERDUE_AMT" order="24" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Overdue Amount"/>
       <restriction logicalOperator="AND">
         <filter xsi:type="Privilege:AttributeFilter" attributeName="CC_OVERDUE_ST">
@@ -312,7 +327,7 @@
         </filter>
         <attributeName>CC_OVERDUE_ST</attributeName>
       </restriction>
-    </measure>
+      </measure>
   </restrictedMeasures>
   <localDimensions/>
 </logicalModel>
@@ -343,22 +358,22 @@
       <upperLeftCorner x="356" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="AGG_CONTACC_BALANCE" modelObjectNameSpace="J_CONTACC_BALANCE" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_BpInfoRolesBank" modelObjectNameSpace="J_CONTACC_BALANCE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="620" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_BpInfoRolesBank" modelObjectNameSpace="J_CONTACC_BALANCE" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="AGG_CONTACC_BALANCE" modelObjectNameSpace="J_CONTACC_BALANCE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="920" y="30"/>
       <rectangleSize width="217"/>
-    </shape>
-    <shape expanded="true" modelObjectName="AGG_CONTACC_BALANCE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="230" y="554"/>
-      <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BpInfoRolesBank" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="433" y="554"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-  </shapes>
+  
+    <shape expanded="true" modelObjectName="AGG_CONTACC_BALANCE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="230" y="554"/>
+      <rectangleSize height="30" width="160"/>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
