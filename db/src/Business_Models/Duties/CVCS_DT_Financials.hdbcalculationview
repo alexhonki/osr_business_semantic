@@ -53,6 +53,8 @@
       <viewAttribute id="AccountBalanceStatus"/>
       <viewAttribute id="AccountBalanceRange"/>
       <viewAttribute id="FormBundleValueCategory"/>
+    
+      <viewAttribute id="AssessmentAmount"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials"/>
@@ -166,48 +168,65 @@
       <descriptions defaultDescription="Overdue Status"/>
       <keyMapping columnObjectName="P_DT_Financials" columnName="OverdueStatus"/>
     </attribute>
-    <attribute id="AgeMonths" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Number of Months Overdue"/>
-      <keyMapping columnObjectName="P_DT_Financials" columnName="AgeMonths"/>
-    </attribute>
-    <attribute id="AgeMonthsStatus" order="28" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AgeMonthsStatus" order="27" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Overdue Month Category"/>
       <keyMapping columnObjectName="P_DT_Financials" columnName="AgeMonthsStatus"/>
     </attribute>
-    <attribute id="AgeDays" order="29" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AgeDays" order="28" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Number of Days Overdue "/>
       <keyMapping columnObjectName="P_DT_Financials" columnName="AgeDays"/>
+    </attribute>
+    <attribute id="AgeMonths" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Number of Months Overdue"/>
+      <keyMapping columnObjectName="P_DT_Financials" columnName="AgeMonths"/>
     </attribute>
     <attribute id="AgeDaysStatus" order="30" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Overdue Days Category "/>
       <keyMapping columnObjectName="P_DT_Financials" columnName="AgeDaysStatus"/>
     </attribute>
-    <attribute id="AccountBalanceStatus" order="37" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AccountBalanceStatus" order="31" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account Balance Status"/>
       <keyMapping columnObjectName="P_DT_Financials" columnName="AccountBalanceStatus"/>
     </attribute>
-    <attribute id="AccountBalanceRange" order="38" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AccountBalanceRange" order="32" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account Balance Range"/>
       <keyMapping columnObjectName="P_DT_Financials" columnName="AccountBalanceRange"/>
     </attribute>
-    <attribute id="FormBundleValueCategory" order="39" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FormBundleValueCategory" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Form Bundle Value Category"/>
       <keyMapping columnObjectName="P_DT_Financials" columnName="FormBundleValueCategory"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="BETRH" order="31" aggregationType="sum" measureType="simple">
+    <measure id="BETRH" order="34" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount"/>
       <measureMapping columnObjectName="P_DT_Financials" columnName="BETRH"/>
     </measure>
-    <measure id="AUGBT" order="32" aggregationType="sum" measureType="simple">
+    <measure id="AssessmentAmount" order="35" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Assessment Amount"/>
+      <measureMapping columnObjectName="P_DT_Financials" columnName="AssessmentAmount"/>
+    </measure>
+    <measure id="AUGBT" order="36" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Clearing Amount"/>
       <measureMapping columnObjectName="P_DT_Financials" columnName="AUGBT"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
-    <measure id="CC_ASSMNT_CNT" order="35" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+  
+    <measure id="CC_DOCUMENT_COUNTER" order="39" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="Document Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="OPBEL"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      
+      
+      
+      
+      </measure>
+  
+    <measure id="CC_ASSMNT_CNT" order="40" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Assessment Counter"/>
       <exceptionAggregation>
         <attribute attributeName="FBNUM"/>
@@ -221,21 +240,10 @@
       
       
       
-      </measure>
-  
-    <measure id="CC_DOCUMENT_COUNTER" order="36" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
-      <descriptions defaultDescription="Document Counter"/>
-      <exceptionAggregation>
-        <attribute attributeName="OPBEL"/>
-      </exceptionAggregation>
-      <formula>1</formula>
       
-      
-      
-      </measure>
-  </calculatedMeasures>
+      </measure></calculatedMeasures>
   <restrictedMeasures>
-    <measure id="RC_TRANS_AMT" order="33" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+    <measure id="RC_TRANS_AMT" order="37" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Transferred Amount"/>
       <restriction logicalOperator="AND">
         <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
@@ -244,7 +252,7 @@
         <attributeName>BLART</attributeName>
       </restriction>
       </measure>
-    <measure id="RC_REVERSED_AMT" order="34" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+    <measure id="RC_REVERSED_AMT" order="38" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Reversed Amount"/>
       <restriction logicalOperator="AND">
         <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
