@@ -299,7 +299,7 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
 (&quot;AUGST&quot;!='9' and date(&quot;BUDAT&quot;) &lt;= date('$$IP_KeyDate$$')) OR
 (&quot;AUGST&quot;='9' and (date(&quot;BUDAT&quot;) &lt;= date('$$IP_KeyDate$$') OR (date(&quot;AUGBD&quot;) &lt;= date('$$IP_KeyDate$$') AND &quot;AUGBD&quot; != '00000000')))</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_DFKKKO_DFKKOP" cardinality="C1_N" joinType="inner">
+  <calculationView xsi:type="Calculation:JoinView" id="J_DFKKKO_DFKKOP" cardinality="C1_N" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="OPBEL"/>
@@ -445,16 +445,8 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
       <viewAttribute aggregationType="sum" id="CC_AgeDays"/>
       <viewAttribute id="CC_AgeDaysStatus"/>
       <viewAttribute id="CC_ValueCategory"/>
-      <viewAttribute id="AUGBL_BLART"/>
-      <viewAttribute hidden="true" id="JOIN$APPLK$APPLK"/>
-    </viewAttributes>
+      <viewAttribute id="AUGBL_BLART"/></viewAttributes>
     <calculatedViewAttributes/>
-    <input node="P_DFKKKO">
-      <mapping xsi:type="Calculation:AttributeMapping" source="MANDT" target="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" source="OPBEL" target="OPBEL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" source="BLART" target="AUGBL_BLART"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$APPLK$APPLK" source="APPLK"/>
-    </input>
     <input node="P_DFKKOP">
       <mapping xsi:type="Calculation:AttributeMapping" source="OPUPW" target="OPUPW"/>
       <mapping xsi:type="Calculation:AttributeMapping" source="OPUPK" target="OPUPK"/>
@@ -599,12 +591,17 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
       <mapping xsi:type="Calculation:AttributeMapping" source="CC_AgeDaysStatus" target="CC_AgeDaysStatus"/>
       <mapping xsi:type="Calculation:AttributeMapping" source="CC_ValueCategory" target="CC_ValueCategory"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="AUGBL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$APPLK$APPLK" source="APPLK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+    </input>
+    <input node="P_DFKKKO">
+      <mapping xsi:type="Calculation:AttributeMapping" source="BLART" target="AUGBL_BLART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APPLK" source="APPLK"/>
     </input>
     <joinAttribute name="MANDT"/>
-    <joinAttribute name="OPBEL"/>
-    <joinAttribute name="JOIN$APPLK$APPLK"/>
+    <joinAttribute name="AUGBL"/>
+    <joinAttribute name="APPLK"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKKO" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -1340,7 +1337,7 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
         <attributeReference alias="MANDT_3" attributeName="MANDT" hidden="true"/>
         <attributeReference alias="SPRAS_3" attributeName="SPRAS" hidden="true"/>
         <attributeReference alias="APPLK_3" attributeName="APPLK" hidden="true"/>
-        <attributeReference alias="TFK003T_LTEXT_1" attributeName="LTEXT">
+        <attributeReference alias="AUGBL_BLART_TEXT" attributeName="LTEXT">
           <descriptions defaultDescription="Clearing Documen Type Descriptiont "/>
         </attributeReference>
         <attributeReference alias="BLART_2" attributeName="BLART" hidden="true"/>
@@ -1407,11 +1404,11 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
       <upperLeftCorner x="221" y="292"/>
       <rectangleSize width="160" height="30"/>
     </shape>
-    <shape modelObjectNameSpace="J_DFKKKO_DFKKOP" modelObjectType="JoinNodeInput" modelObjectName="P_DFKKKO">
+    <shape modelObjectNameSpace="J_DFKKKO_DFKKOP" modelObjectType="JoinNodeInput" modelObjectName="P_DFKKOP">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="130"/>
     </shape>
-    <shape modelObjectNameSpace="J_DFKKKO_DFKKOP" modelObjectType="JoinNodeInput" modelObjectName="P_DFKKOP">
+    <shape modelObjectNameSpace="J_DFKKKO_DFKKOP" modelObjectType="JoinNodeInput" modelObjectName="P_DFKKKO">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="149"/>
     </shape>
