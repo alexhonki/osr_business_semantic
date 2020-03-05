@@ -37,6 +37,9 @@
   <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtFinancials">
     <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtFinancials</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVC_CO_CorrespondenceHistory">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVC_CO_CorrespondenceHistory</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_FormBundles" filterExpressionLanguage="SQL">
@@ -4041,693 +4044,1130 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     <restrictedViewAttributes/>
     <input node="P_PTFinancials"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_TAXRT_CORRHIST" joinType="fullOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="JOINT_FILER"/>
+      <viewAttribute id="BU_ID_TYPE"/>
+      <viewAttribute id="TAXPAYER_ID"/>
+      <viewAttribute id="ACCOUNT"/>
+      <viewAttribute id="REG_ID"/>
+      <viewAttribute id="REG_TYPE"/>
+      <viewAttribute id="APPLY_FROM"/>
+      <viewAttribute id="APPLY_TO"/>
+      <viewAttribute id="PERIOD_KEY"/>
+      <viewAttribute id="FBTYP"/>
+      <viewAttribute id="BETRW" aggregationType="sum"/>
+      <viewAttribute id="ERNAM"/>
+      <viewAttribute id="AENAM"/>
+      <viewAttribute id="KEYDT"/>
+      <viewAttribute id="FBSTA"/>
+      <viewAttribute id="FBUST"/>
+      <viewAttribute id="FBSTZ"/>
+      <viewAttribute id="DUE_DATE"/>
+      <viewAttribute id="LAST_FILING"/>
+      <viewAttribute id="BATCH_ID"/>
+      <viewAttribute id="TRANSACTION_TYPE"/>
+      <viewAttribute id="IN_CHANNEL"/>
+      <viewAttribute id="INDPR"/>
+      <viewAttribute id="KEYPP"/>
+      <viewAttribute id="ZZREASSESSED"/>
+      <viewAttribute id="ZZTRANSFERRED"/>
+      <viewAttribute id="ZZCLIENTREF"/>
+      <viewAttribute id="ZZSENDER"/>
+      <viewAttribute id="ZZELNOID"/>
+      <viewAttribute id="ZZELNOTXN"/>
+      <viewAttribute id="CURRENT_VERSION"/>
+      <viewAttribute id="ZZRFR_REQUESTER"/>
+      <viewAttribute id="FBTYP_TEXT"/>
+      <viewAttribute id="IN_CHANNEL_TEXT"/>
+      <viewAttribute id="FBSTA_TEXT"/>
+      <viewAttribute id="REVENUE_TYPE_TEXT"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="A_GROSS_SAL_WAGE" aggregationType="sum"/>
+      <viewAttribute id="A_ALLOWANCE" aggregationType="sum"/>
+      <viewAttribute id="A_BONUS" aggregationType="sum"/>
+      <viewAttribute id="A_COMMISSION" aggregationType="sum"/>
+      <viewAttribute id="A_EMPL_SUP_CONTRIB" aggregationType="sum"/>
+      <viewAttribute id="A_ELIG_TERM_PMT" aggregationType="sum"/>
+      <viewAttribute id="A_CONTRACTORS" aggregationType="sum"/>
+      <viewAttribute id="A_SHARE_SCHEMES" aggregationType="sum"/>
+      <viewAttribute id="A_APPRENT_PMT" aggregationType="sum"/>
+      <viewAttribute id="A_TRAINEES_PMT" aggregationType="sum"/>
+      <viewAttribute id="A_OTH_NON_TAX_WAGE" aggregationType="sum"/>
+      <viewAttribute id="A_INT_WAGES_Q"/>
+      <viewAttribute id="A_TOT_INT_WAGE" aggregationType="sum"/>
+      <viewAttribute id="A_TOT_QLD_GM" aggregationType="sum"/>
+      <viewAttribute id="A_TOT_INT_GM" aggregationType="sum"/>
+      <viewAttribute id="A_F_P_AND_P_FINAL" aggregationType="sum"/>
+      <viewAttribute id="A_F_P_AND_P_RESID" aggregationType="sum"/>
+      <viewAttribute id="A_EXCESS_DEDUCT" aggregationType="sum"/>
+      <viewAttribute id="A_EXCESS_REB" aggregationType="sum"/>
+      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES" aggregationType="sum"/>
+      <viewAttribute id="C_TOT_QLD_NON_TAX_WAGE" aggregationType="sum"/>
+      <viewAttribute id="C_REBATE_CALC" aggregationType="sum"/>
+      <viewAttribute id="C_TOT_GRP_AUST_WAGES" aggregationType="sum"/>
+      <viewAttribute id="C_F_TOTAL_PER_AMNT" aggregationType="sum"/>
+      <viewAttribute id="C_F_LAST_PER_AMNT" aggregationType="sum"/>
+      <viewAttribute id="C_F_LAST_PER_START"/>
+      <viewAttribute id="C_F_TOTAL_PER_END"/>
+      <viewAttribute id="C_P_AND_P_END_DATE"/>
+      <viewAttribute id="C_F_RESID_START"/>
+      <viewAttribute id="C_TAX_AMOUNT" aggregationType="sum"/>
+      <viewAttribute id="C_BASE_TAX" aggregationType="sum"/>
+      <viewAttribute id="C_REBATE_NETT" aggregationType="sum"/>
+      <viewAttribute id="C_PAY_TAX_AMOUNT" aggregationType="sum"/>
+      <viewAttribute id="C_TOT_PAID_PAYABLE" aggregationType="sum"/>
+      <viewAttribute id="C_PAY_TAX_LIAB_CREDIT" aggregationType="sum"/>
+      <viewAttribute id="CC_PeriodCycle"/>
+      <viewAttribute id="CC_DueDate"/>
+      <viewAttribute id="RELTYP"/>
+      <viewAttribute id="RTITL"/>
+      <viewAttribute id="CC_CREATE_DATE"/>
+      <viewAttribute id="CC_UPDATE_DATE"/>
+      <viewAttribute id="CC_Overdue"/>
+      <viewAttribute id="CC_OverdueDays" aggregationType="sum"/>
+      <viewAttribute id="PARTNER1"/>
+      <viewAttribute id="CC_PrtGroupFullName"/>
+      <viewAttribute id="CC_TaxPayerFullName"/>
+      <viewAttribute id="C_PAY_RECEIVED" aggregationType="sum"/>
+      <viewAttribute id="C_UTI_TOTAL" aggregationType="sum"/>
+      <viewAttribute id="C_PENALTY_TAX" aggregationType="sum"/>
+      <viewAttribute id="C_PENALTY_TOTAL" aggregationType="sum"/>
+      <viewAttribute id="C_TOTAL_LIABILITY" aggregationType="sum"/>
+      <viewAttribute id="C_DUE_DATE"/>
+      <viewAttribute id="C_UTI_START_DATE"/>
+      <viewAttribute id="C_NO_OF_UTI_DAYS" aggregationType="sum"/>
+      <viewAttribute id="C_DAILY_UTI_AMT" aggregationType="sum"/>
+      <viewAttribute id="A_UTI_REMITT" aggregationType="sum"/>
+      <viewAttribute id="A_UTI_REASON"/>
+      <viewAttribute id="A_PT_INCREASE" aggregationType="sum"/>
+      <viewAttribute id="A_PT_REMITT" aggregationType="sum"/>
+      <viewAttribute id="A_PT_REASON"/>
+      <viewAttribute id="A_REFUND_OPTION"/>
+      <viewAttribute id="A_ORIG_TOT_DUTY" aggregationType="sum"/>
+      <viewAttribute id="A_ORIG_UTI" aggregationType="sum"/>
+      <viewAttribute id="A_ORIG_PENALTY" aggregationType="sum"/>
+      <viewAttribute id="A_LOW_AMT_PAY" aggregationType="sum"/>
+      <viewAttribute id="A_CONT_NAME"/>
+      <viewAttribute id="A_CONT_NO"/>
+      <viewAttribute id="A_CONFIRM"/>
+      <viewAttribute id="C_TOTAL_ORIG" aggregationType="sum"/>
+      <viewAttribute id="C_CONFIRM_DATE"/>
+      <viewAttribute id="A_EMAIL_ADDRESS"/>
+      <viewAttribute id="A_MOBILE_NO"/>
+      <viewAttribute id="A_TITLE"/>
+      <viewAttribute id="C_PAYABLE_TXN" aggregationType="sum"/>
+      <viewAttribute id="CC_DefaultAssessments"/>
+      <viewAttribute id="CC_LiabDueDate"/>
+      <viewAttribute id="CC_UTIStartDate"/>
+      <viewAttribute id="CC_ConfirmDate"/>
+      <viewAttribute id="CC_NillAssessment"/>
+      <viewAttribute id="FiscalMonth"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="A_PT_CALC"/>
+      <viewAttribute id="A_ENTERED_PERIODIC_LIAB" aggregationType="sum"/>
+      <viewAttribute id="A_FIXED_DEDUCTION" aggregationType="sum"/>
+      <viewAttribute id="C_DEDUCTION_ALLOWED" aggregationType="sum"/>
+      <viewAttribute id="A_REGIONAL_EMPLOYER"/>
+      <viewAttribute id="A_GROUP_AUS_WAGES"/>
+      <viewAttribute id="RC_APT_Raised" aggregationType="sum"/>
+      <viewAttribute id="RC_APT_Cleared" aggregationType="sum"/>
+      <viewAttribute id="RC_LTI_Raised" aggregationType="sum"/>
+      <viewAttribute id="RC_LTI_Cleared" aggregationType="sum"/>
+      <viewAttribute id="RC_PTX_Raised" aggregationType="sum"/>
+      <viewAttribute id="RC_PTX_Cleared" aggregationType="sum"/>
+      <viewAttribute id="RC_UTI_Raised" aggregationType="sum"/>
+      <viewAttribute id="RC_UTI_Cleared" aggregationType="sum"/>
+      <viewAttribute id="A_DIRECTOR_FEE" aggregationType="sum"/>
+      <viewAttribute id="A_FRINGE_BENEFIT" aggregationType="sum"/>
+      <viewAttribute id="C_CALC_RATE" aggregationType="sum"/>
+      <viewAttribute id="A_CEASE_EMPL"/>
+      <viewAttribute id="A_CEASE_EMPL_DATE"/>
+      <viewAttribute id="A_GRP_STAT_ENT"/>
+      <viewAttribute id="A_STAT_NEXT"/>
+      <viewAttribute id="A_FIVE_MIL"/>
+      <viewAttribute id="A_ADMIN_APP"/>
+      <viewAttribute id="A_ADMIN_DATE"/>
+      <viewAttribute id="A_ADMIN_CEASE"/>
+      <viewAttribute id="A_ADMIN_CEASE_DATE"/>
+      <viewAttribute id="CC_CurrentFBN"/>
+      <viewAttribute id="FT_BPGroupingType"/>
+      <viewAttribute id="CC_ValidTo"/>
+      <viewAttribute id="CC_RelValidFrom"/>
+      <viewAttribute id="CC_RelValidTo"/>
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_WAGES" aggregationType="sum"/>
+      <viewAttribute id="CC_APPRENTICE_TRAINEE_FLAG"/>
+      <viewAttribute id="CC_ValidFrom"/>
+      <viewAttribute id="CC_CreatedAt"/>
+      <viewAttribute id="ERDAT"/>
+      <viewAttribute id="CC_RELNR" aggregationType="sum"/>
+      <viewAttribute id="CC_FullYearTR"/>
+      <viewAttribute id="CC_SplitPeriodTotalAmount" aggregationType="sum"/>
+      <viewAttribute id="CC_LiaRefund"/>
+      <viewAttribute id="CC_ISPRTGROUP"/>
+      <viewAttribute id="INCORR_FAEDN"/>
+      <viewAttribute id="INCORR_INDATE"/>
+      <viewAttribute id="CC_COVIDFLAG"/>
+      <viewAttribute id="CORR_GPART"/>
+      <viewAttribute id="CORR_ABRZU"/>
+      <viewAttribute id="CORR_ABRZO"/>
+      <viewAttribute id="CORR_PERSL"/>
+      <viewAttribute id="COKEY"/>
+      <viewAttribute id="CALLER"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_TAXRETURN_FINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="TAXPAYER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOINT_FILER" source="JOINT_FILER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_ID_TYPE" source="BU_ID_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER_ID" source="TAXPAYER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT" source="ACCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REG_ID" source="REG_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REG_TYPE" source="REG_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APPLY_FROM" source="APPLY_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APPLY_TO" source="APPLY_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIOD_KEY" source="PERIOD_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBTYP" source="FBTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AENAM" source="AENAM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KEYDT" source="KEYDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA" source="FBSTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBUST" source="FBUST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBSTZ" source="FBSTZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="DUE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAST_FILING" source="LAST_FILING"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_TYPE" source="TRANSACTION_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IN_CHANNEL" source="IN_CHANNEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDPR" source="INDPR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KEYPP" source="KEYPP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZREASSESSED" source="ZZREASSESSED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTRANSFERRED" source="ZZTRANSFERRED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZCLIENTREF" source="ZZCLIENTREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSENDER" source="ZZSENDER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZELNOID" source="ZZELNOID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZELNOTXN" source="ZZELNOTXN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_VERSION" source="CURRENT_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZRFR_REQUESTER" source="ZZRFR_REQUESTER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBTYP_TEXT" source="FBTYP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IN_CHANNEL_TEXT" source="IN_CHANNEL_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA_TEXT" source="FBSTA_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_TYPE_TEXT" source="REVENUE_TYPE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_GROSS_SAL_WAGE" source="A_GROSS_SAL_WAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ALLOWANCE" source="A_ALLOWANCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_BONUS" source="A_BONUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_COMMISSION" source="A_COMMISSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_EMPL_SUP_CONTRIB" source="A_EMPL_SUP_CONTRIB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ELIG_TERM_PMT" source="A_ELIG_TERM_PMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_CONTRACTORS" source="A_CONTRACTORS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_SHARE_SCHEMES" source="A_SHARE_SCHEMES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_APPRENT_PMT" source="A_APPRENT_PMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TRAINEES_PMT" source="A_TRAINEES_PMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_OTH_NON_TAX_WAGE" source="A_OTH_NON_TAX_WAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_INT_WAGES_Q" source="A_INT_WAGES_Q"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TOT_INT_WAGE" source="A_TOT_INT_WAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TOT_QLD_GM" source="A_TOT_QLD_GM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TOT_INT_GM" source="A_TOT_INT_GM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_F_P_AND_P_FINAL" source="A_F_P_AND_P_FINAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_F_P_AND_P_RESID" source="A_F_P_AND_P_RESID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_EXCESS_DEDUCT" source="A_EXCESS_DEDUCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_EXCESS_REB" source="A_EXCESS_REB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_QLD_TXBLE_WAGES" source="C_TOT_QLD_TXBLE_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_QLD_NON_TAX_WAGE" source="C_TOT_QLD_NON_TAX_WAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_REBATE_CALC" source="C_REBATE_CALC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_GRP_AUST_WAGES" source="C_TOT_GRP_AUST_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_TOTAL_PER_AMNT" source="C_F_TOTAL_PER_AMNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_LAST_PER_AMNT" source="C_F_LAST_PER_AMNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_LAST_PER_START" source="C_F_LAST_PER_START"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_TOTAL_PER_END" source="C_F_TOTAL_PER_END"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_P_AND_P_END_DATE" source="C_P_AND_P_END_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_F_RESID_START" source="C_F_RESID_START"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TAX_AMOUNT" source="C_TAX_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_BASE_TAX" source="C_BASE_TAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_REBATE_NETT" source="C_REBATE_NETT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_PAY_TAX_AMOUNT" source="C_PAY_TAX_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_PAID_PAYABLE" source="C_TOT_PAID_PAYABLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_PAY_TAX_LIAB_CREDIT" source="C_PAY_TAX_LIAB_CREDIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PeriodCycle" source="CC_PeriodCycle"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DueDate" source="CC_DueDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP" source="RELTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RTITL" source="RTITL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CREATE_DATE" source="CC_CREATE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPDATE_DATE" source="CC_UPDATE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Overdue" source="CC_Overdue"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_OverdueDays" source="CC_OverdueDays"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PrtGroupFullName" source="CC_PrtGroupFullName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxPayerFullName" source="CC_TaxPayerFullName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_PAY_RECEIVED" source="C_PAY_RECEIVED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_UTI_TOTAL" source="C_UTI_TOTAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_PENALTY_TAX" source="C_PENALTY_TAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_PENALTY_TOTAL" source="C_PENALTY_TOTAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOTAL_LIABILITY" source="C_TOTAL_LIABILITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_DUE_DATE" source="C_DUE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_UTI_START_DATE" source="C_UTI_START_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_NO_OF_UTI_DAYS" source="C_NO_OF_UTI_DAYS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_DAILY_UTI_AMT" source="C_DAILY_UTI_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_UTI_REMITT" source="A_UTI_REMITT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_UTI_REASON" source="A_UTI_REASON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_PT_INCREASE" source="A_PT_INCREASE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_PT_REMITT" source="A_PT_REMITT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_PT_REASON" source="A_PT_REASON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_REFUND_OPTION" source="A_REFUND_OPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ORIG_TOT_DUTY" source="A_ORIG_TOT_DUTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ORIG_UTI" source="A_ORIG_UTI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ORIG_PENALTY" source="A_ORIG_PENALTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_LOW_AMT_PAY" source="A_LOW_AMT_PAY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_CONT_NAME" source="A_CONT_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_CONT_NO" source="A_CONT_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_CONFIRM" source="A_CONFIRM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOTAL_ORIG" source="C_TOTAL_ORIG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_CONFIRM_DATE" source="C_CONFIRM_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_EMAIL_ADDRESS" source="A_EMAIL_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_MOBILE_NO" source="A_MOBILE_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_TITLE" source="A_TITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_PAYABLE_TXN" source="C_PAYABLE_TXN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_DefaultAssessments" source="CC_DefaultAssessments"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LiabDueDate" source="CC_LiabDueDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_UTIStartDate" source="CC_UTIStartDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ConfirmDate" source="CC_ConfirmDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_NillAssessment" source="CC_NillAssessment"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_PT_CALC" source="A_PT_CALC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ENTERED_PERIODIC_LIAB" source="A_ENTERED_PERIODIC_LIAB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_FIXED_DEDUCTION" source="A_FIXED_DEDUCTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_DEDUCTION_ALLOWED" source="C_DEDUCTION_ALLOWED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_REGIONAL_EMPLOYER" source="A_REGIONAL_EMPLOYER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_GROUP_AUS_WAGES" source="A_GROUP_AUS_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_APT_Raised" source="RC_APT_Raised"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_APT_Cleared" source="RC_APT_Cleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_LTI_Raised" source="RC_LTI_Raised"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_LTI_Cleared" source="RC_LTI_Cleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_PTX_Raised" source="RC_PTX_Raised"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_PTX_Cleared" source="RC_PTX_Cleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_UTI_Raised" source="RC_UTI_Raised"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_UTI_Cleared" source="RC_UTI_Cleared"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_DIRECTOR_FEE" source="A_DIRECTOR_FEE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_FRINGE_BENEFIT" source="A_FRINGE_BENEFIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_CALC_RATE" source="C_CALC_RATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_CEASE_EMPL" source="A_CEASE_EMPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_CEASE_EMPL_DATE" source="A_CEASE_EMPL_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_GRP_STAT_ENT" source="A_GRP_STAT_ENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_STAT_NEXT" source="A_STAT_NEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_FIVE_MIL" source="A_FIVE_MIL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ADMIN_APP" source="A_ADMIN_APP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ADMIN_DATE" source="A_ADMIN_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ADMIN_CEASE" source="A_ADMIN_CEASE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_ADMIN_CEASE_DATE" source="A_ADMIN_CEASE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CurrentFBN" source="CC_CurrentFBN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="FT_BPGroupingType"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidTo" source="CC_ValidTo"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidFrom" source="CC_RelValidFrom"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RelValidTo" source="CC_RelValidTo"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_WAGES" source="CC_APPRENTICE_TRAINEE_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_APPRENTICE_TRAINEE_FLAG" source="CC_APPRENTICE_TRAINEE_FLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CreatedAt" source="CC_CreatedAt"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_RELNR" source="CC_RELNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullYearTR" source="CC_FullYearTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_SplitPeriodTotalAmount" source="CC_SplitPeriodTotalAmount"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LiaRefund" source="CC_LiaRefund"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ISPRTGROUP" source="CC_ISPRTGROUP"/>
+    </input>
+    <input node="P_CORRHIST">
+      <mapping xsi:type="Calculation:AttributeMapping" target="INCORR_FAEDN" source="INCORR_FAEDN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INCORR_INDATE" source="INCORR_INDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_COVIDFLAG" source="CC_COVIDFLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORR_GPART" source="CORR_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORR_ABRZU" source="CORR_ABRZU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORR_ABRZO" source="CORR_ABRZO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORR_PERSL" source="CORR_PERSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COKEY" source="COKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CALLER" source="CALLER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CALLER"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="CASE_GUID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CORRHIST" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="COTYP"/>
+      <viewAttribute id="INCORR_FAEDN"/>
+      <viewAttribute id="INCORR_INDATE"/>
+      <viewAttribute id="INCOTYP"/>
+      <viewAttribute id="CALLER"/>
+      <viewAttribute id="CORR_GPART"/>
+      <viewAttribute id="CORR_ABRZU"/>
+      <viewAttribute id="CORR_ABRZO"/>
+      <viewAttribute id="CORR_PERSL"/>
+      <viewAttribute id="COKEY"/>
+      <viewAttribute id="AUGRD"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_COVIDFLAG" datatype="NVARCHAR" length="1" expressionLanguage="SQL">
+        <formula>CASE
+    WHEN &quot;INCORR_FAEDN&quot; = '20200803' THEN 'X'
+    ELSE ''
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVC_CO_CorrespondenceHistory">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORR_GPART" source="GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORR_ABRZU" source="ABRZU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORR_ABRZO" source="ABRZO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORR_PERSL" source="PERSL"/>
+    </input>
+    <filter>&quot;COTYP&quot; = 'P700' AND &quot;INCOTYP&quot; IN ('PT-M', 'PT-A', 'PT-H', 'PT-Q') AND &quot;AUGRD&quot; &lt;&gt; 'S'</filter>
+  </calculationView>
 </calculationViews>
-<logicalModel id="J_TAXRETURN_FINANCIALS">
+<logicalModel id="J_TAXRT_CORRHIST">
   <attributes>
     <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false" key="true">
       <descriptions defaultDescription="SAP Client"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="MANDT"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="MANDT"/>
     </attribute>
     <attribute id="CASE_GUID" order="2" displayAttribute="false" attributeHierarchyActive="false" key="true">
       <descriptions defaultDescription="GUID"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CASE_GUID"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CASE_GUID"/>
     </attribute>
     <attribute id="FBNUM" order="3" semanticType="empty" descriptionColumnName="FBNUM" displayAttribute="false" attributeHierarchyActive="false" key="true">
       <descriptions defaultDescription="Form Bundle Number"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FBNUM"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="FBNUM"/>
     </attribute>
     <attribute id="TAXPAYER" order="4" semanticType="empty" descriptionColumnName="CC_TaxPayerFullName" displayAttribute="false" attributeHierarchyActive="false" key="true">
       <descriptions defaultDescription="Business Partner"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="TAXPAYER"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="TAXPAYER"/>
     </attribute>
     <attribute id="JOINT_FILER" order="5" semanticType="empty" descriptionColumnName="JOINT_FILER" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BP Number Of Joint Filler"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="JOINT_FILER"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="JOINT_FILER"/>
     </attribute>
     <attribute id="BU_ID_TYPE" order="6" semanticType="empty" descriptionColumnName="BU_ID_TYPE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Identification Type"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="BU_ID_TYPE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="BU_ID_TYPE"/>
     </attribute>
     <attribute id="TAXPAYER_ID" order="7" semanticType="empty" descriptionColumnName="TAXPAYER_ID" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ID Number Of Joint Filler"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="TAXPAYER_ID"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="TAXPAYER_ID"/>
     </attribute>
     <attribute id="ACCOUNT" order="8" semanticType="empty" descriptionColumnName="ACCOUNT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account Number"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="ACCOUNT"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="ACCOUNT"/>
     </attribute>
     <attribute id="REG_ID" order="9" semanticType="empty" descriptionColumnName="REG_ID" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reference Specifications from Contract"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="REG_ID"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="REG_ID"/>
     </attribute>
     <attribute id="REG_TYPE" order="10" semanticType="empty" descriptionColumnName="REG_TYPE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subapplication in Contract Accounts Receivable and Payable"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="REG_TYPE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="REG_TYPE"/>
     </attribute>
     <attribute id="APPLY_FROM" order="11" semanticType="empty" descriptionColumnName="APPLY_FROM" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Lower Limit of Settlement Period"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="APPLY_FROM"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="APPLY_FROM"/>
     </attribute>
     <attribute id="APPLY_TO" order="12" semanticType="empty" descriptionColumnName="APPLY_TO" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Upper Limit of the Billing Period"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="APPLY_TO"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="APPLY_TO"/>
     </attribute>
     <attribute id="PERIOD_KEY" order="13" semanticType="empty" descriptionColumnName="PERIOD_KEY" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Key for Period Assignment"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="PERIOD_KEY"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="PERIOD_KEY"/>
     </attribute>
     <attribute id="FBTYP" order="14" semanticType="empty" descriptionColumnName="FBTYP_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Form Bundle Type"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FBTYP"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="FBTYP"/>
     </attribute>
     <attribute id="ERNAM" order="16" semanticType="empty" descriptionColumnName="ERNAM" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Who Created the Object"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="ERNAM"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="ERNAM"/>
     </attribute>
     <attribute id="AENAM" order="17" semanticType="empty" descriptionColumnName="AENAM" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User who changed object"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="AENAM"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="AENAM"/>
     </attribute>
     <attribute id="KEYDT" order="18" semanticType="empty" descriptionColumnName="KEYDT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Key Date for Determination of BRF Events"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="KEYDT"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="KEYDT"/>
     </attribute>
     <attribute id="FBSTA" order="19" semanticType="empty" descriptionColumnName="FBSTA_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Status of a Form Bundle"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FBSTA"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="FBSTA"/>
     </attribute>
     <attribute id="FBUST" order="20" semanticType="empty" descriptionColumnName="FBUST" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="User Status of a Form Bundle"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FBUST"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="FBUST"/>
     </attribute>
     <attribute id="FBSTZ" order="21" semanticType="empty" descriptionColumnName="FBSTZ" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Status Information Replicated Sucessfully"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FBSTZ"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="FBSTZ"/>
     </attribute>
     <attribute id="DUE_DATE" order="22" semanticType="empty" descriptionColumnName="DUE_DATE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Due Date for Tax Return"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="DUE_DATE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="DUE_DATE"/>
     </attribute>
     <attribute id="LAST_FILING" order="23" semanticType="empty" descriptionColumnName="LAST_FILING" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Filing Date"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="LAST_FILING"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="LAST_FILING"/>
     </attribute>
     <attribute id="BATCH_ID" order="24" semanticType="empty" descriptionColumnName="BATCH_ID" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Identification Number of Lot"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="BATCH_ID"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="BATCH_ID"/>
     </attribute>
     <attribute id="TRANSACTION_TYPE" order="25" semanticType="empty" descriptionColumnName="TRANSACTION_TYPE" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Transaction Type"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="TRANSACTION_TYPE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="TRANSACTION_TYPE"/>
     </attribute>
     <attribute id="IN_CHANNEL" order="26" semanticType="empty" descriptionColumnName="IN_CHANNEL_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Communication Channel"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="IN_CHANNEL"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="IN_CHANNEL"/>
     </attribute>
     <attribute id="INDPR" order="27" semanticType="empty" descriptionColumnName="INDPR" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Process Indicator"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="INDPR"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="INDPR"/>
     </attribute>
     <attribute id="KEYPP" order="28" semanticType="empty" descriptionColumnName="KEYPP" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subarea for Parallelization in Mass Processing"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="KEYPP"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="KEYPP"/>
     </attribute>
     <attribute id="ZZREASSESSED" order="29" semanticType="empty" descriptionColumnName="ZZREASSESSED" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reassessed"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="ZZREASSESSED"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="ZZREASSESSED"/>
     </attribute>
     <attribute id="ZZTRANSFERRED" order="30" semanticType="empty" descriptionColumnName="ZZTRANSFERRED" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Transferred"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="ZZTRANSFERRED"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="ZZTRANSFERRED"/>
     </attribute>
     <attribute id="ZZCLIENTREF" order="31" semanticType="empty" descriptionColumnName="ZZCLIENTREF" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Client Reference Number"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="ZZCLIENTREF"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="ZZCLIENTREF"/>
     </attribute>
     <attribute id="ZZSENDER" order="32" semanticType="empty" descriptionColumnName="ZZSENDER" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Sender Id"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="ZZSENDER"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="ZZSENDER"/>
     </attribute>
     <attribute id="ZZELNOID" order="33" semanticType="empty" descriptionColumnName="ZZELNOID" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ELN Id"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="ZZELNOID"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="ZZELNOID"/>
     </attribute>
     <attribute id="ZZELNOTXN" order="34" semanticType="empty" descriptionColumnName="ZZELNOTXN" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ELN Transaction Id"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="ZZELNOTXN"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="ZZELNOTXN"/>
     </attribute>
     <attribute id="CURRENT_VERSION" order="35" semanticType="empty" descriptionColumnName="CURRENT_VERSION" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Current version of forms"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CURRENT_VERSION"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CURRENT_VERSION"/>
     </attribute>
     <attribute id="ZZRFR_REQUESTER" order="36" semanticType="empty" descriptionColumnName="ZZRFR_REQUESTER" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="RfR Requester"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="ZZRFR_REQUESTER"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="ZZRFR_REQUESTER"/>
     </attribute>
     <attribute id="FBTYP_TEXT" order="37" semanticType="empty" descriptionColumnName="FBTYP_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Form Bundle Type Text"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FBTYP_TEXT"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="FBTYP_TEXT"/>
     </attribute>
     <attribute id="IN_CHANNEL_TEXT" order="38" semanticType="empty" descriptionColumnName="IN_CHANNEL_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Comm Channel Text"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="IN_CHANNEL_TEXT"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="IN_CHANNEL_TEXT"/>
     </attribute>
     <attribute id="FBSTA_TEXT" order="39" semanticType="empty" descriptionColumnName="FBSTA_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FBSTA_TEXT"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FBSTA_TEXT"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="FBSTA_TEXT"/>
     </attribute>
     <attribute id="REVENUE_TYPE_TEXT" order="40" semanticType="empty" descriptionColumnName="REVENUE_TYPE_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Revenue Type Text"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="REVENUE_TYPE_TEXT"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="REVENUE_TYPE_TEXT"/>
     </attribute>
     <attribute id="VERSION" order="41" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
       <descriptions defaultDescription="Version"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="VERSION"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="VERSION"/>
     </attribute>
     <attribute id="A_INT_WAGES_Q" order="42" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
       <descriptions defaultDescription="Interstate Wages Flag"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_INT_WAGES_Q"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_INT_WAGES_Q"/>
     </attribute>
     <attribute id="CC_APPRENTICE_TRAINEE_FLAG" key="true" order="53" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="A&amp;T Wages Flag"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_APPRENTICE_TRAINEE_FLAG"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_APPRENTICE_TRAINEE_FLAG"/>
     </attribute>
     <attribute id="C_F_LAST_PER_START" order="70" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Period Start"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_F_LAST_PER_START"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_F_LAST_PER_START"/>
     </attribute>
     <attribute id="C_F_TOTAL_PER_END" order="71" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Total Periodic Amount"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_F_TOTAL_PER_END"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_F_TOTAL_PER_END"/>
     </attribute>
     <attribute id="C_P_AND_P_END_DATE" order="72" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Periodic End "/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_P_AND_P_END_DATE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_P_AND_P_END_DATE"/>
     </attribute>
     <attribute id="C_F_RESID_START" order="73" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Residual Start"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_F_RESID_START"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_F_RESID_START"/>
     </attribute>
   
     <attribute id="CC_PeriodCycle" order="79" semanticType="empty" descriptionColumnName="CC_PeriodCycle" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Cycle"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_PeriodCycle"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_PeriodCycle"/>
   
     </attribute>
     <attribute id="CC_DueDate" order="80" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Due Date"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_DueDate"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_DueDate"/>
     </attribute>
     <attribute id="RELTYP" order="81" descriptionColumnName="RTITL" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rel. BP Grouping Type"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RELTYP"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="RELTYP"/>
     </attribute>
     <attribute id="RTITL" order="82" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rel. BP Grouping Type (Text)"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RTITL"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="RTITL"/>
     </attribute>
     <attribute id="CC_RelValidFrom" order="83" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rel. BP Grouping Type Valid From"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_RelValidFrom"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_RelValidFrom"/>
     </attribute>
     <attribute id="CC_RelValidTo" order="84" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rel. BP Grouping Type Valid To"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_RelValidTo"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_RelValidTo"/>
     </attribute>
     <attribute id="FT_BPGroupingType" order="85" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fact BP Grouping Type"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FT_BPGroupingType"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="FT_BPGroupingType"/>
     </attribute>
     <attribute id="CC_ValidFrom" order="86" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fact BP Grouping Type Valid From"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_ValidFrom"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_ValidFrom"/>
     </attribute>
     <attribute id="CC_ValidTo" order="87" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fact BP Grouping Type Valid To"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_ValidTo"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_ValidTo"/>
     </attribute>
   
     <attribute id="CC_CREATE_DATE" order="89" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Creation Date"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_CREATE_DATE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_CREATE_DATE"/>
   
     </attribute>
     <attribute id="CC_UPDATE_DATE" order="90" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Modified/Closed Date"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_UPDATE_DATE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_UPDATE_DATE"/>
     </attribute>
     <attribute id="CC_Overdue" order="91" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Overdue"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_Overdue"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_Overdue"/>
     </attribute>
   
     <attribute id="CC_OverdueDays" order="92" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Days Overdue"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_OverdueDays"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_OverdueDays"/>
   
     </attribute>
   
     <attribute id="PARTNER1" order="93" descriptionColumnName="CC_PrtGroupFullName" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PRT/Floating Group"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="PARTNER1"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="PARTNER1"/>
   
     </attribute>
     <attribute id="CC_TaxPayerFullName" order="94" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Name"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_TaxPayerFullName"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_TaxPayerFullName"/>
     </attribute>
     <attribute id="CC_PrtGroupFullName" order="95" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PRT Group Name"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_PrtGroupFullName"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_PrtGroupFullName"/>
     </attribute>
     <attribute id="C_NO_OF_UTI_DAYS" order="101" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - UTI Days Overdue"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_NO_OF_UTI_DAYS"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_NO_OF_UTI_DAYS"/>
     </attribute>
     <attribute id="A_UTI_REASON" order="104" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - UTI Remit Reason"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_UTI_REASON"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_UTI_REASON"/>
     </attribute>
     <attribute id="A_PT_REASON" order="107" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Penalty Tax Reason"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_PT_REASON"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_PT_REASON"/>
     </attribute>
     <attribute id="A_CONT_NAME" order="112" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Name"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_CONT_NAME"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_CONT_NAME"/>
     </attribute>
     <attribute id="A_CONT_NO" order="113" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Phone"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_CONT_NO"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_CONT_NO"/>
     </attribute>
     <attribute id="A_CONFIRM" order="114" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Flag"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_CONFIRM"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_CONFIRM"/>
     </attribute>
     <attribute id="A_EMAIL_ADDRESS" order="116" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Email"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_EMAIL_ADDRESS"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_EMAIL_ADDRESS"/>
     </attribute>
     <attribute id="A_MOBILE_NO" order="117" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Mobile"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_MOBILE_NO"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_MOBILE_NO"/>
     </attribute>
     <attribute id="A_TITLE" order="118" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Title"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TITLE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_TITLE"/>
     </attribute>
   
     <attribute id="CC_DefaultAssessments" order="120" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Default Assessment"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_DefaultAssessments"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_DefaultAssessments"/>
   
     </attribute>
     <attribute id="CC_LiabDueDate" order="121" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Transaction Due Date"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_LiabDueDate"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_LiabDueDate"/>
     </attribute>
     <attribute id="CC_UTIStartDate" order="122" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - UTI Start Date"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_UTIStartDate"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_UTIStartDate"/>
     </attribute>
     <attribute id="CC_ConfirmDate" order="123" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Liab. - Acknowledgment Date"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_ConfirmDate"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_ConfirmDate"/>
     </attribute>
   
     <attribute id="CC_NillAssessment" order="124" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Nill Assessment"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_NillAssessment"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_NillAssessment"/>
   
     </attribute>
   
     <attribute id="FiscalMonth" order="125" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fiscal Period"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FiscalMonth"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="FiscalMonth"/>
   
     </attribute>
     <attribute id="FISCAL_YEAR" order="126" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fiscal Year"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="FISCAL_YEAR"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="FISCAL_YEAR"/>
     </attribute>
   
     <attribute id="A_PT_CALC" order="127" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Per. - Needs To Calculate PT Liability"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_PT_CALC"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_PT_CALC"/>
   
     </attribute>
     <attribute id="A_REGIONAL_EMPLOYER" order="131" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Per. - Claimed Regional Employer Disc"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_REGIONAL_EMPLOYER"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_REGIONAL_EMPLOYER"/>
     </attribute>
     <attribute id="A_GROUP_AUS_WAGES" order="132" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Per. - Will Pay over 6.5M on AUS Wages"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_GROUP_AUS_WAGES"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_GROUP_AUS_WAGES"/>
     </attribute>
   
     <attribute id="C_CALC_RATE" order="143" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Rate"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_CALC_RATE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_CALC_RATE"/>
   
     </attribute>
   
     <attribute id="A_CEASE_EMPL" order="144" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Cease To Employ"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_CEASE_EMPL"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_CEASE_EMPL"/>
   
     </attribute>
     <attribute id="A_CEASE_EMPL_DATE" order="145" semanticType="date" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Cease To Employ Date"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_CEASE_EMPL_DATE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_CEASE_EMPL_DATE"/>
     </attribute>
     <attribute id="A_GRP_STAT_ENT" order="146" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Change Employer Status"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_GRP_STAT_ENT"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_GRP_STAT_ENT"/>
     </attribute>
     <attribute id="A_STAT_NEXT" order="147" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - New Employer Status"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_STAT_NEXT"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_STAT_NEXT"/>
     </attribute>
     <attribute id="A_FIVE_MIL" order="148" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Group Pays Over 5.5M"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_FIVE_MIL"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_FIVE_MIL"/>
     </attribute>
     <attribute id="A_ADMIN_APP" order="149" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Admin. Appointed"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ADMIN_APP"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_ADMIN_APP"/>
     </attribute>
     <attribute id="A_ADMIN_DATE" order="150" semanticType="date" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Admin. Appointed Date"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ADMIN_DATE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_ADMIN_DATE"/>
     </attribute>
     <attribute id="A_ADMIN_CEASE" order="151" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Admin. Ceased"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ADMIN_CEASE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_ADMIN_CEASE"/>
     </attribute>
     <attribute id="A_ADMIN_CEASE_DATE" order="152" semanticType="date" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="St. Change - Admin. Ceased Date"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ADMIN_CEASE_DATE"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_ADMIN_CEASE_DATE"/>
     </attribute>
   
     <attribute id="CC_FullYearTR" order="153" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Full Year Assessment Flag"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_FullYearTR"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_FullYearTR"/>
   
     </attribute>
   
     <attribute id="A_REFUND_OPTION" order="155" displayAttribute="false" attributeHierarchyActive="false" replaceNull="false">
       <descriptions defaultDescription="Liab. - Refund to Be Deposited"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_LiaRefund"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_LiaRefund"/>
   
     </attribute>
   
     <attribute id="CC_CurrentFBN" order="156" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Current Assessment (For Period)"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_CurrentFBN"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_CurrentFBN"/>
   
     </attribute>
     <attribute id="CC_ISPRTGROUP" order="157" displayAttribute="false" attributeHierarchyActive="false" replaceNull="true">
       <descriptions defaultDescription="Is PRT Group Flag"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_ISPRTGROUP"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_ISPRTGROUP"/>
     </attribute>
   
     <attribute id="CC_CreatedAt" order="158" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Rel Grouping Type Created Date"/>
   
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_CreatedAt"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_CreatedAt"/>
   
     </attribute>
     <attribute id="ERDAT" order="159" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fact Grouping Type Created Date"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="ERDAT"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="ERDAT"/>
     </attribute>
     <attribute id="CC_RELNR" order="160" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Relationship ID"/>
-      <keyMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_RELNR"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_RELNR"/>
+    </attribute>
+  
+    <attribute id="INCORR_FAEDN" order="161" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Inbound Correspondence Due Date"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="INCORR_FAEDN"/>
+    </attribute>
+    <attribute id="INCORR_INDATE" order="162" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Date Inbound Correspondence Received"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="INCORR_INDATE"/>
+    </attribute>
+    <attribute id="CC_COVIDFLAG" order="163" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_COVIDFLAG"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_COVIDFLAG"/>
+    </attribute>
+    <attribute id="CORR_GPART" order="164" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CORR_GPART"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CORR_GPART"/>
+    </attribute>
+    <attribute id="CORR_ABRZU" order="165" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CORR_ABRZU"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CORR_ABRZU"/>
+    </attribute>
+    <attribute id="CORR_ABRZO" order="166" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CORR_ABRZO"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CORR_ABRZO"/>
+    </attribute>
+    <attribute id="CORR_PERSL" order="167" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CORR_PERSL"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CORR_PERSL"/>
+    </attribute>
+    <attribute id="COKEY" order="168" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COKEY"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="COKEY"/>
+    </attribute>
+    <attribute id="CALLER" order="171" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Caller for Inbound Correspondence"/>
+      <keyMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CALLER"/>
     </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_CORR_STATUS" order="170" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Correspondence Status"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="32">
+        <formula>CASE
+    WHEN &quot;CASE_GUID&quot; IS NOT NULL THEN 'Lodged'
+    WHEN &quot;CASE_GUID&quot; IS NULL AND &quot;CALLER&quot; &lt;&gt; '' THEN 'Lodged - Tax Return unavailable'
+    WHEN &quot;CASE_GUID&quot; IS NULL AND &quot;CALLER&quot; = '' THEN 'Unlodged'
+    ELSE 'Err'
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures>
     <measure id="BETRW" order="15" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Return Amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="BETRW"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="BETRW"/>
     </measure>
     <measure id="A_GROSS_SAL_WAGE" order="43" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Gross S/W"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_GROSS_SAL_WAGE"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_GROSS_SAL_WAGE"/>
     </measure>
     <measure id="A_ALLOWANCE" order="44" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Allowances"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ALLOWANCE"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_ALLOWANCE"/>
     </measure>
     <measure id="A_BONUS" order="45" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Bonuses"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_BONUS"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_BONUS"/>
     </measure>
     <measure id="A_COMMISSION" order="46" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Commissions"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_COMMISSION"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_COMMISSION"/>
     </measure>
     <measure id="A_EMPL_SUP_CONTRIB" order="47" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Emp. Super Contributions"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_EMPL_SUP_CONTRIB"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_EMPL_SUP_CONTRIB"/>
     </measure>
     <measure id="A_ELIG_TERM_PMT" order="48" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Terminations Payments"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ELIG_TERM_PMT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_ELIG_TERM_PMT"/>
     </measure>
     <measure id="A_CONTRACTORS" order="49" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Contractors"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_CONTRACTORS"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_CONTRACTORS"/>
     </measure>
     <measure id="A_SHARE_SCHEMES" order="50" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Shares and Options"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_SHARE_SCHEMES"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_SHARE_SCHEMES"/>
     </measure>
     <measure id="A_APPRENT_PMT" order="51" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="ANFN Apprentices Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_APPRENT_PMT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_APPRENT_PMT"/>
     </measure>
     <measure id="A_TRAINEES_PMT" order="52" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="ANFN Trainees Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TRAINEES_PMT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_TRAINEES_PMT"/>
     </measure>
   
     <measure id="CC_APPRENTICE_TRAINEE_WAGES" order="54" aggregationType="sum" measureType="simple" key="true">
       <descriptions defaultDescription="Apprentice and Trainee Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_APPRENTICE_TRAINEE_WAGES"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_APPRENTICE_TRAINEE_WAGES"/>
     </measure>
   
     <measure id="C_REBATE_CALC" order="55" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Gross A&amp;T Rebate"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_REBATE_CALC"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_REBATE_CALC"/>
     </measure>
     <measure id="C_REBATE_NETT" order="56" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Applied Rebate"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_REBATE_NETT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_REBATE_NETT"/>
     </measure>
     <measure id="A_OTH_NON_TAX_WAGE" order="57" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Other Non-taxable Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_OTH_NON_TAX_WAGE"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_OTH_NON_TAX_WAGE"/>
     </measure>
     <measure id="A_TOT_INT_WAGE" order="58" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Interstate Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TOT_INT_WAGE"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_TOT_INT_WAGE"/>
     </measure>
     <measure id="A_TOT_QLD_GM" order="59" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total QLD Wages (All GM)"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TOT_QLD_GM"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_TOT_QLD_GM"/>
     </measure>
     <measure id="A_TOT_INT_GM" order="60" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Interstate Wages (All GM)"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_TOT_INT_GM"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_TOT_INT_GM"/>
     </measure>
     <measure id="A_F_P_AND_P_FINAL" order="61" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Split period 2nd amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_F_P_AND_P_FINAL"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_F_P_AND_P_FINAL"/>
     </measure>
     <measure id="A_F_P_AND_P_RESID" order="62" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Split period 1st amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_F_P_AND_P_RESID"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_F_P_AND_P_RESID"/>
     </measure>
     <measure id="A_EXCESS_DEDUCT" order="63" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Excess Deduction"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_EXCESS_DEDUCT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_EXCESS_DEDUCT"/>
     </measure>
     <measure id="A_EXCESS_REB" order="64" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Excess Rebate"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_EXCESS_REB"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_EXCESS_REB"/>
     </measure>
     <measure id="C_TOT_QLD_TXBLE_WAGES" order="65" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total QLD Taxable Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOT_QLD_TXBLE_WAGES"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_TOT_QLD_TXBLE_WAGES"/>
     </measure>
     <measure id="C_TOT_QLD_NON_TAX_WAGE" order="66" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total QLD Non-taxable Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOT_QLD_NON_TAX_WAGE"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_TOT_QLD_NON_TAX_WAGE"/>
     </measure>
     <measure id="C_TOT_GRP_AUST_WAGES" order="67" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Group AU Taxable Wages"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOT_GRP_AUST_WAGES"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_TOT_GRP_AUST_WAGES"/>
     </measure>
     <measure id="C_F_TOTAL_PER_AMNT" order="68" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total Periodic Amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_F_TOTAL_PER_AMNT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_F_TOTAL_PER_AMNT"/>
     </measure>
     <measure id="C_F_LAST_PER_AMNT" order="69" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Last Period Amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_F_LAST_PER_AMNT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_F_LAST_PER_AMNT"/>
     </measure>
     <measure id="C_TAX_AMOUNT" order="74" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Taxable Amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TAX_AMOUNT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_TAX_AMOUNT"/>
     </measure>
     <measure id="C_BASE_TAX" order="75" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Calculated Tax"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_BASE_TAX"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_BASE_TAX"/>
     </measure>
     <measure id="C_PAY_TAX_AMOUNT" order="76" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Payroll Tax Amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_PAY_TAX_AMOUNT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_PAY_TAX_AMOUNT"/>
     </measure>
     <measure id="C_TOT_PAID_PAYABLE" order="77" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Paid Periodic Amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOT_PAID_PAYABLE"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_TOT_PAID_PAYABLE"/>
     </measure>
     <measure id="C_PAY_TAX_LIAB_CREDIT" order="78" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Final Tax Liability/Credit"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_PAY_TAX_LIAB_CREDIT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_PAY_TAX_LIAB_CREDIT"/>
     </measure>
     <measure id="C_PAY_RECEIVED" order="96" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Payments/Credits Received"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_PAY_RECEIVED"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_PAY_RECEIVED"/>
     </measure>
     <measure id="C_UTI_TOTAL" order="97" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Total UTI"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_UTI_TOTAL"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_UTI_TOTAL"/>
     </measure>
     <measure id="C_PENALTY_TAX" order="98" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Penalty Tax"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_PENALTY_TAX"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_PENALTY_TAX"/>
     </measure>
     <measure id="C_PENALTY_TOTAL" order="99" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Total Penalty Tax"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_PENALTY_TOTAL"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_PENALTY_TOTAL"/>
     </measure>
     <measure id="C_TOTAL_LIABILITY" order="100" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Total Liability"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOTAL_LIABILITY"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_TOTAL_LIABILITY"/>
     </measure>
     <measure id="C_DAILY_UTI_AMNT" order="102" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Daily UTI"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_DAILY_UTI_AMT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_DAILY_UTI_AMT"/>
     </measure>
     <measure id="A_UTI_REMITT" order="103" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - UTI Remit"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_UTI_REMITT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_UTI_REMITT"/>
     </measure>
     <measure id="A_PT_INCREASE" order="105" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Penalty tax Increase"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_PT_INCREASE"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_PT_INCREASE"/>
     </measure>
     <measure id="A_PT_REMITT" order="106" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Penalty Tax Remit"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_PT_REMITT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_PT_REMITT"/>
     </measure>
     <measure id="A_ORIG_TOT_DUTY" order="108" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Original tax/duty Payable"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ORIG_TOT_DUTY"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_ORIG_TOT_DUTY"/>
     </measure>
     <measure id="A_ORIG_UTI" order="109" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Original UTI"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ORIG_UTI"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_ORIG_UTI"/>
     </measure>
     <measure id="A_ORIG_PENALTY" order="110" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Original Penalty"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ORIG_PENALTY"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_ORIG_PENALTY"/>
     </measure>
     <measure id="A_LOW_AMT_PAY" order="111" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Lowest Amount Payable"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_LOW_AMT_PAY"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_LOW_AMT_PAY"/>
     </measure>
     <measure id="C_TOTAL_ORIG" order="115" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Total Of Original"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_TOTAL_ORIG"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_TOTAL_ORIG"/>
     </measure>
     <measure id="C_PAYABLE_TXN" order="119" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Liab. - Total Duty Payable"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_PAYABLE_TXN"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_PAYABLE_TXN"/>
     </measure>
   
     <measure id="A_ENTERED_PERIODIC_LIAB" order="128" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Per. - Calculated periodic liability "/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_ENTERED_PERIODIC_LIAB"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_ENTERED_PERIODIC_LIAB"/>
     </measure>
     <measure id="A_FIXED_DEDUCTION" order="129" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Per. - Fixed Deduction"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_FIXED_DEDUCTION"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_FIXED_DEDUCTION"/>
     </measure>
     <measure id="C_DEDUCTION_ALLOWED" order="130" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Per. - Deduction allowed"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="C_DEDUCTION_ALLOWED"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="C_DEDUCTION_ALLOWED"/>
     </measure>
     <measure id="RC_APT_Raised" order="133" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - Payroll Assessments Tax Raised"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_APT_Raised"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="RC_APT_Raised"/>
     </measure>
     <measure id="RC_APT_Cleared" order="134" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - Payroll Assessments Tax Cleared"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_APT_Cleared"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="RC_APT_Cleared"/>
     </measure>
     <measure id="RC_LTI_Raised" order="135" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - LTI Raised"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_LTI_Raised"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="RC_LTI_Raised"/>
     </measure>
     <measure id="RC_LTI_Cleared" order="136" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - LTI Cleared"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_LTI_Cleared"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="RC_LTI_Cleared"/>
     </measure>
     <measure id="RC_PTX_Raised" order="137" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - Penalty Tax Raised"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_PTX_Raised"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="RC_PTX_Raised"/>
     </measure>
     <measure id="RC_PTX_Cleared" order="138" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - Penalty Tax Cleared"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_PTX_Cleared"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="RC_PTX_Cleared"/>
     </measure>
     <measure id="RC_UTI_Raised" order="139" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - UTI Raised"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_UTI_Raised"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="RC_UTI_Raised"/>
     </measure>
     <measure id="RC_UTI_Cleared" order="140" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fin. - UTI Cleared"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="RC_UTI_Cleared"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="RC_UTI_Cleared"/>
     </measure>
     <measure id="A_DIRECTOR_FEE" order="141" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Director&apos;s Fees"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_DIRECTOR_FEE"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_DIRECTOR_FEE"/>
     </measure>
     <measure id="A_FRINGE_BENEFIT" order="142" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Fringe Benefits"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="A_FRINGE_BENEFIT"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="A_FRINGE_BENEFIT"/>
     </measure>
   
     <measure id="CC_SplitPeriodTotalAmount" order="154" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Split period total amount"/>
-      <measureMapping columnObjectName="J_TAXRETURN_FINANCIALS" columnName="CC_SplitPeriodTotalAmount"/>
+      <measureMapping columnObjectName="J_TAXRT_CORRHIST" columnName="CC_SplitPeriodTotalAmount"/>
     </measure></baseMeasures>
   <calculatedMeasures>
     <measure id="CO_TaxReturns" order="88" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -4751,6 +5191,15 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       
       
       
+      
+      </measure>
+  
+    <measure id="CO_CORR_COUNT" order="169" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="Correspondence Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="COKEY"/>
+      </exceptionAggregation>
+      <formula>1</formula>
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -4759,17 +5208,17 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="363" y="112"/>
+      <upperLeftCorner x="663.2686306228226" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_FormBundles" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="169" y="2226"/>
+      <upperLeftCorner x="641.6413659986911" y="2386.9999845027924"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXR_RETURNDETAIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="410" y="2066"/>
+      <upperLeftCorner x="458.3080326653576" y="2226.9999856948853"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_FormBundles" modelObjectNameSpace="J_TAXR_RETURNDETAIL" modelObjectType="JoinNodeInput">
@@ -4782,26 +5231,26 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     </shape>
   
     <shape expanded="true" modelObjectName="U_TR_DETAILS_A_P" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="437" y="2230"/>
+      <upperLeftCorner x="431.64136599869096" y="2390.333317836126"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="R_RETURN_DETAILS_P" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="335" y="2371"/>
+      <upperLeftCorner x="313.85401120512716" y="2531.9999833106995"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_RETURN_DETAILS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="545" y="2371"/>
+      <upperLeftCorner x="523.8540112051273" y="2531.9999833106995"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_PeriodData" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="328" y="1586"/>
+      <upperLeftCorner x="328.666666666667" y="1746.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXR_PERIOD" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="145" y="1426"/>
+      <upperLeftCorner x="155.46485229490526" y="1586.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXRET_LIABILITY" modelObjectNameSpace="J_TAXR_PERIOD" modelObjectType="JoinNodeInput">
@@ -4813,7 +5262,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRET_LIABILITY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="1586"/>
+      <upperLeftCorner x="118.6666666666668" y="1746.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXRETURN_STATCHANGE" modelObjectNameSpace="J_TAXRET_LIABILITY" modelObjectType="JoinNodeInput">
@@ -4825,7 +5274,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <rectangleSize width="259"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRETURN_STATCHANGE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="369" y="1746"/>
+      <upperLeftCorner x="346.52020097277074" y="1906.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXRET_FBNCURRFLAG" modelObjectNameSpace="J_TAXRETURN_STATCHANGE" modelObjectType="JoinNodeInput">
@@ -4839,11 +5288,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
   
   
     <shape expanded="true" modelObjectName="R_LIABILITY_LATEST_VER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="1746"/>
+      <upperLeftCorner x="92.00000000000017" y="1906.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRET_FBNCURRFLAG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="169" y="1906"/>
+      <upperLeftCorner x="641.6413659986911" y="2066.999986886978"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_RETURNDETAIL" modelObjectNameSpace="J_TAXRET_FBNCURRFLAG" modelObjectType="JoinNodeInput">
@@ -4857,19 +5306,19 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
   
   
     <shape expanded="true" modelObjectName="R_STATCHANGE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="396" y="1906"/>
+      <upperLeftCorner x="319.8535343061041" y="2066.999986886978"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_CURRENT_FBN_PER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="143" y="2084"/>
+      <upperLeftCorner x="668.3080326653577" y="2244.4999856948853"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BpRelantionship" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="467" y="1266"/>
+      <upperLeftCorner x="392.1315189615718" y="1426.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_TAXR_BPGROUP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="440" y="1106"/>
+      <upperLeftCorner x="208.7981856282385" y="1266.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_BPNAME" modelObjectNameSpace="NEJ_TAXR_BPGROUP" modelObjectType="JoinNodeInput">
@@ -4882,7 +5331,7 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     </shape>
   
     <shape expanded="true" modelObjectName="J_TAXR_BPNAME" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="171" y="1266"/>
+      <upperLeftCorner x="182.13151896157194" y="1426.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_PERIOD" modelObjectNameSpace="J_TAXR_BPNAME" modelObjectType="JoinNodeInput">
@@ -4894,11 +5343,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BpInfo" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="435" y="1426"/>
+      <upperLeftCorner x="481.46485169885875" y="1586.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXR_PRTGROUPNAM" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="600" y="536"/>
+      <upperLeftCorner x="392.1315189615718" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_FactGroupType_Creation" modelObjectNameSpace="J_TAXR_PRTGROUPNAM" modelObjectType="JoinNodeInput">
@@ -4911,12 +5360,12 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     </shape>
   
     <shape expanded="true" modelObjectName="R_FactGroupType_Creation" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="439" y="696"/>
+      <upperLeftCorner x="365.46485229490514" y="856.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="NEJ_GroupType_BPFacts" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="439" y="801"/>
+      <upperLeftCorner x="365.46485229490514" y="961.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_GroupType_Creation_Date" modelObjectNameSpace="NEJ_GroupType_BPFacts" modelObjectType="JoinNodeInput">
@@ -4928,20 +5377,20 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_GroupType_Creation_Date" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="537" y="933"/>
+      <upperLeftCorner x="182.13151896157194" y="1131.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPFacts" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="256" y="961"/>
+      <upperLeftCorner x="392.1315189615718" y="1121.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_FiscalDate" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="387" y="536"/>
+      <upperLeftCorner x="669.863873234295" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRETURN_FISCALPERIOD" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="455" y="376"/>
+      <upperLeftCorner x="630.984482547783" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXR_PRTGROUPNAM" modelObjectNameSpace="J_TAXRETURN_FISCALPERIOD" modelObjectType="JoinNodeInput">
@@ -4954,11 +5403,11 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
     </shape>
   
     <shape expanded="true" modelObjectName="P_PTFinancials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="177" y="536"/>
+      <upperLeftCorner x="879.8638732342949" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXRETURN_FINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="363" y="217"/>
+      <upperLeftCorner x="789.7600679374907" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TAXRETURN_FISCALPERIOD" modelObjectNameSpace="J_TAXRETURN_FINANCIALS" modelObjectType="JoinNodeInput">
@@ -4970,8 +5419,25 @@ if(&quot;CC_UPDATE_DATE&quot;&gt;&quot;CC_FinalDueDate&quot;,daysbetween(&quot;C
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_PTFinancialsFBN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="177" y="394"/>
+      <upperLeftCorner x="847.4974933779151" y="554.4999976158142"/>
       <rectangleSize height="30" width="160"/>
-    </shape></shapes>
+    </shape>
+    <shape expanded="true" modelObjectName="J_TAXRT_CORRHIST" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="663.2686306228226" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_TAXRETURN_FINANCIALS" modelObjectNameSpace="J_TAXRT_CORRHIST" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CORRHIST" modelObjectNameSpace="J_TAXRT_CORRHIST" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136.0234375"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CORRHIST" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="579.7600679374905" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
