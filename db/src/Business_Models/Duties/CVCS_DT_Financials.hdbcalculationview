@@ -94,17 +94,14 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="DATE"/>
     </input>
-    <filter>&quot;VKTYP_PS&quot; in ('CA','FH','ID', 'MV', 'OD', 'TD') 
+    <filter>&quot;VKTYP_PS&quot; in ('CA','FH','ID', 'MV', 'OD', 'TD') and &quot;BLART&quot;!='B1'
 </filter>
     <joinAttribute name="BUDAT"/>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_Last_Clearing_date" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="FBNUM"/>
-      <viewAttribute id="AUGDT"/>
-    
-      <viewAttribute id="AUGBL_BLART_TEXT"/>
-    </viewAttributes>
+      <viewAttribute id="AUGDT"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_CVCS_CO_Financials"/>
     <windowFunction dynamicPartitionAttributes="false">
@@ -271,11 +268,11 @@
       <keyMapping columnObjectName="J_Financials_Last_Clearing_Date" columnName="AUGRD"/>
     </attribute>
     <attribute id="AUGBL_BLART_TEXT" order="18" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Clearing Document Type"/>
+      <descriptions defaultDescription="Clearing Document Type Description"/>
       <keyMapping columnObjectName="J_Financials_Last_Clearing_Date" columnName="AUGBL_BLART_TEXT"/>
     </attribute>
     <attribute id="AUGBL" order="19" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Clearing Document "/>
+      <descriptions defaultDescription="Clearing Document Number"/>
       <keyMapping columnObjectName="J_Financials_Last_Clearing_Date" columnName="AUGBL"/>
     </attribute>
     <attribute id="AUGDT" order="20" displayAttribute="false" attributeHierarchyActive="false">
@@ -351,7 +348,7 @@
   </baseMeasures>
   <calculatedMeasures>
   
-    <measure id="CC_DOCUMENTCOUNTER" order="54" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+    <measure id="CC_DOCUMENTCOUNTER" order="55" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Document Counter"/>
       <exceptionAggregation>
         <attribute attributeName="OPBEL"/>
@@ -372,9 +369,11 @@
       
       
       
+      
+      
       </measure>
   
-    <measure id="CC_ASSESSMENTCOUNTER" order="55" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+    <measure id="CC_ASSESSMENTCOUNTER" order="56" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Assessment Counter"/>
       <exceptionAggregation>
         <attribute attributeName="FBNUM"/>
@@ -400,8 +399,10 @@
       
       
       
+      
+      
       </measure>
-    <measure id="CC_BPCOUNTER" order="56" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+    <measure id="CC_BPCOUNTER" order="57" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="BP Counter"/>
       <exceptionAggregation>
         <attribute attributeName="GPART"/>
@@ -413,109 +414,100 @@
       
       
       
+      
+      
+      </measure>
+  
+    <measure id="CC_OPENITEM_BALANCE" order="58" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+      <descriptions defaultDescription="Open Item Balance"/>
+      <formula>&quot;BETRH&quot;-&quot;AUGBT&quot;</formula>
+    
       </measure>
   </calculatedMeasures>
   <restrictedMeasures>
-    <measure id="RC_OPENITEM_BALANCE" order="37" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
-      <descriptions defaultDescription="Open Item Balance"/>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="B1"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="OpenItemFlag">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="X"/>
-        </filter>
-        <attributeName>OpenItemFlag</attributeName>
-      </restriction>
-    </measure>
-    <measure id="RC_ASSESSMENTAMOUNT" order="38" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+    <measure id="RC_ASSESSMENTAMOUNT" order="37" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Assessment Amount "/>
-      <restrictionExpression>(&quot;AUGRD&quot; != '05') AND (&quot;HVORG&quot; = '4000' or &quot;HVORG&quot;='4010' or &quot;HVORG&quot;='1015') AND (&quot;TVORG&quot; != '0508' and &quot;TVORG&quot; != '0510' and &quot;TVORG&quot; != '0512' and &quot;TVORG&quot; != '0516' and &quot;TVORG&quot; != '0511' and &quot;TVORG&quot; != '0518' and &quot;TVORG&quot;!='0500' and &quot;TVORG&quot;!='0501' and &quot;TVORG&quot;!='0523' and &quot;TVORG&quot;!='0524')</restrictionExpression>
-    </measure>
-    <measure id="RC_ASSESSMENT_CLEARED" order="39" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
+      <restrictionExpression>(&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03') AND (&quot;HVORG&quot; = '4000' or &quot;HVORG&quot;='4010' or &quot;HVORG&quot;='1015') AND (&quot;TVORG&quot; != '0508' and &quot;TVORG&quot; != '0510' and &quot;TVORG&quot; != '0512' and &quot;TVORG&quot; != '0516' and &quot;TVORG&quot; != '0511' and &quot;TVORG&quot; != '0518' and &quot;TVORG&quot;!='0500' and &quot;TVORG&quot;!='0501' and &quot;TVORG&quot;!='0523' and &quot;TVORG&quot;!='0524')</restrictionExpression>
+      </measure>
+    <measure id="RC_ASSESSMENT_CLEARED" order="38" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Assessment Cleared Amount"/>
-      <restrictionExpression>(&quot;AUGRD&quot; != '05') AND (&quot;HVORG&quot; = '4000' or &quot;HVORG&quot;='4010' or &quot;HVORG&quot;='1015') AND (&quot;TVORG&quot; != '0508' and &quot;TVORG&quot; != '0510' and &quot;TVORG&quot; != '0512' and &quot;TVORG&quot; != '0516' and &quot;TVORG&quot; != '0511' and &quot;TVORG&quot; != '0518' and &quot;TVORG&quot;!='0500' and &quot;TVORG&quot;!='0501' and &quot;TVORG&quot;!='0523' and &quot;TVORG&quot;!='0524')</restrictionExpression>
-    </measure>
-    <measure id="RC_REASSESSMENTAMOUNT" order="40" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <restrictionExpression>(&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03') AND (&quot;HVORG&quot; = '4000' or &quot;HVORG&quot;='4010' or &quot;HVORG&quot;='1015') AND (&quot;TVORG&quot; != '0508' and &quot;TVORG&quot; != '0510' and &quot;TVORG&quot; != '0512' and &quot;TVORG&quot; != '0516' and &quot;TVORG&quot; != '0511' and &quot;TVORG&quot; != '0518' and &quot;TVORG&quot;!='0500' and &quot;TVORG&quot;!='0501' and &quot;TVORG&quot;!='0523' and &quot;TVORG&quot;!='0524')</restrictionExpression>
+      </measure>
+    <measure id="RC_REASSESSMENTAMOUNT" order="39" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Reassessment Amount"/>
-      <restrictionExpression>(&quot;AUGRD&quot; != '05') AND (&quot;HVORG&quot; = '4000' or &quot;HVORG&quot;='4010' or &quot;HVORG&quot;='1015') AND (&quot;TVORG&quot; ='0180' or &quot;TVORG&quot; ='0181' or &quot;TVORG&quot; ='0183' or &quot;TVORG&quot; ='0186' or &quot;TVORG&quot; ='0188' or &quot;TVORG&quot; ='0192' or &quot;TVORG&quot; = '0194' or &quot;TVORG&quot; ='0196' or &quot;TVORG&quot; ='0584' or &quot;TVORG&quot; ='0231')</restrictionExpression>
-    </measure>
-    <measure id="RC_REASSESSMENT_CLEARED" order="41" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
+      <restrictionExpression>(&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03') AND (&quot;HVORG&quot; = '4000' or &quot;HVORG&quot;='4010' or &quot;HVORG&quot;='1015') AND (&quot;TVORG&quot; ='0180' or &quot;TVORG&quot; ='0181' or &quot;TVORG&quot; ='0183' or &quot;TVORG&quot; ='0186' or &quot;TVORG&quot; ='0188' or &quot;TVORG&quot; ='0192' or &quot;TVORG&quot; = '0194' or &quot;TVORG&quot; ='0196' or &quot;TVORG&quot; ='0584' or &quot;TVORG&quot; ='0231')</restrictionExpression>
+      </measure>
+    <measure id="RC_REASSESSMENT_CLEARED" order="40" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Reassessment Cleared Amount"/>
-      <restrictionExpression>(&quot;AUGRD&quot; != '05') AND (&quot;HVORG&quot; = '4000' or &quot;HVORG&quot;='4010' or &quot;HVORG&quot;='1015') AND (&quot;TVORG&quot; ='0180' or &quot;TVORG&quot; ='0181' or &quot;TVORG&quot; ='0183' or &quot;TVORG&quot; ='0186' or &quot;TVORG&quot; ='0188' or &quot;TVORG&quot; ='0192' or &quot;TVORG&quot; = '0194' or &quot;TVORG&quot; ='0196' or &quot;TVORG&quot; ='0584' or &quot;TVORG&quot; ='0231')</restrictionExpression>
-    </measure>
+      <restrictionExpression>(&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03') AND (&quot;HVORG&quot; = '4000' or &quot;HVORG&quot;='4010' or &quot;HVORG&quot;='1015') AND (&quot;TVORG&quot; ='0180' or &quot;TVORG&quot; ='0181' or &quot;TVORG&quot; ='0183' or &quot;TVORG&quot; ='0186' or &quot;TVORG&quot; ='0188' or &quot;TVORG&quot; ='0192' or &quot;TVORG&quot; = '0194' or &quot;TVORG&quot; ='0196' or &quot;TVORG&quot; ='0584' or &quot;TVORG&quot; ='0231')</restrictionExpression>
+      </measure>
   
-    <measure id="RC_UTIAMOUNT" order="42" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+    <measure id="RC_UTIAMOUNT" order="41" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Unpaid Tax Interest Amount"/>
   
-      <restrictionExpression>(&quot;HVORG&quot; = '0040') AND (&quot;TVORG&quot; = '0002' OR &quot;TVORG&quot; = '0000') AND (&quot;AUGRD&quot; != '05') </restrictionExpression>
-  
-    </measure>
-    <measure id="RC_UTI_CLEARED" order="43" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
+      <restrictionExpression>(&quot;HVORG&quot; = '0040') AND (&quot;TVORG&quot; = '0005' or &quot;TVORG&quot;='0001' or &quot;TVORG&quot; = '0002' OR &quot;TVORG&quot; = '0000') AND (&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03')</restrictionExpression>
+      </measure>
+    <measure id="RC_UTI_CLEARED" order="42" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Unpaid Tax Interest Cleared Amount"/>
-      <restrictionExpression>(&quot;HVORG&quot; = '0040') AND (&quot;TVORG&quot; = '0002' OR &quot;TVORG&quot; = '0000') AND (&quot;AUGRD&quot; != '05') </restrictionExpression>
-    </measure>
-    <measure id="RC_LPIAMOUNT" order="44" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <restrictionExpression>(&quot;HVORG&quot; = '0040') AND (&quot;TVORG&quot; = '0005' or &quot;TVORG&quot; = '0002' OR &quot;TVORG&quot; = '0000' or &quot;TVORG&quot;='0001') AND (&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03')</restrictionExpression>
+      </measure>
+    <measure id="RC_LPIAMOUNT" order="43" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Late Payment Interest Amount"/>
-      <restrictionExpression>(&quot;HVORG&quot; = '0040') AND (&quot;TVORG&quot; = '0020') AND (&quot;AUGRD&quot; != '05')</restrictionExpression>
-    </measure>
-    <measure id="RC_LPI_CLEARED" order="45" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
+      <restrictionExpression>(&quot;HVORG&quot; = '0040') AND (&quot;TVORG&quot; = '0020') AND (&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03')</restrictionExpression>
+      </measure>
+    <measure id="RC_LPI_CLEARED" order="44" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Late Payment Interest Cleared Amount"/>
-      <restrictionExpression>(&quot;HVORG&quot; = '0040') AND (&quot;TVORG&quot; = '0020') AND (&quot;AUGRD&quot; != '05')</restrictionExpression>
-    </measure>
-    <measure id="RC_OTHER_INTEREST" order="46" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <restrictionExpression>(&quot;HVORG&quot; = '0040') AND (&quot;TVORG&quot; = '0020') AND (&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03')</restrictionExpression>
+      </measure>
+    <measure id="RC_OTHER_INTEREST" order="45" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Other Interest Amount"/>
-      <restrictionExpression>(&quot;HVORG&quot; = '0040') AND (&quot;TVORG&quot; = '0040' or &quot;TVORG&quot;='0210') AND (&quot;AUGRD&quot; != '05') </restrictionExpression>
-    </measure>
-    <measure id="RC_OTHERINTEREST_CLEARED" order="47" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
+      <restrictionExpression>(&quot;HVORG&quot; = '0040') AND (&quot;TVORG&quot; = '0040' or &quot;TVORG&quot;='0210' or &quot;TVORG&quot;='0030' or &quot;TVORG&quot;='0510') AND (&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03')</restrictionExpression>
+      </measure>
+    <measure id="RC_OTHERINTEREST_CLEARED" order="46" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Other Interest Cleared Amount"/>
-      <restrictionExpression>(&quot;HVORG&quot; = '0040') AND (&quot;TVORG&quot; = '0040' or &quot;TVORG&quot;='0210') AND (&quot;AUGRD&quot; != '05') </restrictionExpression>
-    </measure>
-    <measure id="RC_PENALTYTAXAMOUNT" order="48" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <restrictionExpression>(&quot;HVORG&quot; = '0040') AND (&quot;TVORG&quot; = '0040' or &quot;TVORG&quot;='0210' or &quot;TVORG&quot;='0030' or &quot;TVORG&quot;='0510') AND (&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03')</restrictionExpression>
+      </measure>
+    <measure id="RC_TOTAL_INTEREST_AMOUNT" order="47" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Total Interest Amount"/>
+      <restrictionExpression>(&quot;HVORG&quot;='0040') and (&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03')</restrictionExpression>
+      </measure>
+    <measure id="RC_TOTAL_INTEREST_CLEARED" order="48" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Total Interest Cleared Amount"/>
+      <restrictionExpression>(&quot;HVORG&quot;='0040') and (&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03')</restrictionExpression>
+      </measure>
+    <measure id="RC_PENALTYTAXAMOUNT" order="49" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Penalty Tax Amount"/>
-      <restrictionExpression>(&quot;HVORG&quot; = '0041' or &quot;HVORG&quot;='0044' or &quot;HVORG&quot;='0046') AND (&quot;TVORG&quot; = '0000' OR &quot;TVORG&quot; = '0002') AND (&quot;AUGRD&quot; != '05')</restrictionExpression>
-    </measure>
-    <measure id="RC_PENALTYTAX_CLEARED" order="49" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
+      <restrictionExpression>(&quot;HVORG&quot; = '0041' or &quot;HVORG&quot;='0044' or &quot;HVORG&quot;='0046') AND (&quot;TVORG&quot; = '0005' or &quot;TVORG&quot; = '0000' OR &quot;TVORG&quot;='0001' or &quot;TVORG&quot; = '0002') AND (&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03')</restrictionExpression>
+      </measure>
+    <measure id="RC_PENALTYTAX_CLEARED" order="50" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Penalty Tax Cleared Amount"/>
-      <restrictionExpression>(&quot;HVORG&quot; = '0041' or &quot;HVORG&quot;='0044' or &quot;HVORG&quot;='0046') AND (&quot;TVORG&quot; = '0000' OR &quot;TVORG&quot; = '0002') AND (&quot;AUGRD&quot; != '05')</restrictionExpression>
-    </measure>
-    <measure id="RC_FEESANDCHARGES" order="50" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
+      <restrictionExpression>(&quot;HVORG&quot; = '0041' or &quot;HVORG&quot;='0044' or &quot;HVORG&quot;='0046') AND (&quot;TVORG&quot; = '0005' or &quot;TVORG&quot;='0001' or &quot;TVORG&quot; = '0000' OR &quot;TVORG&quot; = '0002') AND (&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03')</restrictionExpression>
+      </measure>
+    <measure id="RC_FEESANDCHARGES" order="51" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Fees and Charges Amount"/>
-      <restrictionExpression>(&quot;HVORG&quot; = '4050' OR &quot;HVORG&quot; = '4000' OR &quot;HVORG&quot; = '0010' or &quot;HVORG&quot;='4010') AND (&quot;AUGRD&quot; != '05') AND (&quot;TVORG&quot; = '0508' OR &quot;TVORG&quot; = '0525' OR &quot;TVORG&quot; = '0516' OR &quot;TVORG&quot; = '0510' OR &quot;TVORG&quot; = '0518' OR &quot;TVORG&quot; = '0512' or &quot;TVORG&quot;='0199' or &quot;TVORG&quot; ='0299' or &quot;TVORG&quot;='0500' or &quot;TVORG&quot;='0523' or &quot;TVORG&quot;='0524' or &quot;TVORG&quot;='0521' or &quot;TVORG&quot;='0525' or &quot;TVORG&quot;='0526' or &quot;TVORG&quot;='0528') AND (&quot;BLART&quot; != 'WA')</restrictionExpression>
-    </measure>
-    <measure id="RC_FEESCHARGES_CLEARED" order="51" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
+      <restrictionExpression>(&quot;HVORG&quot; = '4050' OR &quot;HVORG&quot; = '4000' OR &quot;HVORG&quot; = '0010' or &quot;HVORG&quot;='4010') AND (&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03') AND (&quot;TVORG&quot; = '0508' OR &quot;TVORG&quot; = '0525' OR &quot;TVORG&quot; = '0516' OR &quot;TVORG&quot; = '0510' OR &quot;TVORG&quot; = '0518' OR &quot;TVORG&quot; = '0512' or &quot;TVORG&quot;='0199' or &quot;TVORG&quot; ='0299' or &quot;TVORG&quot;='0500' or &quot;TVORG&quot;='0523' or &quot;TVORG&quot;='0524' or &quot;TVORG&quot;='0521' or &quot;TVORG&quot;='0525' or &quot;TVORG&quot;='0526' or &quot;TVORG&quot;='0528' or &quot;TVORG&quot;='0511')</restrictionExpression>
+      </measure>
+    <measure id="RC_FEESCHARGES_CLEARED" order="52" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="AUGBT" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Fees and Charges Cleared Amount"/>
-      <restrictionExpression>(&quot;HVORG&quot; = '4050' OR &quot;HVORG&quot; = '4000' OR &quot;HVORG&quot; = '0010' or &quot;HVORG&quot;='4010') AND (&quot;AUGRD&quot; != '05') AND (&quot;TVORG&quot; = '0508' OR &quot;TVORG&quot; = '0525' OR &quot;TVORG&quot; = '0516' OR &quot;TVORG&quot; = '0510' OR &quot;TVORG&quot; = '0518' OR &quot;TVORG&quot; = '0512' or &quot;TVORG&quot;='0199' or &quot;TVORG&quot; ='0299' or &quot;TVORG&quot;='0500' or &quot;TVORG&quot;='0523' or &quot;TVORG&quot;='0524' or &quot;TVORG&quot;='0521' or &quot;TVORG&quot;='0525' or &quot;TVORG&quot;='0526' or &quot;TVORG&quot;='0528') AND (&quot;BLART&quot; != 'WA')</restrictionExpression>
-    </measure>
+      <restrictionExpression>(&quot;HVORG&quot; = '4050' OR &quot;HVORG&quot; = '4000' OR &quot;HVORG&quot; = '0010' or &quot;HVORG&quot;='4010') AND (&quot;AUGRD&quot; != '05' and &quot;AUGRD&quot;!='03') AND (&quot;TVORG&quot; = '0508' OR &quot;TVORG&quot; = '0525' OR &quot;TVORG&quot; = '0516' OR &quot;TVORG&quot; = '0510' OR &quot;TVORG&quot; = '0518' OR &quot;TVORG&quot; = '0512' or &quot;TVORG&quot;='0199' or &quot;TVORG&quot; ='0299' or &quot;TVORG&quot;='0500' or &quot;TVORG&quot;='0523' or &quot;TVORG&quot;='0524' or &quot;TVORG&quot;='0521' or &quot;TVORG&quot;='0525' or &quot;TVORG&quot;='0526' or &quot;TVORG&quot;='0528' or &quot;TVORG&quot;='0511')</restrictionExpression>
+      </measure>
   
-    <measure id="RC_TRANSFERREDAMOUNT" order="52" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+    <measure id="RC_TRANSFERREDAMOUNT" order="53" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Transferred Amount"/>
   
       <restriction logicalOperator="AND">
   
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="TA"/>
-        </filter>
-  
-        <attributeName>BLART</attributeName>
-  
-      </restriction>
-  
-      <restriction logicalOperator="AND">
-  
         <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
+  
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="03"/>
+  
         </filter>
   
         <attributeName>AUGRD</attributeName>
   
       </restriction>
-  
-    </measure>
-    <measure id="RC_REVERSEDAMOUNT" order="53" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+      </measure>
+    <measure id="RC_REVERSEDAMOUNT" order="54" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Reversed Amount"/>
       <restriction logicalOperator="AND">
         <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
@@ -523,7 +515,7 @@
         </filter>
         <attributeName>AUGRD</attributeName>
       </restriction>
-    </measure></restrictedMeasures>
+      </measure></restrictedMeasures>
   <localDimensions/>
 
   <sharedDimensions/>
@@ -548,7 +540,7 @@
       <rectangleSize width="497"/>
     </shape>
     <shape expanded="true" modelObjectName="R_Last_Clearing_date" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="376"/>
+      <upperLeftCorner x="265" y="374"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_Financials_Last_Clearing_Date" modelObjectNameSpace="CalculationView">
