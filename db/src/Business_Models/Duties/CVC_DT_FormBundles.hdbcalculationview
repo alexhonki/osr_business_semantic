@@ -7,9 +7,12 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_FormBundles">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_FormBundles</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CALENDAR_FISC">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CALENDAR_FISC</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_FormBundles" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:JoinView" id="J_FormBundles" joinType="leftOuter" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="FBNUM"/>
@@ -30,93 +33,131 @@
       <viewAttribute id="REVENUE_TYPE_TEXT"/>
       <viewAttribute id="CC_CREATE_DATE"/>
       <viewAttribute id="CC_UPDATE_DATE"/>
-      <viewAttribute id="BETRW"/>
+      <viewAttribute id="BETRW" aggregationType="sum"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="FiscalMonth"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_FormBundles"/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_FormBundles">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="TAXPAYER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT" source="ACCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APPLY_FROM" source="APPLY_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APPLY_TO" source="APPLY_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIOD_KEY" source="PERIOD_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBTYP" source="FBTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_TYPE" source="TRANSACTION_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZREASSESSED" source="ZZREASSESSED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTRANSFERRED" source="ZZTRANSFERRED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZCLIENTREF" source="ZZCLIENTREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_VERSION" source="CURRENT_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBTYP_TEXT" source="FBTYP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IN_CHANNEL_TEXT" source="IN_CHANNEL_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA_TEXT" source="FBSTA_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_TYPE_TEXT" source="REVENUE_TYPE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CREATE_DATE" source="CC_CREATE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_UPDATE_DATE" source="CC_UPDATE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+    </input>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CALENDAR_FISC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FiscalMonth" source="FiscalMonth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_CREATE_DATE" source="DATE"/>
+    </input>
     <filter>&quot;FBTYP&quot; in ('ZTER','ZIA2','ZIC2''ZID2','ZIDA','ZIDC','ZIDR','ZLH2','ZLRD','ZMV2','ZMVA','ZOTH','ZTD2','ZTDA')</filter>
+    <joinAttribute name="CC_CREATE_DATE"/>
   </calculationView>
 </calculationViews>
-<logicalModel id="P_FormBundles" filterExpressionLanguage="SQL">
+<logicalModel id="J_FormBundles">
   <attributes>
     <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAP Client"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="MANDT"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="MANDT"/>
     </attribute>
     <attribute id="FBNUM" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Form Bundle Number"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="FBNUM"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="FBNUM"/>
     </attribute>
     <attribute id="TAXPAYER" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Number"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="TAXPAYER"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="TAXPAYER"/>
     </attribute>
     <attribute id="ACCOUNT" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account Number"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="ACCOUNT"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="ACCOUNT"/>
     </attribute>
     <attribute id="APPLY_FROM" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Start Date"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="APPLY_FROM"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="APPLY_FROM"/>
     </attribute>
     <attribute id="APPLY_TO" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period End Date"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="APPLY_TO"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="APPLY_TO"/>
     </attribute>
     <attribute id="PERIOD_KEY" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Key"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="PERIOD_KEY"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="PERIOD_KEY"/>
     </attribute>
     <attribute id="TRANSACTION_TYPE" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Transaction Type"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="TRANSACTION_TYPE"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="TRANSACTION_TYPE"/>
     </attribute>
     <attribute id="ZZREASSESSED" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reassessed"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="ZZREASSESSED"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="ZZREASSESSED"/>
     </attribute>
     <attribute id="ZZTRANSFERRED" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Transferred"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="ZZTRANSFERRED"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="ZZTRANSFERRED"/>
     </attribute>
     <attribute id="ZZCLIENTREF" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Client Reference Number"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="ZZCLIENTREF"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="ZZCLIENTREF"/>
     </attribute>
     <attribute id="CURRENT_VERSION" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Current Version Number"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="CURRENT_VERSION"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="CURRENT_VERSION"/>
     </attribute>
     <attribute id="FBTYP_TEXT" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Form Bundle Type"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="FBTYP_TEXT"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="FBTYP_TEXT"/>
     </attribute>
     <attribute id="IN_CHANNEL_TEXT" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Communication Channel"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="IN_CHANNEL_TEXT"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="IN_CHANNEL_TEXT"/>
     </attribute>
     <attribute id="FBSTA_TEXT" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Form Bundle Status"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="FBSTA_TEXT"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="FBSTA_TEXT"/>
     </attribute>
     <attribute id="REVENUE_TYPE_TEXT" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Revenue Type"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="REVENUE_TYPE_TEXT"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="REVENUE_TYPE_TEXT"/>
     </attribute>
     <attribute id="CC_CREATE_DATE" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Creation Date"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="CC_CREATE_DATE"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="CC_CREATE_DATE"/>
     </attribute>
     <attribute id="CC_UPDATE_DATE" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Modified Date"/>
-      <keyMapping columnObjectName="P_FormBundles" columnName="CC_UPDATE_DATE"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="CC_UPDATE_DATE"/>
+    </attribute>
+  
+    <attribute id="FISCAL_YEAR" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fiscal Year (Creation Date)"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="FISCAL_YEAR"/>
+    </attribute>
+    <attribute id="FiscalMonth" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fiscal Month (Creation Date"/>
+      <keyMapping columnObjectName="J_FormBundles" columnName="FiscalMonth"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="BETRW" order="19" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Assessment Amount"/>
-      <measureMapping columnObjectName="P_FormBundles" columnName="BETRW"/>
+      <measureMapping columnObjectName="J_FormBundles" columnName="BETRW"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
@@ -127,6 +168,7 @@
       </exceptionAggregation>
       <formula>1</formula>
       
+      
       </measure>
   
     <measure id="CC_BPCOUNTER" order="21" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
@@ -136,6 +178,7 @@
       </exceptionAggregation>
       <formula>1</formula>
     
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -147,10 +190,17 @@
     
       <rectangleSize width="160"/>
     </shape>
-  
-    <shape expanded="true" modelObjectName="P_FormBundles" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="110" y="217"/>
+    <shape expanded="true" modelObjectName="J_FormBundles" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="129" y="224"/>
       <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CV_FormBundles" modelObjectNameSpace="J_FormBundles" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="523.439453125"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CALENDAR_FISC" modelObjectNameSpace="J_FormBundles" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="903" y="43"/>
+      <rectangleSize width="588.783203125"/>
     </shape>
   </shapes>
 </layout>
