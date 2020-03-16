@@ -160,20 +160,17 @@
       <viewAttribute id="DEBT_SET"/>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute datatype="NVARCHAR" length="1" expressionLanguage="COLUMN_ENGINE" id="CC_OpenItemFlag">
-        <formula>if(
-&quot;STAKZ&quot; != 'R' 
-AND 
-&quot;STAKZ&quot; != 'S' 
-AND 
-(
-    &quot;AUGST&quot;='' 
-    OR 
-    (&quot;AUGST&quot;='9' AND date(&quot;AUGDT&quot;) &gt; date('$$IP_KeyDate$$'))
-),'X','')</formula>
+      <calculatedViewAttribute datatype="NVARCHAR" length="1" expressionLanguage="SQL" id="CC_OpenItemFlag">
+        <formula>CASE
+WHEN &quot;STAKZ&quot; != 'R' AND &quot;STAKZ&quot; != 'S' AND ( &quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date(&quot;AUGDT&quot;) &gt; to_date('$$IP_KeyDate$$'))) then 'X'
+else ''
+end</formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute datatype="NVARCHAR" length="6" expressionLanguage="COLUMN_ENGINE" id="CC_CreditDebitFlag">
-        <formula>if(&quot;BETRH&quot; &lt; 0,'Credit','Debit')</formula>
+      <calculatedViewAttribute datatype="NVARCHAR" length="6" expressionLanguage="SQL" id="CC_CreditDebitFlag">
+        <formula>CASE 
+When &quot;BETRH&quot; &lt; 0 then 'Credit'
+else 'Debit'
+END</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE" id="CC_Doubtful">
         <formula>case(&quot;INFOZ&quot;,
@@ -182,116 +179,77 @@ AND
 '902','Not Impaired',
 'Other')</formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE" id="CC_OverdueStatus">
-        <formula>if(&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND date('$$IP_KeyDate$$')&lt;date(&quot;AUGDT&quot;)),
-    if(&quot;STUDT&quot;='00000000',
-        if(date(&quot;FAEDN&quot;)&gt;=date('$$IP_KeyDate$$'),
-        'Not due',
-        'Overdue'),
-        if(date(&quot;STUDT&quot;)&gt;=date('$$IP_KeyDate$$'),
-        'Not due',
-        'Overdue'
-        )
-    ),
-    if(&quot;STUDT&quot;='00000000',
-        if(date(&quot;FAEDN&quot;)&gt;=date(&quot;AUGDT&quot;),
-        'Finalised ontime',
-        'Finalised overdue'),
-        if(date(&quot;STUDT&quot;)&gt;=date(&quot;AUGDT&quot;),
-        'Finalised ontime',
-        'Finalised overdue'
-        )
-    )
-)</formula>
+      <calculatedViewAttribute datatype="NVARCHAR" length="20" expressionLanguage="SQL" id="CC_OverdueStatus">
+        <formula>CASE
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &lt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot; is null or &quot;STUDT&quot;='') and (to_date(&quot;FAEDN&quot;) &gt;= to_date('$$IP_KeyDate$$')) THEN 'Not due'
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &lt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot; is null or &quot;STUDT&quot;='') and (to_date(&quot;FAEDN&quot;) &lt; to_date('$$IP_KeyDate$$')) THEN 'Overdue'
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &lt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;!='00000000' or &quot;STUDT&quot; is not null or &quot;STUDT&quot;!='') and (to_date(&quot;STUDT&quot;) &gt;= to_date('$$IP_KeyDate$$')) THEN 'Not due'
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &lt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;!='00000000' or &quot;STUDT&quot; is not null or &quot;STUDT&quot;!='') and (to_date(&quot;STUDT&quot;) &lt; to_date('$$IP_KeyDate$$')) THEN 'Overdue'
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &gt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot; is null or &quot;STUDT&quot;='') and (to_date(&quot;FAEDN&quot;) &gt;= to_date(&quot;AUGDT&quot;)) THEN 'Finalised ontime'
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &gt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot; is null or &quot;STUDT&quot;='') and (to_date(&quot;FAEDN&quot;) &lt; to_date(&quot;AUGDT&quot;)) THEN 'Finalised overdue'
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &gt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;!='00000000' or &quot;STUDT&quot; is not null or &quot;STUDT&quot;!='') and (to_date(&quot;STUDT&quot;) &gt;= to_date(&quot;AUGDT&quot;)) THEN 'Finalised ontime'
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &gt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;!='00000000' or &quot;STUDT&quot; is not null or &quot;STUDT&quot;!='') and (to_date(&quot;STUDT&quot;) &lt; to_date(&quot;AUGDT&quot;)) THEN 'Finalised overdue'
+ELSE null
+End</formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute datatype="INTEGER" expressionLanguage="COLUMN_ENGINE" id="CC_AgeMonths">
-        <formula>if(&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND date('$$IP_KeyDate$$')&lt;date(&quot;AUGDT&quot;)),
-    if(&quot;STUDT&quot;='00000000' or isnull(&quot;STUDT&quot;) or &quot;STUDT&quot;='',
-        if(date(&quot;FAEDN&quot;)&lt;date('$$IP_KeyDate$$'),
-            if(int(component(date(&quot;FAEDN&quot;),3))&lt;=int(component(date('$$IP_KeyDate$$'),3)),
-                int((component(date('$$IP_KeyDate$$'),1) - component(date(&quot;FAEDN&quot;),1)) * 12 + (component(date('$$IP_KeyDate$$'),2) - component(date(&quot;FAEDN&quot;),2))),
-                (int((component(date('$$IP_KeyDate$$'),1) - component(date(&quot;FAEDN&quot;),1)) * 12 + (component(date('$$IP_KeyDate$$'),2) - component(date(&quot;FAEDN&quot;),2)))) - 1
-            ),
-            null
-        ),
-        if(date(&quot;STUDT&quot;)&lt;date('$$IP_KeyDate$$'),
-            if(int(component(date(&quot;STUDT&quot;),3))&lt;=int(component(date('$$IP_KeyDate$$'),3)),
-                int((component(date('$$IP_KeyDate$$'),1) - component(date(&quot;STUDT&quot;),1)) * 12 + (component(date('$$IP_KeyDate$$'),2) - component(date(&quot;STUDT&quot;),2))),
-                (int((component(date('$$IP_KeyDate$$'),1) - component(date(&quot;STUDT&quot;),1)) * 12 + (component(date('$$IP_KeyDate$$'),2) - component(date(&quot;STUDT&quot;),2)))) - 1
-            ),
-            null
-        )
-    ),
-    if(&quot;STUDT&quot;='00000000' or isnull(&quot;STUDT&quot;) or &quot;STUDT&quot;='',
-        if(date(&quot;FAEDN&quot;)&lt;date(&quot;AUGDT&quot;),
-            if(int(component(date(&quot;FAEDN&quot;),3))&lt;=int(component(date(&quot;AUGDT&quot;),3)),
-                int((component(date(&quot;AUGDT&quot;),1) - component(date(&quot;FAEDN&quot;),1)) * 12 + (component(date(&quot;AUGDT&quot;),2) - component(date(&quot;FAEDN&quot;),2))),
-                (int((component(date(&quot;AUGDT&quot;),1) - component(date(&quot;FAEDN&quot;),1)) * 12 + (component(date(&quot;AUGDT&quot;),2) - component(date(&quot;FAEDN&quot;),2)))) - 1
-            ),
-            null
-        ),
-        if(date(&quot;STUDT&quot;)&lt;date(&quot;AUGDT&quot;),
-            if(int(component(date(&quot;STUDT&quot;),3))&lt;=int(component(date(&quot;AUGDT&quot;),3)),
-                int((component(date(&quot;AUGDT&quot;),1) - component(date(&quot;STUDT&quot;),1)) * 12 + (component(date(&quot;AUGDT&quot;),2) - component(date(&quot;STUDT&quot;),2))),
-                (int((component(date(&quot;AUGDT&quot;),1) - component(date(&quot;STUDT&quot;),1)) * 12 + (component(date(&quot;AUGDT&quot;),2) - component(date(&quot;STUDT&quot;),2)))) - 1
-            ),
-            null
-        )
-    )
-)</formula>
+      <calculatedViewAttribute datatype="INTEGER" expressionLanguage="SQL" id="CC_AgeMonths">
+        <formula>CASE
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &lt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot; is null or &quot;STUDT&quot;='') and (to_date(&quot;FAEDN&quot;) &lt;= to_date('$$IP_KeyDate$$')) THEN months_between(to_date(&quot;FAEDN&quot;), to_date('$$IP_KeyDate$$'))
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &lt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;!='00000000' or &quot;STUDT&quot; is not null or &quot;STUDT&quot;!='') and (to_date(&quot;STUDT&quot;) &lt;= to_date('$$IP_KeyDate$$')) then  months_between(to_date(&quot;STUDT&quot;), to_date('$$IP_KeyDate$$'))
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &gt;= to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot; is null or &quot;STUDT&quot;='') and (to_date(&quot;FAEDN&quot;) &lt;= to_date(&quot;AUGDT&quot;)) then  months_between(to_date(&quot;FAEDN&quot;), to_date(&quot;AUGDT&quot;))
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &gt;= to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;!='00000000' or &quot;STUDT&quot; is not null or &quot;STUDT&quot;!='') and (to_date(&quot;STUDT&quot;) &lt;= to_date(&quot;AUGDT&quot;)) then  months_between(to_date(&quot;STUDT&quot;), to_date(&quot;AUGDT&quot;))
+	ELSE null
+END</formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE" id="CC_AgeMonthsStatus">
-        <formula>if(&quot;CC_AgeMonths&quot; &gt;= 0 AND &quot;CC_AgeMonths&quot; &lt;= 2,'&lt; 3 Months',
-if(&quot;CC_AgeMonths&quot; &gt;= 3 AND &quot;CC_AgeMonths&quot; &lt;= 6,'3 to 6 Months',
-if(&quot;CC_AgeMonths&quot; &gt;= 7 AND &quot;CC_AgeMonths&quot; &lt;= 12,'7 to 12 Months',
-if(&quot;CC_AgeMonths&quot; &gt;= 13 AND &quot;CC_AgeMonths&quot; &lt;= 24,'13 to 24 Months',
-if(&quot;CC_AgeMonths&quot; &gt; 24,'&gt; 24 Months',
-'Err/Neg Months'
-)))))</formula>
+      <calculatedViewAttribute datatype="NVARCHAR" length="20" expressionLanguage="SQL" id="CC_AgeMonthsStatus">
+        <formula>CASE
+WHEN &quot;CC_AgeMonths&quot; &gt;= 0 AND &quot;CC_AgeMonths&quot; &lt;= 2 THEN '&lt; 3 Months'
+WHEN &quot;CC_AgeMonths&quot; &gt;= 3 AND &quot;CC_AgeMonths&quot; &lt;= 6 THEN '3 to 6 Months'
+WHEN &quot;CC_AgeMonths&quot; &gt;= 7 AND &quot;CC_AgeMonths&quot; &lt;= 12 THEN '7 to 12 Months'
+WHEN &quot;CC_AgeMonths&quot; &gt;= 13 AND &quot;CC_AgeMonths&quot; &lt;= 24 THEN '13 to 24 Months'
+WHEN &quot;CC_AgeMonths&quot; &gt; 24 THEN '&gt; 24 Months'
+ELSE 'Err/Neg Months'
+END</formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute datatype="INTEGER" expressionLanguage="COLUMN_ENGINE" id="CC_AgeDays">
-        <formula>if(&quot;FAEDN&quot;='00010101',
-    null,
-    if(&quot;AUGDT&quot;='00000000',
-        if(&quot;STUDT&quot;='00000000' or &quot;STUDT&quot;='' or isNull(&quot;STUDT&quot;),
-            if(date(&quot;FAEDN&quot;)&lt;date('$$IP_KeyDate$$'),
-                daysbetween(date(&quot;FAEDN&quot;),date('$$IP_KeyDate$$')),
-                null
-            ),
-            if(date(&quot;STUDT&quot;)&lt;date('$$IP_KeyDate$$'),
-                daysbetween(date(&quot;STUDT&quot;),date('$$IP_KeyDate$$')),
-                null
-            )
-        ),
-        if(&quot;STUDT&quot;='00000000' or &quot;STUDT&quot;='' or isNull(&quot;STUDT&quot;),
-            if(date(&quot;FAEDN&quot;)&lt;date(&quot;AUGDT&quot;),
-                daysbetween(date(&quot;FAEDN&quot;),date(&quot;AUGDT&quot;)),
-                null
-            ),
-            if(date(&quot;STUDT&quot;)&lt;date(&quot;AUGDT&quot;),
-                daysbetween(date(&quot;STUDT&quot;),date(&quot;AUGDT&quot;)),
-                null
-            )
-        )
-    )
-)</formula>
+      <calculatedViewAttribute datatype="INTEGER" expressionLanguage="SQL" id="CC_AgeDays">
+        <formula>CASE 
+WHEN &quot;FAEDN&quot; != '00010101' AND &quot;AUGDT&quot;='00000000' AND (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot;='' or &quot;STUDT&quot; is null) AND (to_date(&quot;FAEDN&quot;) &lt;= to_date('$$IP_KeyDate$$')) THEN DAYS_BETWEEN(to_date(&quot;FAEDN&quot;), to_date('$$IP_KeyDate$$'))
+WHEN &quot;FAEDN&quot; != '00010101'AND &quot;AUGDT&quot;='00000000'AND (&quot;STUDT&quot;!='00000000' or &quot;STUDT&quot;!='' or &quot;STUDT&quot; is not null) AND to_date(&quot;STUDT&quot;) &lt;= to_date('$$IP_KeyDate$$') THEN DAYS_BETWEEN(to_date(&quot;STUDT&quot;), to_date('$$IP_KeyDate$$'))
+WHEN &quot;FAEDN&quot; != '00010101'AND &quot;AUGDT&quot;!='00000000'AND (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot;='' or &quot;STUDT&quot; is null) AND to_date(&quot;FAEDN&quot;) &lt;= to_date(&quot;AUGDT&quot;) THEN DAYS_BETWEEN(to_date(&quot;FAEDN&quot;), to_date(&quot;AUGDT&quot;))
+WHEN &quot;FAEDN&quot; != '00010101'AND &quot;AUGDT&quot;!='00000000'AND (&quot;STUDT&quot;!='00000000' or &quot;STUDT&quot;!='' or &quot;STUDT&quot; is not null) AND to_date(&quot;STUDT&quot;) &lt;= to_date(&quot;AUGDT&quot;) THEN DAYS_BETWEEN(to_date(&quot;STUDT&quot;), to_date(&quot;AUGDT&quot;))
+ELSE null
+END
+ </formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE" id="CC_AgeDaysStatus">
-        <formula>if(&quot;CC_AgeDays&quot; &gt;= 0 AND &quot;CC_AgeDays&quot; &lt;= 13,'&lt; 14 Days',
-if(&quot;CC_AgeDays&quot; &gt;= 14 AND &quot;CC_AgeDays&quot; &lt;= 20,'14 to 20 Days',
-if(&quot;CC_AgeDays&quot; &gt;= 21 AND &quot;CC_AgeDays&quot; &lt;= 29,'21 to 29 Days',
-if(&quot;CC_AgeDays&quot; &gt;= 30 AND &quot;CC_AgeDays&quot; &lt;= 59,'30 to 59 Days',
-if(&quot;CC_AgeDays&quot; &gt;= 60 AND &quot;CC_AgeDays&quot; &lt;= 90,'60 to 90 Days',
-if(&quot;CC_AgeDays&quot; &gt; 90, '&gt; 90 Days',
-'Err/Neg Days'
-))))))</formula>
+      <calculatedViewAttribute datatype="NVARCHAR" length="20" expressionLanguage="SQL" id="CC_AgeDaysStatus">
+        <formula>CASE
+WHEN &quot;CC_AgeDays&quot; &gt;= 0 AND &quot;CC_AgeDays&quot; &lt;= 13 THEN '&lt; 14 Days'
+WHEN &quot;CC_AgeDays&quot; &gt;= 14 AND &quot;CC_AgeDays&quot; &lt;= 20 THEN '14 to 20 Days'
+WHEN &quot;CC_AgeDays&quot; &gt;= 21 AND &quot;CC_AgeDays&quot; &lt;= 29 THEN '21 to 29 Days'
+WHEN &quot;CC_AgeDays&quot; &gt;= 30 AND &quot;CC_AgeDays&quot; &lt;= 59 THEN '30 to 59 Days'
+WHEN &quot;CC_AgeDays&quot; &gt;= 60 AND &quot;CC_AgeDays&quot; &lt;= 90 THEN '60 to 90 Days'
+WHEN &quot;CC_AgeDays&quot; &gt; 90 THEN '&gt; 90 Days'
+ELSE 'Err/Neg Days'
+END</formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE" id="CC_ValueCategory">
-        <formula>if(abs(&quot;BETRH&quot;) &lt; 999999,'&lt; $1M',
-if(abs(&quot;BETRH&quot;) &gt;= 1000000 AND abs(&quot;BETRH&quot;) &lt;= 20000000,'$1M to $20M',
-if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
-'Err'
-)))</formula>
+      <calculatedViewAttribute datatype="NVARCHAR" length="20" expressionLanguage="SQL" id="CC_ValueCategory">
+        <formula>CASE
+WHEN abs(&quot;BETRH&quot;) &lt; 999999 THEN '&lt; $1M'
+WHEN abs(&quot;BETRH&quot;) &gt;= 1000000 AND abs(&quot;BETRH&quot;) &lt;= 20000000 THEN '$1M to $20M'
+WHEN abs(&quot;BETRH&quot;) &gt; 20000000 THEN '&gt; $20M'
+ELSE 'Err'
+END</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_AGEMTHCRDSTA" datatype="NVARCHAR" length="20" expressionLanguage="SQL">
+    
+        <formula>CASE
+WHEN &quot;CC_AgeMonths&quot; &gt;= 0 AND &quot;CC_AgeMonths&quot; &lt; 2 THEN '&lt; 2 Months'
+WHEN &quot;CC_AgeMonths&quot; &gt;= 2 AND &quot;CC_AgeMonths&quot; &lt;= 12 THEN '2 to 12 Months'
+WHEN &quot;CC_AgeMonths&quot; &gt; 12 THEN '&gt; 12 Months'
+ELSE 'Err/Neg Months'
+END</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="osr.business.semantic.db.synonyms::DFKKOP" emptyUnionBehavior="undefined"/>
@@ -445,7 +403,9 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
       <viewAttribute aggregationType="sum" id="CC_AgeDays"/>
       <viewAttribute id="CC_AgeDaysStatus"/>
       <viewAttribute id="CC_ValueCategory"/>
-      <viewAttribute id="AUGBL_BLART"/></viewAttributes>
+      <viewAttribute id="AUGBL_BLART"/>
+      <viewAttribute id="CC_AGEMTHCRDSTA"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_DFKKOP">
       <mapping xsi:type="Calculation:AttributeMapping" source="OPUPW" target="OPUPW"/>
@@ -592,6 +552,8 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
       <mapping xsi:type="Calculation:AttributeMapping" source="CC_ValueCategory" target="CC_ValueCategory"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AGEMTHCRDSTA" source="CC_AGEMTHCRDSTA"/>
     </input>
     <input node="P_DFKKKO">
       <mapping xsi:type="Calculation:AttributeMapping" source="BLART" target="AUGBL_BLART"/>
@@ -605,9 +567,9 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKKO" filterExpressionLanguage="SQL">
     <viewAttributes>
+      <viewAttribute id="BLART"/>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="OPBEL"/>
-      <viewAttribute id="BLART"/>
     
       <viewAttribute id="APPLK"/></viewAttributes>
     <calculatedViewAttributes/>
@@ -1101,6 +1063,10 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
       <descriptions defaultDescription="Clearing Document Type"/>
       <keyMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="AUGBL_BLART"/>
     </attribute>
+    <attribute id="CC_AGEMTHCRDSTA" order="122" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Age Credit Status"/>
+      <keyMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="CC_AGEMTHCRDSTA"/>
+    </attribute>
     <attribute id="MANDT$local">
       <descriptions defaultDescription="MANDT"/>
       <keyMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="MANDT"/>
@@ -1133,105 +1099,105 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure aggregationType="sum" id="PSWBT" order="122" measureType="simple">
+    <measure aggregationType="sum" id="PSWBT" order="123" measureType="simple">
       <descriptions defaultDescription="Amount for Updating in General Ledger"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="PSWBT"/>
     </measure>
-    <measure aggregationType="sum" id="SKTPZ" order="123" measureType="simple">
+    <measure aggregationType="sum" id="SKTPZ" order="124" measureType="simple">
       <descriptions defaultDescription="Cash discount rate"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="SKTPZ"/>
     </measure>
-    <measure aggregationType="sum" id="KURSF" order="124" measureType="simple">
+    <measure aggregationType="sum" id="KURSF" order="125" measureType="simple">
       <descriptions defaultDescription="Exchange rate"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="KURSF"/>
     </measure>
-    <measure aggregationType="sum" id="BETRH" order="125" measureType="simple">
+    <measure aggregationType="sum" id="BETRH" order="126" measureType="simple">
       <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="BETRH"/>
     </measure>
-    <measure aggregationType="sum" id="BETRW" order="126" measureType="simple">
+    <measure aggregationType="sum" id="BETRW" order="127" measureType="simple">
       <descriptions defaultDescription="Amount in Transaction Currency with +/- Sign"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="BETRW"/>
     </measure>
-    <measure aggregationType="sum" id="BETR2" order="127" measureType="simple">
+    <measure aggregationType="sum" id="BETR2" order="128" measureType="simple">
       <descriptions defaultDescription="Amount in second parallel currency with +/- sign"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="BETR2"/>
     </measure>
-    <measure aggregationType="sum" id="BETR3" order="128" measureType="simple">
+    <measure aggregationType="sum" id="BETR3" order="129" measureType="simple">
       <descriptions defaultDescription="Amount in third parallel currency with +/- sign"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="BETR3"/>
     </measure>
-    <measure aggregationType="sum" id="SKFBT" order="129" measureType="simple">
+    <measure aggregationType="sum" id="SKFBT" order="130" measureType="simple">
       <descriptions defaultDescription="Amount eligible for cash discount in document currency"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="SKFBT"/>
     </measure>
-    <measure aggregationType="sum" id="SBETH" order="130" measureType="simple">
+    <measure aggregationType="sum" id="SBETH" order="131" measureType="simple">
       <descriptions defaultDescription="Tax Amount in Local Currency With +/- Sign"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="SBETH"/>
     </measure>
-    <measure aggregationType="sum" id="SBETW" order="131" measureType="simple">
+    <measure aggregationType="sum" id="SBETW" order="132" measureType="simple">
       <descriptions defaultDescription="Tax Amount in Transaction Currency with +/- Sign"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="SBETW"/>
     </measure>
-    <measure aggregationType="sum" id="SBET2" order="132" measureType="simple">
+    <measure aggregationType="sum" id="SBET2" order="133" measureType="simple">
       <descriptions defaultDescription="Tax amount in second parallel currency"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="SBET2"/>
     </measure>
-    <measure aggregationType="sum" id="SBET3" order="133" measureType="simple">
+    <measure aggregationType="sum" id="SBET3" order="134" measureType="simple">
       <descriptions defaultDescription="Tax amount in third parallel currency"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="SBET3"/>
     </measure>
-    <measure aggregationType="sum" id="AUGBT" order="134" measureType="simple">
+    <measure aggregationType="sum" id="AUGBT" order="135" measureType="simple">
       <descriptions defaultDescription="Clearing amount in clearing currency"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="AUGBT"/>
     </measure>
-    <measure aggregationType="sum" id="AUGBS" order="135" measureType="simple">
+    <measure aggregationType="sum" id="AUGBS" order="136" measureType="simple">
       <descriptions defaultDescription="Tax amount in clearing currency"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="AUGBS"/>
     </measure>
-    <measure aggregationType="sum" id="AUGSK" order="136" measureType="simple">
+    <measure aggregationType="sum" id="AUGSK" order="137" measureType="simple">
       <descriptions defaultDescription="Cash Discount Granted/Surcharge Levied in Clearing Currency"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="AUGSK"/>
     </measure>
-    <measure aggregationType="sum" id="FDWBT" order="137" measureType="simple">
+    <measure aggregationType="sum" id="FDWBT" order="138" measureType="simple">
       <descriptions defaultDescription="Planned Amount in Document or G/L Account Currency"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="FDWBT"/>
     </measure>
-    <measure aggregationType="sum" id="QSSHB" order="138" measureType="simple">
+    <measure aggregationType="sum" id="QSSHB" order="139" measureType="simple">
       <descriptions defaultDescription="Tax Base Amount"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="QSSHB"/>
     </measure>
-    <measure aggregationType="sum" id="QBSHB" order="139" measureType="simple">
+    <measure aggregationType="sum" id="QBSHB" order="140" measureType="simple">
       <descriptions defaultDescription="Withholding Tax Amount (in Document Currency)"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="QBSHB"/>
     </measure>
-    <measure aggregationType="sum" id="SCTAX" order="140" measureType="simple">
+    <measure aggregationType="sum" id="SCTAX" order="141" measureType="simple">
       <descriptions defaultDescription="Tax Portion in FI-CA Local Currency"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="SCTAX"/>
     </measure>
-    <measure aggregationType="sum" id="STTAX" order="141" measureType="simple">
+    <measure aggregationType="sum" id="STTAX" order="142" measureType="simple">
       <descriptions defaultDescription="Tax Amount as Statistical Information in Document Currency"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="STTAX"/>
     </measure>
-    <measure aggregationType="sum" id="PSWTX" order="142" measureType="simple">
+    <measure aggregationType="sum" id="PSWTX" order="143" measureType="simple">
       <descriptions defaultDescription="Tax Amount for Update in General Ledger"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="PSWTX"/>
     </measure>
-    <measure aggregationType="sum" id="ZEXCL_AMT" order="143" measureType="simple">
+    <measure aggregationType="sum" id="ZEXCL_AMT" order="144" measureType="simple">
       <descriptions defaultDescription="Tax Amount that is excluded from Interest Calculations"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="ZEXCL_AMT"/>
     </measure>
-    <measure aggregationType="sum" id="CC_AgeMonths" order="144" measureType="simple">
+    <measure aggregationType="sum" id="CC_AgeMonths" order="145" measureType="simple">
       <descriptions defaultDescription="CC_AgeMonths"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="CC_AgeMonths"/>
     </measure>
-    <measure aggregationType="sum" id="CC_AgeDays" order="145" measureType="simple">
+    <measure aggregationType="sum" id="CC_AgeDays" order="146" measureType="simple">
       <descriptions defaultDescription="CC_AgeDays"/>
       <measureMapping columnObjectName="J_DFKKKO_DFKKOP" columnName="CC_AgeDays"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
-    <measure calculatedMeasureType="counter" aggregationType="sum" datatype="BIGINT" aggregatable="true" length="" id="CC_FBNDistinctCounter" order="146" measureType="simple">
+    <measure calculatedMeasureType="counter" aggregationType="sum" datatype="BIGINT" aggregatable="true" length="" id="CC_FBNDistinctCounter" order="147" measureType="simple">
       <descriptions defaultDescription="FBN Distinct Counter"/>
       <exceptionAggregation>
         <attribute attributeName="FBNUM"/>
@@ -1246,14 +1212,16 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
       
       
       
+      
       </measure>
-    <measure calculatedMeasureType="counter" aggregationType="sum" datatype="BIGINT" aggregatable="true" length="" id="CC_DocumentCounter" order="147" measureType="simple">
+    <measure calculatedMeasureType="counter" aggregationType="sum" datatype="BIGINT" aggregatable="true" length="" id="CC_DocumentCounter" order="148" measureType="simple">
       <descriptions defaultDescription="Document Counter"/>
       <exceptionAggregation>
         <attribute attributeName="OPBEL"/>
       </exceptionAggregation>
       <formula>1</formula>
     
+      
       
       
       
@@ -1397,11 +1365,11 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectNameSpace="CalculationView" modelObjectName="P_DFKKOP">
-      <upperLeftCorner x="302" y="451"/>
+      <upperLeftCorner x="92" y="466"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectNameSpace="CalculationView" modelObjectName="J_DFKKKO_DFKKOP">
-      <upperLeftCorner x="221" y="292"/>
+      <upperLeftCorner x="221" y="307"/>
       <rectangleSize width="160" height="30"/>
     </shape>
     <shape modelObjectNameSpace="J_DFKKKO_DFKKOP" modelObjectType="JoinNodeInput" modelObjectName="P_DFKKOP">
@@ -1413,7 +1381,7 @@ if(abs(&quot;BETRH&quot;) &gt; 20000000,'&gt; $20M',
       <rectangleSize width="149"/>
     </shape>
     <shape expanded="true" modelObjectNameSpace="CalculationView" modelObjectName="P_DFKKKO">
-      <upperLeftCorner x="92" y="451"/>
+      <upperLeftCorner x="302" y="466"/>
       <rectangleSize width="160" height="30"/>
     </shape>
     <shape modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository" modelObjectName="J_DFKKKO_DFKKOP">

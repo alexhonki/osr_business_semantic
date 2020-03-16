@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_PaymentPlans_Text" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="Payment Plans Text"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_PaymentPlans">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_PaymentPlans</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews/>
+<logicalModel id="osr.business.semantic.db.Business_Models.CommonObjects::CV_PaymentPlans">
+  <attributes>
+    <attribute id="MANDT" key="true" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="CV_PaymentPlans" columnName="MANDT"/>
+    </attribute>
+    <attribute id="PPKEY" key="true" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Identification of Promise to Pay"/>
+      <keyMapping columnObjectName="CV_PaymentPlans" columnName="PPKEY"/>
+    </attribute>
+    <attribute id="PPCAT" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Category of Promise to Pay"/>
+      <keyMapping columnObjectName="CV_PaymentPlans" columnName="PPCAT"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_PPKEY_DESC" order="4" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Categories of Promises to Pay"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="50">
+        <formula>CASE &quot;PPCAT&quot;
+	WHEN '03' then 'Monthly, no interest'
+	WHEN '04' then 'Fast Data Entry'
+    WHEN 'Z1' THEN '6 Monthly Instalments'
+    WHEN 'Z2' THEN '12 Monthly Instalments'
+    When 'Z3' THEN '3 Quarterly Instalments'
+    WHEN 'Z4' THEN '24 Weekly Instalments'
+    WHEN 'Z5' THEN '12 Fortnightly'
+    WhEN 'Z6' THEN 'LT Pre TAA - 12 Monthly Instalments'
+    WHEN 'Z7' THEN 'LT EPO'
+    WHEN 'ZA' THEN 'Royalties: 6 Monthly Instalments'
+    WHEN 'ZB' THEN 'Royalties: 12 Monthly Instalments'
+    WHEN 'ZC' THEN 'Royalties: 3 Quarterly Instalments'
+    WHEN 'ZD' THEN 'Royalties: 24 Weekly Instalments'
+    WHEN 'ZE' THEN 'Royalties: 12 Fortnightly Instalments'
+    ELSE null 
+END</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+  </calculatedAttributes>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
