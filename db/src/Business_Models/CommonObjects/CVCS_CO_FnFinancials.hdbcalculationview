@@ -1550,6 +1550,9 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
     <attribute id="DFKK_H_GPART$local">
       <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKK_H_GPART"/>
     </attribute>
+    <attribute id="ABWBL$local">
+      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ABWBL"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -1673,6 +1676,7 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       
       
       
+      
       </measure>
   
     <measure id="FBNCounter" order="145" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -1681,6 +1685,7 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
         <attribute attributeName="FBNUM"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -1715,7 +1720,7 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
         </filter>
         <attributeName>BLART</attributeName>
       </restriction>
-    </measure>
+      </measure>
   
     <measure id="OpenItemBalance" order="155" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Open Item Balance"/>
@@ -1739,8 +1744,7 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
         <attributeName>BLART</attributeName>
   
       </restriction>
-  
-    </measure>
+      </measure>
     <measure id="AssessmentAmount" order="156" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="Assessment Amount"/>
       <restriction logicalOperator="AND">
@@ -1815,7 +1819,7 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
         </filter>
         <attributeName>FBNUM</attributeName>
       </restriction>
-    </measure>
+      </measure>
   </restrictedMeasures>
   <localDimensions/>
 
@@ -1927,26 +1931,56 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
 
     </logicalJoin>
 
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_PaymentPlans_Text">
+
+      <attributes>
+
+        <attributeRef>MANDT$local</attributeRef>
+
+        <attributeRef>ABWBL$local</attributeRef>
+
+      </attributes>
+
+      <associatedAttributeNames>
+
+        <attributeName>MANDT</attributeName>
+
+        <attributeName>PPKEY</attributeName>
+
+      </associatedAttributeNames>
+
+      <properties cardinality="CN_1" joinType="inner" joinOperator="Equal"/>
+
+      <associatedAttributeFeatures>
+
+        <attributeReference alias="MANDT_2" attributeName="MANDT" hidden="true"/>
+
+        <attributeReference attributeName="PPKEY" hidden="true"/>
+
+      </associatedAttributeFeatures>
+
+    </logicalJoin>
+
   </sharedDimensions>
 </logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="210.93122138090405" y="112"/>
+      <upperLeftCorner x="210" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CV_Financials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="127.99999940395352" y="851.9999952316284"/>
+      <upperLeftCorner x="127" y="851"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CONTACCTBAL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="127.99999940395352" y="706.9999964237213"/>
+      <upperLeftCorner x="127" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_BALANCE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="101.33333273728685" y="441.9999976158142"/>
+      <upperLeftCorner x="101" y="441"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CV_Financials" modelObjectNameSpace="J_FIN_BALANCE" modelObjectType="JoinNodeInput">
@@ -1958,15 +1992,15 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_CONTACCTBAL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="127.99999940395352" y="601.9999964237213"/>
+      <upperLeftCorner x="127" y="601"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_FBNUMS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="337.99999940395355" y="706.9999964237213"/>
+      <upperLeftCorner x="337" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_ASSTAMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="194.23741874930752" y="281.9999988079071"/>
+      <upperLeftCorner x="194" y="281"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FIN_BALANCE" modelObjectNameSpace="J_FIN_ASSTAMTS" modelObjectType="JoinNodeInput">
@@ -1978,7 +2012,7 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_FBNUM_AMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="337.99999940395355" y="601.9999964237213"/>
+      <upperLeftCorner x="337" y="601"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FIN_ASSTAMTS" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
@@ -1997,6 +2031,11 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
     <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpSolvency_IP" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
       <upperLeftCorner x="920" y="30"/>
       <rectangleSize width="574"/>
+    </shape>
+  
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_PaymentPlans_Text" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="1220" y="30"/>
+      <rectangleSize width="250"/>
     </shape>
   </shapes>
 </layout>
