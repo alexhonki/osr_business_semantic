@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CV_FinancialsCurrent" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
-<descriptions defaultDescription="CV FINANCIALS"/>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CV_FinancialsCurrent" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="Financials Current "/>
 <localVariables/>
 <variableMappings/>
 <dataSources>
-  <DataSource id="osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials">
-    <resourceUri>osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials</resourceUri>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -176,9 +176,13 @@
       <viewAttribute id="AltRevenueTypeGroups"/>
       <viewAttribute id="VKTYP_TEXT"/>
       <viewAttribute id="FormBundleValueCategory"/>
+    
+      <viewAttribute id="PPCAT"/>
+      <viewAttribute id="CC_PPKEY_DESC"/>
+      <viewAttribute id="CC_AGEMTHCRDSTA"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.Finance::CV_FnFinancials">
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials">
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BUDAT" source="DFKK_H_BUDAT"/></input></calculationView>
 </calculationViews>
 <logicalModel id="P_FINANCIALS">
@@ -693,7 +697,9 @@
   
     <attribute id="STEP" order="150" semanticType="empty" descriptionColumnName="STEP" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Collection Step"/>
+  
       <keyMapping columnObjectName="P_FINANCIALS" columnName="STEP"/>
+  
     </attribute>
     <attribute id="STEP_DESC" order="151" semanticType="empty" descriptionColumnName="STEP_DESC" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Name of Collection Step"/>
@@ -734,6 +740,19 @@
     <attribute id="FormBundleValueCategory" order="161" semanticType="empty" descriptionColumnName="FormBundleValueCategory" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Form Bundle Value Category"/>
       <keyMapping columnObjectName="P_FINANCIALS" columnName="FormBundleValueCategory"/>
+    </attribute>
+  
+    <attribute id="PPCAT" order="162" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Category of Promise to Pay"/>
+      <keyMapping columnObjectName="P_FINANCIALS" columnName="PPCAT"/>
+    </attribute>
+    <attribute id="CC_PPKEY_DESC" order="163" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Categories of Promises to Pay"/>
+      <keyMapping columnObjectName="P_FINANCIALS" columnName="CC_PPKEY_DESC"/>
+    </attribute>
+    <attribute id="CC_AGEMTHCRDSTA" order="164" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Age Credit Status"/>
+      <keyMapping columnObjectName="P_FINANCIALS" columnName="CC_AGEMTHCRDSTA"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -846,6 +865,7 @@
       
       
       
+      
       </measure>
   
     <measure id="DocumentCounter" order="2" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -854,6 +874,7 @@
         <attribute attributeName="OPBEL"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
