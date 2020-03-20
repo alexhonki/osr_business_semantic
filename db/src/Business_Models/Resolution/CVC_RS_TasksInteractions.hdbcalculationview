@@ -38,32 +38,11 @@
       <viewAttribute id="ORGEH"/>
       <viewAttribute id="SHORT"/>
     
-      <viewAttribute id="CREATED_BY"/></viewAttributes>
-    <calculatedViewAttributes>
-    
-      <calculatedViewAttribute id="Source" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
-    
-        <formula>'Tasks &amp; Interactions'</formula>
-    
-      </calculatedViewAttribute>
-    
-      <calculatedViewAttribute id="CC_RowCount" datatype="INTEGER" expressionLanguage="SQL">
-    
-        <formula>1</formula>
-    
-      </calculatedViewAttribute>
-    
-      <calculatedViewAttribute id="CC_Days_Bt_Creation_Mod" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-    
-        <formula>if(&quot;TXT30&quot;='Completed' or &quot;TXT30&quot;='Finalised',daysbetween(&quot;CC_Created_Date&quot;, &quot;CC_Last_Changed&quot;),daysbetween(&quot;CC_Created_Date&quot;, now()))</formula>
-    
-      </calculatedViewAttribute>
-    
-      <calculatedViewAttribute id="CC_ActivityType" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
-    
-        <formula>if(&quot;PROCESS_TYPE&quot; = 'ZTRA', 'Task - Action', 'All Others' )</formula>
-    
-      </calculatedViewAttribute></calculatedViewAttributes>
+      <viewAttribute id="CREATED_BY"/>
+      <viewAttribute id="CC_Days_to_Process"/>
+      <viewAttribute id="CC_Days_Bt_Creation_Mod"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVC_CO_TasksInteractions"/></calculationView>
 </calculationViews>
 <logicalModel id="P_TasksInteractions">
@@ -84,148 +63,122 @@
       <descriptions defaultDescription="Process Type (Desc) - hide in SAC"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="P_DESCRIPTION"/>
     </attribute>
-  
-    <attribute id="CC_ActivityType" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Activity Type"/>
-  
-      <keyMapping columnObjectName="P_TasksInteractions" columnName="CC_ActivityType"/>
-  
-    </attribute>
-    <attribute id="CHANGED_BY" order="6" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="ChangedByName">
+    <attribute id="CHANGED_BY" order="5" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="ChangedByName">
       <descriptions defaultDescription="Changed By (Team Member)"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="CHANGED_BY"/>
     </attribute>
-    <attribute id="ARCHIVING_FLAG" order="7" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ARCHIVING_FLAG" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Archiving flag"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="ARCHIVING_FLAG"/>
     </attribute>
-    <attribute id="CC_Created_Date" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_Created_Date" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Creation Date"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="CC_Created_Date"/>
     </attribute>
-    <attribute id="CC_Last_Changed" order="9" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_Last_Changed" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Changed date"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="CC_Last_Changed"/>
     </attribute>
-    <attribute id="DESCRIPTION" order="10" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="DESCRIPTION" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Task Description - hide in SAC"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="DESCRIPTION"/>
     </attribute>
-    <attribute id="CATEGORY" order="11" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CAT_DESCRIPTION">
+    <attribute id="CATEGORY" order="10" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CAT_DESCRIPTION">
       <descriptions defaultDescription="Category"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="CATEGORY"/>
     </attribute>
-    <attribute id="OBJECTIVE" order="12" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="OBJ_DESCRIPTION">
-      <descriptions defaultDescription="Area"/>
+    <attribute id="OBJECTIVE" order="11" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="OBJ_DESCRIPTION">
+      <descriptions defaultDescription="Revenue Type"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="OBJECTIVE"/>
     </attribute>
-    <attribute id="DIRECTION" order="13" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_CommDirectionLabel">
+    <attribute id="DIRECTION" order="12" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_CommDirectionLabel">
       <descriptions defaultDescription="Direction"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="DIRECTION"/>
     </attribute>
-    <attribute id="CC_CommDirectionLabel" order="14" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_CommDirectionLabel" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Direction Text - hide in SAC"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="CC_CommDirectionLabel"/>
     </attribute>
-    <attribute id="CAT_DESCRIPTION" order="15" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CAT_DESCRIPTION" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Category Text - hide in SAC"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="CAT_DESCRIPTION"/>
     </attribute>
-    <attribute id="OBJ_DESCRIPTION" order="16" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="OBJ_DESCRIPTION" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Area Text - hide in SAC"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="OBJ_DESCRIPTION"/>
     </attribute>
-    <attribute id="CreatedByName" order="17" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CreatedByName" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Created By Name - hide in SAC"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="CreatedByName"/>
     </attribute>
-    <attribute id="ChangedByName" order="18" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ChangedByName" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Changed By Name - hide in SAC"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="ChangedByName"/>
     </attribute>
-    <attribute id="ESTAT" order="19" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="TXT30">
+    <attribute id="ESTAT" order="18" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="TXT30">
       <descriptions defaultDescription="Status"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="ESTAT"/>
     </attribute>
-    <attribute id="TXT30" order="20" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TXT30" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Status Text - hide in SAC"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="TXT30"/>
     </attribute>
-    <attribute id="GUID" order="21" displayAttribute="false" attributeHierarchyActive="false" hidden="true">
+    <attribute id="GUID" order="20" displayAttribute="false" attributeHierarchyActive="false" hidden="true">
       <descriptions defaultDescription="GUID - hide in SAC"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="GUID"/>
     </attribute>
-    <attribute id="ACTIVITY_PARTNER" order="22" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="ACTIVPART_NAME">
+    <attribute id="ACTIVITY_PARTNER" order="21" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="ACTIVPART_NAME">
       <descriptions defaultDescription="Activity Partner"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="ACTIVITY_PARTNER"/>
     </attribute>
-    <attribute id="ACTIVPART_NAME" order="23" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ACTIVPART_NAME" order="22" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Activity Partner Name - hide in SAC"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="ACTIVPART_NAME"/>
     </attribute>
-    <attribute id="EMP_PARTNER" order="24" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="EMP_PARTNER">
+    <attribute id="EMP_PARTNER" order="23" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="EMP_PARTNER">
       <descriptions defaultDescription="Employee Responsible"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="EMP_PARTNER"/>
     </attribute>
-    <attribute id="EMP_NAME" order="25" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="EMP_NAME" order="24" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Employee Responsible Name - hide in SAC"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="EMP_NAME"/>
     </attribute>
-    <attribute id="ORGEH" order="26" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="SHORT">
+    <attribute id="ORGEH" order="25" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="SHORT">
       <descriptions defaultDescription="Org. Unit (Team)"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="ORGEH"/>
     </attribute>
-    <attribute id="SHORT" order="27" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SHORT" order="26" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team) Name - hide in SAC"/>
       <keyMapping columnObjectName="P_TasksInteractions" columnName="SHORT"/>
     </attribute>
   
-    <attribute id="CREATED_BY" order="28" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CreatedByName">
+    <attribute id="CREATED_BY" order="27" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CreatedByName">
       <descriptions defaultDescription="Created By (Team Member)"/>
   
       <keyMapping columnObjectName="P_TasksInteractions" columnName="CREATED_BY"/>
   
     </attribute>
-  
-    <attribute id="Source" order="33" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Source"/>
-  
-      <keyMapping columnObjectName="P_TasksInteractions" columnName="Source"/>
-  
-    </attribute></attributes>
+    <attribute id="CC_Days_to_Process" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Age Range"/>
+      <keyMapping columnObjectName="P_TasksInteractions" columnName="CC_Days_to_Process"/>
+    </attribute>
+  </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="CC_RowCount" order="30" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="CC_RowCount - hide in SAC"/>
-      <measureMapping columnObjectName="P_TasksInteractions" columnName="CC_RowCount"/>
-    </measure>
-  
-    <measure id="CC_Days_Bt_Creation_Mod" order="31" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="CC_Days_Bt_Creation_Mod"/>
+    <measure id="CC_Days_Bt_Creation_Mod" order="29" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Day of Process (Age)"/>
       <measureMapping columnObjectName="P_TasksInteractions" columnName="CC_Days_Bt_Creation_Mod"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
-    <measure id="CC_TASKINT_DURATIONAVG" order="29" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="SQL">
-      <descriptions defaultDescription="Task Duration (Aggr. Avg.)"/>
-      <formula>&quot;CC_Days_Bt_Creation_Mod&quot;/&quot;CC_RowCount&quot;</formula>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      </measure>
   
-    <measure id="CC_TASKINT_COUNTER" order="32" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+    <measure id="CC_TASKINT_COUNTER" order="30" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Task/Interactions Count"/>
       <exceptionAggregation>
         <attribute attributeName="GUID"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
