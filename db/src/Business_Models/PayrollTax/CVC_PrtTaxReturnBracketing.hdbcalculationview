@@ -97,6 +97,11 @@ END</formula>
       <descriptions defaultDescription="Period Cycle"/>
       <keyMapping columnObjectName="R_TOP_PER_CYC" columnName="CC_PeriodCycle"/>
     </attribute>
+  
+    <attribute id="RES_WAGES_GT_ZERO" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RES_WAGES_GT_ZERO"/>
+      <keyMapping columnObjectName="R_TOP_PER_CYC" columnName="RES_WAGES_GT_ZERO"/>
+    </attribute>
   </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="CC_EST_TAX_BRACKET" order="7" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
@@ -115,14 +120,9 @@ END</formula>
     <measure id="C_TOT_QLD_TXBLE_WAGES" order="4" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Total QLD Taxable Wages"/>
       <measureMapping columnObjectName="R_TOP_PER_CYC" columnName="C_TOT_QLD_TXBLE_WAGES"/>
-    </measure>
-    <measure id="RES_WAGES_GT_ZERO" order="8" aggregationType="count" measureType="simple">
-      <descriptions defaultDescription="RES_WAGES_GT_ZERO"/>
-      <measureMapping columnObjectName="R_TOP_PER_CYC" columnName="RES_WAGES_GT_ZERO"/>
-    </measure>
-  </baseMeasures>
+    </measure></baseMeasures>
   <calculatedMeasures>
-    <measure id="CC_EST_ANNUAL_WAGES" order="6" aggregationType="sum" engineAggregation="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+    <measure id="CC_EST_ANNUAL_WAGES" order="6" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
       <descriptions defaultDescription="Estimated Annual Wages"/>
       <formula>CASE
     WHEN &quot;RES_WAGES_GT_ZERO&quot; = 0 THEN 0
@@ -132,6 +132,7 @@ END</formula>
     WHEN &quot;CC_PeriodCycle&quot; = 'Month' THEN (&quot;C_TOT_QLD_TXBLE_WAGES&quot;/&quot;RES_WAGES_GT_ZERO&quot;) * 12
     ELSE null
 END</formula>
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
