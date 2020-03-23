@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.PayrollTax::CVC_PrtTaxReturnBracketing" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CVC_PrtTaxReturnBracketing"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturns">
+    <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturns</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_TAXRETURNS" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES"/>
+      <viewAttribute id="CC_PeriodCycle"/>
+      <viewAttribute id="PERIOD_KEY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturns"/>
+    <filter>&quot;FISCAL_YEAR&quot; IN ('2020', '2019')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_WAGES_NON_NIL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES" aggregationType="sum"/>
+      <viewAttribute id="CC_PeriodCycle"/>
+      <viewAttribute id="PERIOD_KEY" aggregationType="count"/>
+      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES_DIM"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_PERIOD_RANK" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>CASE
+    WHEN &quot;CC_PeriodCycle&quot; = 'Annual' THEN 0
+    WHEN &quot;CC_PeriodCycle&quot; = 'Final' THEN 1
+    WHEN &quot;CC_PeriodCycle&quot; = 'Month' THEN 2
+    WHEN &quot;CC_PeriodCycle&quot; = 'Quarter' THEN 3
+    WHEN &quot;CC_PeriodCycle&quot; = 'Half-Year' THEN 4
+    ELSE 5
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes>
+      <restrictedViewAttribute id="RES_WAGES_GT_ZERO" baseViewAttribute="PERIOD_KEY" restrictionExpressionLanguage="SQL">
+        <descriptions defaultDescription=""/>
+        <restrictionExpression>&quot;C_TOT_QLD_TXBLE_WAGES_DIM&quot; &gt; 0</restrictionExpression>
+      </restrictedViewAttribute>
+    </restrictedViewAttributes>
+    <input node="P_TAXRETURNS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_QLD_TXBLE_WAGES_DIM" source="C_TOT_QLD_TXBLE_WAGES"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_TOP_PER_CYC">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES" aggregationType="sum"/>
+      <viewAttribute id="CC_PeriodCycle"/>
+      <viewAttribute id="PERIOD_KEY" aggregationType="count"/>
+      <viewAttribute id="RES_WAGES_GT_ZERO" aggregationType="formula"/>
+      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES_DIM" aggregationType="sum"/>
+      <viewAttribute id="CC_PERIOD_RANK" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="AGG_WAGES_NON_NIL"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>MANDT</partitionViewAttributeName>
+      <partitionViewAttributeName>TAXPAYER</partitionViewAttributeName>
+      <partitionViewAttributeName>FISCAL_YEAR</partitionViewAttributeName>
+      <order byViewAttributeName="CC_PERIOD_RANK" direction="ASC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
+</calculationViews>
+<logicalModel id="R_TOP_PER_CYC">
+  <attributes>
+    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SAP Client"/>
+      <keyMapping columnObjectName="R_TOP_PER_CYC" columnName="MANDT"/>
+    </attribute>
+    <attribute id="TAXPAYER" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner"/>
+      <keyMapping columnObjectName="R_TOP_PER_CYC" columnName="TAXPAYER"/>
+    </attribute>
+    <attribute id="FISCAL_YEAR" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Fiscal Year"/>
+      <keyMapping columnObjectName="R_TOP_PER_CYC" columnName="FISCAL_YEAR"/>
+    </attribute>
+    <attribute id="CC_PeriodCycle" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Period Cycle"/>
+      <keyMapping columnObjectName="R_TOP_PER_CYC" columnName="CC_PeriodCycle"/>
+    </attribute>
+  
+    <attribute id="RES_WAGES_GT_ZERO" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RES_WAGES_GT_ZERO"/>
+      <keyMapping columnObjectName="R_TOP_PER_CYC" columnName="RES_WAGES_GT_ZERO"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_EST_TAX_BRACKET" order="7" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Under/Over $6.5 Million"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="25">
+        <formula>CASE
+    WHEN &quot;CC_EST_ANNUAL_WAGES&quot; = 0 THEN 'No wages lodged'
+    WHEN &quot;CC_EST_ANNUAL_WAGES&quot; &gt;= 6500000 THEN '$6.5 Million or over'
+    WHEN &quot;CC_EST_ANNUAL_WAGES&quot; &lt; 6500000 THEN 'Under $6.5 Million'
+    ELSE 'Unidentified'
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
+  <baseMeasures>
+    <measure id="C_TOT_QLD_TXBLE_WAGES" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total QLD Taxable Wages"/>
+      <measureMapping columnObjectName="R_TOP_PER_CYC" columnName="C_TOT_QLD_TXBLE_WAGES"/>
+    </measure></baseMeasures>
+  <calculatedMeasures>
+    <measure id="CC_EST_ANNUAL_WAGES" order="6" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Estimated Annual Wages"/>
+      <formula>CASE
+    WHEN &quot;RES_WAGES_GT_ZERO&quot; = 0 THEN 0
+    WHEN &quot;CC_PeriodCycle&quot; IN ('Annual', 'Final') THEN &quot;C_TOT_QLD_TXBLE_WAGES&quot;
+    WHEN &quot;CC_PeriodCycle&quot; = 'Half-Year' THEN &quot;C_TOT_QLD_TXBLE_WAGES&quot; * 2
+    WHEN &quot;CC_PeriodCycle&quot; = 'Quarter' THEN (&quot;C_TOT_QLD_TXBLE_WAGES&quot;/&quot;RES_WAGES_GT_ZERO&quot;) * 4
+    WHEN &quot;CC_PeriodCycle&quot; = 'Month' THEN (&quot;C_TOT_QLD_TXBLE_WAGES&quot;/&quot;RES_WAGES_GT_ZERO&quot;) * 12
+    ELSE null
+END</formula>
+      
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_TAXRETURNS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="391"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_WAGES_NON_NIL" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="279"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="R_TOP_PER_CYC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="201"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
