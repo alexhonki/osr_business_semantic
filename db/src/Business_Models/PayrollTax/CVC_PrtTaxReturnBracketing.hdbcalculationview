@@ -17,21 +17,38 @@
       <viewAttribute id="C_TOT_QLD_TXBLE_WAGES"/>
       <viewAttribute id="CC_PeriodCycle"/>
       <viewAttribute id="PERIOD_KEY"/>
+      <viewAttribute id="C_TOT_GRP_AUST_WAGES"/>
+    
+      <viewAttribute id="A_TOT_INT_WAGE"/>
+      <viewAttribute id="FT_BPGroupingType"/>
+      <viewAttribute id="PARTNER1"/>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_WAGES" datatype="DECIMAL" length="23" scale="4" expressionLanguage="SQL">
+        <formula>CASE
+    WHEN &quot;FT_BPGroupingType&quot; = 'DGE' THEN &quot;C_TOT_GRP_AUST_WAGES&quot;
+    WHEN &quot;FT_BPGroupingType&quot; = 'NG' THEN (&quot;C_TOT_QLD_TXBLE_WAGES&quot; + &quot;A_TOT_INT_WAGE&quot;)
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_BRACKET_BP" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>CASE
+    WHEN &quot;FT_BPGroupingType&quot; IN ('DGE', 'GM') THEN &quot;PARTNER1&quot;
+    WHEN &quot;FT_BPGroupingType&quot; = 'NG' THEN &quot;TAXPAYER&quot;
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturns"/>
-    <filter>&quot;FISCAL_YEAR&quot; IN ('2020', '2019')</filter>
+    <filter>&quot;FISCAL_YEAR&quot; IN ('2020', '2019', '2018')</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_WAGES_NON_NIL">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
-      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="CC_BRACKET_BP"/>
       <viewAttribute id="FISCAL_YEAR"/>
-      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES" aggregationType="sum"/>
+      <viewAttribute id="CC_WAGES" aggregationType="sum"/>
       <viewAttribute id="CC_PeriodCycle"/>
       <viewAttribute id="PERIOD_KEY" aggregationType="count"/>
-      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES_DIM"/>
-    </viewAttributes>
+      <viewAttribute id="CC_WAGES_DIM"/></viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_PERIOD_RANK" datatype="INTEGER" expressionLanguage="SQL">
         <formula>CASE
@@ -47,30 +64,48 @@ END</formula>
     <restrictedViewAttributes>
       <restrictedViewAttribute id="RES_WAGES_GT_ZERO" baseViewAttribute="PERIOD_KEY" restrictionExpressionLanguage="SQL">
         <descriptions defaultDescription=""/>
-        <restrictionExpression>&quot;C_TOT_QLD_TXBLE_WAGES_DIM&quot; &gt; 0</restrictionExpression>
+        <restrictionExpression>&quot;CC_WAGES_DIM&quot; &gt; 0</restrictionExpression>
       </restrictedViewAttribute>
     </restrictedViewAttributes>
-    <input node="P_TAXRETURNS">
-      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_QLD_TXBLE_WAGES_DIM" source="C_TOT_QLD_TXBLE_WAGES"/>
+    <input node="P_DGE_NG">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WAGES_DIM" source="CC_WAGES"/>
     </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_DGE_NG" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CC_WAGES"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="CC_BRACKET_BP"/>
+    
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="CC_PeriodCycle"/>
+      <viewAttribute id="PERIOD_KEY"/>
+      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES"/>
+      <viewAttribute id="C_TOT_GRP_AUST_WAGES"/>
+      <viewAttribute id="A_TOT_INT_WAGE"/>
+      <viewAttribute id="FT_BPGroupingType"/>
+      <viewAttribute id="PARTNER1"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_TAXRETURNS"/>
+    <filter>&quot;FT_BPGroupingType&quot; IN ('DGE', 'NG')</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_TOP_PER_CYC">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
-      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="CC_BRACKET_BP"/>
       <viewAttribute id="FISCAL_YEAR"/>
-      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES" aggregationType="sum"/>
+      <viewAttribute id="CC_WAGES" aggregationType="sum"/>
       <viewAttribute id="CC_PeriodCycle"/>
       <viewAttribute id="PERIOD_KEY" aggregationType="count"/>
       <viewAttribute id="RES_WAGES_GT_ZERO" aggregationType="formula"/>
-      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES_DIM" aggregationType="sum"/>
-      <viewAttribute id="CC_PERIOD_RANK" aggregationType="sum"/>
-    </viewAttributes>
+      <viewAttribute id="CC_WAGES_DIM" aggregationType="sum"/>
+      <viewAttribute id="CC_PERIOD_RANK" aggregationType="sum"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="AGG_WAGES_NON_NIL"/>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>MANDT</partitionViewAttributeName>
-      <partitionViewAttributeName>TAXPAYER</partitionViewAttributeName>
+      <partitionViewAttributeName>CC_BRACKET_BP</partitionViewAttributeName>
       <partitionViewAttributeName>FISCAL_YEAR</partitionViewAttributeName>
       <order byViewAttributeName="CC_PERIOD_RANK" direction="ASC"/>
       <rankThreshold>
@@ -78,82 +113,209 @@ END</formula>
       </rankThreshold>
     </windowFunction>
   </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_GRP_NG_WAGES">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="CC_BRACKET_BP"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="CC_WAGES" aggregationType="sum"/>
+      <viewAttribute id="CC_PeriodCycle"/>
+      <viewAttribute id="RES_WAGES_GT_ZERO"/>
+      <viewAttribute id="CC_PERIOD_RANK"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_EST_ANNUAL_WAGES" datatype="DECIMAL" length="23" scale="2" expressionLanguage="SQL">
+        <formula>CASE
+    WHEN &quot;RES_WAGES_GT_ZERO&quot; = 0 THEN 0
+    WHEN &quot;CC_PeriodCycle&quot; IN ('Annual', 'Final') THEN &quot;CC_WAGES&quot;
+    WHEN &quot;CC_PeriodCycle&quot; = 'Half-Year' THEN &quot;CC_WAGES&quot; * 2
+    WHEN &quot;CC_PeriodCycle&quot; = 'Quarter' THEN (&quot;CC_WAGES&quot;/&quot;RES_WAGES_GT_ZERO&quot;) * 4
+    WHEN &quot;CC_PeriodCycle&quot; = 'Month' THEN (&quot;CC_WAGES&quot;/&quot;RES_WAGES_GT_ZERO&quot;) * 12
+    ELSE null
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_EST_TAX_BRACKET" datatype="NVARCHAR" length="25" expressionLanguage="SQL">
+        <formula>CASE
+    WHEN &quot;CC_EST_ANNUAL_WAGES&quot; = 0 THEN 'No wages lodged'
+    WHEN &quot;CC_EST_ANNUAL_WAGES&quot; &gt; 6500000 THEN 'Over $6.5 Million'
+    WHEN &quot;CC_EST_ANNUAL_WAGES&quot; &lt;= 6500000 THEN '$6.5 Million or under'
+    ELSE 'Unidentified'
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="R_TOP_PER_CYC"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_ADD_GMS" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="CC_BRACKET_BP"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="CC_WAGES" aggregationType="sum"/>
+      <viewAttribute id="CC_PeriodCycle"/>
+      <viewAttribute id="RES_WAGES_GT_ZERO" aggregationType="formula"/>
+      <viewAttribute id="CC_PERIOD_RANK" aggregationType="sum"/>
+      <viewAttribute id="CC_EST_ANNUAL_WAGES" aggregationType="sum"/>
+      <viewAttribute id="CC_EST_TAX_BRACKET"/>
+      <viewAttribute id="TAXPAYER"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_TAXPAYER" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>CASE
+    WHEN &quot;TAXPAYER&quot; IS NULL THEN &quot;CC_BRACKET_BP&quot;
+    WHEN &quot;TAXPAYER&quot; IS NOT NULL THEN &quot;TAXPAYER&quot;
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="AGG_GRP_NG_WAGES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BRACKET_BP" source="CC_BRACKET_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_WAGES" source="CC_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PeriodCycle" source="CC_PeriodCycle"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_WAGES_GT_ZERO" source="RES_WAGES_GT_ZERO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PERIOD_RANK" source="CC_PERIOD_RANK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EST_ANNUAL_WAGES" source="CC_EST_ANNUAL_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EST_TAX_BRACKET" source="CC_EST_TAX_BRACKET"/>
+    </input>
+    <input node="R_TOP1_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="TAXPAYER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BRACKET_BP" source="PARTNER1"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="FISCAL_YEAR"/>
+    <joinAttribute name="CC_BRACKET_BP"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_GM" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="FT_BPGroupingType"/>
+      <viewAttribute id="PARTNER1"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_TAXRETURNS"/>
+    <filter>&quot;FT_BPGroupingType&quot; = 'GM'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_TOP1_ROW">
+    <viewAttributes>
+      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="FT_BPGroupingType"/>
+      <viewAttribute id="PARTNER1"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_GM"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>TAXPAYER</partitionViewAttributeName>
+      <partitionViewAttributeName>FISCAL_YEAR</partitionViewAttributeName>
+      <order byViewAttributeName="MANDT" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
 </calculationViews>
-<logicalModel id="R_TOP_PER_CYC">
+<logicalModel id="J_ADD_GMS">
   <attributes>
     <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAP Client"/>
-      <keyMapping columnObjectName="R_TOP_PER_CYC" columnName="MANDT"/>
+      <keyMapping columnObjectName="J_ADD_GMS" columnName="MANDT"/>
     </attribute>
-    <attribute id="TAXPAYER" order="2" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Business Partner"/>
-      <keyMapping columnObjectName="R_TOP_PER_CYC" columnName="TAXPAYER"/>
-    </attribute>
-    <attribute id="FISCAL_YEAR" order="3" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FISCAL_YEAR" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fiscal Year"/>
-      <keyMapping columnObjectName="R_TOP_PER_CYC" columnName="FISCAL_YEAR"/>
+      <keyMapping columnObjectName="J_ADD_GMS" columnName="FISCAL_YEAR"/>
     </attribute>
-    <attribute id="CC_PeriodCycle" order="5" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_PeriodCycle" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Period Cycle"/>
-      <keyMapping columnObjectName="R_TOP_PER_CYC" columnName="CC_PeriodCycle"/>
+      <keyMapping columnObjectName="J_ADD_GMS" columnName="CC_PeriodCycle"/>
     </attribute>
   
-    <attribute id="RES_WAGES_GT_ZERO" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="RES_WAGES_GT_ZERO" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="RES_WAGES_GT_ZERO"/>
-      <keyMapping columnObjectName="R_TOP_PER_CYC" columnName="RES_WAGES_GT_ZERO"/>
+  
+      <keyMapping columnObjectName="J_ADD_GMS" columnName="RES_WAGES_GT_ZERO"/>
+  
+    </attribute>
+  
+    <attribute id="CC_EST_TAX_BRACKET" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_EST_TAX_BRACKET"/>
+  
+      <keyMapping columnObjectName="J_ADD_GMS" columnName="CC_EST_TAX_BRACKET"/>
+  
+    </attribute>
+    <attribute id="TAXPAYER" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TAXPAYER"/>
+      <keyMapping columnObjectName="J_ADD_GMS" columnName="CC_TAXPAYER"/>
     </attribute>
   </attributes>
-  <calculatedAttributes>
-    <calculatedAttribute id="CC_EST_TAX_BRACKET" order="7" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Under/Over $6.5 Million"/>
-      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="25">
-        <formula>CASE
-    WHEN &quot;CC_EST_ANNUAL_WAGES&quot; = 0 THEN 'No wages lodged'
-    WHEN &quot;CC_EST_ANNUAL_WAGES&quot; &gt;= 6500000 THEN '$6.5 Million or over'
-    WHEN &quot;CC_EST_ANNUAL_WAGES&quot; &lt; 6500000 THEN 'Under $6.5 Million'
-    ELSE 'Unidentified'
-END</formula>
-      </keyCalculation>
-      </calculatedAttribute>
-  </calculatedAttributes>
+  <calculatedAttributes/>
   <baseMeasures>
-    <measure id="C_TOT_QLD_TXBLE_WAGES" order="4" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Total QLD Taxable Wages"/>
-      <measureMapping columnObjectName="R_TOP_PER_CYC" columnName="C_TOT_QLD_TXBLE_WAGES"/>
-    </measure></baseMeasures>
-  <calculatedMeasures>
-    <measure id="CC_EST_ANNUAL_WAGES" order="6" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
-      <descriptions defaultDescription="Estimated Annual Wages"/>
-      <formula>CASE
-    WHEN &quot;RES_WAGES_GT_ZERO&quot; = 0 THEN 0
-    WHEN &quot;CC_PeriodCycle&quot; IN ('Annual', 'Final') THEN &quot;C_TOT_QLD_TXBLE_WAGES&quot;
-    WHEN &quot;CC_PeriodCycle&quot; = 'Half-Year' THEN &quot;C_TOT_QLD_TXBLE_WAGES&quot; * 2
-    WHEN &quot;CC_PeriodCycle&quot; = 'Quarter' THEN (&quot;C_TOT_QLD_TXBLE_WAGES&quot;/&quot;RES_WAGES_GT_ZERO&quot;) * 4
-    WHEN &quot;CC_PeriodCycle&quot; = 'Month' THEN (&quot;C_TOT_QLD_TXBLE_WAGES&quot;/&quot;RES_WAGES_GT_ZERO&quot;) * 12
-    ELSE null
-END</formula>
-      
-      </measure>
-  </calculatedMeasures>
+    <measure id="CC_WAGES" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total Taxable Wages"/>
+      <measureMapping columnObjectName="J_ADD_GMS" columnName="CC_WAGES"/>
+    </measure>
+    <measure id="CC_EST_ANNUAL_WAGES" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_EST_ANNUAL_WAGES"/>
+      <measureMapping columnObjectName="J_ADD_GMS" columnName="CC_EST_ANNUAL_WAGES"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="40" y="85"/>
+      <upperLeftCorner x="149" y="112"/>
+    
+      <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_TAXRETURNS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="391"/>
+      <upperLeftCorner x="188" y="808"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_WAGES_NON_NIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="279"/>
+      <upperLeftCorner x="91" y="566"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_DGE_NG" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="668"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_TOP_PER_CYC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="201"/>
+      <upperLeftCorner x="91" y="461"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="AGG_GRP_NG_WAGES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_ADD_GMS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="149" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="AGG_GRP_NG_WAGES" modelObjectNameSpace="J_ADD_GMS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="R_TOP1_ROW" modelObjectNameSpace="J_ADD_GMS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="189.3291015625"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_GM" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="275" y="651"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="R_TOP1_ROW" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="275" y="422"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
