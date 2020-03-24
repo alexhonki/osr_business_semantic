@@ -1570,8 +1570,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_ISPRTGROUP" datatype="NVARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;CC_GroupName&quot; = 'PRT Group' or &quot;CC_GroupName&quot; = 'PRT GROUP','X','')</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+      </calculatedViewAttribute></calculatedViewAttributes>
     <input node="J_BPINFO_TOP300">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZACN" source="CC_ZACN"/>
@@ -1640,39 +1639,17 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     </input>
     <joinAttribute name="CC_ABN"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_TAXBRACKETING">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PRT_TAX_BRACKETING">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
-      <viewAttribute id="TAXPAYER"/>
       <viewAttribute id="FISCAL_YEAR"/>
       <viewAttribute id="CC_EST_TAX_BRACKET"/>
+      <viewAttribute id="TAXPAYER"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.PayrollTax::CVC_PrtTaxReturnBracketing"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_2019TB" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="TAXPAYER"/>
-      <viewAttribute id="FISCAL_YEAR"/>
-      <viewAttribute id="CC_EST_TAX_BRACKET"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_TAXBRACKETING"/>
-    <filter>&quot;FISCAL_YEAR&quot; = '2019'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_2020TB" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="TAXPAYER"/>
-      <viewAttribute id="FISCAL_YEAR"/>
-      <viewAttribute id="CC_EST_TAX_BRACKET"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_TAXBRACKETING"/>
-    <filter>&quot;FISCAL_YEAR&quot; = '2020'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_2019BRACKET" cardinality="C1_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_TB2019" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="PARTNER"/>
       <viewAttribute id="CC_ZACN"/>
@@ -1809,7 +1786,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     <joinAttribute name="PARTNER"/>
     <joinAttribute name="CLIENT"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_2020BRACKET" cardinality="C1_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_2020" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="PARTNER"/>
       <viewAttribute id="CC_ZACN"/>
@@ -1876,7 +1853,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="CC_EST_TAX_BRACKET_2020"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="J_2019BRACKET">
+    <input node="J_BPINFO_TB2019">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZACN" source="CC_ZACN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
@@ -1942,311 +1919,331 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     </input>
     <input node="P_2020TB">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_EST_TAX_BRACKET_2020" source="CC_EST_TAX_BRACKET"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="TAXPAYER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="TAXPAYER"/>
     </input>
-    <joinAttribute name="PARTNER"/>
     <joinAttribute name="CLIENT"/>
+    <joinAttribute name="PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_2019TB" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="CC_EST_TAX_BRACKET"/>
+      <viewAttribute id="TAXPAYER"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_PRT_TAX_BRACKETING"/>
+    <filter>&quot;FISCAL_YEAR&quot; = '2019'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_2020TB" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="CC_EST_TAX_BRACKET"/>
+      <viewAttribute id="TAXPAYER"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_PRT_TAX_BRACKETING"/>
+    <filter>&quot;FISCAL_YEAR&quot; = '2020'</filter>
   </calculationView>
 </calculationViews>
-<logicalModel id="J_2020BRACKET">
+<logicalModel id="J_BPINFO_2020">
   <attributes>
     <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_FullName">
       <descriptions defaultDescription="Business Partner"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="PARTNER"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PARTNER"/>
     </attribute>
     <attribute id="CC_ZACN" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ACN"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_ZACN"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_ZACN"/>
     </attribute>
     <attribute id="CC_ABN" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABN"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_ABN"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_ABN"/>
     </attribute>
     <attribute id="RES_STD_ADDR_ADDRESS_DELIVERY" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Address"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RES_STD_ADDR_ADDRESS_DELIVERY"/>
     </attribute>
     <attribute id="RES_STD_ADDR_LOCALITY" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Suburb"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="RES_STD_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RES_STD_ADDR_LOCALITY"/>
     </attribute>
     <attribute id="RES_STD_ADDR_REGION" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business State"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="RES_STD_ADDR_REGION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RES_STD_ADDR_REGION"/>
     </attribute>
     <attribute id="RES_STD_ADDR_POSTCODE1" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Post Code"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="RES_STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RES_STD_ADDR_POSTCODE1"/>
     </attribute>
     <attribute id="RES_TEL_NUMBER" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Tel Number"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="RES_TEL_NUMBER"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RES_TEL_NUMBER"/>
     </attribute>
     <attribute id="SER_STD_ADDR_ADDRESS_DELIVERY" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Standard Address"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SER_STD_ADDR_ADDRESS_DELIVERY"/>
     </attribute>
     <attribute id="SER_STD_ADDR_LOCALITY" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Standard Suburb"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="SER_STD_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SER_STD_ADDR_LOCALITY"/>
     </attribute>
     <attribute id="SER_STD_ADDR_REGION" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Standard State"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="SER_STD_ADDR_REGION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SER_STD_ADDR_REGION"/>
     </attribute>
     <attribute id="SER_STD_ADDR_POSTCODE1" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Standard Post Code"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="SER_STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SER_STD_ADDR_POSTCODE1"/>
     </attribute>
     <attribute id="SER_TEL_NUMBER" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Standard Tel Number"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="SER_TEL_NUMBER"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SER_TEL_NUMBER"/>
     </attribute>
     <attribute id="RES_SMTP_ADDR" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Email"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="RES_SMTP_ADDR"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RES_SMTP_ADDR"/>
     </attribute>
     <attribute id="SER_SMTP_ADDR" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Standard Email"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="SER_SMTP_ADDR"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SER_SMTP_ADDR"/>
     </attribute>
   
     <attribute id="CC_FullName" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Name"/>
   
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_FullName"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_FullName"/>
   
     </attribute>
   
     <attribute id="CLIENT" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAP Client"/>
   
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CLIENT"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CLIENT"/>
   
     </attribute>
     <attribute id="RELTYP" order="19" semanticType="empty" descriptionColumnName="RELTYP_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Grouping Type (Rel.)"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="RELTYP"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RELTYP"/>
     </attribute>
     <attribute id="RELTYP_TEXT" order="20" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Grouping Type (Text)"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="RELTYP_TEXT"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RELTYP_TEXT"/>
     </attribute>
     <attribute id="PT_STATUS" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Status (Facts)"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="PT_STATUS"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PT_STATUS"/>
     </attribute>
     <attribute id="CC_PtLiabilityTaxDate" order="22" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PT Liability Date"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_PtLiabilityTaxDate"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_PtLiabilityTaxDate"/>
     </attribute>
     <attribute id="CC_TaxRegistrationFromDate" order="23" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Registration From Date"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_TaxRegistrationFromDate"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_TaxRegistrationFromDate"/>
     </attribute>
     <attribute id="CC_TrPeriodCycle" order="24" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Return Periodicity"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_TrPeriodCycle"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_TrPeriodCycle"/>
     </attribute>
     <attribute id="INTERS_W_APPLY" order="25" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Inters. Wages apply"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="INTERS_W_APPLY"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="INTERS_W_APPLY"/>
     </attribute>
     <attribute id="CC_QLDLiabilityDate" order="26" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="QLD Liability Date"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_QLDLiabilityDate"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_QLDLiabilityDate"/>
     </attribute>
     <attribute id="ONLINE_FILL_COMM" order="27" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Online Filling Commit."/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="ONLINE_FILL_COMM"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ONLINE_FILL_COMM"/>
     </attribute>
     <attribute id="PT_GROUP_STATUS" order="28" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PT Group Status"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="PT_GROUP_STATUS"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PT_GROUP_STATUS"/>
     </attribute>
   
     <attribute id="CC_ClientStatusTR" order="29" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Status (Client)"/>
   
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_ClientStatusTR"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_ClientStatusTR"/>
   
     </attribute>
   
     <attribute id="CC_TaxBracket" order="31" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PT Client Bracket"/>
   
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_TaxBracket"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_TaxBracket"/>
   
     </attribute>
   
     <attribute id="PARTNER1" order="32" descriptionColumnName="CC_GroupName" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PRT/Floating Group"/>
   
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="PARTNER1"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PARTNER1"/>
   
     </attribute>
     <attribute id="CC_GroupName" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Group Name"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_GroupName"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_GroupName"/>
     </attribute>
     <attribute id="RC_Top300WQ" order="34" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Top 300 Client Rank"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="RC_Top300WQ"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RC_Top300WQ"/>
     </attribute>
   
     <attribute id="CC_IsTop300" order="35" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Top 300 Client Flag"/>
   
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_IsTop300"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_IsTop300"/>
   
     </attribute>
   
     <attribute id="ENT_TYP_CD" order="36" semanticType="empty" descriptionColumnName="ENTITY_TYPE_DESCRIPTION" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Entity Type"/>
   
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="ENT_TYP_CD"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ENT_TYP_CD"/>
   
     </attribute>
     <attribute id="ORG_NM" order="37" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Organisation Name"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="ORG_NM"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ORG_NM"/>
     </attribute>
     <attribute id="MN_INDY_CLSN" order="38" semanticType="empty" descriptionColumnName="MN_INDY_CLSN_DESCN" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Classification"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="MN_INDY_CLSN"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="MN_INDY_CLSN"/>
     </attribute>
     <attribute id="MN_INDY_CLSN_DESCN" order="39" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Classification Description"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="MN_INDY_CLSN_DESCN"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="MN_INDY_CLSN_DESCN"/>
     </attribute>
     <attribute id="ACN" order="40" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - ACN"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="ACN"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ACN"/>
     </attribute>
     <attribute id="PARENT_ENTITY_CODE" order="41" semanticType="empty" descriptionColumnName="PARENT_ENTITY_DESCRIPTION" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Parent Entity"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="PARENT_ENTITY_CODE"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PARENT_ENTITY_CODE"/>
     </attribute>
     <attribute id="ENTITY_TYPE_DESCRIPTION" order="42" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Entity Type Description"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="ENTITY_TYPE_DESCRIPTION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ENTITY_TYPE_DESCRIPTION"/>
     </attribute>
     <attribute id="PARENT_ENTITY_DESCRIPTION" order="43" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Parent Entity Description"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="PARENT_ENTITY_DESCRIPTION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PARENT_ENTITY_DESCRIPTION"/>
     </attribute>
     <attribute id="CLASS" order="44" semanticType="empty" descriptionColumnName="CLASS_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Class"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CLASS"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CLASS"/>
     </attribute>
     <attribute id="DIVISION" order="45" semanticType="empty" descriptionColumnName="DIV_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Division"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="DIVISION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="DIVISION"/>
     </attribute>
     <attribute id="DIV_TEXT" order="46" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Division Text"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="DIV_TEXT"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="DIV_TEXT"/>
     </attribute>
     <attribute id="SUBDIVISION" order="47" semanticType="empty" descriptionColumnName="SUBDIV_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Subdivision"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="SUBDIVISION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SUBDIVISION"/>
     </attribute>
     <attribute id="SUBDIV_TEXT" order="48" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Subdivision Text"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="SUBDIV_TEXT"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SUBDIV_TEXT"/>
     </attribute>
     <attribute id="GROUP" order="49" semanticType="empty" descriptionColumnName="GROUP_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Group"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="GROUP"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="GROUP"/>
     </attribute>
     <attribute id="GROUP_TEXT" order="50" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Group Text"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="GROUP_TEXT"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="GROUP_TEXT"/>
     </attribute>
     <attribute id="CLASS_TEXT" order="51" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Class Text"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CLASS_TEXT"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CLASS_TEXT"/>
     </attribute>
     <attribute id="STD_ADDR_COUNTRY_NAME" order="52" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Country Name"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="STD_ADDR_COUNTRY_NAME"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="STD_ADDR_COUNTRY_NAME"/>
     </attribute>
     <attribute id="STD_ADDR_COUNTRY_2CHAR" order="53" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Country"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="STD_ADDR_COUNTRY_2CHAR"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="STD_ADDR_COUNTRY_2CHAR"/>
     </attribute>
     <attribute id="STD_ADDR_POSTCODE1" order="54" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - PostCode"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="STD_ADDR_POSTCODE1"/>
     </attribute>
     <attribute id="STD_ADDR_PRIM_ADDRESS" order="55" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Address"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="STD_ADDR_PRIM_ADDRESS"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="STD_ADDR_PRIM_ADDRESS"/>
     </attribute>
     <attribute id="MATCH_ADDR_REGION" order="56" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Region"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="MATCH_ADDR_REGION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="MATCH_ADDR_REGION"/>
     </attribute>
     <attribute id="MATCH_ADDR_LOCALITY" order="57" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Locality"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="MATCH_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="MATCH_ADDR_LOCALITY"/>
     </attribute>
     <attribute id="ADDR_LATITUDE" order="58" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Latitude"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="ADDR_LATITUDE"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ADDR_LATITUDE"/>
     </attribute>
     <attribute id="ADDR_LONGITUDE" order="59" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Longitude"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="ADDR_LONGITUDE"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ADDR_LONGITUDE"/>
     </attribute>
   
     <attribute id="CC_ISPRTGROUP" order="60" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Is PRT Group Flag"/>
   
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_ISPRTGROUP"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_ISPRTGROUP"/>
   
     </attribute>
   
     <attribute id="CC_ValidFrom" order="61" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Valid From (Relationship)"/>
   
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_ValidFrom"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_ValidFrom"/>
   
     </attribute>
     <attribute id="CC_Validto" order="62" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Valid To (Relationship)"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_Validto"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_Validto"/>
     </attribute>
-  
-    <attribute id="CC_EST_TAX_BRACKET_2019" order="63" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_EST_TAX_BRACKET_2019" order="64" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Under/Over $6.5 Million (2019)"/>
-  
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_EST_TAX_BRACKET_2019"/>
-  
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_EST_TAX_BRACKET_2019"/>
     </attribute>
-    <attribute id="CC_EST_TAX_BRACKET_2020" order="64" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_EST_TAX_BRACKET_2020" order="65" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Under/Over $6.5 Million (2020)"/>
-      <keyMapping columnObjectName="J_2020BRACKET" columnName="CC_EST_TAX_BRACKET_2020"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_EST_TAX_BRACKET_2020"/>
     </attribute>
   </attributes>
   <calculatedAttributes>
-    <calculatedAttribute id="CC_EST_TAX_BRACKET_JOINED" order="65" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <calculatedAttribute id="CC_EST_TAX_BRACKET_JOINED" order="63" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Under/Over $6.5 Million"/>
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="25">
         <formula>CASE
     WHEN &quot;CC_EST_TAX_BRACKET_2019&quot; IS NULL AND &quot;CC_EST_TAX_BRACKET_2020&quot; IS NULL THEN 'Unavailable'
-    WHEN &quot;CC_EST_TAX_BRACKET_2020&quot; IS NOT NULL THEN &quot;CC_EST_TAX_BRACKET_2020&quot;
+    WHEN &quot;CC_EST_TAX_BRACKET_2020&quot; IS NOT NULL AND &quot;CC_EST_TAX_BRACKET_2020&quot; != 'No wages lodged' THEN &quot;CC_EST_TAX_BRACKET_2020&quot;
     WHEN &quot;CC_EST_TAX_BRACKET_2019&quot; IS NOT NULL THEN &quot;CC_EST_TAX_BRACKET_2019&quot;
-    ELSE 'Err'
-END</formula>
+    ELSE 'Unavailable'
+END 
+</formula>
       </keyCalculation>
       </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="CC_AnnualEstimate" order="30" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Annual Estimate (B/Last TR)"/>
-      <measureMapping columnObjectName="J_2020BRACKET" columnName="CC_AnnualEstimate"/>
+      <measureMapping columnObjectName="J_BPINFO_2020" columnName="CC_AnnualEstimate"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
@@ -2256,6 +2253,7 @@ END</formula>
         <attribute attributeName="PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -2705,41 +2703,41 @@ END</formula>
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="256"/>
     </shape>
-    <shape expanded="true" modelObjectName="P_TAXBRACKETING" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1738" y="656"/>
+    <shape expanded="true" modelObjectName="P_PRT_TAX_BRACKETING" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1798" y="554"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+    <shape expanded="true" modelObjectName="J_BPINFO_TB2019" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1463" y="316"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_ABR" modelObjectNameSpace="J_BPINFO_TB2019" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_2019TB" modelObjectNameSpace="J_BPINFO_TB2019" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="394" y="42"/>
+      <rectangleSize width="214.1650390625"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPINFO_2020" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1690" y="197"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_TB2019" modelObjectNameSpace="J_BPINFO_2020" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_2020TB" modelObjectNameSpace="J_BPINFO_2020" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="506" y="127"/>
+      <rectangleSize width="214.1650390625"/>
+    </shape>
     <shape expanded="true" modelObjectName="P_2019TB" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1630" y="504"/>
+      <upperLeftCorner x="1680" y="435"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_2020TB" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1840" y="504"/>
+      <upperLeftCorner x="1921" y="435"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="J_2019BRACKET" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1603" y="356"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="J_BPINFO_ABR" modelObjectNameSpace="J_2019BRACKET" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="P_2019TB" modelObjectNameSpace="J_2019BRACKET" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="437" y="30"/>
-      <rectangleSize width="214"/>
-    </shape>
-    <shape expanded="true" modelObjectName="J_2020BRACKET" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1690" y="217"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="J_2019BRACKET" modelObjectNameSpace="J_2020BRACKET" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="P_2020TB" modelObjectNameSpace="J_2020BRACKET" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="498" y="17"/>
-      <rectangleSize width="214"/>
     </shape>
   </shapes>
 </layout>
