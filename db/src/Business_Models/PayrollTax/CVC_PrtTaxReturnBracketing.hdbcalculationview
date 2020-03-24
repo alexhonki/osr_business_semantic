@@ -188,26 +188,14 @@ END</formula>
     <joinAttribute name="FISCAL_YEAR"/>
     <joinAttribute name="CC_BRACKET_BP"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_GM" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="TAXPAYER"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="FISCAL_YEAR"/>
-      <viewAttribute id="FT_BPGroupingType"/>
-      <viewAttribute id="PARTNER1"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_TAXRETURNS"/>
-    <filter>&quot;FT_BPGroupingType&quot; = 'GM'</filter>
-  </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_TOP1_ROW">
     <viewAttributes>
       <viewAttribute id="TAXPAYER"/>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="FISCAL_YEAR"/>
-      <viewAttribute id="FT_BPGroupingType"/>
       <viewAttribute id="PARTNER1"/>
-    </viewAttributes>
+    
+      <viewAttribute id="FT_BPGroupingType"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_GM"/>
     <windowFunction dynamicPartitionAttributes="false">
@@ -218,6 +206,18 @@ END</formula>
         <value>1</value>
       </rankThreshold>
     </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_GM" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="FT_BPGroupingType"/>
+      <viewAttribute id="PARTNER1"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_TAXRETURNS"/>
+    <filter>&quot;FT_BPGroupingType&quot; IN ('DGE','GM')</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_ADD_GMS">
@@ -307,17 +307,17 @@ END</formula>
     </shape>
     <shape modelObjectName="R_TOP1_ROW" modelObjectNameSpace="J_ADD_GMS" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="189.3291015625"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_GM" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="275" y="651"/>
-      <rectangleSize height="30" width="160"/>
+      <rectangleSize width="189"/>
     </shape>
   
     <shape expanded="true" modelObjectName="R_TOP1_ROW" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="275" y="422"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-  </shapes>
+  
+    <shape expanded="true" modelObjectName="P_GM" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="275" y="651"/>
+      <rectangleSize height="30" width="160"/>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
