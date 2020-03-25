@@ -1023,8 +1023,17 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <viewAttribute id="HVORG"/>
       <viewAttribute id="TVORG"/>
       <viewAttribute id="TAX_FG_AMT"/>
+    
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="DFKKOP_OPUPW"/>
+      <viewAttribute id="DFKKOP_OPUPK"/>
+      <viewAttribute id="OPUPZ"/>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_TAX_FORGONE_CNT" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <input node="P_CV_Financials">
       <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="BETRH"/>
     </input>
@@ -1042,22 +1051,6 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
     <calculatedViewAttributes/>
     <input node="P_CV_Financials"/>
     <filter>&quot;FBNUM&quot;!='' and &quot;AUGBL_BLART&quot;='RE' and &quot;AUGDT&quot; &gt;='20200324'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="AGG_TAX_FORGONE">
-    <viewAttributes>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="FBNUM"/>
-      <viewAttribute id="HVORG"/>
-      <viewAttribute id="TVORG"/>
-      <viewAttribute id="TAX_FG_AMT" aggregationType="sum"/>
-    </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_TAX_FORGONE_CNT" datatype="INTEGER" expressionLanguage="SQL">
-        <formula>1</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
-    <restrictedViewAttributes/>
-    <input node="P_TAX_FORGONE"/>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="Agg_COVID_REFUND">
     <viewAttributes>
@@ -1093,20 +1086,29 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
     </restrictedViewAttributes>
     <input node="P_COVID_REFUND"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_COVID" cardinality="C1_1" joinType="inner">
+  <calculationView xsi:type="Calculation:JoinView" id="J_COVID" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="FBNUM"/>
       <viewAttribute id="TAX_FG_AMT" aggregationType="sum"/>
-      <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
       <viewAttribute id="RC_COVID_PENDING_AMT" aggregationType="formula"/>
       <viewAttribute id="RC_COVID_PAID_AMT" aggregationType="formula"/>
       <viewAttribute id="CC_REFUND_CNT" aggregationType="sum"/>
+    
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="DFKKOP_OPUPW"/>
+      <viewAttribute id="DFKKOP_OPUPK"/>
+      <viewAttribute id="OPUPZ"/>
+      <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="AGG_TAX_FORGONE">
+    <input node="P_TAX_FORGONE">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="TAX_FG_AMT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
     </input>
@@ -1276,13 +1278,14 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <viewAttribute id="VKTYP_TEXT"/>
       <viewAttribute id="CC_AGEMTHCRDSTA"/>
       <viewAttribute id="TAX_FG_AMT" aggregationType="sum"/>
-      <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
       <viewAttribute id="RC_COVID_PENDING_AMT" aggregationType="formula"/>
       <viewAttribute id="RC_COVID_PAID_AMT" aggregationType="formula"/>
       <viewAttribute id="CC_REFUND_CNT" aggregationType="sum"/>
     
       <viewAttribute id="AUGBL_BLART"/>
       <viewAttribute id="AUGBL_BLART_TEXT"/>
+    
+      <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_FIN_ASSTAMTS">
@@ -1445,15 +1448,23 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
     </input>
     <input node="J_COVID">
       <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="TAX_FG_AMT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PENDING_AMT" source="RC_COVID_PENDING_AMT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PAID_AMT" source="RC_COVID_PAID_AMT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFUND_CNT" source="CC_REFUND_CNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
     </input>
     <joinAttribute name="MANDT"/>
     <joinAttribute name="FBNUM"/>
+    <joinAttribute name="OPUPZ"/>
+    <joinAttribute name="DFKKOP_OPUPW"/>
+    <joinAttribute name="DFKKOP_OPUPK"/>
+    <joinAttribute name="OPBEL"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_FIN_COVID">
@@ -1974,11 +1985,11 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <descriptions defaultDescription="CC_AGEMTHCRDSTA"/>
       <keyMapping columnObjectName="J_FIN_COVID" columnName="CC_AGEMTHCRDSTA"/>
     </attribute>
-    <attribute id="AUGBL_BLART" order="165" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AUGBL_BLART" order="164" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Clearing Document Type"/>
       <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGBL_BLART"/>
     </attribute>
-    <attribute id="AUGBL_BLART_TEXT" order="166" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AUGBL_BLART_TEXT" order="165" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Clearing Documen Type Descriptiont "/>
       <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGBL_BLART_TEXT"/>
     </attribute>
@@ -2129,17 +2140,18 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <descriptions defaultDescription="Refund Amount (COVID)"/>
       <measureMapping columnObjectName="J_FIN_COVID" columnName="CC_REFUND_CNT"/>
     </measure>
-    <measure id="CC_TAX_FORGONE_CNT" order="161" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Tax Forgone Counter"/>
-      <measureMapping columnObjectName="J_FIN_COVID" columnName="CC_TAX_FORGONE_CNT"/>
-    </measure>
-    <measure id="AVG_BETRH" order="164" aggregationType="avg" measureType="simple">
+    <measure id="AVG_BETRH" order="163" aggregationType="avg" measureType="simple">
       <descriptions defaultDescription="Avg. Amount"/>
       <measureMapping columnObjectName="J_FIN_COVID" columnName="BETRH"/>
     </measure>
+  
+    <measure id="CC_TAX_FORGONE_CNT" order="166" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Forgone Counter"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="CC_TAX_FORGONE_CNT"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures>
-    <measure id="DocumentCounter" order="162" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+    <measure id="DocumentCounter" order="161" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Document Counter"/>
       <exceptionAggregation>
         <attribute attributeName="OPBEL"/>
@@ -2168,14 +2180,16 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       
       
       
+      
       </measure>
   
-    <measure id="FBNCounter" order="163" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+    <measure id="FBNCounter" order="162" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="FBN Counter"/>
       <exceptionAggregation>
         <attribute attributeName="FBNUM"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -2428,10 +2442,6 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <upperLeftCorner x="92" y="901"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="AGG_TAX_FORGONE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="301" y="776"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
     <shape expanded="true" modelObjectName="Agg_COVID_REFUND" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="92" y="776"/>
       <rectangleSize height="30" width="160"/>
@@ -2440,13 +2450,13 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <upperLeftCorner x="290" y="616"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="AGG_TAX_FORGONE" modelObjectNameSpace="J_COVID" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="219"/>
-    </shape>
-    <shape modelObjectName="Agg_COVID_REFUND" modelObjectNameSpace="J_COVID" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_TAX_FORGONE" modelObjectNameSpace="J_COVID" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="228"/>
+    </shape>
+    <shape modelObjectName="Agg_COVID_REFUND" modelObjectNameSpace="J_COVID" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="178.90380859375"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_COVID" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="591" y="296"/>
