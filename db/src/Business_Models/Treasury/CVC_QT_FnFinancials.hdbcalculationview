@@ -12,7 +12,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FNFINANCIALS" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="DFKK_H_GPART"/>
     
@@ -27,11 +27,10 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials"/>
+    <filter>&quot;HVORG&quot; = '4000' AND &quot;TVORG&quot; = '0250'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="rightOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_COVIDCLIENTS" cardinality="C1_N" joinType="leftOuter">
     <viewAttributes>
-      <viewAttribute id="HVORG"/>
-      <viewAttribute id="TVORG"/>
       <viewAttribute id="CC_BP_CNT" aggregationType="sum"/>
       <viewAttribute id="TAX_FG_AMT" aggregationType="sum"/>
       <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
@@ -48,22 +47,9 @@
       <viewAttribute id="SUBDIV_TEXT"/>
       <viewAttribute id="GROUP"/>
       <viewAttribute id="GROUP_TEXT"/>
-      <viewAttribute id="CLASS_TEXT"/>
-      <viewAttribute hidden="true" id="JOIN$DFKK_H_GPART$PARTNER"/>
-    </viewAttributes>
+      <viewAttribute id="CLASS_TEXT"/></viewAttributes>
     <calculatedViewAttributes/>
-    <input node="Projection_1">
-      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_CNT" source="CC_BP_CNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="TAX_FG_AMT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAXPAYER_PAID_FLAG" source="CC_TAXPAYER_PAID_FLAG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PENDING_AMT" source="RC_COVID_PENDING_AMT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PAID_AMT" source="RC_COVID_PAID_AMT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DFKK_H_GPART$PARTNER" source="DFKK_H_GPART"/>
-    </input>
-    <input node="Projection_2">
+    <input node="P_PRTCLIENTOVERVIEW">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="UNDER_OVER_DECL" source="UNDER_OVER_DECL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
@@ -74,12 +60,19 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIV_TEXT" source="SUBDIV_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GROUP" source="GROUP"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_TEXT" source="GROUP_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_TEXT" source="CLASS_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DFKK_H_GPART$PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_TEXT" source="CLASS_TEXT"/></input>
+    <input node="P_FNFINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_CNT" source="CC_BP_CNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="TAX_FG_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAXPAYER_PAID_FLAG" source="CC_TAXPAYER_PAID_FLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PENDING_AMT" source="RC_COVID_PENDING_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PAID_AMT" source="RC_COVID_PAID_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="DFKK_H_GPART"/>
     </input>
-    <joinAttribute name="JOIN$DFKK_H_GPART$PARTNER"/>
+    <joinAttribute name="PARTNER"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PRTCLIENTOVERVIEW" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="PARTNER"/>
     
@@ -96,90 +89,81 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtClientOverviewStatic"/>
-  
     <filter>&quot;UNDER_OVER_DECL&quot; IN ('$6.5 Million or under', 'Over $6.5 Million')</filter>
   </calculationView>
 </calculationViews>
-<logicalModel id="Join_1">
+<logicalModel id="J_COVIDCLIENTS">
   <attributes>
-    <attribute id="HVORG" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Main Transaction"/>
-      <keyMapping columnObjectName="Join_1" columnName="HVORG"/>
-    </attribute>
-    <attribute id="TVORG" order="2" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Sub Transaction"/>
-      <keyMapping columnObjectName="Join_1" columnName="TVORG"/>
-    </attribute>
-    <attribute id="CC_TAXPAYER_PAID_FLAG" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_TAXPAYER_PAID_FLAG" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Taxpayer Paid Flag (COVID)"/>
-      <keyMapping columnObjectName="Join_1" columnName="CC_TAXPAYER_PAID_FLAG"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="CC_TAXPAYER_PAID_FLAG"/>
     </attribute>
-    <attribute id="PARTNER" order="9" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="PARTNER" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PARTNER"/>
-      <keyMapping columnObjectName="Join_1" columnName="PARTNER"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="PARTNER"/>
     </attribute>
-    <attribute id="UNDER_OVER_DECL" order="10" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="UNDER_OVER_DECL" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Under/Over $6.5 Million (Client Declared)"/>
-      <keyMapping columnObjectName="Join_1" columnName="UNDER_OVER_DECL"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="UNDER_OVER_DECL"/>
     </attribute>
-    <attribute id="STD_ADDR_POSTCODE1" order="11" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STD_ADDR_POSTCODE1" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - PostCode"/>
-      <keyMapping columnObjectName="Join_1" columnName="STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="STD_ADDR_POSTCODE1"/>
     </attribute>
-    <attribute id="CLASS" order="12" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CLASS" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Class"/>
-      <keyMapping columnObjectName="Join_1" columnName="CLASS"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="CLASS"/>
     </attribute>
-    <attribute id="DIVISION" order="13" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="DIVISION" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Division"/>
-      <keyMapping columnObjectName="Join_1" columnName="DIVISION"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="DIVISION"/>
     </attribute>
-    <attribute id="DIV_TEXT" order="14" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="DIV_TEXT" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Division Text"/>
-      <keyMapping columnObjectName="Join_1" columnName="DIV_TEXT"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="DIV_TEXT"/>
     </attribute>
-    <attribute id="SUBDIVISION" order="15" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SUBDIVISION" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Subdivision"/>
-      <keyMapping columnObjectName="Join_1" columnName="SUBDIVISION"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="SUBDIVISION"/>
     </attribute>
-    <attribute id="SUBDIV_TEXT" order="16" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SUBDIV_TEXT" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Subdivision Text"/>
-      <keyMapping columnObjectName="Join_1" columnName="SUBDIV_TEXT"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="SUBDIV_TEXT"/>
     </attribute>
-    <attribute id="GROUP" order="17" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="GROUP" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Group"/>
-      <keyMapping columnObjectName="Join_1" columnName="GROUP"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="GROUP"/>
     </attribute>
-    <attribute id="GROUP_TEXT" order="18" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="GROUP_TEXT" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Group Text"/>
-      <keyMapping columnObjectName="Join_1" columnName="GROUP_TEXT"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="GROUP_TEXT"/>
     </attribute>
-    <attribute id="CLASS_TEXT" order="19" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CLASS_TEXT" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Class Text"/>
-      <keyMapping columnObjectName="Join_1" columnName="CLASS_TEXT"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="CLASS_TEXT"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="CC_BP_CNT" order="3" aggregationType="sum" measureType="simple">
+    <measure id="CC_BP_CNT" order="1" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BP Counter"/>
-      <measureMapping columnObjectName="Join_1" columnName="CC_BP_CNT"/>
+      <measureMapping columnObjectName="J_COVIDCLIENTS" columnName="CC_BP_CNT"/>
     </measure>
-    <measure id="TAX_FG_AMT" order="4" aggregationType="sum" measureType="simple">
+    <measure id="TAX_FG_AMT" order="2" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Forgone Amount"/>
-      <measureMapping columnObjectName="Join_1" columnName="TAX_FG_AMT"/>
+      <measureMapping columnObjectName="J_COVIDCLIENTS" columnName="TAX_FG_AMT"/>
     </measure>
-    <measure id="CC_TAX_FORGONE_CNT" order="5" aggregationType="sum" measureType="simple">
+    <measure id="CC_TAX_FORGONE_CNT" order="3" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Forgone Counter"/>
-      <measureMapping columnObjectName="Join_1" columnName="CC_TAX_FORGONE_CNT"/>
+      <measureMapping columnObjectName="J_COVIDCLIENTS" columnName="CC_TAX_FORGONE_CNT"/>
     </measure>
-    <measure id="RC_COVID_PENDING_AMT" order="7" aggregationType="sum" measureType="simple">
+    <measure id="RC_COVID_PENDING_AMT" order="5" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Pending Amount (COVID)"/>
-      <measureMapping columnObjectName="Join_1" columnName="RC_COVID_PENDING_AMT"/>
+      <measureMapping columnObjectName="J_COVIDCLIENTS" columnName="RC_COVID_PENDING_AMT"/>
     </measure>
-    <measure id="RC_COVID_PAID_AMT" order="8" aggregationType="sum" measureType="simple">
+    <measure id="RC_COVID_PAID_AMT" order="6" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Paid Amount (COVID)"/>
-      <measureMapping columnObjectName="Join_1" columnName="RC_COVID_PAID_AMT"/>
+      <measureMapping columnObjectName="J_COVIDCLIENTS" columnName="RC_COVID_PAID_AMT"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures/>
@@ -192,23 +176,23 @@
       <upperLeftCorner x="40" y="85"/>
     </shape>
   
-    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+    <shape expanded="true" modelObjectName="P_FNFINANCIALS" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="-41" y="377"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+    <shape expanded="true" modelObjectName="J_COVIDCLIENTS" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="100" y="225"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_PRTCLIENTOVERVIEW" modelObjectNameSpace="J_COVIDCLIENTS" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_FNFINANCIALS" modelObjectNameSpace="J_COVIDCLIENTS" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="136"/>
     </shape>
-    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+    <shape expanded="true" modelObjectName="P_PRTCLIENTOVERVIEW" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="229" y="377"/>
       <rectangleSize height="30" width="160"/>
     </shape>
