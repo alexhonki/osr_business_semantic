@@ -857,6 +857,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     <input node="P_RegistrationStatus"/>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="VALID_TO" direction="DESC"/>
       <rankThreshold>
         <value>1</value>
       </rankThreshold>
@@ -1226,6 +1227,49 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     </input>
     <joinAttribute name="PARTNER"/>
     <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_UNDER_OVER_6_5" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="PT_STATUS"/>
+      <viewAttribute id="CC_PtLiabilityTaxDate"/>
+      <viewAttribute id="CC_TaxRegistrationFromDate"/>
+      <viewAttribute id="CC_TrPeriodCycle"/>
+      <viewAttribute id="INTERS_W_APPLY"/>
+      <viewAttribute id="CC_QLDLiabilityDate"/>
+      <viewAttribute id="ONLINE_FILL_COMM"/>
+      <viewAttribute id="PT_GROUP_STATUS"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="UNDER_OVER_DECL"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_UNDER_OVER_DECLARED" datatype="NVARCHAR" length="25" expressionLanguage="SQL">
+        <formula>CASE
+    WHEN &quot;UNDER_OVER_DECL&quot; = 'A' THEN '$6.5 Million or under'
+    WHEN &quot;UNDER_OVER_DECL&quot; = 'B' THEN 'Over $6.5 Million'
+    ELSE 'Undefined'
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="J_FACT_PTGRPSTAT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PT_STATUS" source="PT_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PtLiabilityTaxDate" source="CC_PtLiabilityTaxDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxRegistrationFromDate" source="CC_TaxRegistrationFromDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TrPeriodCycle" source="CC_TrPeriodCycle"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTERS_W_APPLY" source="INTERS_W_APPLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_QLDLiabilityDate" source="CC_QLDLiabilityDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ONLINE_FILL_COMM" source="ONLINE_FILL_COMM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PT_GROUP_STATUS" source="PT_GROUP_STATUS"/>
+    </input>
+    <input node="R_UNDER_OVER_6_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNDER_OVER_DECL" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="PARTNER"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_TaxReturns" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -1982,60 +2026,16 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_BpFacts"/>
-  
     <filter>&quot;FACT_TYPE&quot;='ZPR2' AND &quot;FACT_CATEGORY&quot;='Z067'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_UNDER_OVER_6_5" cardinality="C1_1" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="CLIENT"/>
-      <viewAttribute id="PARTNER"/>
-      <viewAttribute id="PT_STATUS"/>
-      <viewAttribute id="CC_PtLiabilityTaxDate"/>
-      <viewAttribute id="CC_TaxRegistrationFromDate"/>
-      <viewAttribute id="CC_TrPeriodCycle"/>
-      <viewAttribute id="INTERS_W_APPLY"/>
-      <viewAttribute id="CC_QLDLiabilityDate"/>
-      <viewAttribute id="ONLINE_FILL_COMM"/>
-      <viewAttribute id="PT_GROUP_STATUS"/>
-      <viewAttribute id="UNDER_OVER_DECL"/>
-    </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_UNDER_OVER_DECLARED" datatype="NVARCHAR" length="25" expressionLanguage="SQL">
-        <formula>CASE
-    WHEN &quot;UNDER_OVER_DECL&quot; = 'A' THEN '$6.5 Million or under'
-    WHEN &quot;UNDER_OVER_DECL&quot; = 'B' THEN 'Over $6.5 Million'
-    ELSE 'Undefined'
-END</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
-    <input node="J_FACT_PTGRPSTAT">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PT_STATUS" source="PT_STATUS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PtLiabilityTaxDate" source="CC_PtLiabilityTaxDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxRegistrationFromDate" source="CC_TaxRegistrationFromDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TrPeriodCycle" source="CC_TrPeriodCycle"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTERS_W_APPLY" source="INTERS_W_APPLY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_QLDLiabilityDate" source="CC_QLDLiabilityDate"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ONLINE_FILL_COMM" source="ONLINE_FILL_COMM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PT_GROUP_STATUS" source="PT_GROUP_STATUS"/>
-    </input>
-    <input node="R_UNDER_OVER_6_5">
-      <mapping xsi:type="Calculation:AttributeMapping" target="UNDER_OVER_DECL" source="VALUE_GENERIC"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
-    </input>
-    <joinAttribute name="CLIENT"/>
-    <joinAttribute name="PARTNER"/>
   </calculationView>
   <calculationView xsi:type="Calculation:RankView" id="R_UNDER_OVER_6_5">
     <viewAttributes>
+      <viewAttribute id="VALUE_GENERIC"/>
       <viewAttribute id="CLIENT"/>
       <viewAttribute id="PARTNER"/>
       <viewAttribute id="VALID_TO" aggregationType="min"/>
       <viewAttribute id="FACT_TYPE"/>
       <viewAttribute id="FACT_CATEGORY"/>
-      <viewAttribute id="VALUE_GENERIC"/>
       <viewAttribute id="FACT_CAT_SEQ"/>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -2329,7 +2329,9 @@ END</formula>
   
     <attribute id="UNDER_OVER_DECL" order="66" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Under/Over $6.5 Million (Client Declared)"/>
+  
       <keyMapping columnObjectName="J_BPINFO_2020" columnName="UNDER_OVER_DECL"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -2755,6 +2757,19 @@ END
       <upperLeftCorner x="648" y="79"/>
       <rectangleSize width="250"/>
     </shape>
+  
+    <shape expanded="true" modelObjectName="J_UNDER_OVER_6_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="122" y="1160"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_FACT_PTGRPSTAT" modelObjectNameSpace="J_UNDER_OVER_6_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="R_UNDER_OVER_6_5" modelObjectNameSpace="J_UNDER_OVER_6_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="189"/>
+    </shape>
     <shape expanded="true" modelObjectName="P_TaxReturns" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="1026" y="1136"/>
       <rectangleSize height="30" width="160"/>
@@ -2849,19 +2864,6 @@ END
     <shape expanded="true" modelObjectName="P_UNDER_OVER_6_5" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="-141" y="2525"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="J_UNDER_OVER_6_5" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="122" y="1160"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="J_FACT_PTGRPSTAT" modelObjectNameSpace="J_UNDER_OVER_6_5" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="R_UNDER_OVER_6_5" modelObjectNameSpace="J_UNDER_OVER_6_5" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="189.384765625"/>
     </shape>
     <shape expanded="true" modelObjectName="R_UNDER_OVER_6_5" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="-141" y="2386"/>
