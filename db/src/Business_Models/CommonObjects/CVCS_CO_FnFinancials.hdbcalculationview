@@ -1086,7 +1086,7 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
     </restrictedViewAttributes>
     <input node="P_COVID_REFUND"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_COVID" cardinality="C1_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_ASSMT_REFUND" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="FBNUM"/>
@@ -1286,6 +1286,9 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <viewAttribute id="AUGBL_BLART_TEXT"/>
     
       <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
+    
+      <viewAttribute id="RC_COVID_OPEN_CREDIT_AMT" aggregationType="formula"/>
+      <viewAttribute id="CC_HOLIDAY_REFUND"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_FIN_ASSTAMTS">
@@ -1447,24 +1450,112 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL_BLART_TEXT" source="AUGBL_BLART_TEXT"/>
     </input>
     <input node="J_COVID">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="TAX_FG_AMT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PENDING_AMT" source="RC_COVID_PENDING_AMT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PAID_AMT" source="RC_COVID_PAID_AMT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFUND_CNT" source="CC_REFUND_CNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_OPEN_CREDIT_AMT" source="RC_COVID_OPEN_CREDIT_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_HOLIDAY_REFUND" source="CC_HOLIDAY_REFUND"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
     </input>
     <joinAttribute name="MANDT"/>
-    <joinAttribute name="FBNUM"/>
     <joinAttribute name="OPUPZ"/>
+    <joinAttribute name="FBNUM"/>
     <joinAttribute name="DFKKOP_OPUPW"/>
     <joinAttribute name="DFKKOP_OPUPK"/>
     <joinAttribute name="OPBEL"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Holiday_Refund" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="OpenItemFlag"/>
+      <viewAttribute id="CreditDebitFlag"/>
+      <viewAttribute id="BETRH"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CV_Financials"/>
+    <filter>&quot;FBNUM&quot;!=''</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_Holiday_Refund">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="OpenItemFlag"/>
+      <viewAttribute id="CreditDebitFlag"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes>
+      <restrictedViewAttribute id="RC_COVID_OPEN_CREDIT_AMT" baseViewAttribute="BETRH">
+        <descriptions defaultDescription="">
+          <comment text="Open Credit Amount (COVID)"/>
+        </descriptions>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="OpenItemFlag">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="X"/>
+          </filter>
+          <attributeName>OpenItemFlag</attributeName>
+        </restriction>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="CreditDebitFlag">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Credit"/>
+          </filter>
+          <attributeName>CreditDebitFlag</attributeName>
+        </restriction>
+      </restrictedViewAttribute>
+    </restrictedViewAttributes>
+    <input node="P_Holiday_Refund"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_COVID" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="TAX_FG_AMT" aggregationType="sum"/>
+      <viewAttribute id="RC_COVID_PENDING_AMT" aggregationType="formula"/>
+      <viewAttribute id="RC_COVID_PAID_AMT" aggregationType="formula"/>
+      <viewAttribute id="CC_REFUND_CNT" aggregationType="sum"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="DFKKOP_OPUPW"/>
+      <viewAttribute id="DFKKOP_OPUPK"/>
+      <viewAttribute id="OPUPZ"/>
+      <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
+      <viewAttribute id="RC_COVID_OPEN_CREDIT_AMT" aggregationType="formula"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_HOLIDAY_REFUND" datatype="NVARCHAR" length="7" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN &quot;RC_COVID_OPEN_CREDIT_AMT&quot; is null and &quot;RC_COVID_PAID_AMT&quot; is null and &quot;RC_COVID_PENDING_AMT&quot; is null then 'Holiday' 
+	 ELSE 'Refund' 
+ END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="J_ASSMT_REFUND">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="TAX_FG_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PENDING_AMT" source="RC_COVID_PENDING_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PAID_AMT" source="RC_COVID_PAID_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFUND_CNT" source="CC_REFUND_CNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
+    </input>
+    <input node="AGG_Holiday_Refund">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_OPEN_CREDIT_AMT" source="RC_COVID_OPEN_CREDIT_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="FBNUM"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_FIN_COVID">
@@ -1993,6 +2084,10 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <descriptions defaultDescription="Clearing Documen Type Descriptiont "/>
       <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGBL_BLART_TEXT"/>
     </attribute>
+    <attribute id="CC_HOLIDAY_REFUND" order="170" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Holiday or Refund"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="CC_HOLIDAY_REFUND"/>
+    </attribute>
     <attribute id="DFKK_H_BUDAT$local">
       <descriptions defaultDescription="DFKK_H_BUDAT"/>
       <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKK_H_BUDAT"/>
@@ -2035,7 +2130,7 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
     ELSE ''
 END</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="KURSF" order="22" aggregationType="sum" measureType="simple">
@@ -2147,7 +2242,7 @@ END</formula>
       <measureMapping columnObjectName="J_FIN_COVID" columnName="RC_COVID_PAID_AMT"/>
     </measure>
     <measure id="CC_REFUND_CNT" order="160" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Refund Amount (COVID)"/>
+      <descriptions defaultDescription="Refund Counter (COVID)"/>
       <measureMapping columnObjectName="J_FIN_COVID" columnName="CC_REFUND_CNT"/>
     </measure>
     <measure id="AVG_BETRH" order="163" aggregationType="avg" measureType="simple">
@@ -2159,6 +2254,11 @@ END</formula>
       <descriptions defaultDescription="Tax Forgone Counter"/>
       <measureMapping columnObjectName="J_FIN_COVID" columnName="CC_TAX_FORGONE_CNT"/>
     </measure>
+  
+    <measure id="RC_COVID_OPEN_CREDIT_AMT" order="169" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Open Credit Amount (COVID)"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="RC_COVID_OPEN_CREDIT_AMT"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures>
     <measure id="DocumentCounter" order="161" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
@@ -2167,6 +2267,7 @@ END</formula>
         <attribute attributeName="OPBEL"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -2223,6 +2324,7 @@ END</formula>
       
       
       
+      
       </measure>
   
     <measure id="CC_BP_CNT" order="167" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
@@ -2231,6 +2333,20 @@ END</formula>
         <attribute attributeName="DFKK_H_GPART"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      </measure>
+  
+    <measure id="CC_TAX_FG_AMT" order="171" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Tax Forgone Amount"/>
+      <formula>&quot;TAX_FG_AMT&quot; * -1</formula>
+      </measure>
+    <measure id="CC_COVID_PENDING_AMT" order="172" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Pending Amount (COVID)"/>
+      <formula>&quot;RC_COVID_PENDING_AMT&quot; * -1</formula>
+      </measure>
+    <measure id="CC_COVID_PAID_AMT" order="173" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Paid Amount (COVID)"/>
+      <formula>&quot;RC_COVID_PAID_AMT&quot; * -1</formula>
       </measure>
   </calculatedMeasures>
   <restrictedMeasures>
@@ -2248,18 +2364,17 @@ END</formula>
         </filter>
         <attributeName>BLART</attributeName>
       </restriction>
-    </measure>
+      </measure>
   
     <measure id="OpenItemBalance" order="158" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Open Item Balance"/>
   
       <restrictionExpression>(&quot;OpenItemFlag&quot; = 'X') AND (&quot;BLART&quot; != 'B1')</restrictionExpression>
-  
-    </measure>
+      </measure>
     <measure id="AssessmentAmount" order="159" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Assessment Amount"/>
       <restrictionExpression>(&quot;BLART&quot; = 'AA' OR &quot;BLART&quot; = 'AB' OR &quot;BLART&quot; = 'AC' OR &quot;BLART&quot; = 'AD' OR &quot;BLART&quot; = 'AF' OR &quot;BLART&quot; = 'AG' OR &quot;BLART&quot; = 'AL' OR &quot;BLART&quot; = 'AR' OR &quot;BLART&quot; = 'AY' OR &quot;BLART&quot; = 'AZ') AND (&quot;AUGRD&quot; != '05') AND (&quot;FBNUM&quot; != '')</restrictionExpression>
-    </measure>
+      </measure>
   </restrictedMeasures>
   <localDimensions/>
 
@@ -2406,21 +2521,21 @@ END</formula>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="649" y="112"/>
+      <upperLeftCorner x="515.0628796274505" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CV_Financials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="517" y="1066"/>
+      <upperLeftCorner x="536.5714279753822" y="1066.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CONTACCTBAL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="727" y="901"/>
+      <upperLeftCorner x="127.99999940395355" y="881.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_BALANCE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="748" y="616"/>
+      <upperLeftCorner x="101.51109867554965" y="596.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CV_Financials" modelObjectNameSpace="J_FIN_BALANCE" modelObjectType="JoinNodeInput">
@@ -2432,15 +2547,15 @@ END</formula>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_CONTACCTBAL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="727" y="776"/>
+      <upperLeftCorner x="128.17776534221628" y="756.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_FBNUMS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="517" y="901"/>
+      <upperLeftCorner x="337.9999994039535" y="881.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_ASSTAMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="618" y="456"/>
+      <upperLeftCorner x="303.82898663306673" y="436.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FIN_BALANCE" modelObjectNameSpace="J_FIN_ASSTAMTS" modelObjectType="JoinNodeInput">
@@ -2452,35 +2567,35 @@ END</formula>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_FBNUM_AMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="511" y="776"/>
+      <upperLeftCorner x="338.17776534221633" y="756.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TAX_FORGONE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="307" y="901"/>
+      <upperLeftCorner x="547.9999994039538" y="881.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_COVID_REFUND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="901"/>
+      <upperLeftCorner x="757.9999994039538" y="881.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Agg_COVID_REFUND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="776"/>
+      <upperLeftCorner x="645.8688715261782" y="756.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="J_COVID" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="290" y="616"/>
+    <shape expanded="true" modelObjectName="J_ASSMT_REFUND" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="570.9175826430718" y="596.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="P_TAX_FORGONE" modelObjectNameSpace="J_COVID" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_TAX_FORGONE" modelObjectNameSpace="J_ASSMT_REFUND" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="228"/>
     </shape>
-    <shape modelObjectName="Agg_COVID_REFUND" modelObjectNameSpace="J_COVID" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="Agg_COVID_REFUND" modelObjectNameSpace="J_ASSMT_REFUND" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="620" y="30"/>
       <rectangleSize width="178"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_COVID" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="591" y="296"/>
+      <upperLeftCorner x="515.0628796274505" y="277"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FIN_ASSTAMTS" modelObjectNameSpace="J_FIN_COVID" modelObjectType="JoinNodeInput">
@@ -2488,8 +2603,28 @@ END</formula>
       <rectangleSize width="168"/>
     </shape>
     <shape modelObjectName="J_COVID" modelObjectNameSpace="J_FIN_COVID" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="904" y="90"/>
+      <rectangleSize width="256.5322265625"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_Holiday_Refund" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="967.9999994039536" y="881.9999952316284"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_Holiday_Refund" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="855.8688715261782" y="756.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_COVID" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="597.5842493097384" y="436.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_ASSMT_REFUND" modelObjectNameSpace="J_COVID" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="228.41455078125"/>
+    </shape>
+    <shape modelObjectName="AGG_Holiday_Refund" modelObjectNameSpace="J_COVID" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="228"/>
+      <rectangleSize width="256.5322265625"/>
     </shape>
     <shape modelObjectName="J_FIN_COVID" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
       <upperLeftCorner x="1520" y="30"/>
