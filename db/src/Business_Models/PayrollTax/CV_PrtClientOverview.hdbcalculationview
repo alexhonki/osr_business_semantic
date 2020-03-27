@@ -803,8 +803,8 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="CLIENT"/>
       <viewAttribute id="PARTNER"/>
       <viewAttribute id="PT_STATUS"/>
-      <viewAttribute id="VALUE_GENERIC"/>
       <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+      <viewAttribute id="VALUE_GENERIC"/>
       <viewAttribute hidden="true" id="JOIN$CLIENT$CLIENT"/>
       <viewAttribute hidden="true" id="JOIN$PARTNER$PARTNER"/>
     </viewAttributes>
@@ -874,11 +874,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="VALUE_GENERIC"/>
       <viewAttribute id="CLIENT"/>
       <viewAttribute id="PARTNER"/>
+      <viewAttribute id="VALID_TO"/>
+    
       <viewAttribute id="FACT_TYPE"/>
       <viewAttribute id="FACT_CATEGORY"/>
-      <viewAttribute id="FACT_CAT_SEQ"/>
-      <viewAttribute id="VALID_TO"/>
-    </viewAttributes>
+      <viewAttribute id="FACT_CAT_SEQ"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_Payroll_Liability"/>
     <windowFunction dynamicPartitionAttributes="false">
@@ -1267,12 +1267,12 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="CC_QLDLiabilityDate"/>
       <viewAttribute id="ONLINE_FILL_COMM"/>
       <viewAttribute id="PT_GROUP_STATUS"/>
-      <viewAttribute id="PARTNER"/>
-      <viewAttribute id="CLIENT"/>
-      <viewAttribute id="UNDER_OVER_DECL"/>
     
       <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
-    </viewAttributes>
+    
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="UNDER_OVER_DECL"/></viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_UNDER_OVER_DECLARED" datatype="NVARCHAR" length="25" expressionLanguage="SQL">
         <formula>CASE
@@ -1303,6 +1303,26 @@ END</formula>
     </input>
     <joinAttribute name="CLIENT"/>
     <joinAttribute name="PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_UNDER_OVER_6_5">
+    <viewAttributes>
+      <viewAttribute id="VALUE_GENERIC"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="VALID_TO" aggregationType="min"/>
+      <viewAttribute id="FACT_TYPE"/>
+      <viewAttribute id="FACT_CATEGORY"/>
+      <viewAttribute id="FACT_CAT_SEQ"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_UNDER_OVER_6_5"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="VALID_TO" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_TaxReturns" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -1743,7 +1763,7 @@ END</formula>
     </input>
     <joinAttribute name="CC_ABN"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_PRT_TAX_BRACKETING">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PRT_TAX_BRACKETING" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="FISCAL_YEAR"/>
@@ -1752,6 +1772,8 @@ END</formula>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.PayrollTax::CVC_PrtTaxReturnBracketing"/>
+  
+    <filter>&quot;CC_EST_TAX_BRACKET&quot; IS NOT NULL</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_TB2019" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
@@ -2081,26 +2103,6 @@ END</formula>
     <input node="P_BpFacts"/>
     <filter>&quot;FACT_TYPE&quot;='ZPR2' AND &quot;FACT_CATEGORY&quot;='Z067'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="R_UNDER_OVER_6_5">
-    <viewAttributes>
-      <viewAttribute id="VALUE_GENERIC"/>
-      <viewAttribute id="CLIENT"/>
-      <viewAttribute id="PARTNER"/>
-      <viewAttribute id="VALID_TO" aggregationType="min"/>
-      <viewAttribute id="FACT_TYPE"/>
-      <viewAttribute id="FACT_CATEGORY"/>
-      <viewAttribute id="FACT_CAT_SEQ"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_UNDER_OVER_6_5"/>
-    <windowFunction dynamicPartitionAttributes="false">
-      <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
-      <order byViewAttributeName="VALID_TO" direction="DESC"/>
-      <rankThreshold>
-        <value>1</value>
-      </rankThreshold>
-    </windowFunction>
-  </calculationView>
 </calculationViews>
 <logicalModel id="J_BPINFO_2020">
   <attributes>
@@ -2389,7 +2391,9 @@ END</formula>
   
     <attribute id="ZPRE_VALID_TO" order="67" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ZPRE Facts Valid To"/>
+  
       <keyMapping columnObjectName="J_BPINFO_2020" columnName="ZPRE_VALID_TO"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -2828,6 +2832,11 @@ END
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="189"/>
     </shape>
+    <shape expanded="true" modelObjectName="R_UNDER_OVER_6_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-141" y="2386"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="P_TaxReturns" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="1026" y="1136"/>
       <rectangleSize height="30" width="160"/>
@@ -2922,11 +2931,6 @@ END
     <shape expanded="true" modelObjectName="P_UNDER_OVER_6_5" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="-141" y="2525"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="R_UNDER_OVER_6_5" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-141" y="2386"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
