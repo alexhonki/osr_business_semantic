@@ -189,11 +189,11 @@ END</formula>
   <calculationView xsi:type="Calculation:RankView" id="R_TOP1_ROW">
     <viewAttributes>
       <viewAttribute id="TAXPAYER"/>
+    
+      <viewAttribute id="FT_BPGroupingType"/>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="FISCAL_YEAR"/>
-      <viewAttribute id="PARTNER1"/>
-    
-      <viewAttribute id="FT_BPGroupingType"/></viewAttributes>
+      <viewAttribute id="PARTNER1"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_GM"/>
     <windowFunction dynamicPartitionAttributes="false">
@@ -208,11 +208,11 @@ END</formula>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_GM" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="TAXPAYER"/>
+    
+      <viewAttribute id="FT_BPGroupingType"/>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="FISCAL_YEAR"/>
-      <viewAttribute id="PARTNER1"/>
-    
-      <viewAttribute id="FT_BPGroupingType"/></viewAttributes>
+      <viewAttribute id="PARTNER1"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_TAXRETURNS"/>
     <filter>&quot;FT_BPGroupingType&quot; IN ('DGE','GM') AND &quot;PARTNER1&quot; IS NOT NULL</filter>
@@ -370,7 +370,7 @@ END</formula>
       <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="FT_BPGroupingType"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="R_GRPSTAT_FY">
+  <calculationView xsi:type="Calculation:RankView" id="R_GRPSTAT_FY" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="TAXPAYER"/>
@@ -389,6 +389,7 @@ END</formula>
         <value>1</value>
       </rankThreshold>
     </windowFunction>
+    <filter>&quot;FT_BPGroupingType&quot; IS NOT NULL</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_TAXPSTAT_WAGES" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
@@ -401,23 +402,13 @@ END</formula>
       <viewAttribute id="CC_EST_ANNUAL_WAGES" aggregationType="sum"/>
       <viewAttribute id="CC_EST_TAX_BRACKET"/>
       <viewAttribute id="TAXPAYER"/>
-      <viewAttribute id="FT_BPGroupingType"/>
-      <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
-      <viewAttribute hidden="true" id="JOIN$TAXPAYER$TAXPAYER"/>
-      <viewAttribute hidden="true" id="JOIN$FISCAL_YEAR$FISCAL_YEAR"/>
-      <viewAttribute hidden="true" id="JOIN$FT_BPGroupingType$FT_BPGroupingType"/>
-    </viewAttributes>
+      <viewAttribute id="FT_BPGroupingType"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="R_GRPSTAT_FY">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="TAXPAYER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="FT_BPGroupingType"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TAXPAYER$TAXPAYER" source="TAXPAYER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FISCAL_YEAR$FISCAL_YEAR" source="FISCAL_YEAR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FT_BPGroupingType$FT_BPGroupingType" source="FT_BPGroupingType"/>
-    </input>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="FT_BPGroupingType"/></input>
     <input node="U_NG_GRPS">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_WAGES" source="CC_WAGES"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PeriodCycle" source="CC_PeriodCycle"/>
@@ -425,15 +416,15 @@ END</formula>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PERIOD_RANK" source="CC_PERIOD_RANK"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_EST_ANNUAL_WAGES" source="CC_EST_ANNUAL_WAGES"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_EST_TAX_BRACKET" source="CC_EST_TAX_BRACKET"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TAXPAYER$TAXPAYER" source="TAXPAYER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FISCAL_YEAR$FISCAL_YEAR" source="FISCAL_YEAR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FT_BPGroupingType$FT_BPGroupingType" source="FT_BPGroupingType"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="TAXPAYER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="FT_BPGroupingType"/>
     </input>
-    <joinAttribute name="JOIN$MANDT$MANDT"/>
-    <joinAttribute name="JOIN$TAXPAYER$TAXPAYER"/>
-    <joinAttribute name="JOIN$FISCAL_YEAR$FISCAL_YEAR"/>
-    <joinAttribute name="JOIN$FT_BPGroupingType$FT_BPGroupingType"/>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="TAXPAYER"/>
+    <joinAttribute name="FISCAL_YEAR"/>
+    <joinAttribute name="FT_BPGroupingType"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_TAXPSTAT_WAGES">
@@ -487,34 +478,34 @@ END</formula>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="406.0859205533264" y="112"/>
+      <upperLeftCorner x="406" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_TAXRETURNS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="318.0000000000001" y="1196.9999916553497"/>
+      <upperLeftCorner x="318" y="1196"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_WAGES_NON_NIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="507.23110977206045" y="906.9999940395355"/>
+      <upperLeftCorner x="507" y="906"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_DGE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="512.0000000000001" y="1031.9999928474426"/>
+      <upperLeftCorner x="512" y="1031"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_TOP_PER_CYC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="523.6646752899256" y="781.9999952316284"/>
+      <upperLeftCorner x="523" y="781"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_GRP_NG_WAGES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="523.6646752899256" y="676.9999952316284"/>
+      <upperLeftCorner x="523" y="676"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADD_GMS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="550.3313419565923" y="516.9999964237213"/>
+      <upperLeftCorner x="550" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="AGG_GRP_NG_WAGES" modelObjectNameSpace="J_ADD_GMS" modelObjectType="JoinNodeInput">
@@ -527,41 +518,41 @@ END</formula>
     </shape>
   
     <shape expanded="true" modelObjectName="R_TOP1_ROW" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="717.2311097720604" y="906.9999940395355"/>
+      <upperLeftCorner x="717" y="906"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_GM" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="722.0000000000001" y="1031.9999928474426"/>
+      <upperLeftCorner x="722" y="1031"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_NG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302.0000000000001" y="1031.9999928474426"/>
+      <upperLeftCorner x="302" y="1031"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_WAGES_NON_NIL_NG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="297.2311097720605" y="906.9999940395355"/>
+      <upperLeftCorner x="297" y="906"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_TOP_PER_CYC_NG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="297.2311097720605" y="781.9999952316284"/>
+      <upperLeftCorner x="297" y="781"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_GRP_NG_WAGES_NG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="297.2311097720605" y="676.9999952316284"/>
+      <upperLeftCorner x="297" y="676"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="U_NG_GRPS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="384.21086028595664" y="376.9999976158142"/>
+      <upperLeftCorner x="384" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="R_GRPSTAT_FY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="1041.9999928474426"/>
+      <upperLeftCorner x="92" y="1041"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TAXPSTAT_WAGES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="357.54419361929" y="236.9999988079071"/>
+      <upperLeftCorner x="357" y="236"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_GRPSTAT_FY" modelObjectNameSpace="J_TAXPSTAT_WAGES" modelObjectType="JoinNodeInput">
@@ -570,7 +561,7 @@ END</formula>
     </shape>
     <shape modelObjectName="U_NG_GRPS" modelObjectNameSpace="J_TAXPSTAT_WAGES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="189.3291015625"/>
+      <rectangleSize width="189"/>
     </shape>
   </shapes>
 </layout>
