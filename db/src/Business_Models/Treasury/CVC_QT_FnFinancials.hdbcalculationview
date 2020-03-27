@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.Treasury::CVC_QT_FnFinancials" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CVC_QT_FnFinancials"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtClientOverviewStatic">
+    <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtClientOverviewStatic</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FNFINANCIALS" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DFKK_H_GPART"/>
+    
+      <viewAttribute id="HVORG"/>
+      <viewAttribute id="TVORG"/>
+      <viewAttribute id="CC_BP_CNT"/>
+      <viewAttribute id="TAX_FG_AMT"/>
+      <viewAttribute id="CC_TAX_FORGONE_CNT"/>
+      <viewAttribute id="CC_TAXPAYER_PAID_FLAG"/>
+      <viewAttribute id="RC_COVID_PENDING_AMT"/>
+      <viewAttribute id="RC_COVID_PAID_AMT"/>
+    
+      <viewAttribute id="PERSL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials"/>
+    <filter>&quot;HVORG&quot; = '4000' AND &quot;TVORG&quot; = '0250'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_COVIDCLIENTS" cardinality="C1_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CC_BP_CNT" aggregationType="sum"/>
+      <viewAttribute id="TAX_FG_AMT" aggregationType="sum"/>
+      <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
+      <viewAttribute id="CC_TAXPAYER_PAID_FLAG"/>
+      <viewAttribute id="RC_COVID_PENDING_AMT" aggregationType="sum"/>
+      <viewAttribute id="RC_COVID_PAID_AMT" aggregationType="sum"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="UNDER_OVER_DECL"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="DIVISION"/>
+      <viewAttribute id="DIV_TEXT"/>
+      <viewAttribute id="PERSL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_PRTCLIENTOVERVIEW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNDER_OVER_DECL" source="UNDER_OVER_DECL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIVISION" source="DIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIV_TEXT" source="DIV_TEXT"/></input>
+    <input node="P_FNFINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BP_CNT" source="CC_BP_CNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="TAX_FG_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAXPAYER_PAID_FLAG" source="CC_TAXPAYER_PAID_FLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PENDING_AMT" source="RC_COVID_PENDING_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PAID_AMT" source="RC_COVID_PAID_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="DFKK_H_GPART"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PRTCLIENTOVERVIEW" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="PARTNER"/>
+    
+      <viewAttribute id="UNDER_OVER_DECL"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="DIVISION"/>
+      <viewAttribute id="DIV_TEXT"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtClientOverviewStatic"/>
+    <filter>&quot;UNDER_OVER_DECL&quot; IN ('$6.5 Million or under', 'Over $6.5 Million')</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_COVIDCLIENTS">
+  <attributes>
+    <attribute id="CC_TAXPAYER_PAID_FLAG" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Taxpayer Paid Flag (COVID)"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="CC_TAXPAYER_PAID_FLAG"/>
+    </attribute>
+    <attribute id="UNDER_OVER_DECL" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Under/Over $6.5 Million (Client Declared)"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="UNDER_OVER_DECL"/>
+    </attribute>
+    <attribute id="STD_ADDR_POSTCODE1" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ABR - Add - PostCode"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="STD_ADDR_POSTCODE1"/>
+    </attribute>
+    <attribute id="DIVISION" order="9" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="DIV_TEXT">
+      <descriptions defaultDescription="ANZSIC Division"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="DIVISION"/>
+    </attribute>
+    <attribute id="DIV_TEXT" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANZSIC Division Text"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="DIV_TEXT"/>
+    </attribute>
+    <attribute id="PERSL" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Period Key"/>
+      <keyMapping columnObjectName="J_COVIDCLIENTS" columnName="PERSL"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="CC_BP_CNT" order="1" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BP Counter"/>
+      <measureMapping columnObjectName="J_COVIDCLIENTS" columnName="CC_BP_CNT"/>
+    </measure>
+    <measure id="TAX_FG_AMT" order="2" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Forgone Amount"/>
+      <measureMapping columnObjectName="J_COVIDCLIENTS" columnName="TAX_FG_AMT"/>
+    </measure>
+    <measure id="CC_TAX_FORGONE_CNT" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Forgone Counter"/>
+      <measureMapping columnObjectName="J_COVIDCLIENTS" columnName="CC_TAX_FORGONE_CNT"/>
+    </measure>
+    <measure id="RC_COVID_PENDING_AMT" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Pending Amount (COVID)"/>
+      <measureMapping columnObjectName="J_COVIDCLIENTS" columnName="RC_COVID_PENDING_AMT"/>
+    </measure>
+    <measure id="RC_COVID_PAID_AMT" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Paid Amount (COVID)"/>
+      <measureMapping columnObjectName="J_COVIDCLIENTS" columnName="RC_COVID_PAID_AMT"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_FNFINANCIALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-41" y="377"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_COVIDCLIENTS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="225"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_PRTCLIENTOVERVIEW" modelObjectNameSpace="J_COVIDCLIENTS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_FNFINANCIALS" modelObjectNameSpace="J_COVIDCLIENTS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_PRTCLIENTOVERVIEW" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="229" y="377"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

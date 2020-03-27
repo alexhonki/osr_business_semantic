@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpSolvency_IP" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="BP Solvency with Input Parameter"/>
+<localVariables>
+  <variable id="IP_KeyDate" parameter="true">
+    <descriptions defaultDescription="Reporting Date"/>
+    <variableProperties datatype="NVARCHAR" length="8" mandatory="false">
+      <valueDomain type="Date"/>
+      <selection multiLine="false" type="SingleValue"/>
+      <defaultRange lowValue="date(leftstr(string(now()),10))" lowExpression="true"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpSolvency">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_BpSolvency</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews/>
+<logicalModel id="osr.business.semantic.db.Business_Models.CommonObjects::CV_BpSolvency" filterExpressionLanguage="COLUMN_ENGINE">
+  <attributes>
+    <attribute id="CLIENT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="CV_BpSolvency" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Number"/>
+      <keyMapping columnObjectName="CV_BpSolvency" columnName="PARTNER"/>
+    </attribute>
+    <attribute id="ZZTFLD2WCKOA" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Date From"/>
+      <keyMapping columnObjectName="CV_BpSolvency" columnName="ZZTFLD2WCKOA"/>
+    </attribute>
+    <attribute id="ZZTFLD2ACBOA" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Date To"/>
+      <keyMapping columnObjectName="CV_BpSolvency" columnName="ZZTFLD2ACBOA"/>
+    </attribute>
+    <attribute id="ZZTFLDPVC3OA" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Solvency Status"/>
+      <keyMapping columnObjectName="CV_BpSolvency" columnName="ZZTFLDPVC3OA"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+
+  <filter>date(&quot;ZZTFLD2WCKOA&quot;) &lt;= date('$$IP_KeyDate$$') AND date(&quot;ZZTFLD2ACBOA&quot;) &gt;= date('$$IP_KeyDate$$')</filter>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
