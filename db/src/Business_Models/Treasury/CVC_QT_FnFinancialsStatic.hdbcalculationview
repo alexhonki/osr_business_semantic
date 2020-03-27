@@ -17,16 +17,15 @@
       <viewAttribute id="DIV_TEXT"/>
       <viewAttribute id="CC_REFUND_UNPAID_ASSMT"/>
       <viewAttribute id="CC_HOLIDAY_REFUND_IND"/>
-      <viewAttribute id="CC_BP_CNT"/>
       <viewAttribute id="TAX_FG_AMT"/>
-      <viewAttribute id="CC_TAX_FORGONE_CNT"/>
       <viewAttribute id="RC_COVID_PENDING_AMT"/>
       <viewAttribute id="RC_COVID_PAID_AMT"/>
-      <viewAttribute id="CC_REFUND_CNT"/>
       <viewAttribute id="CC_TAX_FG_AMT"/>
       <viewAttribute id="RC_COVID_OPEN_CREDIT_AMT"/>
       <viewAttribute id="CC_COVID_PENDING_AMT"/>
       <viewAttribute id="CC_COVID_PAID_AMT"/>
+    
+      <viewAttribute id="PARTNER"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Tables::T_QtFnFinancials"/>
@@ -58,51 +57,52 @@
       <descriptions defaultDescription="Holiday/Refund Status (COVID)"/>
       <keyMapping columnObjectName="Projection_1" columnName="CC_HOLIDAY_REFUND_IND"/>
     </attribute>
+  
+    <attribute id="PARTNER" hidden="true" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PARTNER"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PARTNER"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="CC_BP_CNT" order="7" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="BP Counter"/>
-      <measureMapping columnObjectName="Projection_1" columnName="CC_BP_CNT"/>
-    </measure>
-    <measure id="TAX_FG_AMT" order="8" aggregationType="sum" measureType="simple">
+    <measure id="TAX_FG_AMT" order="7" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Forgone Amount"/>
       <measureMapping columnObjectName="Projection_1" columnName="TAX_FG_AMT"/>
     </measure>
-    <measure id="CC_TAX_FORGONE_CNT" order="9" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Tax Forgone Counter"/>
-      <measureMapping columnObjectName="Projection_1" columnName="CC_TAX_FORGONE_CNT"/>
-    </measure>
-    <measure id="RC_COVID_PENDING_AMT" order="10" aggregationType="sum" measureType="simple">
+    <measure id="RC_COVID_PENDING_AMT" order="8" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Pending Amount (COVID)"/>
       <measureMapping columnObjectName="Projection_1" columnName="RC_COVID_PENDING_AMT"/>
     </measure>
-    <measure id="RC_COVID_PAID_AMT" order="11" aggregationType="sum" measureType="simple">
+    <measure id="RC_COVID_PAID_AMT" order="9" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Paid Amount (COVID)"/>
       <measureMapping columnObjectName="Projection_1" columnName="RC_COVID_PAID_AMT"/>
     </measure>
-    <measure id="CC_REFUND_CNT" order="12" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="Refund Counter (COVID)"/>
-      <measureMapping columnObjectName="Projection_1" columnName="CC_REFUND_CNT"/>
-    </measure>
-    <measure id="CC_TAX_FG_AMT" order="13" aggregationType="sum" measureType="simple">
+    <measure id="CC_TAX_FG_AMT" order="10" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Forgone Amount (COVID)"/>
       <measureMapping columnObjectName="Projection_1" columnName="CC_TAX_FG_AMT"/>
     </measure>
-    <measure id="RC_COVID_OPEN_CREDIT_AMT" order="14" aggregationType="sum" measureType="simple">
+    <measure id="RC_COVID_OPEN_CREDIT_AMT" order="11" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Open Credit Amount (COVID)"/>
       <measureMapping columnObjectName="Projection_1" columnName="RC_COVID_OPEN_CREDIT_AMT"/>
     </measure>
-    <measure id="CC_COVID_PENDING_AMT" order="15" aggregationType="sum" measureType="simple">
+    <measure id="CC_COVID_PENDING_AMT" order="12" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Pending Amount (COVID)"/>
       <measureMapping columnObjectName="Projection_1" columnName="CC_COVID_PENDING_AMT"/>
     </measure>
-    <measure id="CC_COVID_PAID_AMT" order="16" aggregationType="sum" measureType="simple">
+    <measure id="CC_COVID_PAID_AMT" order="13" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Paid Amount (COVID)"/>
       <measureMapping columnObjectName="Projection_1" columnName="CC_COVID_PAID_AMT"/>
     </measure>
   </baseMeasures>
-  <calculatedMeasures/>
+  <calculatedMeasures>
+    <measure id="CC_BPCOUNT" order="14" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="Taxpayer Count"/>
+      <exceptionAggregation>
+        <attribute attributeName="PARTNER"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
 </logicalModel>
