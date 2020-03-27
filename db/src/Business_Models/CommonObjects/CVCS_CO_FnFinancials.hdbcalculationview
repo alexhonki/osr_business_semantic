@@ -1484,7 +1484,6 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
   <calculationView xsi:type="Calculation:JoinView" id="J_COVID" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
-      <viewAttribute id="TAX_FG_AMT" aggregationType="sum"/>
       <viewAttribute id="RC_COVID_PENDING_AMT" aggregationType="formula"/>
       <viewAttribute id="RC_COVID_PAID_AMT" aggregationType="formula"/>
       <viewAttribute id="CC_REFUND_CNT" aggregationType="sum"/>
@@ -1497,8 +1496,17 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <viewAttribute id="DFKKOP_OPUPK"/>
       <viewAttribute id="OPBEL"/>
       <viewAttribute id="PERSL"/>
-    </viewAttributes>
+    
+      <viewAttribute id="TAX_FG_AMT" aggregationType="sum"/></viewAttributes>
     <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_TAX_FG_RECAL_AMT" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+        <formula>CASE &quot;PERSL&quot;
+	 WHEN '2XQ2' then (&quot;TAX_FG_AMT&quot; *  2/3)
+	 WHEN '2XH1' then (&quot;TAX_FG_AMT&quot; *  2/6)
+	 ELSE &quot;TAX_FG_AMT&quot; 
+ END</formula>
+      </calculatedViewAttribute>
+    
       <calculatedViewAttribute id="CC_REFUND_UNPAID_ASSMT" datatype="VARCHAR" length="18" expressionLanguage="SQL">
         <formula>CASE 
 	 WHEN &quot;RC_COVID_OPEN_CREDIT_AMT&quot; is null and &quot;RC_COVID_PAID_AMT&quot; is null and &quot;RC_COVID_PENDING_AMT&quot; is null then 'Unpaid Assessment' 
@@ -1507,20 +1515,14 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_HOLIDAY_REFUND_IND" datatype="VARCHAR" length="8" expressionLanguage="SQL">
+    
         <formula>CASE 
-	 WHEN &quot;PERSL&quot;= '2X05' or &quot;PERSL&quot;= '2X06' or &quot;PERSL&quot;= '2XQ2' or &quot;PERSL&quot;= '2XH1' then 'Refund' 
+	 WHEN &quot;PERSL&quot;= '2X05' or &quot;PERSL&quot;= '2X06' or &quot;PERSL&quot;= '20Q2' or &quot;PERSL&quot;= '20H1' then 'Refund' 
 	 WHEN &quot;PERSL&quot;= '2X07' or &quot;PERSL&quot;= '2X08' or &quot;PERSL&quot;= '2X09' then 'Holiday' 
 	 ELSE null 
  END</formula>
-      </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_TAX_FG_RECAL_AMT" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
-        <formula>CASE &quot;PERSL&quot;
-	 WHEN '2XQ2' then (&quot;TAX_FG_AMT&quot; *  2/3)
-	 WHEN '2XH1' then (&quot;TAX_FG_AMT&quot; *  2/6)
-	 ELSE &quot;TAX_FG_AMT&quot; 
- END</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+    
+      </calculatedViewAttribute></calculatedViewAttributes>
     <input node="J_ASSMT_REFUND">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
@@ -1543,18 +1545,6 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
     </input>
     <joinAttribute name="MANDT"/>
     <joinAttribute name="FBNUM"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_Holiday_Refund" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="FBNUM"/>
-      <viewAttribute id="OpenItemFlag"/>
-      <viewAttribute id="CreditDebitFlag"/>
-      <viewAttribute id="BETRH"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_CV_Financials"/>
-    <filter>&quot;FBNUM&quot;!=''</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_Holiday_Refund">
     <viewAttributes>
@@ -1582,6 +1572,18 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       </restrictedViewAttribute>
     </restrictedViewAttributes>
     <input node="P_Holiday_Refund"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Holiday_Refund" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="OpenItemFlag"/>
+      <viewAttribute id="CreditDebitFlag"/>
+      <viewAttribute id="BETRH"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CV_Financials"/>
+    <filter>&quot;FBNUM&quot;!=''</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_FIN_COVID">
@@ -2160,7 +2162,7 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
     ELSE ''
 END</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="KURSF" order="22" aggregationType="sum" measureType="simple">
@@ -2400,17 +2402,18 @@ END</formula>
         </filter>
         <attributeName>BLART</attributeName>
       </restriction>
-      </measure>
+    </measure>
   
     <measure id="OpenItemBalance" order="159" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Open Item Balance"/>
   
       <restrictionExpression>(&quot;OpenItemFlag&quot; = 'X') AND (&quot;BLART&quot; != 'B1')</restrictionExpression>
-      </measure>
+  
+    </measure>
     <measure id="AssessmentAmount" order="160" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Assessment Amount"/>
       <restrictionExpression>(&quot;BLART&quot; = 'AA' OR &quot;BLART&quot; = 'AB' OR &quot;BLART&quot; = 'AC' OR &quot;BLART&quot; = 'AD' OR &quot;BLART&quot; = 'AF' OR &quot;BLART&quot; = 'AG' OR &quot;BLART&quot; = 'AL' OR &quot;BLART&quot; = 'AR' OR &quot;BLART&quot; = 'AY' OR &quot;BLART&quot; = 'AZ') AND (&quot;AUGRD&quot; != '05') AND (&quot;FBNUM&quot; != '')</restrictionExpression>
-      </measure>
+    </measure>
   </restrictedMeasures>
   <localDimensions/>
 
@@ -2557,21 +2560,21 @@ END</formula>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="515.0628796274505" y="112"/>
+      <upperLeftCorner x="515" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CV_Financials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="536.5714279753822" y="1066.9999940395355"/>
+      <upperLeftCorner x="536" y="1066"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CONTACCTBAL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="127.9999994039535" y="881.9999952316284"/>
+      <upperLeftCorner x="127" y="881"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_BALANCE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="101.51109867554965" y="596.9999976158142"/>
+      <upperLeftCorner x="101" y="596"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CV_Financials" modelObjectNameSpace="J_FIN_BALANCE" modelObjectType="JoinNodeInput">
@@ -2583,15 +2586,15 @@ END</formula>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_CONTACCTBAL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="128.17776534221628" y="756.9999964237213"/>
+      <upperLeftCorner x="128" y="756"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_FBNUMS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="337.9999994039535" y="881.9999952316284"/>
+      <upperLeftCorner x="337" y="881"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_ASSTAMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="303.82898663306673" y="436.9999988079071"/>
+      <upperLeftCorner x="303" y="436"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FIN_BALANCE" modelObjectNameSpace="J_FIN_ASSTAMTS" modelObjectType="JoinNodeInput">
@@ -2603,23 +2606,23 @@ END</formula>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_FBNUM_AMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="338.17776534221633" y="756.9999964237213"/>
+      <upperLeftCorner x="338" y="756"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TAX_FORGONE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="547.9999994039538" y="881.9999952316284"/>
+      <upperLeftCorner x="547" y="881"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_COVID_REFUND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="757.9999994039538" y="881.9999952316284"/>
+      <upperLeftCorner x="757" y="881"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Agg_COVID_REFUND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="645.8688715261782" y="756.9999964237213"/>
+      <upperLeftCorner x="645" y="756"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ASSMT_REFUND" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="570.9175826430718" y="596.9999976158142"/>
+      <upperLeftCorner x="570" y="596"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_TAX_FORGONE" modelObjectNameSpace="J_ASSMT_REFUND" modelObjectType="JoinNodeInput">
@@ -2631,7 +2634,7 @@ END</formula>
       <rectangleSize width="178"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_COVID" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="515.0628796274505" y="277"/>
+      <upperLeftCorner x="515" y="277"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FIN_ASSTAMTS" modelObjectNameSpace="J_FIN_COVID" modelObjectType="JoinNodeInput">
@@ -2643,7 +2646,7 @@ END</formula>
       <rectangleSize width="256"/>
     </shape>
     <shape expanded="true" modelObjectName="J_COVID" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="597.5842493097384" y="436.9999988079071"/>
+      <upperLeftCorner x="597" y="436"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ASSMT_REFUND" modelObjectNameSpace="J_COVID" modelObjectType="JoinNodeInput">
@@ -2654,12 +2657,12 @@ END</formula>
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="256"/>
     </shape>
-    <shape expanded="true" modelObjectName="P_Holiday_Refund" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="967.9999994039536" y="881.9999952316284"/>
+    <shape expanded="true" modelObjectName="AGG_Holiday_Refund" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="855" y="756"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="AGG_Holiday_Refund" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="855.8688715261782" y="756.9999964237213"/>
+    <shape expanded="true" modelObjectName="P_Holiday_Refund" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="967" y="881"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FIN_COVID" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
