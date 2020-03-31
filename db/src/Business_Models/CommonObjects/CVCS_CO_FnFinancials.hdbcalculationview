@@ -1030,6 +1030,8 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <viewAttribute id="OPUPZ"/>
     
       <viewAttribute id="PERSL"/>
+    
+      <viewAttribute id="AUGRD"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_TAX_FORGONE_CNT" datatype="INTEGER" expressionLanguage="SQL">
@@ -1039,7 +1041,7 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
     <input node="P_CV_Financials">
       <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="BETRH"/>
     </input>
-    <filter>&quot;FBNUM&quot;!='' and &quot;HVORG&quot;='4000' and &quot;TVORG&quot;='0250'</filter>
+    <filter>&quot;FBNUM&quot;!='' and &quot;HVORG&quot;='4000' and &quot;TVORG&quot;='0250' and &quot;AUGRD&quot; != '05'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_COVID_REFUND" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -1508,10 +1510,12 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_REFUND_UNPAID_ASSMT" datatype="VARCHAR" length="18" expressionLanguage="SQL">
+    
         <formula>CASE 
 	 WHEN &quot;RC_COVID_OPEN_CREDIT_AMT&quot; is null and &quot;RC_COVID_PAID_AMT&quot; is null and &quot;RC_COVID_PENDING_AMT&quot; is null then 'Unpaid Assessment' 
 	 ELSE 'Refund Issued' 
  END</formula>
+    
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CC_HOLIDAY_REFUND_IND" datatype="VARCHAR" length="8" expressionLanguage="SQL">
