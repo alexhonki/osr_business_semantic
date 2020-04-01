@@ -21,10 +21,12 @@
       <viewAttribute id="CC_TAX_FG_AMT"/>
       <viewAttribute id="CC_HOLIDAY_REFUND_IND"/>
       <viewAttribute id="CC_COVID_PAID_AMT"/>
+    
+      <viewAttribute id="CC_TAX_FORGONE_CNT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials"/>
-    <filter>&quot;TVORG&quot; = '0250' </filter>
+    <filter>&quot;TVORG&quot; = '0250' and &quot;PERSL&quot; in ('2X07', '2X08', '2X09', '20Q3', '20H2')</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_TaxReturn" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -52,6 +54,8 @@
       <viewAttribute id="C_PAY_TAX_AMOUNT" aggregationType="sum"/>
       <viewAttribute id="CC_TAX_FG_AMT" aggregationType="sum"/>
       <viewAttribute id="CC_COVID_PAID_AMT" aggregationType="sum"/>
+    
+      <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_TaxReturn">
@@ -66,6 +70,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FG_AMT" source="CC_TAX_FG_AMT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_HOLIDAY_REFUND_IND" source="CC_HOLIDAY_REFUND_IND"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_COVID_PAID_AMT" source="CC_COVID_PAID_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="DFKK_H_GPART"/>
@@ -118,6 +123,11 @@
       <descriptions defaultDescription="Paid Amount (COVID)"/>
       <measureMapping columnObjectName="J_Fn_TaxReturn" columnName="CC_COVID_PAID_AMT"/>
     </measure>
+  
+    <measure id="CC_TAX_FORGONE_CNT" order="15" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Forgone Counter (COVID)"/>
+      <measureMapping columnObjectName="J_Fn_TaxReturn" columnName="CC_TAX_FORGONE_CNT"/>
+    </measure>
   </baseMeasures>
   <calculatedMeasures>
     <measure id="CC_TAXPAYER_CNT" order="10" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
@@ -126,6 +136,7 @@
         <attribute attributeName="TAXPAYER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       </measure>
     <measure id="CC_FBNUM_CNT" order="11" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Form Bundle Number Counter"/>
@@ -133,6 +144,7 @@
         <attribute attributeName="FBNUM"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures>
@@ -153,6 +165,19 @@
       <descriptions defaultDescription="Total Queensland Taxable Wages 2X08"/>
       <restrictionExpression>(&quot;PERIOD_KEY&quot; = '2X08')</restrictionExpression>
       </measure>
+  
+    <measure id="RC_TOT_QLD_TXBLE_WAGES_1908" order="16" aggregationType="sum" datatype="DECIMAL" length="23" scale="4" baseMeasure="C_TOT_QLD_TXBLE_WAGES" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Total Queensland Taxable Wages 1908"/>
+      <restrictionExpression>(&quot;PERIOD_KEY&quot; = '1908')</restrictionExpression>
+      </measure>
+    <measure id="RC_TOT_QLD_TXBLE_WAGES_2X09" order="17" aggregationType="sum" datatype="DECIMAL" length="23" scale="4" baseMeasure="C_TOT_QLD_TXBLE_WAGES" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Total Queensland Taxable Wages 2X09"/>
+      <restrictionExpression>(&quot;PERIOD_KEY&quot; = '2X09')</restrictionExpression>
+      </measure>
+    <measure id="RC_TOT_QLD_TXBLE_WAGES_1909" order="18" aggregationType="sum" datatype="DECIMAL" length="23" scale="4" baseMeasure="C_TOT_QLD_TXBLE_WAGES" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Total Queensland Taxable Wages 1909"/>
+      <restrictionExpression>(&quot;PERIOD_KEY&quot; = '1909')</restrictionExpression>
+      </measure>
   </restrictedMeasures>
   <localDimensions/>
 </logicalModel>
@@ -165,7 +190,7 @@
     </shape>
   
     <shape expanded="true" modelObjectName="P_FnFinancials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-68" y="389"/>
+      <upperLeftCorner x="-58" y="389"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TaxReturn" modelObjectNameSpace="CalculationView">
@@ -178,11 +203,11 @@
     </shape>
     <shape modelObjectName="P_TaxReturn" modelObjectNameSpace="J_Fn_TaxReturn" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="232.4912109375"/>
+      <rectangleSize width="232"/>
     </shape>
     <shape modelObjectName="P_FnFinancials" modelObjectNameSpace="J_Fn_TaxReturn" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="238.216796875"/>
+      <rectangleSize width="238"/>
     </shape>
   </shapes>
 </layout>
