@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.business.semantic.db.Business_Models.PayrollTax::CVC_PRT_COVID_RefundHolidayEligibilityAnalysis" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="Refund/Holiday Eligibility Analysis (COVID)"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturns">
+    <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturns</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FnFinancials" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="DFKK_H_GPART"/>
+      <viewAttribute id="PERSL"/>
+      <viewAttribute id="CC_TAX_FG_AMT"/>
+      <viewAttribute id="CC_HOLIDAY_REFUND_IND"/>
+      <viewAttribute id="CC_COVID_PAID_AMT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials"/>
+    <filter>&quot;TVORG&quot; = '0250' </filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_TaxReturn" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="PERIOD_KEY"/>
+      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES"/>
+      <viewAttribute id="C_PAY_TAX_AMOUNT"/>
+      <viewAttribute id="FBSTA"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturns"/>
+    <filter>&quot;PERIOD_KEY&quot; in ( '1907','1908','1909', '19Q3', '19H2', '2X07', '2X08', '2X09','20Q3','20H2') and  
+&quot;FBSTA&quot; = 'Billed'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_Fn_TaxReturn" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="PERIOD_KEY"/>
+      <viewAttribute id="CC_HOLIDAY_REFUND_IND"/>
+      <viewAttribute id="C_TOT_QLD_TXBLE_WAGES" aggregationType="sum"/>
+      <viewAttribute id="C_PAY_TAX_AMOUNT" aggregationType="sum"/>
+      <viewAttribute id="CC_TAX_FG_AMT" aggregationType="sum"/>
+      <viewAttribute id="CC_COVID_PAID_AMT" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_TaxReturn">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="TAXPAYER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIOD_KEY" source="PERIOD_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_TOT_QLD_TXBLE_WAGES" source="C_TOT_QLD_TXBLE_WAGES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_PAY_TAX_AMOUNT" source="C_PAY_TAX_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+    </input>
+    <input node="P_FnFinancials">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FG_AMT" source="CC_TAX_FG_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_HOLIDAY_REFUND_IND" source="CC_HOLIDAY_REFUND_IND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_COVID_PAID_AMT" source="CC_COVID_PAID_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIOD_KEY" source="PERSL"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="FBNUM"/>
+    <joinAttribute name="TAXPAYER"/>
+    <joinAttribute name="PERIOD_KEY"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_Fn_TaxReturn">
+  <attributes>
+    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SAP Client"/>
+      <keyMapping columnObjectName="J_Fn_TaxReturn" columnName="MANDT"/>
+    </attribute>
+    <attribute id="FBNUM" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Form Bundle Number"/>
+      <keyMapping columnObjectName="J_Fn_TaxReturn" columnName="FBNUM"/>
+    </attribute>
+    <attribute id="TAXPAYER" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner"/>
+      <keyMapping columnObjectName="J_Fn_TaxReturn" columnName="TAXPAYER"/>
+    </attribute>
+    <attribute id="PERIOD_KEY" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Key for Period Assignment"/>
+      <keyMapping columnObjectName="J_Fn_TaxReturn" columnName="PERIOD_KEY"/>
+    </attribute>
+    <attribute id="CC_HOLIDAY_REFUND_IND" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Holiday/Refund Status (COVID)"/>
+      <keyMapping columnObjectName="J_Fn_TaxReturn" columnName="CC_HOLIDAY_REFUND_IND"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="C_TOT_QLD_TXBLE_WAGES" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total QLD Taxable Wages"/>
+      <measureMapping columnObjectName="J_Fn_TaxReturn" columnName="C_TOT_QLD_TXBLE_WAGES"/>
+    </measure>
+    <measure id="C_PAY_TAX_AMOUNT" order="7" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Payroll Tax Amount"/>
+      <measureMapping columnObjectName="J_Fn_TaxReturn" columnName="C_PAY_TAX_AMOUNT"/>
+    </measure>
+    <measure id="CC_TAX_FG_AMT" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Forgone Amount (COVID)"/>
+      <measureMapping columnObjectName="J_Fn_TaxReturn" columnName="CC_TAX_FG_AMT"/>
+    </measure>
+    <measure id="CC_COVID_PAID_AMT" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Paid Amount (COVID)"/>
+      <measureMapping columnObjectName="J_Fn_TaxReturn" columnName="CC_COVID_PAID_AMT"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures>
+    <measure id="CC_TAXPAYER_CNT" order="10" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="Tax Payer Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="TAXPAYER"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+    <measure id="CC_FBNUM_CNT" order="11" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="Form Bundle Number Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="FBNUM"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures>
+    <measure id="RC_TOT_QLD_TXBLE_WAGES_2X07" order="12" aggregationType="sum" datatype="DECIMAL" length="23" scale="4" baseMeasure="C_TOT_QLD_TXBLE_WAGES">
+      <descriptions defaultDescription="Total Queensland Taxable Wages 2X07"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="PERIOD_KEY">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="2X07"/>
+        </filter>
+        <attributeName>PERIOD_KEY</attributeName>
+      </restriction>
+      </measure>
+    <measure id="RC_TOT_QLD_TXBLE_WAGES_1907" order="13" aggregationType="sum" datatype="DECIMAL" length="23" scale="4" baseMeasure="C_TOT_QLD_TXBLE_WAGES" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Total Queensland Taxable Wages 1907"/>
+      <restrictionExpression>(&quot;PERIOD_KEY&quot; = '1907')</restrictionExpression>
+      </measure>
+    <measure id="RC_TOT_QLD_TXBLE_WAGES_2X08" order="14" aggregationType="sum" datatype="DECIMAL" length="23" scale="4" baseMeasure="C_TOT_QLD_TXBLE_WAGES" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="Total Queensland Taxable Wages 2X08"/>
+      <restrictionExpression>(&quot;PERIOD_KEY&quot; = '2X08')</restrictionExpression>
+      </measure>
+  </restrictedMeasures>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="92" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_FnFinancials" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-68" y="389"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_TaxReturn" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="260" y="389"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_Fn_TaxReturn" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="202"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_TaxReturn" modelObjectNameSpace="J_Fn_TaxReturn" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="232.4912109375"/>
+    </shape>
+    <shape modelObjectName="P_FnFinancials" modelObjectNameSpace="J_Fn_TaxReturn" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="238.216796875"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
