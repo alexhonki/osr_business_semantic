@@ -177,6 +177,9 @@
       <viewAttribute id="VKTYP_TEXT"/>
     
       <viewAttribute id="CC_AGEMTHCRDSTA"/>
+    
+      <viewAttribute id="AUGBL_BLART"/>
+      <viewAttribute id="AUGBL_BLART_TEXT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_Financials">
@@ -375,6 +378,9 @@
       <viewAttribute id="VKTYP_TEXT"/>
     
       <viewAttribute id="CC_AGEMTHCRDSTA"/>
+    
+      <viewAttribute id="AUGBL_BLART"/>
+      <viewAttribute id="AUGBL_BLART_TEXT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_CV_Financials">
@@ -530,6 +536,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_TEXT" source="VKTYP_TEXT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_AGEMTHCRDSTA" source="CC_AGEMTHCRDSTA"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL_BLART" source="AUGBL_BLART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL_BLART_TEXT" source="AUGBL_BLART_TEXT"/>
     </input>
     <input node="AGG_CONTACCTBAL">
       <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceStatus" source="AccountBalanceStatus"/>
@@ -745,6 +754,9 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       <viewAttribute id="VKTYP_TEXT"/>
     
       <viewAttribute id="CC_AGEMTHCRDSTA"/>
+    
+      <viewAttribute id="AUGBL_BLART"/>
+      <viewAttribute id="AUGBL_BLART_TEXT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_FIN_BALANCE">
@@ -902,6 +914,9 @@ if(abs(&quot;OpenItemBalance&quot;) &gt;= 1000000.01,'$1,000,000 and greater',
       <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_TEXT" source="VKTYP_TEXT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_AGEMTHCRDSTA" source="CC_AGEMTHCRDSTA"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL_BLART" source="AUGBL_BLART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL_BLART_TEXT" source="AUGBL_BLART_TEXT"/>
     </input>
     <input node="AGG_FBNUM_AMTS">
       <mapping xsi:type="Calculation:AttributeMapping" target="FormBundleValueCategory" source="FormBundleValueCategory"/>
@@ -1001,671 +1016,1298 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
     </restrictedViewAttributes>
     <input node="P_FBNUMS"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_TAX_FORGONE" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="HVORG"/>
+      <viewAttribute id="TVORG"/>
+      <viewAttribute id="TAX_FG_AMT"/>
+    
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="DFKKOP_OPUPW"/>
+      <viewAttribute id="DFKKOP_OPUPK"/>
+      <viewAttribute id="OPUPZ"/>
+    
+      <viewAttribute id="PERSL"/>
+    
+      <viewAttribute id="AUGRD"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_TAX_FORGONE_CNT" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="P_CV_Financials">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="BETRH"/>
+    </input>
+    <filter>&quot;FBNUM&quot;!='' and &quot;HVORG&quot;='4000' and &quot;TVORG&quot;='0250' and &quot;AUGRD&quot; != '05'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_COVID_REFUND" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="OpenItemFlag"/>
+      <viewAttribute id="AUGDT"/>
+      <viewAttribute id="AUGBL_BLART"/>
+      <viewAttribute id="AUGBT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CV_Financials"/>
+    <filter>&quot;FBNUM&quot;!='' and &quot;AUGBL_BLART&quot;='RE' and &quot;AUGDT&quot; &gt;='20200324'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Agg_COVID_REFUND">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="OpenItemFlag"/>
+      <viewAttribute id="AUGDT"/>
+      <viewAttribute id="AUGBL_BLART"/>
+      <viewAttribute id="AUGBT" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_REFUND_CNT" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes>
+      <restrictedViewAttribute id="RC_COVID_PENDING_AMT" baseViewAttribute="AUGBT">
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="OpenItemFlag">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="X"/>
+          </filter>
+          <attributeName>OpenItemFlag</attributeName>
+        </restriction>
+      </restrictedViewAttribute>
+      <restrictedViewAttribute id="RC_COVID_PAID_AMT" baseViewAttribute="AUGBT">
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="OpenItemFlag">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="X"/>
+          </filter>
+          <attributeName>OpenItemFlag</attributeName>
+        </restriction>
+      </restrictedViewAttribute>
+    </restrictedViewAttributes>
+    <input node="P_COVID_REFUND"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_ASSMT_REFUND" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="TAX_FG_AMT" aggregationType="sum"/>
+      <viewAttribute id="RC_COVID_PENDING_AMT" aggregationType="formula"/>
+      <viewAttribute id="RC_COVID_PAID_AMT" aggregationType="formula"/>
+      <viewAttribute id="CC_REFUND_CNT" aggregationType="sum"/>
+    
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="DFKKOP_OPUPW"/>
+      <viewAttribute id="DFKKOP_OPUPK"/>
+      <viewAttribute id="OPUPZ"/>
+      <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
+    
+      <viewAttribute id="PERSL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_TAX_FORGONE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="TAX_FG_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+    </input>
+    <input node="Agg_COVID_REFUND">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PENDING_AMT" source="RC_COVID_PENDING_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PAID_AMT" source="RC_COVID_PAID_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFUND_CNT" source="CC_REFUND_CNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="FBNUM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_FIN_COVID" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPUPZ"/>
+      <viewAttribute id="PRCTR"/>
+      <viewAttribute id="AUGST"/>
+      <viewAttribute id="VTREF"/>
+      <viewAttribute id="VTPOS"/>
+      <viewAttribute id="ABWBL"/>
+      <viewAttribute id="ABWTP"/>
+      <viewAttribute id="HVORG"/>
+      <viewAttribute id="TVORG"/>
+      <viewAttribute id="KOFIZ"/>
+      <viewAttribute id="HKONT"/>
+      <viewAttribute id="MWSKZ"/>
+      <viewAttribute id="MWSZKZ"/>
+      <viewAttribute id="XANZA"/>
+      <viewAttribute id="STAKZ"/>
+      <viewAttribute id="OPTXT"/>
+      <viewAttribute id="WAERS"/>
+      <viewAttribute id="VERKZ"/>
+      <viewAttribute id="STUDT"/>
+      <viewAttribute id="XMANL"/>
+      <viewAttribute id="KURSF" aggregationType="sum"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+      <viewAttribute id="BETRW" aggregationType="sum"/>
+      <viewAttribute id="BETR2" aggregationType="sum"/>
+      <viewAttribute id="BETR3" aggregationType="sum"/>
+      <viewAttribute id="SKFBT" aggregationType="sum"/>
+      <viewAttribute id="SBETH" aggregationType="sum"/>
+      <viewAttribute id="SBETW" aggregationType="sum"/>
+      <viewAttribute id="SBET2" aggregationType="sum"/>
+      <viewAttribute id="SBET3" aggregationType="sum"/>
+      <viewAttribute id="MWSKO"/>
+      <viewAttribute id="MWVKO"/>
+      <viewAttribute id="TXRUL"/>
+      <viewAttribute id="PYMET"/>
+      <viewAttribute id="PERNR"/>
+      <viewAttribute id="GRKEY"/>
+      <viewAttribute id="PERSL"/>
+      <viewAttribute id="AUGDT"/>
+      <viewAttribute id="AUGBL"/>
+      <viewAttribute id="AUGBD"/>
+      <viewAttribute id="AUGRD"/>
+      <viewAttribute id="AUGWA"/>
+      <viewAttribute id="AUGBT" aggregationType="sum"/>
+      <viewAttribute id="AUGBS" aggregationType="sum"/>
+      <viewAttribute id="AUGSK" aggregationType="sum"/>
+      <viewAttribute id="AUGVD"/>
+      <viewAttribute id="AUGOB"/>
+      <viewAttribute id="WHANG"/>
+      <viewAttribute id="WHGRP"/>
+      <viewAttribute id="XAUGP"/>
+      <viewAttribute id="ABRZU"/>
+      <viewAttribute id="ABRZO"/>
+      <viewAttribute id="FDZTG"/>
+      <viewAttribute id="FDWBT" aggregationType="sum"/>
+      <viewAttribute id="XTAUS"/>
+      <viewAttribute id="AUGRS"/>
+      <viewAttribute id="PYGRP"/>
+      <viewAttribute id="PDTYP"/>
+      <viewAttribute id="SPERZ"/>
+      <viewAttribute id="INFOZ"/>
+      <viewAttribute id="TXDAT"/>
+      <viewAttribute id="VBUND"/>
+      <viewAttribute id="KONTT"/>
+      <viewAttribute id="KONTL"/>
+      <viewAttribute id="OPSTA"/>
+      <viewAttribute id="BLART"/>
+      <viewAttribute id="EMGPA"/>
+      <viewAttribute id="EMBVT"/>
+      <viewAttribute id="EMADR"/>
+      <viewAttribute id="IKEY"/>
+      <viewAttribute id="XRAGL"/>
+      <viewAttribute id="ASTKZ"/>
+      <viewAttribute id="ASBLG"/>
+      <viewAttribute id="XBLNR"/>
+      <viewAttribute id="INKPS"/>
+      <viewAttribute id="QSSHB" aggregationType="sum"/>
+      <viewAttribute id="QBSHB" aggregationType="sum"/>
+      <viewAttribute id="RFUPK"/>
+      <viewAttribute id="INTBU"/>
+      <viewAttribute id="C4EYE"/>
+      <viewAttribute id="C4EYP"/>
+      <viewAttribute id="SCTAX" aggregationType="sum"/>
+      <viewAttribute id="STTAX" aggregationType="sum"/>
+      <viewAttribute id="ORUPZ"/>
+      <viewAttribute id="NEGBU"/>
+      <viewAttribute id="SUBAP"/>
+      <viewAttribute id="PSWSL"/>
+      <viewAttribute id="PSWBT" aggregationType="sum"/>
+      <viewAttribute id="PSWTX" aggregationType="sum"/>
+      <viewAttribute id="PSGRP"/>
+      <viewAttribute id="XCOLC"/>
+      <viewAttribute id="AASTA"/>
+      <viewAttribute id="EMMND"/>
+      <viewAttribute id="PNEXD"/>
+      <viewAttribute id="FINRE"/>
+      <viewAttribute id="RDSTA"/>
+      <viewAttribute id="RDSTB"/>
+      <viewAttribute id="PSOBTYP"/>
+      <viewAttribute id="VKTYP_PS"/>
+      <viewAttribute id="ABTYP_PS"/>
+      <viewAttribute id="REFDOC_ID"/>
+      <viewAttribute id="REFDOC_OBJTYPE"/>
+      <viewAttribute id="CRMOBJ"/>
+      <viewAttribute id="BRI_GUID"/>
+      <viewAttribute id="REFDOC_GUID"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="ZEXCL_AMT" aggregationType="sum"/>
+      <viewAttribute id="ZZSRCDOCNO"/>
+      <viewAttribute id="FMTYP"/>
+      <viewAttribute id="ORIGFIKRS"/>
+      <viewAttribute id="FIPEX"/>
+      <viewAttribute id="FISTL"/>
+      <viewAttribute id="FONDS"/>
+      <viewAttribute id="MEASURE"/>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="BUDGETYEAR"/>
+      <viewAttribute id="BUDGET_PD"/>
+      <viewAttribute id="QSPRZ"/>
+      <viewAttribute id="TXGRP"/>
+      <viewAttribute id="PALIX"/>
+      <viewAttribute id="OPUPF"/>
+      <viewAttribute id="DEBT_SET"/>
+      <viewAttribute id="TFKHVOT_TXT30"/>
+      <viewAttribute id="TFKTVOT_TXT30"/>
+      <viewAttribute id="TFK003T_LTEXT"/>
+      <viewAttribute id="TFK001AT_TXT50"/>
+      <viewAttribute id="DFKK_H_GPART"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="DFKK_H_BUDAT"/>
+      <viewAttribute id="OpenItemFlag"/>
+      <viewAttribute id="CreditDebitFlag"/>
+      <viewAttribute id="DFKKOP_OPUPW"/>
+      <viewAttribute id="DFKKOP_OPUPK"/>
+      <viewAttribute id="DFKKOP_BUKRS"/>
+      <viewAttribute id="DFKKOP_VKONT"/>
+      <viewAttribute id="DFKKOP_APPLK"/>
+      <viewAttribute id="DFKKOP_BLDAT"/>
+      <viewAttribute id="DFKKOP_FAEDN"/>
+      <viewAttribute id="DFKKOP_FAEDS"/>
+      <viewAttribute id="DFKKOP_SKTPZ" aggregationType="sum"/>
+      <viewAttribute id="Doubtful"/>
+      <viewAttribute id="OverdueStatus"/>
+      <viewAttribute id="AgeMonths" aggregationType="sum"/>
+      <viewAttribute id="AgeMonthsStatus"/>
+      <viewAttribute id="AgeDays" aggregationType="sum"/>
+      <viewAttribute id="AgeDaysStatus"/>
+      <viewAttribute id="AccountBalanceStatus"/>
+      <viewAttribute id="AccountBalanceRange"/>
+      <viewAttribute id="AltRevenueTypeGroups"/>
+      <viewAttribute id="FormBundleValueCategory"/>
+      <viewAttribute id="VKTYP_TEXT"/>
+      <viewAttribute id="CC_AGEMTHCRDSTA"/>
+      <viewAttribute id="TAX_FG_AMT" aggregationType="sum"/>
+      <viewAttribute id="RC_COVID_PENDING_AMT" aggregationType="formula"/>
+      <viewAttribute id="RC_COVID_PAID_AMT" aggregationType="formula"/>
+      <viewAttribute id="CC_REFUND_CNT" aggregationType="sum"/>
+    
+      <viewAttribute id="AUGBL_BLART"/>
+      <viewAttribute id="AUGBL_BLART_TEXT"/>
+    
+      <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
+    
+      <viewAttribute id="RC_COVID_OPEN_CREDIT_AMT" aggregationType="formula"/>
+      <viewAttribute id="CC_REFUND_UNPAID_ASSMT"/>
+      <viewAttribute id="CC_HOLIDAY_REFUND_IND"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_FIN_ASSTAMTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRCTR" source="PRCTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGST" source="AUGST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTREF" source="VTREF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VTPOS" source="VTPOS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABWBL" source="ABWBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABWTP" source="ABWTP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOFIZ" source="KOFIZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWSZKZ" source="MWSZKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XANZA" source="XANZA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAKZ" source="STAKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPTXT" source="OPTXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERKZ" source="VERKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STUDT" source="STUDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XMANL" source="XMANL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KURSF" source="KURSF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETR2" source="BETR2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETR3" source="BETR3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SKFBT" source="SKFBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBETH" source="SBETH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBETW" source="SBETW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBET2" source="SBET2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SBET3" source="SBET3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWSKO" source="MWSKO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MWVKO" source="MWVKO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXRUL" source="TXRUL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PYMET" source="PYMET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRKEY" source="GRKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBD" source="AUGBD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGWA" source="AUGWA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBS" source="AUGBS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGSK" source="AUGSK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGVD" source="AUGVD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGOB" source="AUGOB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WHANG" source="WHANG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WHGRP" source="WHGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XAUGP" source="XAUGP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABRZU" source="ABRZU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABRZO" source="ABRZO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FDZTG" source="FDZTG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FDWBT" source="FDWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XTAUS" source="XTAUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRS" source="AUGRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PYGRP" source="PYGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PDTYP" source="PDTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPERZ" source="SPERZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INFOZ" source="INFOZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXDAT" source="TXDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VBUND" source="VBUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KONTT" source="KONTT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KONTL" source="KONTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPSTA" source="OPSTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMGPA" source="EMGPA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMBVT" source="EMBVT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMADR" source="EMADR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IKEY" source="IKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XRAGL" source="XRAGL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASTKZ" source="ASTKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASBLG" source="ASBLG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INKPS" source="INKPS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QSSHB" source="QSSHB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QBSHB" source="QBSHB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RFUPK" source="RFUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTBU" source="INTBU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C4EYE" source="C4EYE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C4EYP" source="C4EYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCTAX" source="SCTAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STTAX" source="STTAX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORUPZ" source="ORUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NEGBU" source="NEGBU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBAP" source="SUBAP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWSL" source="PSWSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWBT" source="PSWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWTX" source="PSWTX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSGRP" source="PSGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XCOLC" source="XCOLC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AASTA" source="AASTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMMND" source="EMMND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PNEXD" source="PNEXD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINRE" source="FINRE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RDSTA" source="RDSTA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RDSTB" source="RDSTB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBTYP" source="PSOBTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_PS" source="VKTYP_PS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABTYP_PS" source="ABTYP_PS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_ID" source="REFDOC_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_OBJTYPE" source="REFDOC_OBJTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CRMOBJ" source="CRMOBJ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BRI_GUID" source="BRI_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_GUID" source="REFDOC_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZEXCL_AMT" source="ZEXCL_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSRCDOCNO" source="ZZSRCDOCNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FMTYP" source="FMTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORIGFIKRS" source="ORIGFIKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FIPEX" source="FIPEX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISTL" source="FISTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FONDS" source="FONDS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MEASURE" source="MEASURE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDGETYEAR" source="BUDGETYEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDGET_PD" source="BUDGET_PD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QSPRZ" source="QSPRZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXGRP" source="TXGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PALIX" source="PALIX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPF" source="OPUPF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEBT_SET" source="DEBT_SET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFKHVOT_TXT30" source="TFKHVOT_TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFKTVOT_TXT30" source="TFKTVOT_TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFK003T_LTEXT" source="TFK003T_LTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TFK001AT_TXT50" source="TFK001AT_TXT50"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_GPART" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKK_H_BUDAT" source="DFKK_H_BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OpenItemFlag" source="OpenItemFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CreditDebitFlag" source="CreditDebitFlag"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BUKRS" source="DFKKOP_BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_VKONT" source="DFKKOP_VKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_APPLK" source="DFKKOP_APPLK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_BLDAT" source="DFKKOP_BLDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_FAEDN" source="DFKKOP_FAEDN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_FAEDS" source="DFKKOP_FAEDS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_SKTPZ" source="DFKKOP_SKTPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Doubtful" source="Doubtful"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OverdueStatus" source="OverdueStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonths" source="AgeMonths"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeMonthsStatus" source="AgeMonthsStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDays" source="AgeDays"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AgeDaysStatus" source="AgeDaysStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceStatus" source="AccountBalanceStatus"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AccountBalanceRange" source="AccountBalanceRange"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AltRevenueTypeGroups" source="AltRevenueTypeGroups"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FormBundleValueCategory" source="FormBundleValueCategory"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VKTYP_TEXT" source="VKTYP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AGEMTHCRDSTA" source="CC_AGEMTHCRDSTA"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL_BLART" source="AUGBL_BLART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL_BLART_TEXT" source="AUGBL_BLART_TEXT"/>
+    </input>
+    <input node="J_COVID">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="CC_TAX_FG_RECAL_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PENDING_AMT" source="RC_COVID_PENDING_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PAID_AMT" source="RC_COVID_PAID_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFUND_CNT" source="CC_REFUND_CNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_OPEN_CREDIT_AMT" source="RC_COVID_OPEN_CREDIT_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFUND_UNPAID_ASSMT" source="CC_REFUND_UNPAID_ASSMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_HOLIDAY_REFUND_IND" source="CC_HOLIDAY_REFUND_IND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="OPUPZ"/>
+    <joinAttribute name="FBNUM"/>
+    <joinAttribute name="DFKKOP_OPUPW"/>
+    <joinAttribute name="DFKKOP_OPUPK"/>
+    <joinAttribute name="OPBEL"/>
+    <joinAttribute name="PERSL"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_COVID" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CC_TAX_FORGONE_CNT" aggregationType="sum"/>
+      <viewAttribute id="RC_COVID_PENDING_AMT" aggregationType="formula"/>
+      <viewAttribute id="RC_COVID_PAID_AMT" aggregationType="formula"/>
+      <viewAttribute id="CC_REFUND_CNT" aggregationType="sum"/>
+      <viewAttribute id="RC_COVID_OPEN_CREDIT_AMT" aggregationType="formula"/>
+    
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPUPZ"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="DFKKOP_OPUPW"/>
+      <viewAttribute id="DFKKOP_OPUPK"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="PERSL"/>
+    
+      <viewAttribute id="TAX_FG_AMT" aggregationType="sum"/></viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_TAX_FG_RECAL_AMT" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+        <formula>CASE &quot;PERSL&quot;
+	 WHEN '2XQ2' then (&quot;TAX_FG_AMT&quot; *  2/3)
+	 WHEN '2XH1' then (&quot;TAX_FG_AMT&quot; *  2/6)
+	 ELSE &quot;TAX_FG_AMT&quot; 
+ END</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_REFUND_UNPAID_ASSMT" datatype="VARCHAR" length="18" expressionLanguage="SQL">
+    
+        <formula>CASE 
+	 WHEN &quot;RC_COVID_OPEN_CREDIT_AMT&quot; is null and &quot;RC_COVID_PAID_AMT&quot; is null and &quot;RC_COVID_PENDING_AMT&quot; is null then 'Unpaid Assessment' 
+	 ELSE 'Refund Issued' 
+ END</formula>
+    
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_HOLIDAY_REFUND_IND" datatype="VARCHAR" length="8" expressionLanguage="SQL">
+    
+        <formula>CASE 
+	 WHEN &quot;PERSL&quot;= '2X05' or &quot;PERSL&quot;= '2X06' or &quot;PERSL&quot;= '20Q2' or &quot;PERSL&quot;= '20H1' then 'Refund' 
+	 WHEN &quot;PERSL&quot;= '2X07' or &quot;PERSL&quot;= '2X08' or &quot;PERSL&quot;= '2X09' then 'Holiday' 
+	 ELSE null 
+ END</formula>
+    
+      </calculatedViewAttribute></calculatedViewAttributes>
+    <input node="J_ASSMT_REFUND">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_FG_AMT" source="TAX_FG_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PENDING_AMT" source="RC_COVID_PENDING_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_PAID_AMT" source="RC_COVID_PAID_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFUND_CNT" source="CC_REFUND_CNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPW" source="DFKKOP_OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DFKKOP_OPUPK" source="DFKKOP_OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FORGONE_CNT" source="CC_TAX_FORGONE_CNT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+    </input>
+    <input node="AGG_Holiday_Refund">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_COVID_OPEN_CREDIT_AMT" source="RC_COVID_OPEN_CREDIT_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="FBNUM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_Holiday_Refund">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="OpenItemFlag"/>
+      <viewAttribute id="CreditDebitFlag"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes>
+      <restrictedViewAttribute id="RC_COVID_OPEN_CREDIT_AMT" baseViewAttribute="BETRH">
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="OpenItemFlag">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="X"/>
+          </filter>
+          <attributeName>OpenItemFlag</attributeName>
+        </restriction>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="CreditDebitFlag">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Credit"/>
+          </filter>
+          <attributeName>CreditDebitFlag</attributeName>
+        </restriction>
+      </restrictedViewAttribute>
+    </restrictedViewAttributes>
+    <input node="P_Holiday_Refund"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Holiday_Refund" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FBNUM"/>
+      <viewAttribute id="OpenItemFlag"/>
+      <viewAttribute id="CreditDebitFlag"/>
+      <viewAttribute id="BETRH"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CV_Financials"/>
+    <filter>&quot;FBNUM&quot;!=''</filter>
+  </calculationView>
 </calculationViews>
-<logicalModel id="J_FIN_ASSTAMTS">
+<logicalModel id="J_FIN_COVID">
   <attributes>
     <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Client"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="MANDT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="MANDT"/>
     </attribute>
     <attribute id="OPUPZ" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subitem for a Partial Clearing in Document"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="OPUPZ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="OPUPZ"/>
     </attribute>
     <attribute id="PRCTR" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Profit Center"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PRCTR"/>
+      <descriptions defaultDescription="Subitem for a Partial Clearing in Document"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="PRCTR"/>
     </attribute>
     <attribute id="AUGST" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Clearing status"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AUGST"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGST"/>
     </attribute>
     <attribute id="VTREF" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Object"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="VTREF"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="VTREF"/>
     </attribute>
     <attribute id="VTPOS" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract: Item Number"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="VTPOS"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="VTPOS"/>
     </attribute>
     <attribute id="ABWBL" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Substitute Document Number "/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ABWBL"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="ABWBL"/>
     </attribute>
     <attribute id="ABWTP" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Payment Arrangement Type"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ABWTP"/>
+      <descriptions defaultDescription="Substitute Document Number "/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="ABWTP"/>
     </attribute>
     <attribute id="HVORG" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Main Transaction"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="HVORG"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="HVORG"/>
     </attribute>
     <attribute id="TVORG" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Sub Transaction"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="TVORG"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="TVORG"/>
     </attribute>
     <attribute id="KOFIZ" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Account Determination"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="KOFIZ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="KOFIZ"/>
     </attribute>
     <attribute id="HKONT" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="General Ledger Account Number "/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="HKONT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="HKONT"/>
     </attribute>
     <attribute id="MWSKZ" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="GST"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="MWSKZ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="MWSKZ"/>
     </attribute>
     <attribute id="MWSZKZ" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Supplementary Tax"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="MWSZKZ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="MWSZKZ"/>
     </attribute>
     <attribute id="XANZA" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Down Payment Request"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="XANZA"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="XANZA"/>
     </attribute>
     <attribute id="STAKZ" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Type of Statistical Line Item"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="STAKZ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="STAKZ"/>
     </attribute>
     <attribute id="OPTXT" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Free Text"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="OPTXT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="OPTXT"/>
     </attribute>
     <attribute id="WAERS" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Currency"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="WAERS"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="WAERS"/>
     </attribute>
     <attribute id="VERKZ" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Item Can Only Be Cleared"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="VERKZ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="VERKZ"/>
     </attribute>
     <attribute id="STUDT" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Deferral Date"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="STUDT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="STUDT"/>
     </attribute>
     <attribute id="XMANL" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Exclude from Dunning"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="XMANL"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="XMANL"/>
     </attribute>
     <attribute id="MWSKO" order="32" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Account for posting taxes for down payments"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="MWSKO"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="MWSKO"/>
     </attribute>
     <attribute id="MWVKO" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Account for offsetting tax posting in down payments"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="MWVKO"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="MWVKO"/>
     </attribute>
     <attribute id="TXRUL" order="34" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Update Rule for Tax and Tax Clearing"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="TXRUL"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="TXRUL"/>
     </attribute>
     <attribute id="PYMET" order="35" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Payment Method"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PYMET"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="PYMET"/>
     </attribute>
     <attribute id="PERNR" order="36" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Personnel Number"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PERNR"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="PERNR"/>
     </attribute>
     <attribute id="GRKEY" order="37" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Grouping Key for Displaying Open Items"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="GRKEY"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="GRKEY"/>
     </attribute>
     <attribute id="PERSL" order="38" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Assessment Period Key"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PERSL"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="PERSL"/>
     </attribute>
     <attribute id="AUGDT" order="39" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Clearing Date"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AUGDT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGDT"/>
     </attribute>
     <attribute id="AUGBL" order="40" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Clearing Document "/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AUGBL"/>
+      <descriptions defaultDescription="Clearing Document"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGBL"/>
     </attribute>
     <attribute id="AUGBD" order="41" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Clearing Document Date"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AUGBD"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGBD"/>
     </attribute>
     <attribute id="AUGRD" order="42" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Clearing Reason"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AUGRD"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGRD"/>
     </attribute>
     <attribute id="AUGWA" order="43" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Clearing currency"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AUGWA"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGWA"/>
     </attribute>
     <attribute id="AUGVD" order="47" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Value date for clearing"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AUGVD"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGVD"/>
     </attribute>
     <attribute id="AUGOB" order="48" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Item Canceled"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AUGOB"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGOB"/>
     </attribute>
     <attribute id="WHANG" order="49" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Number of repetition items"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="WHANG"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="WHANG"/>
     </attribute>
     <attribute id="WHGRP" order="50" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Repetition group"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="WHGRP"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="WHGRP"/>
     </attribute>
     <attribute id="XAUGP" order="51" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Check Sample Record Clearing"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="XAUGP"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="XAUGP"/>
     </attribute>
     <attribute id="ABRZU" order="52" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Lower Limit of Settlement Period"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ABRZU"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="ABRZU"/>
     </attribute>
     <attribute id="ABRZO" order="53" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Upper Limit of the Billing Period"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ABRZO"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="ABRZO"/>
     </attribute>
     <attribute id="FDZTG" order="54" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Additional Days for Cash Management"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="FDZTG"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="FDZTG"/>
     </attribute>
     <attribute id="XTAUS" order="56" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Item Split"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="XTAUS"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="XTAUS"/>
     </attribute>
     <attribute id="AUGRS" order="57" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Clearing restriction"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AUGRS"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGRS"/>
     </attribute>
     <attribute id="PYGRP" order="58" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Grouping field for automatic payments"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PYGRP"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="PYGRP"/>
     </attribute>
     <attribute id="PDTYP" order="59" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Payment Specification Processed"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PDTYP"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="PDTYP"/>
     </attribute>
     <attribute id="SPERZ" order="60" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Interest Lock Reason"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="SPERZ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="SPERZ"/>
     </attribute>
     <attribute id="INFOZ" order="61" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Impairment Status"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="INFOZ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="INFOZ"/>
     </attribute>
     <attribute id="TXDAT" order="62" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Decisive Date for Calculating Taxes"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="TXDAT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="TXDAT"/>
     </attribute>
     <attribute id="VBUND" order="63" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Counter Party Identification"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="VBUND"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="VBUND"/>
     </attribute>
     <attribute id="KONTT" order="64" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Account Assignment Category"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="KONTT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="KONTT"/>
     </attribute>
     <attribute id="KONTL" order="65" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Acct assnmnt string for industry-specific account assngments"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="KONTL"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="KONTL"/>
     </attribute>
     <attribute id="OPSTA" order="66" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Dunning indicator"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="OPSTA"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="OPSTA"/>
     </attribute>
     <attribute id="BLART" order="67" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Document Type"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="BLART"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="BLART"/>
     </attribute>
     <attribute id="EMGPA" order="68" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Alternative Business Partner for Payments"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="EMGPA"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="EMGPA"/>
     </attribute>
     <attribute id="EMBVT" order="69" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Bank Account Details Identification Number"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="EMBVT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="EMBVT"/>
     </attribute>
     <attribute id="EMADR" order="70" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Address number"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="EMADR"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="EMADR"/>
     </attribute>
     <attribute id="IKEY" order="71" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Interest Key"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="IKEY"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="IKEY"/>
     </attribute>
     <attribute id="XRAGL" order="72" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Clearing Reversal "/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="XRAGL"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="XRAGL"/>
     </attribute>
     <attribute id="ASTKZ" order="73" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Statistical Key of the Initiating Item"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ASTKZ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="ASTKZ"/>
     </attribute>
     <attribute id="ASBLG" order="74" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Down Payment Doc Number"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ASBLG"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="ASBLG"/>
     </attribute>
     <attribute id="XBLNR" order="75" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reference document number"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="XBLNR"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="XBLNR"/>
     </attribute>
     <attribute id="INKPS" order="76" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Collection Item"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="INKPS"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="INKPS"/>
     </attribute>
     <attribute id="RFUPK" order="79" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reference Item In FI-CA Document"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="RFUPK"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="RFUPK"/>
     </attribute>
     <attribute id="INTBU" order="80" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reason for Automatic Creation of Posting"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="INTBU"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="INTBU"/>
     </attribute>
     <attribute id="C4EYE" order="81" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Check Reason for Workflows Acc. to Dual Control Principle"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="C4EYE"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="C4EYE"/>
     </attribute>
     <attribute id="C4EYP" order="82" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Editing Process To Be Confirmed"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="C4EYP"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="C4EYP"/>
     </attribute>
     <attribute id="ORUPZ" order="85" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subitem Number before Item Split"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ORUPZ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="ORUPZ"/>
     </attribute>
     <attribute id="NEGBU" order="86" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Control Field for Negative Posting"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="NEGBU"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="NEGBU"/>
     </attribute>
     <attribute id="SUBAP" order="87" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subapplication in Contract Accounts Receivable and Payable"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="SUBAP"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="SUBAP"/>
     </attribute>
     <attribute id="PSWSL" order="88" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Update Currency for General Ledger Transaction Figures"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PSWSL"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="PSWSL"/>
     </attribute>
     <attribute id="PSGRP" order="91" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Grouping Key for Document Items"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PSGRP"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="PSGRP"/>
     </attribute>
     <attribute id="XCOLC" order="92" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Item Is Included in Collection Case"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="XCOLC"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="XCOLC"/>
     </attribute>
     <attribute id="AASTA" order="93" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Control Field for Account Assignment Distributions"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AASTA"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AASTA"/>
     </attribute>
     <attribute id="EMMND" order="94" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SEPA Mandate Identifier"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="EMMND"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="EMMND"/>
     </attribute>
     <attribute id="PNEXD" order="95" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SEPA: Date of Execution of Direct Debit Pre-Notifcation"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PNEXD"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="PNEXD"/>
     </attribute>
     <attribute id="FINRE" order="96" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account of Final Recipient"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="FINRE"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="FINRE"/>
     </attribute>
     <attribute id="RDSTA" order="97" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Current Distribution Status"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="RDSTA"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="RDSTA"/>
     </attribute>
     <attribute id="RDSTB" order="98" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Last Distribution Status Reported"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="RDSTB"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="RDSTB"/>
     </attribute>
     <attribute id="PSOBTYP" order="99" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Object Type"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PSOBTYP"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="PSOBTYP"/>
     </attribute>
     <attribute id="VKTYP_PS" order="100" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account Category"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="VKTYP_PS"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="VKTYP_PS"/>
     </attribute>
     <attribute id="ABTYP_PS" order="101" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Revenue Type"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ABTYP_PS"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="ABTYP_PS"/>
     </attribute>
     <attribute id="REFDOC_ID" order="102" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Transaction"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="REFDOC_ID"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="REFDOC_ID"/>
     </attribute>
     <attribute id="REFDOC_OBJTYPE" order="103" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Object Type for CRM Transaction Type/Item Category"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="REFDOC_OBJTYPE"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="REFDOC_OBJTYPE"/>
     </attribute>
     <attribute id="CRMOBJ" order="104" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="GUID of a CRM Order Object"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="CRMOBJ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="CRMOBJ"/>
     </attribute>
     <attribute id="BRI_GUID" order="105" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="GUID of a CRM Order Object"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="BRI_GUID"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="BRI_GUID"/>
     </attribute>
     <attribute id="REFDOC_GUID" order="106" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Unique UUID (Technical Key)"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="REFDOC_GUID"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="REFDOC_GUID"/>
     </attribute>
     <attribute id="FBNUM" order="107" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Form Bundle Number"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="FBNUM"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="FBNUM"/>
     </attribute>
     <attribute id="ZZSRCDOCNO" order="109" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Number of Source Document to Be Invoiced"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ZZSRCDOCNO"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="ZZSRCDOCNO"/>
     </attribute>
     <attribute id="FMTYP" order="110" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Update Method for FM - FI-CA Integration"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="FMTYP"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="FMTYP"/>
     </attribute>
     <attribute id="ORIGFIKRS" order="111" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Original FM Area for FM Account Assignment"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ORIGFIKRS"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="ORIGFIKRS"/>
     </attribute>
     <attribute id="FIPEX" order="112" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Commitment item"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="FIPEX"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="FIPEX"/>
     </attribute>
     <attribute id="FISTL" order="113" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Funds Center"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="FISTL"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="FISTL"/>
     </attribute>
     <attribute id="FONDS" order="114" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fund"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="FONDS"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="FONDS"/>
     </attribute>
     <attribute id="MEASURE" order="115" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Funded Program"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="MEASURE"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="MEASURE"/>
     </attribute>
     <attribute id="GRANT_NBR" order="116" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Grant"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="GRANT_NBR"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="GRANT_NBR"/>
     </attribute>
     <attribute id="BUDGETYEAR" order="117" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Original Year for FM Account Assignment"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="BUDGETYEAR"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="BUDGETYEAR"/>
     </attribute>
     <attribute id="BUDGET_PD" order="118" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Budget Period"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="BUDGET_PD"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="BUDGET_PD"/>
     </attribute>
     <attribute id="QSPRZ" order="119" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Withholding Tax Percentage"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="QSPRZ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="QSPRZ"/>
     </attribute>
     <attribute id="TXGRP" order="120" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Grouping Key for Tax Items"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="TXGRP"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="TXGRP"/>
     </attribute>
     <attribute id="PALIX" order="121" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Item Is Part of a Collaborative Liability"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PALIX"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="PALIX"/>
     </attribute>
     <attribute id="OPUPF" order="122" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Subitems in Factoring"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="OPUPF"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="OPUPF"/>
     </attribute>
     <attribute id="DEBT_SET" order="123" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Debt Set Number "/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DEBT_SET"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DEBT_SET"/>
     </attribute>
     <attribute id="TFKHVOT_TXT30" order="124" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Main Transaction Description"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="TFKHVOT_TXT30"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="TFKHVOT_TXT30"/>
     </attribute>
     <attribute id="TFKTVOT_TXT30" order="125" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Sub Transaction Description"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="TFKTVOT_TXT30"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="TFKTVOT_TXT30"/>
     </attribute>
     <attribute id="TFK003T_LTEXT" order="126" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Document Type Description"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="TFK003T_LTEXT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="TFK003T_LTEXT"/>
     </attribute>
     <attribute id="TFK001AT_TXT50" order="127" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Clearing Reason Description"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="TFK001AT_TXT50"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="TFK001AT_TXT50"/>
     </attribute>
     <attribute id="DFKK_H_GPART" order="128" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Number"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKK_H_GPART"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKK_H_GPART"/>
     </attribute>
     <attribute id="OPBEL" order="129" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PSCD Document Number "/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="OPBEL"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="OPBEL"/>
     </attribute>
     <attribute id="DFKK_H_BUDAT" order="130" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Document Posting Document"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKK_H_BUDAT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKK_H_BUDAT"/>
     </attribute>
     <attribute id="OpenItemFlag" order="131" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Open Item Indicator"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="OpenItemFlag"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="OpenItemFlag"/>
     </attribute>
     <attribute id="CreditDebitFlag" order="132" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Debit or Credit Indicator "/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="CreditDebitFlag"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="CreditDebitFlag"/>
     </attribute>
     <attribute id="DFKKOP_OPUPW" order="133" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Repetition Item "/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKKOP_OPUPW"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKKOP_OPUPW"/>
     </attribute>
     <attribute id="DFKKOP_OPUPK" order="134" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Items"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKKOP_OPUPK"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKKOP_OPUPK"/>
     </attribute>
     <attribute id="DFKKOP_BUKRS" order="135" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Company Code"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKKOP_BUKRS"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKKOP_BUKRS"/>
     </attribute>
     <attribute id="DFKKOP_VKONT" order="136" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account Number"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKKOP_VKONT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKKOP_VKONT"/>
     </attribute>
     <attribute id="DFKKOP_APPLK" order="137" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Application area"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKKOP_APPLK"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKKOP_APPLK"/>
     </attribute>
     <attribute id="DFKKOP_BLDAT" order="138" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Document Date in Document"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKKOP_BLDAT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKKOP_BLDAT"/>
     </attribute>
     <attribute id="DFKKOP_FAEDN" order="139" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Payment Due Date"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKKOP_FAEDN"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKKOP_FAEDN"/>
     </attribute>
     <attribute id="DFKKOP_FAEDS" order="140" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Distinct Due Date"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKKOP_FAEDS"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKKOP_FAEDS"/>
     </attribute>
     <attribute id="Doubtful" order="142" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Doubtful"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="Doubtful"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="Doubtful"/>
     </attribute>
     <attribute id="OverdueStatus" order="143" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Finalisation Time"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="OverdueStatus"/>
+      <descriptions defaultDescription="OverdueStatus"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="OverdueStatus"/>
     </attribute>
-  
-    <attribute id="AgeMonths" order="146" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Number of Months Overdue"/>
-  
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AgeMonths"/>
-  
+    <attribute id="AgeMonthsStatus" order="145" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AgeMonthsStatus"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AgeMonthsStatus"/>
     </attribute>
-    <attribute id="AgeMonthsStatus" order="147" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Overdue Month Category"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AgeMonthsStatus"/>
+    <attribute id="AgeDaysStatus" order="147" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AgeDaysStatus"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AgeDaysStatus"/>
     </attribute>
-    <attribute id="AgeDays" order="148" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Number of Days Overdue "/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AgeDays"/>
+    <attribute id="AccountBalanceStatus" order="148" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AccountBalanceStatus"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AccountBalanceStatus"/>
     </attribute>
-    <attribute id="AgeDaysStatus" order="149" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Overdue Days Category "/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AgeDaysStatus"/>
+    <attribute id="AccountBalanceRange" order="149" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AccountBalanceRange"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AccountBalanceRange"/>
     </attribute>
-  
-    <attribute id="AccountBalanceStatus" order="150" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Contract Account Balance Status"/>
-  
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AccountBalanceStatus"/>
-  
+    <attribute id="AltRevenueTypeGroups" order="150" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AltRevenueTypeGroups"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AltRevenueTypeGroups"/>
     </attribute>
-  
-    <attribute id="AccountBalanceRange" order="151" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Contract Account Balance Range"/>
-  
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AccountBalanceRange"/>
-  
+    <attribute id="FormBundleValueCategory" order="151" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FormBundleValueCategory"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="FormBundleValueCategory"/>
     </attribute>
-    <attribute id="AltRevenueTypeGroups" order="154" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Alt. Contract Account Category Groups"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AltRevenueTypeGroups"/>
-    </attribute>
-  
-    <attribute id="VKTYP_TEXT" order="157" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="VKTYP_TEXT" order="152" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account Category Description"/>
-  
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="VKTYP_TEXT"/>
-  
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="VKTYP_TEXT"/>
     </attribute>
-  
-    <attribute id="FormBundleValueCategory" order="158" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Form Bundle Value Category"/>
-  
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="FormBundleValueCategory"/>
-  
+    <attribute id="AUGBL_BLART" order="153" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing Document Type"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGBL_BLART"/>
     </attribute>
-    <attribute id="CC_AGEMTHCRDSTA" order="159" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Age Credit Status"/>
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="CC_AGEMTHCRDSTA"/>
+    <attribute id="AUGBL_BLART_TEXT" order="154" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Clearing Documen Type Descriptiont "/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="AUGBL_BLART_TEXT"/>
+    </attribute>
+    <attribute id="CC_AGEMTHCRDSTA" order="155" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_AGEMTHCRDSTA"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="CC_AGEMTHCRDSTA"/>
+    </attribute>
+    <attribute id="CC_REFUND_UNPAID_ASSMT" order="163" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Refund/Unpaid Assessment Status (COVID)"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="CC_REFUND_UNPAID_ASSMT"/>
+    </attribute>
+    <attribute id="CC_HOLIDAY_REFUND_IND" order="164" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Holiday/Refund Status (COVID)"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="CC_HOLIDAY_REFUND_IND"/>
     </attribute>
     <attribute id="DFKK_H_BUDAT$local">
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKK_H_BUDAT"/>
+      <descriptions defaultDescription="DFKK_H_BUDAT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKK_H_BUDAT"/>
     </attribute>
     <attribute id="MANDT$local">
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="MANDT"/>
-    </attribute>
-    <attribute id="OPUPZ$local">
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="OPUPZ"/>
+      <descriptions defaultDescription="MANDT"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="MANDT"/>
     </attribute>
     <attribute id="OPBEL$local">
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="OPBEL"/>
+      <descriptions defaultDescription="OPBEL"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="OPBEL"/>
+    </attribute>
+    <attribute id="OPUPZ$local">
+      <descriptions defaultDescription="OPUPZ"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="OPUPZ"/>
     </attribute>
     <attribute id="DFKKOP_OPUPW$local">
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKKOP_OPUPW"/>
+      <descriptions defaultDescription="DFKKOP_OPUPW"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKKOP_OPUPW"/>
     </attribute>
     <attribute id="DFKKOP_OPUPK$local">
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKKOP_OPUPK"/>
+      <descriptions defaultDescription="DFKKOP_OPUPK"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKKOP_OPUPK"/>
     </attribute>
     <attribute id="DFKK_H_GPART$local">
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKK_H_GPART"/>
+      <descriptions defaultDescription="DFKK_H_GPART"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKK_H_GPART"/>
     </attribute>
     <attribute id="ABWBL$local">
-      <keyMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ABWBL"/>
+      <descriptions defaultDescription="ABWBL"/>
+      <keyMapping columnObjectName="J_FIN_COVID" columnName="ABWBL"/>
     </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_TAXPAYER_PAID_FLAG" order="170" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Taxpayer Paid Flag (COVID)"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="1">
+        <formula>CASE
+    WHEN &quot;RC_COVID_PAID_AMT&quot; IS NOT NULL THEN 'X'
+    ELSE ''
+END</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures>
     <measure id="KURSF" order="22" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Exchange rate"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="KURSF"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="KURSF"/>
     </measure>
     <measure id="BETRH" order="23" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="BETRH"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="BETRH"/>
     </measure>
     <measure id="BETRW" order="24" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount in Transaction Currency with +/- Sign"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="BETRW"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="BETRW"/>
     </measure>
     <measure id="BETR2" order="25" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount in second parallel currency with +/- sign"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="BETR2"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="BETR2"/>
     </measure>
     <measure id="BETR3" order="26" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount in third parallel currency with +/- sign"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="BETR3"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="BETR3"/>
     </measure>
     <measure id="SKFBT" order="27" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount eligible for cash discount in document currency"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="SKFBT"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="SKFBT"/>
     </measure>
     <measure id="SBETH" order="28" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Amount in Local Currency With +/- Sign"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="SBETH"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="SBETH"/>
     </measure>
     <measure id="SBETW" order="29" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Amount in Transaction Currency with +/- Sign"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="SBETW"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="SBETW"/>
     </measure>
     <measure id="SBET2" order="30" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax amount in second parallel currency"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="SBET2"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="SBET2"/>
     </measure>
     <measure id="SBET3" order="31" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax amount in third parallel currency"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="SBET3"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="SBET3"/>
     </measure>
     <measure id="AUGBT" order="44" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Clearing Amount"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AUGBT"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="AUGBT"/>
     </measure>
     <measure id="AUGBS" order="45" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax amount in clearing currency"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AUGBS"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="AUGBS"/>
     </measure>
     <measure id="AUGSK" order="46" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Cash Discount Granted/Surcharge Levied in Clearing Currency"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="AUGSK"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="AUGSK"/>
     </measure>
     <measure id="FDWBT" order="55" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Planned Amount in Document or G/L Account Currency"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="FDWBT"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="FDWBT"/>
     </measure>
     <measure id="QSSHB" order="77" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Base Amount"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="QSSHB"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="QSSHB"/>
     </measure>
     <measure id="QBSHB" order="78" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Withholding Tax Amount (in Document Currency)"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="QBSHB"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="QBSHB"/>
     </measure>
     <measure id="SCTAX" order="83" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Portion in FI-CA Local Currency"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="SCTAX"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="SCTAX"/>
     </measure>
     <measure id="STTAX" order="84" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Amount as Statistical Information in Document Currency"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="STTAX"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="STTAX"/>
     </measure>
     <measure id="PSWBT" order="89" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount for Updating in General Ledger"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PSWBT"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="PSWBT"/>
     </measure>
     <measure id="PSWTX" order="90" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Amount for Update in General Ledger"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="PSWTX"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="PSWTX"/>
     </measure>
     <measure id="ZEXCL_AMT" order="108" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Tax Amount that is excluded from Interest Calculations"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="ZEXCL_AMT"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="ZEXCL_AMT"/>
     </measure>
     <measure id="DFKKOP_SKTPZ" order="141" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Statistical Key "/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="DFKKOP_SKTPZ"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="DFKKOP_SKTPZ"/>
+    </measure>
+    <measure id="AgeMonths" order="144" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AgeMonths"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="AgeMonths"/>
+    </measure>
+    <measure id="AgeDays" order="146" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AgeDays"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="AgeDays"/>
+    </measure>
+    <measure id="AVG_BETRH" order="162" aggregationType="avg" measureType="simple">
+      <descriptions defaultDescription="Avg. Amount"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="BETRH"/>
+    </measure>
+    <measure id="TAX_FG_AMT" order="165" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Forgone Amount (COVID)"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="TAX_FG_AMT"/>
+    </measure>
+    <measure id="RC_COVID_PENDING_AMT" order="166" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Pending Amount (COVID)"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="RC_COVID_PENDING_AMT"/>
+    </measure>
+    <measure id="RC_COVID_PAID_AMT" order="167" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Paid Amount (COVID)"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="RC_COVID_PAID_AMT"/>
+    </measure>
+    <measure id="CC_REFUND_CNT" order="168" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Refund Counter (COVID)"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="CC_REFUND_CNT"/>
     </measure>
   
-    <measure id="AVG_BETRH" order="152" aggregationType="avg" measureType="simple">
-      <descriptions defaultDescription="Avg. Amount"/>
-      <measureMapping columnObjectName="J_FIN_ASSTAMTS" columnName="BETRH"/>
+    <measure id="CC_TAX_FORGONE_CNT" order="169" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Forgone Counter (COVID)"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="CC_TAX_FORGONE_CNT"/>
+    </measure>
+  
+    <measure id="RC_COVID_OPEN_CREDIT_AMT" order="172" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Open Credit Amount (COVID)"/>
+      <measureMapping columnObjectName="J_FIN_COVID" columnName="RC_COVID_OPEN_CREDIT_AMT"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
-    <measure id="DocumentCounter" order="144" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+  
+    <measure id="CC_BP_CNT" order="156" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="BP Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="DFKK_H_GPART"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      
+      
+      </measure>
+    <measure id="DocumentCounter" order="157" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="Document Counter"/>
       <exceptionAggregation>
         <attribute attributeName="OPBEL"/>
@@ -1692,9 +2334,15 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       
       
       
+      
+      
+      
+      
+      
+      
       </measure>
   
-    <measure id="FBNCounter" order="145" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
+    <measure id="FBNCounter" order="161" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="FBN Counter"/>
       <exceptionAggregation>
         <attribute attributeName="FBNUM"/>
@@ -1719,10 +2367,32 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       
       
       
+      
+      
+      
+      
+      
+      
+      </measure>
+  
+    <measure id="CC_TAX_FG_AMT" order="171" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Tax Forgone Amount (COVID)"/>
+      <formula>&quot;TAX_FG_AMT&quot; * -1</formula>
+      
+      </measure>
+    <measure id="CC_COVID_PENDING_AMT" order="173" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Pending Amount (COVID)"/>
+      <formula>&quot;RC_COVID_PENDING_AMT&quot; * -1</formula>
+      
+      </measure>
+    <measure id="CC_COVID_PAID_AMT" order="174" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Paid Amount (COVID)"/>
+      <formula>&quot;RC_COVID_PAID_AMT&quot; * -1</formula>
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures>
-    <measure id="GLPostingAmount" order="153" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+    <measure id="GLPostingAmount" order="158" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
       <descriptions defaultDescription="General Ledger Posting Amount"/>
       <restriction logicalOperator="AND">
         <filter xsi:type="Privilege:AttributeFilter" attributeName="OpenItemFlag">
@@ -1738,104 +2408,15 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       </restriction>
     </measure>
   
-    <measure id="OpenItemBalance" order="155" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+    <measure id="OpenItemBalance" order="159" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Open Item Balance"/>
   
-      <restriction logicalOperator="AND">
-  
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="OpenItemFlag">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="X"/>
-        </filter>
-  
-        <attributeName>OpenItemFlag</attributeName>
-  
-      </restriction>
-  
-      <restriction logicalOperator="AND">
-  
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="B1"/>
-        </filter>
-  
-        <attributeName>BLART</attributeName>
-  
-      </restriction>
+      <restrictionExpression>(&quot;OpenItemFlag&quot; = 'X') AND (&quot;BLART&quot; != 'B1')</restrictionExpression>
   
     </measure>
-    <measure id="AssessmentAmount" order="156" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH">
+    <measure id="AssessmentAmount" order="160" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Assessment Amount"/>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AA"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AB"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AC"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AD"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AF"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AG"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AL"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AR"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AY"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="BLART">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AZ"/>
-        </filter>
-        <attributeName>BLART</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="AUGRD">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value="05"/>
-        </filter>
-        <attributeName>AUGRD</attributeName>
-      </restriction>
-      <restriction logicalOperator="AND">
-        <filter xsi:type="Privilege:AttributeFilter" attributeName="FBNUM">
-          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="false" value=""/>
-        </filter>
-        <attributeName>FBNUM</attributeName>
-      </restriction>
+      <restrictionExpression>(&quot;BLART&quot; = 'AA' OR &quot;BLART&quot; = 'AB' OR &quot;BLART&quot; = 'AC' OR &quot;BLART&quot; = 'AD' OR &quot;BLART&quot; = 'AF' OR &quot;BLART&quot; = 'AG' OR &quot;BLART&quot; = 'AL' OR &quot;BLART&quot; = 'AR' OR &quot;BLART&quot; = 'AY' OR &quot;BLART&quot; = 'AZ') AND (&quot;AUGRD&quot; != '05') AND (&quot;FBNUM&quot; != '')</restrictionExpression>
     </measure>
   </restrictedMeasures>
   <localDimensions/>
@@ -1872,9 +2453,9 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
 
         <attributeRef>MANDT$local</attributeRef>
 
-        <attributeRef>OPUPZ$local</attributeRef>
-
         <attributeRef>OPBEL$local</attributeRef>
+
+        <attributeRef>OPUPZ$local</attributeRef>
 
         <attributeRef>DFKKOP_OPUPW$local</attributeRef>
 
@@ -1886,9 +2467,9 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
 
         <attributeName>MANDT</attributeName>
 
-        <attributeName>OPUPZ</attributeName>
-
         <attributeName>OPBEL</attributeName>
+
+        <attributeName>OPUPZ</attributeName>
 
         <attributeName>OPUPW</attributeName>
 
@@ -1983,21 +2564,21 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="210" y="112"/>
+      <upperLeftCorner x="515" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CV_Financials" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="127" y="866"/>
+      <upperLeftCorner x="536" y="1066"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CONTACCTBAL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="127" y="721"/>
+      <upperLeftCorner x="127" y="881"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_BALANCE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-205" y="563"/>
+      <upperLeftCorner x="101" y="596"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CV_Financials" modelObjectNameSpace="J_FIN_BALANCE" modelObjectType="JoinNodeInput">
@@ -2009,15 +2590,15 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_CONTACCTBAL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="127" y="616"/>
+      <upperLeftCorner x="128" y="756"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_FBNUMS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="337" y="721"/>
+      <upperLeftCorner x="337" y="881"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FIN_ASSTAMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="194" y="296"/>
+      <upperLeftCorner x="303" y="436"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FIN_BALANCE" modelObjectNameSpace="J_FIN_ASSTAMTS" modelObjectType="JoinNodeInput">
@@ -2029,29 +2610,84 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_FBNUM_AMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="337" y="616"/>
+      <upperLeftCorner x="338" y="756"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_FIN_ASSTAMTS" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+    <shape expanded="true" modelObjectName="P_TAX_FORGONE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="547" y="881"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_COVID_REFUND" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="757" y="881"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Agg_COVID_REFUND" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="645" y="756"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_ASSMT_REFUND" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="570" y="596"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_TAX_FORGONE" modelObjectNameSpace="J_ASSMT_REFUND" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="228"/>
+    </shape>
+    <shape modelObjectName="Agg_COVID_REFUND" modelObjectNameSpace="J_ASSMT_REFUND" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="178"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_FIN_COVID" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="515" y="277"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_FIN_ASSTAMTS" modelObjectNameSpace="J_FIN_COVID" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
+      <rectangleSize width="168"/>
+    </shape>
+    <shape modelObjectName="J_COVID" modelObjectNameSpace="J_FIN_COVID" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="904" y="90"/>
+      <rectangleSize width="256"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_COVID" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="597" y="436"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_ASSMT_REFUND" modelObjectNameSpace="J_COVID" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="228"/>
+    </shape>
+    <shape modelObjectName="AGG_Holiday_Refund" modelObjectNameSpace="J_COVID" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="256"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_Holiday_Refund" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="855" y="756"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_Holiday_Refund" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="967" y="881"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_FIN_COVID" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+      <upperLeftCorner x="1520" y="30"/>
+      <rectangleSize width="141"/>
     </shape>
     <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CALENDAR_FISC" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
+      <upperLeftCorner x="1820" y="30"/>
+      <rectangleSize width="588"/>
     </shape>
-  
     <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_LatestDunning" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-      <upperLeftCorner x="620" y="30"/>
-      <rectangleSize width="250"/>
+      <upperLeftCorner x="2120" y="30"/>
+      <rectangleSize width="571"/>
     </shape>
     <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_BpSolvency_IP" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-      <upperLeftCorner x="920" y="30"/>
+      <upperLeftCorner x="2420" y="30"/>
       <rectangleSize width="574"/>
     </shape>
     <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_PaymentPlans_Text" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-      <upperLeftCorner x="1220" y="30"/>
-      <rectangleSize width="250"/>
+      <upperLeftCorner x="2720" y="30"/>
+      <rectangleSize width="599"/>
     </shape>
   </shapes>
 </layout>
