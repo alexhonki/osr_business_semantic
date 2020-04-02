@@ -7,8 +7,8 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturns">
-    <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturns</resourceUri>
+  <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturnsStatic">
+    <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturnsStatic</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -43,7 +43,7 @@
       <viewAttribute id="FBSTA"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturns"/>
+    <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturnsStatic"/>
     <filter>&quot;PERIOD_KEY&quot; in ( '1907','1908','1909', '19Q1', '19Q2', '19Q3', '19H1', '19H2', '2X07', '2X08', '2X09','20Q1','20Q2','20Q3','20H1','20H2') and  
 &quot;FBSTA&quot; = 'IP014'</filter>
   </calculationView>
@@ -213,7 +213,26 @@
       <keyMapping columnObjectName="AGG_TaxReturn_Analysis" columnName="CC_TAX_FORGONE_FLAG"/>
     </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_VAR_TAX_WAGES_2X07_1907" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Total Queensland Taxable Wages Variance (2X07 &amp;1907)"/>
+      <keyCalculation datatype="DECIMAL" expressionLanguage="SQL" length="23" scale="4">
+        <formula>&quot;RC_TOT_QLD_TXBLE_WAGES_2X07&quot;-&quot;RC_TOT_QLD_TXBLE_WAGES_1907&quot;</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+    <calculatedAttribute id="CC_VAR_TAX_WAGES_20Q3_19Q3" order="31" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Total Queensland Taxable Wages Variance (20Q3 &amp; 19Q3)"/>
+      <keyCalculation datatype="DECIMAL" expressionLanguage="SQL" length="23" scale="4">
+        <formula>&quot;RC_TOT_QLD_TXBLE_WAGES_20Q3&quot;-&quot;RC_TOT_QLD_TXBLE_WAGES_19Q3&quot;</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+    <calculatedAttribute id="CC_VAR_TAX_WAGES_PERC_2X09_1909" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Total Queensland Taxable Wages Variance % (2X09 &amp;1909)"/>
+      <keyCalculation datatype="DECIMAL" expressionLanguage="SQL" length="7" scale="3">
+        <formula>&quot;CC_VAR_TAX_WAGES_2X09_1909&quot;/nullif(&quot;RC_TOT_QLD_TXBLE_WAGES_1909&quot;,0)*100</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures>
     <measure id="C_TOT_QLD_TXBLE_WAGES" order="6" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="C_TOT_QLD_TXBLE_WAGES"/>
@@ -327,22 +346,9 @@
       
       
       </measure>
-  
-    <measure id="CC_VAR_TAX_WAGES_2X07_1907" order="29" aggregationType="none" measureType="simple" datatype="DECIMAL" length="23" scale="4" expressionLanguage="SQL" engineAggregation="sum" aggregatable="true">
-      <descriptions defaultDescription="Total Queensland Taxable Wages Variance (2X07 &amp;1907)"/>
-      <formula>&quot;RC_TOT_QLD_TXBLE_WAGES_2X07&quot;-&quot;RC_TOT_QLD_TXBLE_WAGES_1907&quot;</formula>
-      
-      
-      </measure>
     <measure id="CC_VAR_TAX_WAGES_2X09_1909" hidden="false" order="30" aggregationType="" measureType="simple" aggregatable="true" datatype="DECIMAL" length="23" scale="4" expressionLanguage="SQL" engineAggregation="sum">
       <descriptions defaultDescription="Total Queensland Taxable Wages Variance (2X09 &amp; 1909)"/>
       <formula>&quot;RC_TOT_QLD_TXBLE_WAGES_2X09&quot;-&quot;RC_TOT_QLD_TXBLE_WAGES_1909&quot;</formula>
-      
-      
-      </measure>
-    <measure id="CC_VAR_TAX_WAGES_20Q3_19Q3" order="31" aggregationType="none" measureType="simple" datatype="DECIMAL" length="23" scale="4" expressionLanguage="SQL" engineAggregation="sum" aggregatable="true">
-      <descriptions defaultDescription="Total Queensland Taxable Wages Variance (20Q3 &amp; 19Q3)"/>
-      <formula>&quot;RC_TOT_QLD_TXBLE_WAGES_20Q3&quot;-&quot;RC_TOT_QLD_TXBLE_WAGES_19Q3&quot;</formula>
       
       
       </measure>
@@ -361,12 +367,6 @@
     <measure id="CC_VAR_TAX_WAGES_PERC_2X08_1908" order="34" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="SQL" length="7" scale="3">
       <descriptions defaultDescription="Total Queensland Taxable Wages Variance % (2X08 &amp;1908)"/>
       <formula>&quot;CC_VAR_TAX_WAGES_2X08_1908&quot;/nullif(&quot;RC_TOT_QLD_TXBLE_WAGES_1908&quot;,0)*100</formula>
-      
-      
-      </measure>
-    <measure id="CC_VAR_TAX_WAGES_PERC_2X09_1909" order="35" aggregationType="none" measureType="simple" datatype="DECIMAL" expressionLanguage="SQL" length="7" scale="3" engineAggregation="sum" aggregatable="true">
-      <descriptions defaultDescription="Total Queensland Taxable Wages Variance % (2X09 &amp;1909)"/>
-      <formula>&quot;CC_VAR_TAX_WAGES_2X09_1909&quot;/nullif(&quot;RC_TOT_QLD_TXBLE_WAGES_1909&quot;,0)*100</formula>
       
       
       </measure>
