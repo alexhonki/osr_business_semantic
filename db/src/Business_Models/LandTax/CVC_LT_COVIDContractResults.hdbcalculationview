@@ -312,10 +312,13 @@
     <calculatedAttribute id="CC_TAXFOREGONE(COVID)" order="77" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Foregone (COVID)"/>
       <keyCalculation datatype="DECIMAL" expressionLanguage="SQL" length="13" scale="2">
-        <formula>CASE &quot;CONCESSCODE&quot;
-WHEN 'C' then &quot;PROPTAXAMT&quot;-((&quot;PROPTAXAMT&quot;/(100-&quot;CONCESSPCT&quot;)/100))
+        <formula>CASE
+WHEN &quot;PROPTAXAMT&quot; = 0 OR &quot;CONCESSPCT&quot; = 0 THEN 0
+WHEN &quot;CONCESSCODE&quot;='C' THEN (&quot;PROPTAXAMT&quot;-(&quot;PROPTAXAMT&quot;/((100-&quot;CONCESSPCT&quot;)/100)))*-1
 ELSE 0
 END
+
+
 </formula>
       </keyCalculation>
     </calculatedAttribute>
