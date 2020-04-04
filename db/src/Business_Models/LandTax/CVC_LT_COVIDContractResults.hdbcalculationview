@@ -308,7 +308,18 @@
       <keyMapping columnObjectName="LTCNRESV" columnName="TAXYRENDDT"/>
     </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_TAXFOREGONE(COVID)" order="77" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Foregone (COVID)"/>
+      <keyCalculation datatype="DECIMAL" expressionLanguage="SQL" length="13" scale="2">
+        <formula>CASE &quot;CONCESSCODE&quot;
+WHEN 'C' then &quot;PROPTAXAMT&quot;-((&quot;PROPTAXAMT&quot;/(100-&quot;CONCESSPCT&quot;)/100))
+ELSE 0
+END
+</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures/>
   <calculatedMeasures>
     <measure id="CC_BPCOUNTER" order="15" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
