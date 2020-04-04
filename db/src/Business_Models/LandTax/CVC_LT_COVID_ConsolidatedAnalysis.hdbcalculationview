@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_ConsolidatedAnalysis" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CVC_LT_COVID_ConsolidatedAnalysis"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_ExemptionsFormBundles">
+    <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_ExemptionsFormBundles</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVIDContractResults">
+    <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVIDContractResults</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FORMDATA">
+    <viewAttributes>
+      <viewAttribute id="A_BP_NUMBER"/>
+      <viewAttribute id="C_LAND_DESC"/>
+      <viewAttribute id="A_LIABILITY_YEAR"/>
+      <viewAttribute id="MANDT"/>
+    
+      <viewAttribute id="C_LAND_USAGE"/>
+      <viewAttribute id="CONCESSPCT"/>
+      <viewAttribute id="LAND_USE_TEXT"/>
+      <viewAttribute id="CC_LandUseDescription"/>
+      <viewAttribute id="TAXPAYER"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_ExemptionsFormBundles"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="A_BP_NUMBER"/>
+      <viewAttribute id="C_LAND_DESC"/>
+      <viewAttribute id="A_LIABILITY_YEAR"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="C_LAND_USAGE"/>
+      <viewAttribute id="CONCESSPCT" aggregationType="sum"/>
+      <viewAttribute id="LAND_USE_TEXT"/>
+      <viewAttribute id="CC_LandUseDescription"/>
+      <viewAttribute id="TAXPAYER"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="TAXYRENDDT"/>
+      <viewAttribute id="CONCESSCODE"/>
+      <viewAttribute id="CC_TAXFOREGONE(COVID)" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_FORMDATA">
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_BP_NUMBER" source="A_BP_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_LAND_DESC" source="C_LAND_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_LIABILITY_YEAR" source="A_LIABILITY_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_LAND_USAGE" source="C_LAND_USAGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSPCT" source="CONCESSPCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAND_USE_TEXT" source="LAND_USE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_LandUseDescription" source="CC_LandUseDescription"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXPAYER" source="TAXPAYER"/>
+    </input>
+    <input node="P_CNRESV">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSCODE" source="CONCESSCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAXFOREGONE(COVID)" source="CC_TAXFOREGONE(COVID)"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_BP_NUMBER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="C_LAND_DESC" source="PLNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_LIABILITY_YEAR" source="CC_LIABILITY_YEAR"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="A_BP_NUMBER"/>
+    <joinAttribute name="C_LAND_DESC"/>
+    <joinAttribute name="A_LIABILITY_YEAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CNRESV" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="PLNO"/>
+      <viewAttribute id="TAXYRENDDT"/>
+      <viewAttribute id="CONCESSCODE"/>
+      <viewAttribute id="CONCESSPCT"/>
+    
+      <viewAttribute id="CC_TAXFOREGONE(COVID)"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_LIABILITY_YEAR" datatype="NVARCHAR" length="4" expressionLanguage="SQL">
+        <formula>LEFT(&quot;TAXYRSTARTDT&quot;,4)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVIDContractResults"/>
+  
+    <filter>&quot;CONCESSCODE&quot; = 'C'</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_1">
+  <attributes>
+    <attribute id="A_BP_NUMBER" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="A_BP_NUMBER"/>
+      <keyMapping columnObjectName="Join_1" columnName="A_BP_NUMBER"/>
+    </attribute>
+    <attribute id="C_LAND_DESC" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="C_LAND_DESC"/>
+      <keyMapping columnObjectName="Join_1" columnName="C_LAND_DESC"/>
+    </attribute>
+    <attribute id="A_LIABILITY_YEAR" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="A_LIABILITY_YEAR"/>
+      <keyMapping columnObjectName="Join_1" columnName="A_LIABILITY_YEAR"/>
+    </attribute>
+    <attribute id="MANDT" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MANDT"/>
+      <keyMapping columnObjectName="Join_1" columnName="MANDT"/>
+    </attribute>
+    <attribute id="C_LAND_USAGE" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="C_LAND_USAGE"/>
+      <keyMapping columnObjectName="Join_1" columnName="C_LAND_USAGE"/>
+    </attribute>
+    <attribute id="CONCESSPCT" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CONCESSPCT"/>
+      <keyMapping columnObjectName="Join_1" columnName="CONCESSPCT"/>
+    </attribute>
+    <attribute id="LAND_USE_TEXT" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LAND_USE_TEXT"/>
+      <keyMapping columnObjectName="Join_1" columnName="LAND_USE_TEXT"/>
+    </attribute>
+    <attribute id="CC_LandUseDescription" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_LandUseDescription"/>
+      <keyMapping columnObjectName="Join_1" columnName="CC_LandUseDescription"/>
+    </attribute>
+    <attribute id="TAXPAYER" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TAXPAYER"/>
+      <keyMapping columnObjectName="Join_1" columnName="TAXPAYER"/>
+    </attribute>
+    <attribute id="TAXYRSTARTDT" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TAXYRSTARTDT"/>
+      <keyMapping columnObjectName="Join_1" columnName="TAXYRSTARTDT"/>
+    </attribute>
+    <attribute id="TAXYRENDDT" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TAXYRENDDT"/>
+      <keyMapping columnObjectName="Join_1" columnName="TAXYRENDDT"/>
+    </attribute>
+    <attribute id="CONCESSCODE" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CONCESSCODE"/>
+      <keyMapping columnObjectName="Join_1" columnName="CONCESSCODE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="CC_TAXFOREGONE(COVID)" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_TAXFOREGONE(COVID)"/>
+      <measureMapping columnObjectName="Join_1" columnName="CC_TAXFOREGONE(COVID)"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures>
+    <measure id="CC_BPCOUNT" order="14" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="BP Count"/>
+      <exceptionAggregation>
+        <attribute attributeName="A_BP_NUMBER"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+    <measure id="CC_PARCEL_COUNT" order="15" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="Parcel Count"/>
+      <exceptionAggregation>
+        <attribute attributeName="C_LAND_DESC"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="328.6900820831794" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_FORMDATA" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="169" y="376.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="328.6900820831794" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_FORMDATA" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="207.05908203125"/>
+    </shape>
+    <shape modelObjectName="P_CNRESV" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CNRESV" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="395.83468516943316" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
