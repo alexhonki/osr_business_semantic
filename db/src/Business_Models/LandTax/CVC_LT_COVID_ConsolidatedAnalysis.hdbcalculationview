@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_ConsolidatedAnalysis" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_ConsolidatedAnalysis" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CVC_LT_COVID_ConsolidatedAnalysis"/>
 <localVariables/>
 <variableMappings/>
@@ -23,6 +23,7 @@
       <viewAttribute id="A_DEDUCT_REASON_DESC"/>
       <viewAttribute id="C_CP_DECL_DATE"/>
       <viewAttribute id="C_BP_CLIENT_NUMBER"/>
+      <viewAttribute id="FBSTA_TEXT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_ExemptionsFormBundles"/>
@@ -46,30 +47,41 @@
       <viewAttribute id="A_DEDUCT_REASON_DESC"/>
       <viewAttribute id="C_CP_DECL_DATE"/>
       <viewAttribute id="C_BP_CLIENT_NUMBER"/>
+      <viewAttribute id="CC_SURCHARGEFOREGONE(COVID)" aggregationType="sum"/>
+      <viewAttribute id="BPCONCESSVAL"/>
+    
+      <viewAttribute id="FBSTA_TEXT"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_MANDT" datatype="NVARCHAR" length="3" expressionLanguage="SQL">
         <formula>CASE
-    WHEN &quot;MANDT_CNRESV&quot; IS NULL THEN &quot;MANDT_FORM&quot;
-    WHEN &quot;MANDT_FORM&quot; IS NULL THEN &quot;MANDT_CNRESV&quot;
+    WHEN &quot;MANDT_CNRESV&quot; IS NOT NULL THEN &quot;MANDT_CNRESV&quot;
+    WHEN &quot;MANDT_FORM&quot; IS NOT NULL THEN &quot;MANDT_FORM&quot;
 END</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_BPNUMBER" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
         <formula>CASE
-    WHEN &quot;ZZ_PARTNER&quot; IS NULL THEN &quot;C_BP_CLIENT_NUMBER&quot;
-    WHEN &quot;C_BP_CLIENT_NUMBER&quot; IS NULL THEN &quot;ZZ_PARTNER&quot;
+    WHEN &quot;ZZ_PARTNER&quot; IS NOT NULL THEN &quot;ZZ_PARTNER&quot;
+    WHEN &quot;C_BP_CLIENT_NUMBER&quot; IS NOT NULL THEN &quot;C_BP_CLIENT_NUMBER&quot;
 END</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_PARCEL_DESC" datatype="NVARCHAR" length="25" expressionLanguage="SQL">
         <formula>CASE
-    WHEN &quot;PLNO&quot; IS NULL THEN &quot;C_LAND_DESC&quot;
-    WHEN &quot;C_LAND_DESC&quot; IS NULL THEN &quot;PLNO&quot;
+    WHEN &quot;PLNO&quot; IS NOT NULL THEN &quot;PLNO&quot;
+    WHEN &quot;C_LAND_DESC&quot; IS NOT NULL THEN &quot;C_LAND_DESC&quot;
 END</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_LIABILITY_YEAR" datatype="NVARCHAR" length="4" expressionLanguage="SQL">
         <formula>CASE
-    WHEN &quot;CC_LIABILITY_YEAR_CNRESV&quot; IS NULL THEN &quot;C_LAND_YEAR&quot;
-    WHEN &quot;C_LAND_YEAR&quot; IS NULL THEN &quot;CC_LIABILITY_YEAR_CNRESV&quot;
+    WHEN &quot;CC_LIABILITY_YEAR_CNRESV&quot; IS NOT NULL THEN &quot;CC_LIABILITY_YEAR_CNRESV&quot;
+    WHEN &quot;C_LAND_YEAR&quot; IS NOT NULL THEN &quot;C_LAND_YEAR&quot;
+END</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_FBSTA_TEXT" datatype="NVARCHAR" length="30" expressionLanguage="SQL">
+        <formula>CASE
+    WHEN &quot;FBSTA_TEXT&quot; IS NOT NULL THEN &quot;FBSTA_TEXT&quot;
+    WHEN &quot;FBSTA_TEXT&quot; IS NULL THEN 'Manual'
 END</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
@@ -80,6 +92,7 @@ END</formula>
       <mapping xsi:type="Calculation:AttributeMapping" target="A_DEDUCT_REASON_DESC" source="A_DEDUCT_REASON_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_CP_DECL_DATE" source="C_CP_DECL_DATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_BP_CLIENT_NUMBER" source="C_BP_CLIENT_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA_TEXT" source="FBSTA_TEXT"/>
     </input>
     <input node="P_CNRESV">
       <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSCODE" source="CONCESSCODE"/>
@@ -91,6 +104,8 @@ END</formula>
       <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSPCT" source="CONCESSPCT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LANDUSECODE" source="LANDUSECODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_SURCHARGEFOREGONE(COVID)" source="CC_SURCHARGEFOREGONE(COVID)"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPCONCESSVAL" source="BPCONCESSVAL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT_FORM" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_LAND_DESC" source="PLNO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_LAND_YEAR" source="CC_LIABILITY_YEAR_CNRESV"/>
@@ -113,10 +128,11 @@ END</formula>
       <viewAttribute id="CONCESSPCT"/>
       <viewAttribute id="LANDUSECODE"/>
       <viewAttribute id="OWNERTYPE"/>
-    
-      <viewAttribute id="TAXYRENDDT"/>
       <viewAttribute id="CC_SURCHARGEFOREGONE(COVID)"/>
-    </viewAttributes>
+      <viewAttribute id="BPCONCESSVAL"/>
+    
+    
+      <viewAttribute id="TAXYRENDDT"/></viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_LIABILITY_YEAR_CNRESV" datatype="NVARCHAR" length="4" expressionLanguage="SQL">
         <formula>LEFT(&quot;TAXYRENDDT&quot;,4)</formula>
@@ -140,6 +156,10 @@ END</formula>
       <viewAttribute id="CC_BPNUMBER"/>
       <viewAttribute id="CC_PARCEL_DESC"/>
       <viewAttribute id="CC_LIABILITY_YEAR"/>
+      <viewAttribute id="CC_SURCHARGEFOREGONE(COVID)" aggregationType="sum"/>
+      <viewAttribute id="BPCONCESSVAL"/>
+    
+      <viewAttribute id="FBSTA_TEXT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_FORMS_TAX_DATA">
@@ -155,6 +175,10 @@ END</formula>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_BPNUMBER" source="CC_BPNUMBER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARCEL_DESC" source="CC_PARCEL_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_LIABILITY_YEAR" source="CC_LIABILITY_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_SURCHARGEFOREGONE(COVID)" source="CC_SURCHARGEFOREGONE(COVID)"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPCONCESSVAL" source="BPCONCESSVAL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="FBSTA_TEXT" source="CC_FBSTA_TEXT"/>
     </input>
     <input node="P_PARCEL">
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
@@ -182,81 +206,93 @@ END</formula>
 </calculationViews>
 <logicalModel id="J_ADD_PARCEL_DATA">
   <attributes>
-    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MANDT"/>
-      <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="MANDT"/>
-    </attribute>
-    <attribute id="CONCESSCODE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CONCESSCODE" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CONCESSCODE"/>
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="CONCESSCODE"/>
     </attribute>
   
-    <attribute id="MATCH_ADDR_POSTCODE1" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MATCH_ADDR_POSTCODE1" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MATCH_ADDR_POSTCODE1"/>
   
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="MATCH_ADDR_POSTCODE1"/>
   
     </attribute>
   
-    <attribute id="ADDR_LATITUDE" order="7" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ADDR_LATITUDE" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDR_LATITUDE"/>
   
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="ADDR_LATITUDE"/>
   
     </attribute>
-    <attribute id="ADDR_LONGITUDE" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ADDR_LONGITUDE" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDR_LONGITUDE"/>
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="ADDR_LONGITUDE"/>
     </attribute>
   
-    <attribute id="CC_BPNUMBER" order="9" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_BPNUMBER" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CC_BPNUMBER"/>
+  
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="CC_BPNUMBER"/>
+  
     </attribute>
-    <attribute id="CC_PARCEL_DESC" order="10" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_PARCEL_DESC" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CC_PARCEL_DESC"/>
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="CC_PARCEL_DESC"/>
     </attribute>
-    <attribute id="CC_LIABILITY_YEAR" order="11" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CC_LIABILITY_YEAR" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CC_LIABILITY_YEAR"/>
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="CC_LIABILITY_YEAR"/>
     </attribute>
-    <attribute id="CONCESSPCT" order="12" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CONCESSPCT" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CONCESSPCT"/>
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="CONCESSPCT"/>
     </attribute>
-    <attribute id="LANDUSECODE" order="13" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="LANDUSECODE"/>
-      <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="LANDUSECODE"/>
-    </attribute>
-    <attribute id="OWNERTYPE" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="OWNERTYPE"/>
-      <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="OWNERTYPE"/>
-    </attribute>
-    <attribute id="A_DEDUCT_REASON_DESC" order="15" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="A_DEDUCT_REASON_DESC" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="A_DEDUCT_REASON_DESC"/>
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="A_DEDUCT_REASON_DESC"/>
     </attribute>
-    <attribute id="C_CP_DECL_DATE" order="16" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="C_CP_DECL_DATE" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="C_CP_DECL_DATE"/>
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="C_CP_DECL_DATE"/>
+    </attribute>
+    <attribute id="FBSTA_TEXT" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FBSTA_TEXT"/>
+      <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="FBSTA_TEXT"/>
+    </attribute>
+    <attribute id="LANDUSECODE$local">
+      <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="LANDUSECODE"/>
+    </attribute>
+    <attribute id="MANDT$local">
+      <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="MANDT"/>
+    </attribute>
+    <attribute id="OWNERTYPE$local">
+      <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="OWNERTYPE"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="CC_TAXFOREGONE(COVID)" order="3" aggregationType="sum" measureType="simple">
+    <measure id="CC_TAXFOREGONE(COVID)" order="2" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="CC_TAXFOREGONE(COVID)"/>
       <measureMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="CC_TAXFOREGONE(COVID)"/>
-    </measure></baseMeasures>
+    </measure>
+    <measure id="CC_SURCHARGEFOREGONE(COVID)" order="14" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_SURCHARGEFOREGONE(COVID)"/>
+      <measureMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="CC_SURCHARGEFOREGONE(COVID)"/>
+    </measure>
+    <measure id="BPCONCESSVAL" order="15" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BPCONCESSVAL"/>
+      <measureMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="BPCONCESSVAL"/>
+    </measure>
+  </baseMeasures>
   <calculatedMeasures>
-    <measure id="CC_BPCOUNT" order="4" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+    <measure id="CC_BPCOUNT" order="3" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="BP Count"/>
       <exceptionAggregation>
         <attribute attributeName="CC_BPNUMBER"/>
       </exceptionAggregation>
       <formula>1</formula>
       </measure>
-    <measure id="CC_PARCEL_COUNT" order="5" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+    <measure id="CC_PARCEL_COUNT" order="4" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Parcel Count"/>
       <exceptionAggregation>
         <attribute attributeName="CC_PARCEL_DESC"/>
@@ -266,6 +302,35 @@ END</formula>
   </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
+
+  <sharedDimensions>
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_LANDUSECODES">
+      <attributes>
+        <attributeRef>LANDUSECODE$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>LAND_USE_CD</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_1" joinType="leftOuter" referentialDirection="left" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference attributeName="LAND_USE_CD" hidden="true"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.LandTax::CV_OwnerTyperDescription">
+      <attributes>
+        <attributeRef>MANDT$local</attributeRef>
+        <attributeRef>OWNERTYPE$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>MANDT</attributeName>
+        <attributeName>CODE_ID</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_1" joinType="leftOuter" referentialDirection="left" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference alias="MANDT_1" attributeName="MANDT" hidden="true"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+  </sharedDimensions>
 </logicalModel>
 <layout>
   <shapes>
@@ -311,6 +376,19 @@ END</formula>
     <shape expanded="true" modelObjectName="P_PARCEL" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="395" y="356"/>
       <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape modelObjectName="J_ADD_PARCEL_DATA" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_LANDUSECODES" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="422" y="248"/>
+      <rectangleSize width="588.12109375"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.LandTax::CV_OwnerTyperDescription" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="413" y="33"/>
+      <rectangleSize width="533.681640625"/>
     </shape>
   </shapes>
 </layout>
