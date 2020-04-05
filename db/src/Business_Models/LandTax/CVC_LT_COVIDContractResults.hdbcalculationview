@@ -9,7 +9,7 @@
   </DataSource>
 </dataSources>
 <calculationViews/>
-<logicalModel id="osr.business.semantic.db.synonyms::LTCNRESV">
+<logicalModel id="osr.business.semantic.db.synonyms::LTCNRESV" filterExpressionLanguage="SQL">
   <attributes>
     <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Client"/>
@@ -327,9 +327,34 @@
       <formula>1</formula>
       
       </measure>
+  
+    <measure id="CC_TAXFOREGONE(COVID)" order="77" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Tax Foregone (COVID)"/>
+      <formula>CASE
+WHEN &quot;PROPTAXAMT&quot; = 0 OR &quot;CONCESSPCT&quot; = 0 THEN 0
+WHEN &quot;CONCESSCODE&quot;='C' THEN (&quot;PROPTAXAMT&quot;-(&quot;PROPTAXAMT&quot;/((100-&quot;CONCESSPCT&quot;)/100)))*-1
+ELSE 0
+END
+
+
+</formula>
+    </measure>
+    <measure id="CC_SURCHARGEFOREGONE(COVID)" order="78" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Surcharge Foregone (COVID)"/>
+      <formula>CASE
+WHEN &quot;ABSURCHARGE&quot; = 0 OR &quot;CONCESSPCT&quot; = 0 THEN 0
+WHEN &quot;CONCESSCODE&quot;='C' THEN (&quot;ABSURCHARGE&quot;-(&quot;ABSURCHARGE&quot;/((100-&quot;CONCESSPCT&quot;)/100)))*-1
+ELSE 0
+END
+
+
+</formula>
+    </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
+
+  <filter>&quot;CONCESSCODE&quot;='C'</filter>
 </logicalModel>
 <layout>
   <shapes>
