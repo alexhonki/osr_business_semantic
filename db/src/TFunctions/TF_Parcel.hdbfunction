@@ -1,0 +1,28 @@
+FUNCTION "osr.business.semantic.db.TFunctions::TF_Parcel"( )
+       RETURNS table (
+       	"MANDT" NVARCHAR(3),
+		"PLNO" NVARCHAR(20),
+		"MATCH_ADDR_POSTCODE1" NVARCHAR(10),
+		"ADDR_LATITUDE" DOUBLE,
+		"ADDR_LONGITUDE" DOUBLE,
+		"VALIDTO" NVARCHAR(8),
+		"PARCEL_LOCATION" ST_POINT
+       )
+       LANGUAGE SQLSCRIPT 
+       SQL SECURITY INVOKER AS 
+BEGIN 
+
+RETURN
+		SELECT
+			"MANDT",
+			"PLNO",
+			"MATCH_ADDR_POSTCODE1",
+			"ADDR_LATITUDE",
+			"ADDR_LONGITUDE",
+			"VALIDTO",
+			CASE
+			When "ADDR_LATITUDE" is not null and "ADDR_LONGITUDE" is not null then NEW ST_Point("ADDR_LATITUDE","ADDR_LONGITUDE") 
+			ELSE null
+			END as "PARCEL_LOCATION"
+		FROM "osr.business.semantic.db.Business_Models.LandTax::CV_Parcel";
+END;
