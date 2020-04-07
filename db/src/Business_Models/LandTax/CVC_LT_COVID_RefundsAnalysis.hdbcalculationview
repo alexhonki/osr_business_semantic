@@ -85,12 +85,12 @@
   <calculationView xsi:type="Calculation:ProjectionView" id="P_LTAXBPPX" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="CLIENT"/>
-      <viewAttribute id="DOCGUID"/>
       <viewAttribute id="VALIDFROM"/>
       <viewAttribute id="PARTNER"/>
-      <viewAttribute id="EXM_DED_CODE"/>
     
       <viewAttribute id="PROP_TAX_AMOUNT"/>
+      <viewAttribute id="DOCGUID"/>
+      <viewAttribute id="EXM_DED_CODE"/>
       <viewAttribute id="PLNO"/>
       <viewAttribute id="UPDATE_TS"/>
     </viewAttributes>
@@ -101,43 +101,6 @@
     </calculatedViewAttributes>
     <input node="osr.business.semantic.db.synonyms::LTAXBPPX"/>
     <filter>&quot;EXM_DED_CODE&quot; = 'C'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_BASE_FINANCIALS" cardinality="C1_N" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="BKOND" aggregationType="sum"/>
-      <viewAttribute id="DBERVON"/>
-      <viewAttribute id="PARTNER"/>
-    
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="POSTINGDATE"/>
-      <viewAttribute id="BETRH" aggregationType="sum"/>
-      <viewAttribute id="AUGBT" aggregationType="sum"/>
-    
-      <viewAttribute id="CFSTATUS"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="J_BPPX_CASHFLOW">
-      <mapping xsi:type="Calculation:AttributeMapping" target="BKOND" source="BKOND"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="POSTINGDATE" source="POSTINGDATE"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="CFSTATUS" source="CFSTATUS"/>
-    </input>
-    <input node="P_FINANCIALS">
-      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="TAXYRSTARTDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="DFKK_H_GPART"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="POSTINGDATE" source="DFKK_H_BUDAT"/>
-    </input>
-    <joinAttribute name="DBERVON"/>
-    <joinAttribute name="PARTNER"/>
-    <joinAttribute name="MANDT"/>
-    <joinAttribute name="POSTINGDATE"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_FINANCIALS" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -155,30 +118,61 @@
     <input node="osr.business.semantic.db.Business_Models.LandTax::CV_LtFinancials"/>
     <filter>&quot;BLART_1&quot; = 'RE'</filter>
   </calculationView>
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_REFUNDS_AFTER_COVID_POSTING" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="BKOND" aggregationType="sum"/>
+      <viewAttribute id="DBERVON"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="POSTINGDATE"/>
+      <viewAttribute id="FLOWTYPE"/>
+      <viewAttribute id="CFSTATUS"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+      <viewAttribute id="AUGBT" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_BPPX_CASHFLOW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKOND" source="BKOND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POSTINGDATE" source="POSTINGDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FLOWTYPE" source="FLOWTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CFSTATUS" source="CFSTATUS"/>
+    </input>
+    <input node="P_FINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+    </input>
+    <joinAttribute leftColumn="DBERVON" rightColumn="TAXYRSTARTDT" operator="EQ"/>
+    <joinAttribute leftColumn="PARTNER" rightColumn="DFKK_H_GPART" operator="EQ"/>
+    <joinAttribute leftColumn="MANDT" rightColumn="MANDT" operator="EQ"/>
+    <joinAttribute leftColumn="POSTINGDATE" rightColumn="DFKK_H_BUDAT" operator="LE"/>
+  </calculationView>
 </calculationViews>
-<logicalModel id="J_BASE_FINANCIALS">
+<logicalModel id="NEJ_REFUNDS_AFTER_COVID_POSTING">
   <attributes>
     <attribute id="DBERVON" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="DBERVON"/>
-      <keyMapping columnObjectName="J_BASE_FINANCIALS" columnName="DBERVON"/>
+      <keyMapping columnObjectName="NEJ_REFUNDS_AFTER_COVID_POSTING" columnName="DBERVON"/>
     </attribute>
     <attribute id="PARTNER" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PARTNER"/>
-      <keyMapping columnObjectName="J_BASE_FINANCIALS" columnName="PARTNER"/>
+      <keyMapping columnObjectName="NEJ_REFUNDS_AFTER_COVID_POSTING" columnName="PARTNER"/>
     </attribute>
     <attribute id="MANDT" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MANDT"/>
-      <keyMapping columnObjectName="J_BASE_FINANCIALS" columnName="MANDT"/>
+      <keyMapping columnObjectName="NEJ_REFUNDS_AFTER_COVID_POSTING" columnName="MANDT"/>
     </attribute>
     <attribute id="POSTINGDATE" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="POSTINGDATE"/>
-      <keyMapping columnObjectName="J_BASE_FINANCIALS" columnName="POSTINGDATE"/>
+      <keyMapping columnObjectName="NEJ_REFUNDS_AFTER_COVID_POSTING" columnName="POSTINGDATE"/>
     </attribute>
   
     <attribute id="CFSTATUS" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CFSTATUS"/>
   
-      <keyMapping columnObjectName="J_BASE_FINANCIALS" columnName="CFSTATUS"/>
+      <keyMapping columnObjectName="NEJ_REFUNDS_AFTER_COVID_POSTING" columnName="CFSTATUS"/>
   
     </attribute>
   </attributes>
@@ -186,16 +180,16 @@
   <baseMeasures>
     <measure id="BKOND" order="1" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BKOND"/>
-      <measureMapping columnObjectName="J_BASE_FINANCIALS" columnName="BKOND"/>
+      <measureMapping columnObjectName="NEJ_REFUNDS_AFTER_COVID_POSTING" columnName="BKOND"/>
     </measure>
   
     <measure id="BETRH" order="6" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="BETRH"/>
-      <measureMapping columnObjectName="J_BASE_FINANCIALS" columnName="BETRH"/>
+      <measureMapping columnObjectName="NEJ_REFUNDS_AFTER_COVID_POSTING" columnName="BETRH"/>
     </measure>
     <measure id="AUGBT" order="7" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="AUGBT"/>
-      <measureMapping columnObjectName="J_BASE_FINANCIALS" columnName="AUGBT"/>
+      <measureMapping columnObjectName="NEJ_REFUNDS_AFTER_COVID_POSTING" columnName="AUGBT"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures/>
@@ -235,22 +229,22 @@
       <upperLeftCorner x="100" y="767"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-  
-    <shape expanded="true" modelObjectName="J_BASE_FINANCIALS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="229"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="J_BPPX_CASHFLOW" modelObjectNameSpace="J_BASE_FINANCIALS" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="P_FINANCIALS" modelObjectNameSpace="J_BASE_FINANCIALS" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="136"/>
-    </shape>
     <shape expanded="true" modelObjectName="P_FINANCIALS" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="-261" y="527"/>
       <rectangleSize height="30" width="160"/>
-    </shape></shapes>
+    </shape>
+    <shape expanded="true" modelObjectName="NEJ_REFUNDS_AFTER_COVID_POSTING" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="194"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPPX_CASHFLOW" modelObjectNameSpace="NEJ_REFUNDS_AFTER_COVID_POSTING" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_FINANCIALS" modelObjectNameSpace="NEJ_REFUNDS_AFTER_COVID_POSTING" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
