@@ -10,8 +10,8 @@
   <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVIDContractResults">
     <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVIDContractResults</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.TFunctions::TF_Parcel" type="TABLE_FUNCTION">
-    <resourceUri>osr.business.semantic.db.TFunctions::TF_Parcel</resourceUri>
+  <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CV_Parcel">
+    <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CV_Parcel</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -261,8 +261,7 @@ END</formula>
       <viewAttribute id="CC_TAXFOREGONE(COVID)" aggregationType="sum"/>
       <viewAttribute id="CC_SURCHARGEFOREGONE(COVID)" aggregationType="sum"/>
       <viewAttribute id="BPCONCESSVAL" aggregationType="sum"/>
-    
-      <viewAttribute id="PARCEL_LOCATION"/>
+      <viewAttribute id="PLNO"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_FORMS_TAX_DATA">
@@ -281,12 +280,13 @@ END</formula>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAXFOREGONE(COVID)" source="CC_TAXFOREGONE(COVID)"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_SURCHARGEFOREGONE(COVID)" source="CC_SURCHARGEFOREGONE(COVID)"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BPCONCESSVAL" source="BPCONCESSVAL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLNO" source="PLNO"/>
     </input>
     <input node="P_PARCEL">
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARCEL_LOCATION" source="PARCEL_LOCATION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARCEL_DESC" source="PLNO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
     </input>
@@ -301,11 +301,9 @@ END</formula>
     
       <viewAttribute id="PLNO"/>
       <viewAttribute id="MANDT"/>
-      <viewAttribute id="VALIDTO"/>
-      <viewAttribute id="PARCEL_LOCATION"/>
-    </viewAttributes>
+      <viewAttribute id="VALIDTO"/></viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.TFunctions::TF_Parcel"/>
+    <input node="osr.business.semantic.db.Business_Models.LandTax::CV_Parcel"/>
     <filter>TO_DATE(&quot;VALIDTO&quot;) &gt;= CURRENT_DATE</filter>
   </calculationView>
 </calculationViews>
@@ -360,9 +358,9 @@ END</formula>
       <descriptions defaultDescription="Form Bundle Status"/>
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="FBSTA_TEXT"/>
     </attribute>
-    <attribute id="PARCEL_LOCATION" order="16" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Parcel Location"/>
-      <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="PARCEL_LOCATION"/>
+    <attribute id="PLNO" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Parcel Number"/>
+      <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="PLNO"/>
     </attribute>
     <attribute id="MANDT$local">
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="MANDT"/>
@@ -402,6 +400,7 @@ END</formula>
       
       
       
+      
       </measure>
     <measure id="CC_PARCEL_COUNT" order="2" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Parcel Count"/>
@@ -409,6 +408,7 @@ END</formula>
         <attribute attributeName="CC_PARCEL_DESC"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
