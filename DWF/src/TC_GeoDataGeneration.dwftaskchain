@@ -1,0 +1,54 @@
+{
+  "description": "Task to run parcel generation load",
+  "responsible": {
+    "email": "dwfalerts@gmail.com"
+  },
+  "taskTimeout": 3600,
+  "resumeBehavior": "NO_RESUME",
+  "taskList": {
+    "1": {
+      "inline": {
+        "type": "START",
+        "taskGroup": "com.sap.dwf.toe.executionControl"
+      }
+    },
+    "2": {
+      "inline": {
+        "type": "executeProcedure",
+        "taskGroup": "hanaNative",
+        "description": "Parcel location generation",
+        "parameterValues": [
+          {
+            "id": "procName",
+            "value": "osr.business.semantic.db.Procedures::P_ParcelLocationGeneration"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "1",
+          "status": "NEUTRAL"
+        }
+      ]
+    },
+    "3": {
+      "inline": {
+        "type": "executeProcedure",
+        "taskGroup": "hanaNative",
+        "description": "ABR Location Generation",
+        "parameterValues": [
+          {
+            "id": "procName",
+            "value": "osr.business.semantic.db.Procedures::P_ABRLocationGeneration"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "2",
+          "status": "OK"
+        }
+      ]
+    }
+  }
+}
