@@ -10,8 +10,8 @@
   <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVIDContractResults">
     <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVIDContractResults</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CV_Parcel">
-    <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CV_Parcel</resourceUri>
+  <DataSource id="osr.business.semantic.db.TFunctions::TF_Parcel" type="TABLE_FUNCTION">
+    <resourceUri>osr.business.semantic.db.TFunctions::TF_Parcel</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -213,14 +213,14 @@ END</formula>
     <viewAttributes>
       <viewAttribute id="LANDUSECODE"/>
       <viewAttribute id="OWNERTYPE"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+    
     
       <viewAttribute id="MANDT"/>
       <viewAttribute id="PLNO"/>
       <viewAttribute id="CC_LIABILITY_YEAR_CNRESV"/>
       <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="CONCESSCODE"/>
-      <viewAttribute id="TAXYRSTARTDT"/>
-    </viewAttributes>
+      <viewAttribute id="CONCESSCODE"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_CNRESV"/>
   </calculationView>
@@ -238,12 +238,12 @@ END</formula>
       <viewAttribute id="CC_SURCHARGEFOREGONE(COVID)"/>
       <viewAttribute id="BPCONCESSVAL"/>
       <viewAttribute id="CONCESSCODE"/>
-    
-    
-    
-      <viewAttribute id="TAXYRENDDT"/>
       <viewAttribute id="TAXYRSTARTDT"/>
-    </viewAttributes>
+    
+    
+    
+    
+      <viewAttribute id="TAXYRENDDT"/></viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_LIABILITY_YEAR_CNRESV" datatype="NVARCHAR" length="4" expressionLanguage="SQL">
         <formula>LEFT(&quot;TAXYRENDDT&quot;,4)</formula>
@@ -272,8 +272,8 @@ END</formula>
       <viewAttribute id="CC_TAXFOREGONE(COVID)" aggregationType="sum"/>
       <viewAttribute id="CC_SURCHARGEFOREGONE(COVID)" aggregationType="sum"/>
       <viewAttribute id="BPCONCESSVAL" aggregationType="sum"/>
-    
       <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="PARCEL_LOCATION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_FORMS_TAX_DATA">
@@ -299,6 +299,7 @@ END</formula>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARCEL_LOCATION" source="PARCEL_LOCATION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARCEL_DESC" source="PLNO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
     </input>
@@ -310,12 +311,14 @@ END</formula>
       <viewAttribute id="MATCH_ADDR_POSTCODE1"/>
       <viewAttribute id="ADDR_LATITUDE"/>
       <viewAttribute id="ADDR_LONGITUDE"/>
+      <viewAttribute id="PARCEL_LOCATION"/>
+    
     
       <viewAttribute id="PLNO"/>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="VALIDTO"/></viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.LandTax::CV_Parcel"/>
+    <input node="osr.business.semantic.db.TFunctions::TF_Parcel"/>
     <filter>TO_DATE(&quot;VALIDTO&quot;) &gt;= CURRENT_DATE</filter>
   </calculationView>
 </calculationViews>
@@ -370,8 +373,12 @@ END</formula>
       <descriptions defaultDescription="Form Bundle Status"/>
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="FBSTA_TEXT"/>
     </attribute>
-    <attribute id="TAXYRSTARTDT" order="16" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Tax Year Start Date"/>
+    <attribute id="PARCEL_LOCATION" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Parcel Location"/>
+      <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="PARCEL_LOCATION"/>
+    </attribute>
+    <attribute id="TAXYRSTARTDT" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TAXYRSTARTDT"/>
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="TAXYRSTARTDT"/>
     </attribute>
     <attribute id="MANDT$local">
@@ -412,6 +419,7 @@ END</formula>
       
       
       
+      
       </measure>
     <measure id="CC_PARCEL_COUNT" order="2" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Parcel Count"/>
@@ -419,6 +427,7 @@ END</formula>
         <attribute attributeName="CC_PARCEL_DESC"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
