@@ -816,9 +816,9 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="PARTNER"/>
       <viewAttribute id="PT_STATUS"/>
       <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
-      <viewAttribute id="VALUE_GENERIC"/>
       <viewAttribute id="PSOBKEY"/>
       <viewAttribute id="PARTNERACC"/>
+      <viewAttribute id="VALUE_GENERIC"/>
       <viewAttribute hidden="true" id="JOIN$CLIENT$CLIENT"/>
       <viewAttribute hidden="true" id="JOIN$PARTNER$PARTNER"/>
     </viewAttributes>
@@ -860,6 +860,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     <input node="P_TaxObligationFromDate"/>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="VALID_TO" direction="DESC"/>
       <rankThreshold>
         <value>1</value>
       </rankThreshold>
@@ -868,16 +869,16 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
   <calculationView xsi:type="Calculation:RankView" id="R_Registrationstatus">
     <viewAttributes>
       <viewAttribute id="VALUE_GENERIC"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
+    
       <viewAttribute id="CLIENT"/>
       <viewAttribute id="PARTNER"/>
       <viewAttribute id="FACT_TYPE"/>
       <viewAttribute id="FACT_CATEGORY"/>
       <viewAttribute id="FACT_CAT_SEQ"/>
-      <viewAttribute id="VALID_TO" aggregationType="min"/>
-    
-      <viewAttribute id="PSOBKEY"/>
-      <viewAttribute id="PARTNERACC"/>
-    </viewAttributes>
+      <viewAttribute id="VALID_TO" aggregationType="min"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_RegistrationStatus"/>
     <windowFunction dynamicPartitionAttributes="false">
@@ -1025,6 +1026,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     <input node="P_Interstate_wapply"/>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="VALID_TO" direction="DESC"/>
       <rankThreshold>
         <value>1</value>
       </rankThreshold>
@@ -1323,13 +1325,13 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="PT_GROUP_STATUS"/>
     
       <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
+    
     
       <viewAttribute id="PARTNER"/>
       <viewAttribute id="CLIENT"/>
-      <viewAttribute id="UNDER_OVER_DECL"/>
-      <viewAttribute id="PSOBKEY"/>
-      <viewAttribute id="PARTNERACC"/>
-    </viewAttributes>
+      <viewAttribute id="UNDER_OVER_DECL"/></viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_UNDER_OVER_DECLARED" datatype="NVARCHAR" length="25" expressionLanguage="SQL">
         <formula>CASE
@@ -2487,7 +2489,9 @@ END</formula>
   
     <attribute id="PSOBKEY" order="68" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Object ID"/>
+  
       <keyMapping columnObjectName="J_BPINFO_2020" columnName="PSOBKEY"/>
+  
     </attribute>
     <attribute id="PARTNERACC" order="69" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Contract Account Number"/>
@@ -2506,7 +2510,7 @@ END</formula>
 END 
 </formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="CC_AnnualEstimate" order="30" aggregationType="sum" measureType="simple">
