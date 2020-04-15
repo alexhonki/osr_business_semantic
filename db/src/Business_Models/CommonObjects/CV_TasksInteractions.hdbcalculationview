@@ -138,7 +138,7 @@ if(match(&quot;DESCRIPTION&quot;,'*LT 11*') OR match(&quot;DESCRIPTION&quot;,'*L
 'Other'))))))))))))))))))))))))))))))))))))))</formula>
     
       </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_Secondary_LT_Type" datatype="VARCHAR" length="40" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_Secondary_LT_Type" datatype="VARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;CC_LT_Type&quot;!=&quot;CC_Pivot_2nd_LT_Type&quot;,&quot;CC_Pivot_2nd_LT_Type&quot;,'NA')</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CC_Created_Date_Time" datatype="TIME" expressionLanguage="COLUMN_ENGINE">
@@ -631,29 +631,6 @@ if(match(&quot;DESCRIPTION&quot;,'*LT 11*') OR match(&quot;DESCRIPTION&quot;,'*L
     <joinAttribute name="CLIENT"/>
     <joinAttribute name="CREATED_BY"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="R_USERINFO">
-    <viewAttributes>
-      <viewAttribute id="NAME_TEXT"/>
-      <viewAttribute id="Revenue_Stream"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="BNAME"/>
-      <viewAttribute id="ORGEH"/>
-      <viewAttribute id="SHORT"/>
-      <viewAttribute id="ENDDA"/>
-      <viewAttribute id="BEGDA"/>
-      <viewAttribute id="CC_BEGDADATE"/>
-      <viewAttribute id="CC_ENDDADATE"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_USERINFO"/>
-    <windowFunction dynamicPartitionAttributes="false">
-      <partitionViewAttributeName>BNAME</partitionViewAttributeName>
-      <order byViewAttributeName="CC_ENDDADATE" direction="DESC"/>
-      <rankThreshold>
-        <value>1</value>
-      </rankThreshold>
-    </windowFunction>
-  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_ACTUSERSTAT">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
@@ -707,7 +684,7 @@ if(match(&quot;DESCRIPTION&quot;,'*LT 11*') OR match(&quot;DESCRIPTION&quot;,'*L
         <formula>if(&quot;TXT30&quot;='Completed' or &quot;TXT30&quot;='Finalised',daysbetween(&quot;CC_Created_Date&quot;, &quot;CC_Last_Changed&quot;),daysbetween(&quot;CC_Created_Date&quot;, now()))</formula>
       </calculatedViewAttribute>
     
-      <calculatedViewAttribute id="CC_Days_to_Process" datatype="VARCHAR" length="40" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_Days_to_Process" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
     
         <formula>if(&quot;CC_Days_Bt_Creation_Mod&quot;=0,'New',
 if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=30 and &quot;CC_Days_Bt_Creation_Mod&quot;&gt;0,'1 Month or less',
@@ -895,6 +872,29 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
     <joinAttribute leftColumn="CC_Last_Changed" rightColumn="CC_BEGDADATE" operator="GE"/>
     <joinAttribute leftColumn="CC_Last_Changed" rightColumn="CC_ENDDADATE" operator="LE"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_USERINFO">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="BNAME"/>
+      <viewAttribute id="NAME_TEXT"/>
+      <viewAttribute id="ORGEH"/>
+      <viewAttribute id="SHORT"/>
+      <viewAttribute id="ENDDA"/>
+      <viewAttribute id="BEGDA"/>
+      <viewAttribute id="Revenue_Stream"/>
+      <viewAttribute id="CC_BEGDADATE"/>
+      <viewAttribute id="CC_ENDDADATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_USERINFO"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>BNAME</partitionViewAttributeName>
+      <order byViewAttributeName="CC_ENDDADATE" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
 </calculationViews>
 <logicalModel id="J_TASKACTIV_STAT">
   <attributes>
@@ -1067,7 +1067,6 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
       
       
       
-      
       </measure></calculatedMeasures>
   <restrictedMeasures/>
   <localDimensions/>
@@ -1075,21 +1074,21 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="515" y="112"/>
+      <upperLeftCorner x="515.8628791625348" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CRMDORDERADMH" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="1301"/>
+      <upperLeftCorner x="92.00000000000006" y="1301.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PROCESS_TYPE_TEXT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="328" y="1141"/>
+      <upperLeftCorner x="328.66666666666663" y="1141.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TASK_PROCESS_TYPE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="145" y="981"/>
+      <upperLeftCorner x="145.33333333333337" y="981.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_LINK_PARTNERS_CRMDORDERADMH" modelObjectNameSpace="J_TASK_PROCESS_TYPE" modelObjectType="JoinNodeInput">
@@ -1101,7 +1100,7 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_LINK_PARTNERS_CRMDORDERADMH" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="1141"/>
+      <upperLeftCorner x="118.66666666666669" y="1141.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CRMDORDERADMH" modelObjectNameSpace="J_LINK_PARTNERS_CRMDORDERADMH" modelObjectType="JoinNodeInput">
@@ -1113,7 +1112,7 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_LINK_PARTNERS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="326" y="1301"/>
+      <upperLeftCorner x="326.38759720289056" y="1301.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_LINK_ACTPARTNER" modelObjectNameSpace="J_LINK_PARTNERS" modelObjectType="JoinNodeInput">
@@ -1125,7 +1124,7 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_LINK_ACTPARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="299" y="1461"/>
+      <upperLeftCorner x="299.7209305362239" y="1461.9999904632568"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CRMLINK" modelObjectNameSpace="J_LINK_ACTPARTNER" modelObjectType="JoinNodeInput">
@@ -1137,7 +1136,7 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_EMP_PARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="594" y="1621"/>
+      <upperLeftCorner x="594.2048219455801" y="1621.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_EMPLOYEE_PARTNER" modelObjectNameSpace="J_EMP_PARTNER" modelObjectType="JoinNodeInput">
@@ -1150,11 +1149,11 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
     </shape>
   
     <shape expanded="true" modelObjectName="P_CRMLINK" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="384" y="1621"/>
+      <upperLeftCorner x="384.2048219455801" y="1621.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ACTIV_PARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="174" y="1621"/>
+      <upperLeftCorner x="174.20482194558025" y="1621.999989271164"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_CLIENT_PARTNER" modelObjectNameSpace="J_ACTIV_PARTNER" modelObjectType="JoinNodeInput">
@@ -1166,30 +1165,30 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_EMPLOYEE_PARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="620" y="1781"/>
+      <upperLeftCorner x="620.8714886122468" y="1781.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CRMBUT000" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="402" y="1781"/>
+      <upperLeftCorner x="402.80452594501605" y="1781.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CLIENT_PARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="179" y="1781"/>
+      <upperLeftCorner x="179.20452549996793" y="1781.999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CRMPARTNER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="205" y="1926"/>
+      <upperLeftCorner x="205.87119216663461" y="1926.9999868869781"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_CRMACTIV" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="406" y="981"/>
+      <upperLeftCorner x="406.0223291200616" y="981.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TASK_ACTIV" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="172" y="821"/>
+      <upperLeftCorner x="172.00000000000006" y="821.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TASK_PROCESS_TYPE" modelObjectNameSpace="J_TASK_ACTIV" modelObjectType="JoinNodeInput">
@@ -1201,11 +1200,11 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_USERINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="616" y="981"/>
+      <upperLeftCorner x="616.0223291200616" y="981.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TASKACTIV_CREAUSER" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="512" y="661"/>
+      <upperLeftCorner x="512.5746450805457" y="661.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TASK_ACTIV" modelObjectNameSpace="J_TASKACTIV_CREAUSER" modelObjectType="JoinNodeInput">
@@ -1217,18 +1216,12 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
       <rectangleSize width="250"/>
     </shape>
   
-    <shape expanded="true" modelObjectName="R_USERINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="539" y="839"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  
-  
     <shape expanded="true" modelObjectName="P_ACTUSERSTAT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="423" y="376"/>
+      <upperLeftCorner x="423.04297136757583" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_TASKACTIV_STAT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="515" y="217"/>
+      <upperLeftCorner x="515.8628791625347" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_ACTUSERSTAT" modelObjectNameSpace="J_TASKACTIV_STAT" modelObjectType="JoinNodeInput">
@@ -1241,12 +1234,12 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
     </shape>
   
     <shape expanded="true" modelObjectName="R_NEJ_TASACTIV_USERINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="633" y="376"/>
+      <upperLeftCorner x="633.0429713675758" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="NEJ_TASKACTIV_USERINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="589" y="501"/>
+      <upperLeftCorner x="589.4048396124642" y="501.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_TASKACTIV_CREAUSER" modelObjectNameSpace="NEJ_TASKACTIV_USERINFO" modelObjectType="JoinNodeInput">
@@ -1256,6 +1249,12 @@ if(&quot;CC_Days_Bt_Creation_Mod&quot;&lt;=365 and &quot;CC_Days_Bt_Creation_Mod
     <shape modelObjectName="P_USERINFO" modelObjectNameSpace="NEJ_TASKACTIV_USERINFO" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
-    </shape></shapes>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="R_USERINFO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="539.2413117472124" y="839.4999952316284"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>

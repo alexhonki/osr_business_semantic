@@ -7,8 +7,8 @@
   <DataSource id="osr.business.semantic.db.synonyms::VILMPL">
     <resourceUri>osr.business.semantic.db.synonyms::VILMPL</resourceUri>
   </DataSource>
-  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_ADRC">
-    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_ADRC</resourceUri>
+  <DataSource id="osr.business.semantic.db.synonyms::ADRC">
+    <resourceUri>osr.business.semantic.db.synonyms::ADRC</resourceUri>
   </DataSource>
   <DataSource id="osr.business.semantic.db.synonyms::VIBPADDRREL">
     <resourceUri>osr.business.semantic.db.synonyms::VIBPADDRREL</resourceUri>
@@ -134,7 +134,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CADASTERREF" source="CADASTERREF"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDRNO" source="ADDRNO"/>
     </input>
-    <input node="R_LATEST_RECORD">
+    <input node="P_ADRC">
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
@@ -227,17 +227,15 @@
   <calculationView xsi:type="Calculation:ProjectionView" id="P_ADRC">
     <viewAttributes>
       <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY"/>
-      <viewAttribute id="MATCH_ADDR_POSTCODE1"/>
-      <viewAttribute id="ADDR_LATITUDE"/>
-      <viewAttribute id="ADDR_LONGITUDE"/>
-    
     
       <viewAttribute id="CLIENT"/>
       <viewAttribute id="ADDRNUMBER"/>
-      <viewAttribute id="Z_RUN_SEQ_ID"/>
+      <viewAttribute id="MATCH_ADDR_POSTCODE1"/>
+      <viewAttribute id="ADDR_LATITUDE"/>
+      <viewAttribute id="ADDR_LONGITUDE"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_ADRC"/>
+    <input node="osr.business.semantic.db.synonyms::ADRC"/>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_LATEST_REL">
     <viewAttributes>
@@ -251,34 +249,14 @@
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_VIBPADDRREL">
     <viewAttributes>
-      <viewAttribute id="ADDRNO"/>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="INTRENO"/>
+      <viewAttribute id="ADDRNO"/>
       <viewAttribute id="VALIDFROM"/>
       <viewAttribute id="VALIDTO"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::VIBPADDRREL"/></calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="R_LATEST_RECORD">
-    <viewAttributes>
-      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY"/>
-      <viewAttribute id="MATCH_ADDR_POSTCODE1"/>
-      <viewAttribute id="ADDR_LATITUDE" aggregationType="sum"/>
-      <viewAttribute id="ADDR_LONGITUDE" aggregationType="sum"/>
-      <viewAttribute id="CLIENT"/>
-      <viewAttribute id="ADDRNUMBER"/>
-      <viewAttribute id="Z_RUN_SEQ_ID" aggregationType="sum"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_ADRC"/>
-    <windowFunction dynamicPartitionAttributes="false">
-      <partitionViewAttributeName>ADDRNUMBER</partitionViewAttributeName>
-      <order byViewAttributeName="Z_RUN_SEQ_ID" direction="DESC"/>
-      <rankThreshold>
-        <value>1</value>
-      </rankThreshold>
-    </windowFunction>
-  </calculationView>
 </calculationViews>
 <logicalModel id="J_ADRC_VILMPL">
   <attributes>
@@ -428,9 +406,7 @@
   
     <attribute id="MATCH_ADDR_POSTCODE1" order="37" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MATCH_ADDR_POSTCODE1"/>
-  
       <keyMapping columnObjectName="J_ADRC_VILMPL" columnName="MATCH_ADDR_POSTCODE1"/>
-  
     </attribute>
     <attribute id="ADDR_LATITUDE" order="38" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDR_LATITUDE"/>
@@ -477,7 +453,7 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="R_LATEST_RECORD" modelObjectNameSpace="J_ADRC_VILMPL" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="P_ADRC" modelObjectNameSpace="J_ADRC_VILMPL" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="620" y="30"/>
       <rectangleSize width="264"/>
     </shape>
@@ -494,7 +470,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ADRC" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="681" y="481"/>
+      <upperLeftCorner x="448" y="356"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_LATEST_REL" modelObjectNameSpace="CalculationView">
@@ -505,11 +481,6 @@
     <shape expanded="true" modelObjectName="P_VIBPADDRREL" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="91" y="621"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="R_LATEST_RECORD" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="555" y="362"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
