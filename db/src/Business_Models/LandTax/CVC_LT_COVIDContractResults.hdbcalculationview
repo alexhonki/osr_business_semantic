@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVIDContractResults" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVIDContractResults" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
 <descriptions defaultDescription="Land Tax COVID Contract Results"/>
 <localVariables/>
 <variableMappings/>
@@ -12,7 +12,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_CNRESV" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CNRESV">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="TAXYRSTARTDT"/>
@@ -43,9 +43,7 @@
       <viewAttribute id="TAXYRENDDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::LTCNRESV"/>
-    <filter>&quot;ACTIVE&quot;='X'</filter>
-  </calculationView>
+    <input node="osr.business.semantic.db.synonyms::LTCNRESV"/></calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_Parcel" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="Counter"/>
@@ -94,7 +92,6 @@
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_ParcelInfo" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
-      <viewAttribute id="MANDT"/>
       <viewAttribute id="TAXYRSTARTDT"/>
       <viewAttribute id="PLNO"/>
       <viewAttribute id="CONCESSCODE"/>
@@ -124,10 +121,11 @@
       <viewAttribute id="MATCH_ADDR_POSTCODE1"/>
       <viewAttribute id="ADDR_LATITUDE" aggregationType="sum"/>
       <viewAttribute id="ADDR_LONGITUDE" aggregationType="sum"/>
+    
+      <viewAttribute id="MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_CNRESV">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PLNO" source="PLNO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSCODE" source="CONCESSCODE"/>
@@ -154,6 +152,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_INV_DATE" source="ZZ_INV_DATE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
     </input>
     <input node="P_Parcel">
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
@@ -169,65 +169,70 @@
 <logicalModel id="J_ParcelInfo">
   <attributes>
     <attribute id="TAXYRSTARTDT" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="TAXYRSTARTDT"/>
+      <descriptions defaultDescription="Tax Year Start Date"/>
       <keyMapping columnObjectName="J_ParcelInfo" columnName="TAXYRSTARTDT"/>
     </attribute>
     <attribute id="PLNO" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="PLNO"/>
+      <descriptions defaultDescription="Parcel Number"/>
       <keyMapping columnObjectName="J_ParcelInfo" columnName="PLNO"/>
     </attribute>
     <attribute id="CONCESSCODE" order="7" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CONCESSCODE"/>
+      <descriptions defaultDescription="Concession Code"/>
       <keyMapping columnObjectName="J_ParcelInfo" columnName="CONCESSCODE"/>
     </attribute>
-    <attribute id="LANDUSECODE" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="LANDUSECODE"/>
-      <keyMapping columnObjectName="J_ParcelInfo" columnName="LANDUSECODE"/>
-    </attribute>
-    <attribute id="INDIVORG" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="INDIVORG"/>
+    <attribute id="INDIVORG" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Ind / Org Flag"/>
       <keyMapping columnObjectName="J_ParcelInfo" columnName="INDIVORG"/>
     </attribute>
-    <attribute id="ZZ_PARTNER" order="13" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ZZ_PARTNER"/>
+    <attribute id="ZZ_PARTNER" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner"/>
       <keyMapping columnObjectName="J_ParcelInfo" columnName="ZZ_PARTNER"/>
     </attribute>
-    <attribute id="ACTIVE" order="21" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ACTIVE"/>
+    <attribute id="ACTIVE" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Active Taxpayer Flag"/>
       <keyMapping columnObjectName="J_ParcelInfo" columnName="ACTIVE"/>
     </attribute>
-    <attribute id="ZZ_NOIA_DATE" order="26" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ZZ_NOIA_DATE"/>
+    <attribute id="ZZ_NOIA_DATE" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NOIA Date"/>
       <keyMapping columnObjectName="J_ParcelInfo" columnName="ZZ_NOIA_DATE"/>
     </attribute>
-    <attribute id="ZZ_INV_DATE" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ZZ_INV_DATE"/>
+    <attribute id="ZZ_INV_DATE" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Invoice Date"/>
       <keyMapping columnObjectName="J_ParcelInfo" columnName="ZZ_INV_DATE"/>
     </attribute>
-    <attribute id="TAXYRENDDT" order="28" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="TAXYRENDDT"/>
+    <attribute id="TAXYRENDDT" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Year End Date"/>
       <keyMapping columnObjectName="J_ParcelInfo" columnName="TAXYRENDDT"/>
     </attribute>
-    <attribute id="TAXRATECODE" order="29" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="TAXRATECODE"/>
+    <attribute id="TAXRATECODE" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Rate Code"/>
       <keyMapping columnObjectName="J_ParcelInfo" columnName="TAXRATECODE"/>
     </attribute>
-    <attribute id="OWNERTYPE" order="30" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="OWNERTYPE"/>
-      <keyMapping columnObjectName="J_ParcelInfo" columnName="OWNERTYPE"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_POSTCODE1" order="31" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_POSTCODE1"/>
+    <attribute id="MATCH_ADDR_POSTCODE1" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Parcel Postcode"/>
       <keyMapping columnObjectName="J_ParcelInfo" columnName="MATCH_ADDR_POSTCODE1"/>
     </attribute>
-  
-    <attribute id="MANDT" order="34" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MANDT" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MANDT"/>
       <keyMapping columnObjectName="J_ParcelInfo" columnName="MANDT"/>
     </attribute>
+    <attribute id="LANDUSECODE" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LANDUSECODE"/>
+      <keyMapping columnObjectName="J_ParcelInfo" columnName="LANDUSECODE"/>
+    </attribute>
+    <attribute id="OWNERTYPE" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OWNERTYPE"/>
+      <keyMapping columnObjectName="J_ParcelInfo" columnName="OWNERTYPE"/>
+    </attribute>
+    <attribute id="LANDUSECODE$local">
+      <keyMapping columnObjectName="J_ParcelInfo" columnName="LANDUSECODE"/>
+    </attribute>
+    <attribute id="OWNERTYPE$local">
+      <keyMapping columnObjectName="J_ParcelInfo" columnName="OWNERTYPE"/>
+    </attribute>
   </attributes>
   <calculatedAttributes>
-    <calculatedAttribute id="CC_TAXYEAR" order="35" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <calculatedAttribute id="CC_TAXYEAR" order="32" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Year"/>
       <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="4">
         <formula>Left(&quot;TAXYRENDDT&quot;,4)</formula>
@@ -236,67 +241,67 @@
   </calculatedAttributes>
   <baseMeasures>
     <measure id="CONCESSPCT" order="8" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="CONCESSPCT"/>
+      <descriptions defaultDescription="Concession Percentage"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="CONCESSPCT"/>
     </measure>
-    <measure id="BPCONCESSVAL" order="10" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="BPCONCESSVAL"/>
+    <measure id="BPCONCESSVAL" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BP Concession Value"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="BPCONCESSVAL"/>
     </measure>
-    <measure id="TOTBPCONCESSVAL" order="12" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="TOTBPCONCESSVAL"/>
+    <measure id="TOTBPCONCESSVAL" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total BP Concession Value"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="TOTBPCONCESSVAL"/>
     </measure>
-    <measure id="OWNERPERCENT" order="14" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="OWNERPERCENT"/>
+    <measure id="OWNERPERCENT" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Ownership Percentage"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="OWNERPERCENT"/>
     </measure>
-    <measure id="UNIMPRVAL" order="15" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="UNIMPRVAL"/>
+    <measure id="UNIMPRVAL" order="14" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Unimproved Land Value"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="UNIMPRVAL"/>
     </measure>
-    <measure id="RELVNTVAL" order="16" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="RELVNTVAL"/>
+    <measure id="RELVNTVAL" order="15" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Relevant Value"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="RELVNTVAL"/>
     </measure>
-    <measure id="BPRELVNTVAL" order="17" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="BPRELVNTVAL"/>
+    <measure id="BPRELVNTVAL" order="16" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BP Relevant Value"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="BPRELVNTVAL"/>
     </measure>
-    <measure id="BPTAXABLEVAL" order="18" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="BPTAXABLEVAL"/>
+    <measure id="BPTAXABLEVAL" order="17" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BP Taxable Value"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="BPTAXABLEVAL"/>
     </measure>
-    <measure id="PROPTAXAMT" order="19" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="PROPTAXAMT"/>
+    <measure id="PROPTAXAMT" order="18" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Proportion Tax Amount"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="PROPTAXAMT"/>
     </measure>
-    <measure id="ABSURCHARGE" order="20" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="ABSURCHARGE"/>
+    <measure id="ABSURCHARGE" order="19" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Absentee Surcharge"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="ABSURCHARGE"/>
     </measure>
-    <measure id="TOTBPRELVNTVAL" order="22" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="TOTBPRELVNTVAL"/>
+    <measure id="TOTBPRELVNTVAL" order="21" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total BP Relevant Value"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="TOTBPRELVNTVAL"/>
     </measure>
-    <measure id="TOTBPTAXABLEVAL" order="23" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="TOTBPTAXABLEVAL"/>
+    <measure id="TOTBPTAXABLEVAL" order="22" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total BP Taxable Value"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="TOTBPTAXABLEVAL"/>
     </measure>
-    <measure id="TAXAMOUNT" order="24" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="TAXAMOUNT"/>
+    <measure id="TAXAMOUNT" order="23" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Amount"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="TAXAMOUNT"/>
     </measure>
-    <measure id="TAXESTIMATE" order="25" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="TAXESTIMATE"/>
+    <measure id="TAXESTIMATE" order="24" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Estimate Tax"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="TAXESTIMATE"/>
     </measure>
-    <measure id="ADDR_LATITUDE" order="32" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="ADDR_LATITUDE"/>
+    <measure id="ADDR_LATITUDE" order="30" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Parcel Latitude"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="ADDR_LATITUDE"/>
     </measure>
-    <measure id="ADDR_LONGITUDE" order="33" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="ADDR_LONGITUDE"/>
+    <measure id="ADDR_LONGITUDE" order="31" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Parcel Longitude"/>
       <measureMapping columnObjectName="J_ParcelInfo" columnName="ADDR_LONGITUDE"/>
     </measure>
   </baseMeasures>
@@ -310,6 +315,8 @@
       
       
       
+      
+      
       </measure>
     <measure id="CC_PARCELCOUNTER" order="2" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Parcel Count"/>
@@ -317,6 +324,8 @@
         <attribute attributeName="PLNO"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
       
       
       
@@ -334,6 +343,8 @@ END
 </formula>
     
       
+      
+      
       </measure>
     <measure id="CC_SURCHARGEFOREGONE(COVID)" order="4" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
       <descriptions defaultDescription="Surcharge Foregone (COVID)"/>
@@ -347,10 +358,40 @@ END
 </formula>
     
       
+      
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
-  <localDimensions/></logicalModel>
+  <localDimensions/>
+  <sharedDimensions>
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_LANDUSECODES">
+      <attributes>
+        <attributeRef>LANDUSECODE$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>LAND_USE_CD</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_1" joinType="referential" referentialDirection="left" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference attributeName="LAND_USE_CD" hidden="true"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.LandTax::CV_OwnerTyperDescription">
+      <attributes>
+        <attributeRef>OWNERTYPE$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>CODE_ID</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_N" joinType="referential" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference alias="MANDT_1" attributeName="MANDT" hidden="true"/>
+        <attributeReference attributeName="CODE_ID" hidden="true"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+  </sharedDimensions>
+</logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
@@ -378,6 +419,19 @@ END
     <shape modelObjectName="P_Parcel" modelObjectNameSpace="J_ParcelInfo" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="136"/>
+    </shape>
+  
+    <shape modelObjectName="J_ParcelInfo" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_LANDUSECODES" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.LandTax::CV_OwnerTyperDescription" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="533.681640625"/>
     </shape>
   </shapes>
 </layout>
