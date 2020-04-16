@@ -2510,7 +2510,118 @@ END</formula>
 END 
 </formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
+  
+    <calculatedAttribute id="CC_1_DIVISION" order="70" semanticType="empty" descriptionColumnName="CC_1_DIVISION_DESC" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANZSIC Division">
+        <comment text="Needed to handle NULL&apos;s in Join"/>
+      </descriptions>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="1">
+        <formula>CASE
+WHEN &quot;DIVISION&quot; IS NULL THEN 'X'
+ELSE &quot;DIVISION&quot;
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_2_SUBDIVISION" order="71" semanticType="empty" descriptionColumnName="CC_2_SUBDIVISION_DESC" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANZSIC Subdivision">
+        <comment text="Needed to handle NULL&apos;s in Join"/>
+      </descriptions>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="2">
+        <formula>CASE
+WHEN &quot;SUBDIVISION&quot; IS NULL THEN 'XX'
+ELSE &quot;SUBDIVISION&quot;
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_3_GROUP" order="72" semanticType="empty" descriptionColumnName="CC_3_GROUP_DESC" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANZSIC Group">
+        <comment text="Needed to handle NULL&apos;s in Join"/>
+      </descriptions>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="13">
+        <formula>CASE
+WHEN &quot;GROUP&quot; IS NULL THEN 'XXX'
+ELSE &quot;GROUP&quot;
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_4_CLASS" order="73" semanticType="empty" descriptionColumnName="CC_4_CLASS_DESC" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANZSIC Class">
+        <comment text="Needed to handle NULL&apos;s in Join"/>
+      </descriptions>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="4">
+        <formula>CASE
+WHEN &quot;CLASS&quot; IS NULL THEN 'XXXX'
+ELSE &quot;CLASS&quot;
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_5_MN_INDY_CLSN" order="74" semanticType="empty" descriptionColumnName="CC_5_MN_INDY_CLSN_DESC" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANZSIC Classification">
+        <comment text="Needed to handle NULL&apos;s in Join"/>
+      </descriptions>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="5">
+        <formula>CASE
+WHEN &quot;MN_INDY_CLSN&quot; IS NULL THEN 'XXXXX'
+ELSE &quot;MN_INDY_CLSN&quot;
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_1_DIVISION_DESC" order="75" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANZSIC Division Description">
+        <comment text="Needed to handle NULL&apos;s in Join"/>
+      </descriptions>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="1">
+        <formula>CASE
+WHEN &quot;DIV_TEXT&quot; IS NULL THEN '-'
+ELSE &quot;DIV_TEXT&quot;
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_2_SUBDIVISION_DESC" order="76" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANZSIC Subdivision Description">
+        <comment text=" Needed to handle NULL&apos;s in Join"/>
+      </descriptions>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="1">
+        <formula>CASE
+WHEN &quot;SUBDIV_TEXT&quot; IS NULL THEN '-'
+ELSE &quot;SUBDIV_TEXT&quot;
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_3_GROUP_DESC" order="77" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANSZIC Group Description">
+        <comment text="Needed to handle NULL&apos;s in Join"/>
+      </descriptions>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="1">
+        <formula>CASE 
+WHEN &quot;GROUP_TEXT&quot; IS NULL THEN '-'
+ELSE &quot;GROUP_TEXT&quot;
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_4_CLASS_DESC" order="78" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANZSIC Class Description">
+        <comment text="Needed to handle NULL&apos;s in Join"/>
+      </descriptions>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="1">
+        <formula>CASE
+WHEN &quot;CLASS_TEXT&quot; IS NULL  THEN '-'
+ELSE &quot;CLASS_TEXT&quot;
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="CC_5_MN_INDY_CLSN_DESC" order="79" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANZSIC Classification Description">
+        <comment text="Needed to handle NULL&apos;s in Join"/>
+      </descriptions>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="1">
+        <formula>CASE 
+WHEN &quot;MN_INDY_CLSN_DESCN&quot; IS NULL THEN '-'
+ELSE &quot;MN_INDY_CLSN_DESCN&quot;
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="CC_AnnualEstimate" order="30" aggregationType="sum" measureType="simple">
@@ -2525,6 +2636,7 @@ END
         <attribute attributeName="PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -2583,6 +2695,26 @@ END
             <level levelAttribute="GROUP" levelType="MDLEVEL_TYPE_REGULAR" order="3" orderAttribute="GROUP" sortDirection="ASC"/>
             <level levelAttribute="CLASS" levelType="MDLEVEL_TYPE_REGULAR" order="4" orderAttribute="CLASS" sortDirection="ASC"/>
             <level levelAttribute="MN_INDY_CLSN" levelType="MDLEVEL_TYPE_REGULAR" order="5" orderAttribute="MN_INDY_CLSN" sortDirection="ASC"/>
+          </levels>
+        </hierarchy>
+      </hierarchies>
+    </localDimension>
+    <localDimension id="H_CC_ANZSICCode">
+      <attributeRef xsi:type="DataFoundation:Attribute">CC_1_DIVISION</attributeRef>
+      <attributeRef xsi:type="DataFoundation:Attribute">CC_2_SUBDIVISION</attributeRef>
+      <attributeRef xsi:type="DataFoundation:Attribute">CC_3_GROUP</attributeRef>
+      <attributeRef xsi:type="DataFoundation:Attribute">CC_4_CLASS</attributeRef>
+      <attributeRef xsi:type="DataFoundation:Attribute">CC_5_MN_INDY_CLSN</attributeRef>
+      <hierarchies>
+        <hierarchy xsi:type="Dimension:LeveledHierarchy" id="H_CC_ANZSICCode" aggregateAllNodes="true" orphanedNodesHandling="ROOT_NODES" rootNodeVisibility="ADD_ROOT_NODE" withRootNode="true" nodeStyle="LEVEL_NAME_ENFORCED" cacheEnabled="true" cycleHandling="BREAKUP" emptyValueIsNull="true">
+          <descriptions defaultDescription="ANZSIC Code"/>
+          <unassignedMemberProperties mode="FALSE"/>
+          <levels>
+            <level levelAttribute="CC_1_DIVISION" levelType="MDLEVEL_TYPE_REGULAR" order="1" orderAttribute="CC_1_DIVISION_DESC" sortDirection="ASC"/>
+            <level levelAttribute="CC_2_SUBDIVISION" levelType="MDLEVEL_TYPE_REGULAR" order="2" orderAttribute="CC_2_SUBDIVISION_DESC" sortDirection="ASC"/>
+            <level levelAttribute="CC_3_GROUP" levelType="MDLEVEL_TYPE_REGULAR" order="3" orderAttribute="CC_3_GROUP_DESC" sortDirection="ASC"/>
+            <level levelAttribute="CC_4_CLASS" levelType="MDLEVEL_TYPE_REGULAR" order="4" orderAttribute="CC_4_CLASS" sortDirection="ASC"/>
+            <level levelAttribute="CC_5_MN_INDY_CLSN" levelType="MDLEVEL_TYPE_REGULAR" order="5" orderAttribute="CC_5_MN_INDY_CLSN" sortDirection="ASC"/>
           </levels>
         </hierarchy>
       </hierarchies>
