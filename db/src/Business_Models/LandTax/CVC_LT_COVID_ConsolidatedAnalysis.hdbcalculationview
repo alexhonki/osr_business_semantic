@@ -28,7 +28,9 @@
       <viewAttribute id="A_DEDUCT_SELECT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_ExemptionsFormBundles"/>
+    <input node="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_ExemptionsFormBundles">
+      <mapping xsi:type="Calculation:AttributeMapping" target="A_DEDUCT_REASON_DESC" source="CC_DEDUCT_REASON_DESC"/>
+    </input>
     <filter>&quot;A_DEDUCT_SELECT&quot; = 'X'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_FORMS_TAX_DATA" joinType="fullOuter">
@@ -58,6 +60,8 @@
       <viewAttribute id="BPCONCESSVAL" aggregationType="sum"/>
     
       <viewAttribute id="TAXYRSTARTDT"/>
+    
+      <viewAttribute id="ACTIVE"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_MANDT" datatype="NVARCHAR" length="3" expressionLanguage="SQL">
@@ -131,6 +135,8 @@ END</formula>
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE_FORM" source="OWNERTYPE"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE" source="ACTIVE"/>
     </input>
     <input node="P_MEASURES">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT_CNRESV" source="MANDT"/>
@@ -166,6 +172,8 @@ END</formula>
       <viewAttribute id="OWNERTYPE"/>
     
       <viewAttribute id="TAXYRSTARTDT"/>
+    
+      <viewAttribute id="ACTIVE"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_FORMDATA">
@@ -181,6 +189,7 @@ END</formula>
       <mapping xsi:type="Calculation:AttributeMapping" target="LANDUSECODE" source="LANDUSECODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE" source="ACTIVE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_LAND_DESC" source="PLNO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="C_LAND_YEAR" source="CC_LIABILITY_YEAR_CNRESV"/>
@@ -223,7 +232,9 @@ END</formula>
       <viewAttribute id="PLNO"/>
       <viewAttribute id="CC_LIABILITY_YEAR_CNRESV"/>
       <viewAttribute id="ZZ_PARTNER"/>
-      <viewAttribute id="CONCESSCODE"/></viewAttributes>
+      <viewAttribute id="CONCESSCODE"/>
+      <viewAttribute id="ACTIVE"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_CNRESV"/>
   </calculationView>
@@ -246,7 +257,9 @@ END</formula>
     
     
     
-      <viewAttribute id="TAXYRENDDT"/></viewAttributes>
+      <viewAttribute id="TAXYRENDDT"/>
+      <viewAttribute id="ACTIVE"/>
+    </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_LIABILITY_YEAR_CNRESV" datatype="NVARCHAR" length="4" expressionLanguage="SQL">
         <formula>LEFT(&quot;TAXYRENDDT&quot;,4)</formula>
@@ -277,6 +290,8 @@ END</formula>
       <viewAttribute id="BPCONCESSVAL" aggregationType="sum"/>
       <viewAttribute id="TAXYRSTARTDT"/>
       <viewAttribute id="PLNO"/>
+    
+      <viewAttribute id="ACTIVE"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_FORMS_TAX_DATA">
@@ -298,6 +313,8 @@ END</formula>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PLNO" source="PLNO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE" source="ACTIVE"/>
     </input>
     <input node="P_PARCEL">
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
@@ -380,8 +397,12 @@ END</formula>
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="PLNO"/>
     </attribute>
     <attribute id="TAXYRSTARTDT" order="17" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="TAXYRSTARTDT"/>
+      <descriptions defaultDescription="Tax Year Start Date"/>
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="TAXYRSTARTDT"/>
+    </attribute>
+    <attribute id="ACTIVE" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Active Land Tax Payer Flag"/>
+      <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="ACTIVE"/>
     </attribute>
     <attribute id="MANDT$local">
       <keyMapping columnObjectName="J_ADD_PARCEL_DATA" columnName="MANDT"/>
@@ -423,6 +444,7 @@ END</formula>
       
       
 
+      
       </measure>
     <measure id="CC_PARCEL_COUNT" order="2" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Parcel Count"/>
@@ -438,6 +460,7 @@ END</formula>
       
       
 
+      
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
@@ -504,17 +527,17 @@ END</formula>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="375.24698710534636" y="112"/>
+      <upperLeftCorner x="375" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_FORMDATA" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="512.0000000000001" y="726.9999964237213"/>
+      <upperLeftCorner x="512" y="726"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_FORMS_TAX_DATA" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="236.24309577084455" y="406.9999988079071"/>
+      <upperLeftCorner x="236" y="406"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FORM_DIMENSIONS" modelObjectNameSpace="J_FORMS_TAX_DATA" modelObjectType="JoinNodeInput">
@@ -526,7 +549,7 @@ END</formula>
       <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FORM_DIMENSIONS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="328.6666666666668" y="566.9999976158142"/>
+      <upperLeftCorner x="328" y="566"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_FORMDATA" modelObjectNameSpace="J_FORM_DIMENSIONS" modelObjectType="JoinNodeInput">
@@ -538,20 +561,20 @@ END</formula>
       <rectangleSize width="246"/>
     </shape>
     <shape expanded="true" modelObjectName="P_MEASURES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92.00000000000007" y="726.9999964237213"/>
+      <upperLeftCorner x="92" y="726"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_DIMENSIONS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302.0000000000001" y="736.9999964237213"/>
+      <upperLeftCorner x="302" y="736"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CNRESV" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="275.3333333333335" y="871.9999952316284"/>
+      <upperLeftCorner x="275" y="871"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_ADD_PARCEL_DATA" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="375.24698710534636" y="247"/>
+      <upperLeftCorner x="375" y="247"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FORMS_TAX_DATA" modelObjectNameSpace="J_ADD_PARCEL_DATA" modelObjectType="JoinNodeInput">
@@ -563,7 +586,7 @@ END</formula>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PARCEL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="446.24309577084455" y="406.9999988079071"/>
+      <upperLeftCorner x="446" y="406"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
