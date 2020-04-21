@@ -31,6 +31,9 @@
   <DataSource id="J_PROID_12_LOCKR$$$$osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_TFK080R1T$$">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_TFK080R1T</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_TFK000ST">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_TFK000ST</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_TFK080FT">
@@ -173,6 +176,14 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PROID" source="PROID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LOCKR" source="LOCKR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LOCKRT" source="LTEXT"/>
+    </input>
+  
+    <input node="J_PROID_09_LOCKR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPRAS" source="SPRAS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROID" source="PROID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCKR" source="SPPOS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCKRT" source="SPPOT"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_PROID_03_LOCKR" cardinality="C1_N" joinType="rightOuter">
@@ -383,6 +394,30 @@
     <input emptyUnionBehavior="undefined" node="P_TFK080FT"/>
     <filter>&quot;PROID&quot;='09'</filter>
   </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PROID_09_LOCKR" cardinality="C1_1" joinType="textTable" languageColumn="SPRAS">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SPRAS"/>
+      <viewAttribute id="PROID"/>
+      <viewAttribute id="SPPOS"/>
+      <viewAttribute id="SPPOT"/>
+      <viewAttribute hidden="true" id="JOIN$SPRAS$SPRAS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_PROID_09">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROID" source="PROID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SPRAS$SPRAS" source="SPRAS"/>
+    </input>
+  
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_TFK000ST">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPRAS" source="SPRAS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPPOS" source="SPPOS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPPOT" source="SPPOT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SPRAS$SPRAS" source="SPRAS"/>
+    </input>
+    <joinAttribute name="JOIN$SPRAS$SPRAS"/>
+  </calculationView>
 </calculationViews>
 <logicalModel id="U_PROID_LOCKR">
   <attributes>
@@ -561,6 +596,20 @@
     <shape expanded="true" modelObjectName="P_PROID_09" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="1142" y="636"/>
       <rectangleSize width="160"/>
-    </shape></shapes>
+    </shape>
+    <shape expanded="true" modelObjectName="J_PROID_09_LOCKR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1201" y="312"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_PROID_09" modelObjectNameSpace="J_PROID_09_LOCKR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+  
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_TFK000ST" modelObjectNameSpace="J_PROID_09_LOCKR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="546.126953125"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
