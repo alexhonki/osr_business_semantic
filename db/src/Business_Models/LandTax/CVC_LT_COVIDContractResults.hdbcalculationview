@@ -311,7 +311,7 @@
       <keyMapping columnObjectName="J_TaxBracket" columnName="MANDT"/>
     </attribute>
     <attribute id="LANDUSECODE" order="34" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land "/>
+      <descriptions defaultDescription="Land Use Code"/>
       <keyMapping columnObjectName="J_TaxBracket" columnName="LANDUSECODE"/>
     </attribute>
     <attribute id="OWNERTYPE" order="35" displayAttribute="false" attributeHierarchyActive="false">
@@ -328,6 +328,9 @@
     <attribute id="OWNERTYPE$local">
       <keyMapping columnObjectName="J_TaxBracket" columnName="OWNERTYPE"/>
     </attribute>
+    <attribute id="MANDT$local">
+      <keyMapping columnObjectName="J_TaxBracket" columnName="MANDT"/>
+    </attribute>
   </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="CC_TAXYEAR" order="32" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
@@ -335,7 +338,7 @@
       <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="4">
         <formula>Left(&quot;TAXYRENDDT&quot;,4)</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="CONCESSPCT" order="9" aggregationType="sum" measureType="simple">
@@ -473,13 +476,18 @@ END
     <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.LandTax::CV_OwnerTyperDescription">
       <attributes>
         <attributeRef>OWNERTYPE$local</attributeRef>
+        <attributeRef>MANDT$local</attributeRef>
       </attributes>
       <associatedAttributeNames>
         <attributeName>CODE_ID</attributeName>
+        <attributeName>MANDT</attributeName>
       </associatedAttributeNames>
       <properties cardinality="CN_1" joinType="leftOuter" joinOperator="Equal"/>
       <associatedAttributeFeatures>
         <attributeReference alias="MANDT_1" attributeName="MANDT" hidden="true"/>
+        <attributeReference alias="CC_CONSOLOWNERTYPE" attributeName="CC_OwnerTypeDescription">
+          <descriptions defaultDescription="Consolidated Owner Type"/>
+        </attributeReference>
         <attributeReference attributeName="CODE_ID" hidden="true"/>
       </associatedAttributeFeatures>
     </logicalJoin>
