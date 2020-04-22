@@ -974,7 +974,9 @@
   
     <attribute id="A_DEDUCT_SELECT" order="55" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="A_DEDUCT_SELECT"/>
+  
       <keyMapping columnObjectName="J_OWNERSHIPCNRESP_PARCELRESULTS" columnName="A_DEDUCT_SELECT"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -982,6 +984,17 @@
       <descriptions defaultDescription="Approval Type"/>
       <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="4">
         <formula>if(&quot;C_AUTO_APPROVED&quot;='X','AAPR','MAPR')</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+  
+    <calculatedAttribute id="CC_DEDUCT_REASON_DESC" order="56" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="20">
+        <formula>CASE
+    WHEN &quot;A_DEDUCT_REASON&quot; = '000' THEN ''
+    WHEN &quot;A_DEDUCT_REASON&quot; = '001' THEN 'Rent relief'
+    WHEN &quot;A_DEDUCT_REASON&quot; = '002' THEN 'Unable to lease'
+    WHEN &quot;A_DEDUCT_REASON&quot; = '003' THEN 'All of the above'
+END</formula>
       </keyCalculation>
     </calculatedAttribute>
   </calculatedAttributes>
