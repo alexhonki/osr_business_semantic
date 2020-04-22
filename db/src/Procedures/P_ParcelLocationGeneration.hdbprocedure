@@ -1,0 +1,26 @@
+PROCEDURE "osr.business.semantic.db.Procedures::P_ParcelLocationGeneration"( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+
+TRUNCATE TABLE "osr.business.semantic.db.Tables::T_ParcelLocationData";
+
+UPSERT "osr.business.semantic.db.Tables::T_ParcelLocationData" ("PARCEL_ID_LD")
+SELECT "PLNO" FROM "osr.business.semantic.db.Business_Models.LandTax::CV_Parcel" 
+WHERE "PLNO" IS NOT NULL
+GROUP BY "PLNO";
+
+UPDATE "osr.business.semantic.db.Tables::T_ParcelLocationData"
+SET "PARCEL_LOC" = new ST_GEOMETRY('POINT(' || "Longitude" || ' ' ||"Latitude" || ')', 4326).ST_Transform(3857)
+FROM (
+	SELECT MIN("ADDR_LATITUDE") AS "Latitude", MIN("ADDR_LONGITUDE")  AS "Longitude", "PLNO"
+	FROM "osr.business.semantic.db.Business_Models.LandTax::CV_Parcel" 
+	GROUP BY "PLNO"
+), "osr.business.semantic.db.Tables::T_ParcelLocationData"
+WHERE "PLNO" = "PARCEL_ID_LD";
+
+
+END
+

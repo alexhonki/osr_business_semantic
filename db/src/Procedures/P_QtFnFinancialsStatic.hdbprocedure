@@ -1,0 +1,35 @@
+PROCEDURE "osr.business.semantic.db.Procedures::P_QtFnFinancialsStatic"( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+
+	output_table = 
+	SELECT
+		"CC_TAXPAYER_PAID_FLAG",
+		"UNDER_OVER_DECL",
+		"STD_ADDR_POSTCODE1",
+		"DIV_TEXT",
+		"CC_REFUND_UNPAID_ASSMT",
+		"CC_HOLIDAY_REFUND_IND",
+		SUM("CC_BP_CNT") AS "CC_BP_CNT",
+		SUM("TAX_FG_AMT") AS "TAX_FG_AMT",
+		SUM("CC_TAX_FORGONE_CNT") AS "CC_TAX_FORGONE_CNT",
+		SUM("RC_COVID_PENDING_AMT") AS "RC_COVID_PENDING_AMT",
+		SUM("RC_COVID_PAID_AMT") AS "RC_COVID_PAID_AMT",
+		SUM("CC_REFUND_CNT") AS "CC_REFUND_CNT",
+		SUM("CC_TAX_FG_AMT") AS "CC_TAX_FG_AMT",
+		SUM("RC_COVID_OPEN_CREDIT_AMT") AS "RC_COVID_OPEN_CREDIT_AMT",
+		SUM("CC_COVID_PENDING_AMT") AS "CC_COVID_PENDING_AMT",
+		SUM("CC_COVID_PAID_AMT") AS "CC_COVID_PAID_AMT",
+		"PARTNER"
+	FROM "osr.business.semantic.db.Business_Models.Treasury::CVC_QT_FnFinancials"
+	GROUP BY "CC_TAXPAYER_PAID_FLAG", "UNDER_OVER_DECL", "STD_ADDR_POSTCODE1", "DIV_TEXT", "CC_REFUND_UNPAID_ASSMT", "CC_HOLIDAY_REFUND_IND", "PARTNER";
+	
+	DELETE FROM "osr.business.semantic.db.Tables::T_QtFnFinancials";																																																																						
+
+	INSERT INTO "osr.business.semantic.db.Tables::T_QtFnFinancials"																																																																						
+	SELECT * FROM :output_table;
+	
+END

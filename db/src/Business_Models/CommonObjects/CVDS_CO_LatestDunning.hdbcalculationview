@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_LatestDunning" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="Dunning History - Lastest Dunning"/>
+<localVariables>
+  <variable id="IP_KeyDate" parameter="true">
+    <descriptions defaultDescription="Key Date"/>
+    <variableProperties datatype="NVARCHAR" length="8" mandatory="false">
+      <valueDomain type="Date"/>
+      <selection multiLine="false" type="SingleValue"/>
+      <defaultRange lowValue="date(leftstr(string(now()),10))" lowExpression="true"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_DunningHistory">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_DunningHistory</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:RankView" id="R_LatestDunning" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="STEP"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPW"/>
+      <viewAttribute id="OPUPK"/>
+      <viewAttribute id="OPUPZ"/>
+      <viewAttribute id="AUSDT"/>
+      <viewAttribute id="STEP_DESC"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_DunningHistory"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>OPBEL</partitionViewAttributeName>
+      <partitionViewAttributeName>OPUPW</partitionViewAttributeName>
+      <partitionViewAttributeName>OPUPK</partitionViewAttributeName>
+      <partitionViewAttributeName>OPUPZ</partitionViewAttributeName>
+      <order byViewAttributeName="AUSDT" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+    <filter>date(&quot;AUSDT&quot;)&lt;=date('$$IP_KeyDate$$')</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="R_LatestDunning">
+  <attributes>
+    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="R_LatestDunning" columnName="MANDT"/>
+    </attribute>
+    <attribute id="STEP" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Collection Step"/>
+      <keyMapping columnObjectName="R_LatestDunning" columnName="STEP"/>
+    </attribute>
+    <attribute id="OPBEL" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Document Number in Contract Accounts Receivable and Payable"/>
+      <keyMapping columnObjectName="R_LatestDunning" columnName="OPBEL"/>
+    </attribute>
+    <attribute id="OPUPW" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Repetition Item in Contract Account Document"/>
+      <keyMapping columnObjectName="R_LatestDunning" columnName="OPUPW"/>
+    </attribute>
+    <attribute id="OPUPK" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Item number in contract account document"/>
+      <keyMapping columnObjectName="R_LatestDunning" columnName="OPUPK"/>
+    </attribute>
+    <attribute id="OPUPZ" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Sub-item for a Partial Clearing in Document"/>
+      <keyMapping columnObjectName="R_LatestDunning" columnName="OPUPZ"/>
+    </attribute>
+    <attribute id="AUSDT" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Date of issue"/>
+      <keyMapping columnObjectName="R_LatestDunning" columnName="AUSDT"/>
+    </attribute>
+    <attribute id="STEP_DESC" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Collection Step Desc"/>
+      <keyMapping columnObjectName="R_LatestDunning" columnName="STEP_DESC"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="R_LatestDunning" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="79" y="209"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

@@ -31,6 +31,9 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_ABR">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_ABR</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CVC_PrtTaxReturnBracketing">
+    <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CVC_PrtTaxReturnBracketing</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_BPINFO">
@@ -273,7 +276,6 @@
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_ADDRS_PHONE" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
-      <viewAttribute id="PARTNER"/>
       <viewAttribute id="ADR_KIND"/>
       <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY"/>
       <viewAttribute id="STD_ADDR_LOCALITY"/>
@@ -282,6 +284,7 @@
       <viewAttribute id="ADDRNUMBER"/>
       <viewAttribute id="TEL_NUMBER"/>
       <viewAttribute id="SMTP_ADDR"/>
+      <viewAttribute id="PARTNER"/>
       <viewAttribute id="CLIENT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -580,14 +583,14 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_REL_BPINFO" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
-      <viewAttribute id="PARTNER2"/>
-      <viewAttribute id="CLIENT"/>
       <viewAttribute id="RELTYP"/>
       <viewAttribute id="RELTYP_TEXT"/>
       <viewAttribute id="PARTNER1"/>
     
       <viewAttribute id="CC_ValidFrom"/>
       <viewAttribute id="CC_Validto"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNER2"/>
     
       <viewAttribute id="NAME_GRP1"/>
     
@@ -631,14 +634,17 @@ string(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
       <viewAttribute id="FACT_CAT_SEQ"/>
     
       <viewAttribute id="XOBSL"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpFacts"/>
     <filter>&quot;PARTNERACCTYP&quot;='PT' 
-AND &quot;FACT_SET&quot; = 'ZPTX' 
+AND &quot;FACT_SET&quot; = 'ZPTX'
 AND &quot;XOBSL&quot; &lt;&gt; 'X'
-AND (&quot;FACT_TYPE&quot; = 'RG01' OR &quot;FACT_TYPE&quot; = 'ZPRE') 
-AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR &quot;FACT_CATEGORY&quot; = '0016' OR &quot;FACT_CATEGORY&quot; = '0005' OR &quot;FACT_CATEGORY&quot; = '0004' OR &quot;FACT_CATEGORY&quot; = '0011'OR &quot;FACT_CATEGORY&quot; = 'Z011')</filter>
+AND (&quot;FACT_TYPE&quot; = 'RG01' OR &quot;FACT_TYPE&quot; = 'ZPRE' OR &quot;FACT_TYPE&quot; = 'ZPR2') 
+AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR &quot;FACT_CATEGORY&quot; = '0016' OR &quot;FACT_CATEGORY&quot; = '0005' OR &quot;FACT_CATEGORY&quot; = '0004' OR &quot;FACT_CATEGORY&quot; = '0011'OR &quot;FACT_CATEGORY&quot; = 'Z011' OR &quot;FACT_CATEGORY&quot; = 'Z067')</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_QLD_Liability" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -744,6 +750,9 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="FACT_CAT_SEQ"/>
     
       <viewAttribute id="VALID_TO"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input emptyUnionBehavior="undefined" node="P_BpFacts"/>
@@ -771,6 +780,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="PT_STATUS"/>
       <viewAttribute id="CC_PtLiabilityTaxDate"/>
       <viewAttribute id="VALUE_GENERIC"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_TaxRegistrationFromDate" datatype="DATE" expressionLanguage="SQL">
@@ -782,6 +796,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PT_STATUS" source="PT_STATUS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PtLiabilityTaxDate" source="CC_PtLiabilityTaxDate"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
     </input>
     <input node="R_TaxObligationFrom">
       <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
@@ -796,7 +815,10 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="CLIENT"/>
       <viewAttribute id="PARTNER"/>
       <viewAttribute id="PT_STATUS"/>
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
       <viewAttribute id="VALUE_GENERIC"/>
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
       <viewAttribute hidden="true" id="JOIN$CLIENT$CLIENT"/>
       <viewAttribute hidden="true" id="JOIN$PARTNER$PARTNER"/>
     </viewAttributes>
@@ -807,6 +829,8 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     </calculatedViewAttributes>
     <input node="R_Registrationstatus">
       <mapping xsi:type="Calculation:AttributeMapping" target="PT_STATUS" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CLIENT$CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER$PARTNER" source="PARTNER"/>
     </input>
@@ -814,6 +838,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="VALID_TO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CLIENT$CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARTNER$PARTNER" source="PARTNER"/>
     </input>
@@ -849,11 +874,15 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="FACT_CATEGORY"/>
       <viewAttribute id="FACT_CAT_SEQ"/>
       <viewAttribute id="VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_RegistrationStatus"/>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="VALID_TO" direction="DESC"/>
       <rankThreshold>
         <value>1</value>
       </rankThreshold>
@@ -864,11 +893,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="VALUE_GENERIC"/>
       <viewAttribute id="CLIENT"/>
       <viewAttribute id="PARTNER"/>
+      <viewAttribute id="VALID_TO"/>
+    
       <viewAttribute id="FACT_TYPE"/>
       <viewAttribute id="FACT_CATEGORY"/>
-      <viewAttribute id="FACT_CAT_SEQ"/>
-      <viewAttribute id="VALID_TO"/>
-    </viewAttributes>
+      <viewAttribute id="FACT_CAT_SEQ"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_Payroll_Liability"/>
     <windowFunction dynamicPartitionAttributes="false">
@@ -887,6 +916,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="CC_PtLiabilityTaxDate"/>
       <viewAttribute id="VALUE_GENERIC"/>
       <viewAttribute id="CC_TaxRegistrationFromDate"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_TrPeriodCycle" datatype="VARCHAR" length="25" expressionLanguage="COLUMN_ENGINE">
@@ -906,6 +940,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="PT_STATUS" source="PT_STATUS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PtLiabilityTaxDate" source="CC_PtLiabilityTaxDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxRegistrationFromDate" source="CC_TaxRegistrationFromDate"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
     </input>
     <input node="R_TrCycle">
       <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
@@ -944,6 +983,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="CC_TaxRegistrationFromDate"/>
       <viewAttribute id="CC_TrPeriodCycle"/>
       <viewAttribute id="INTERS_W_APPLY"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_FACTS_TRPERIOD">
@@ -953,6 +997,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PtLiabilityTaxDate" source="CC_PtLiabilityTaxDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxRegistrationFromDate" source="CC_TaxRegistrationFromDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TrPeriodCycle" source="CC_TrPeriodCycle"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
     </input>
     <input node="R_Interstate_wapply">
       <mapping xsi:type="Calculation:AttributeMapping" target="INTERS_W_APPLY" source="VALUE_GENERIC"/>
@@ -991,6 +1040,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="CC_TrPeriodCycle"/>
       <viewAttribute id="INTERS_W_APPLY"/>
       <viewAttribute id="VALUE_GENERIC"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_QLDLiabilityDate" datatype="DATE" expressionLanguage="SQL">
@@ -1005,6 +1059,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxRegistrationFromDate" source="CC_TaxRegistrationFromDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TrPeriodCycle" source="CC_TrPeriodCycle"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTERS_W_APPLY" source="INTERS_W_APPLY"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
     </input>
     <input node="R_QLD_Liability">
       <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_GENERIC" source="VALUE_GENERIC"/>
@@ -1045,6 +1104,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="INTERS_W_APPLY"/>
       <viewAttribute id="CC_QLDLiabilityDate"/>
       <viewAttribute id="ONLINE_FILL_COMM"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_FACTS_QLDLIABDT">
@@ -1056,6 +1120,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TrPeriodCycle" source="CC_TrPeriodCycle"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="INTERS_W_APPLY" source="INTERS_W_APPLY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_QLDLiabilityDate" source="CC_QLDLiabilityDate"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
     </input>
     <input node="R_OnlineFillinComm">
       <mapping xsi:type="Calculation:AttributeMapping" target="ONLINE_FILL_COMM" source="VALUE_GENERIC"/>
@@ -1097,6 +1166,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <viewAttribute id="CC_QLDLiabilityDate"/>
       <viewAttribute id="ONLINE_FILL_COMM"/>
       <viewAttribute id="PT_GROUP_STATUS"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_FACT_ONLINEFILLCOMM">
@@ -1109,6 +1183,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="INTERS_W_APPLY" source="INTERS_W_APPLY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_QLDLiabilityDate" source="CC_QLDLiabilityDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ONLINE_FILL_COMM" source="ONLINE_FILL_COMM"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
     </input>
     <input node="R_TaxGroupStat">
       <mapping xsi:type="Calculation:AttributeMapping" target="PT_GROUP_STATUS" source="VALUE_GENERIC"/>
@@ -1173,6 +1252,13 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     
       <viewAttribute id="CC_ValidFrom"/>
       <viewAttribute id="CC_Validto"/>
+    
+      <viewAttribute id="UNDER_OVER_DECL"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_ClientStatusTR" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
@@ -1206,7 +1292,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Validto" source="CC_Validto"/>
     </input>
-    <input node="J_FACT_PTGRPSTAT">
+    <input node="J_UNDER_OVER_6_5">
       <mapping xsi:type="Calculation:AttributeMapping" target="PT_STATUS" source="PT_STATUS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_PtLiabilityTaxDate" source="CC_PtLiabilityTaxDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxRegistrationFromDate" source="CC_TaxRegistrationFromDate"/>
@@ -1215,11 +1301,102 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_QLDLiabilityDate" source="CC_QLDLiabilityDate"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ONLINE_FILL_COMM" source="ONLINE_FILL_COMM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PT_GROUP_STATUS" source="PT_GROUP_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNDER_OVER_DECL" source="CC_UNDER_OVER_DECLARED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
     </input>
     <joinAttribute name="PARTNER"/>
     <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_UNDER_OVER_6_5" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="PT_STATUS"/>
+      <viewAttribute id="CC_PtLiabilityTaxDate"/>
+      <viewAttribute id="CC_TaxRegistrationFromDate"/>
+      <viewAttribute id="CC_TrPeriodCycle"/>
+      <viewAttribute id="INTERS_W_APPLY"/>
+      <viewAttribute id="CC_QLDLiabilityDate"/>
+      <viewAttribute id="ONLINE_FILL_COMM"/>
+      <viewAttribute id="PT_GROUP_STATUS"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="UNDER_OVER_DECL"/>
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_UNDER_OVER_DECLARED" datatype="NVARCHAR" length="25" expressionLanguage="SQL">
+        <formula>CASE
+    WHEN &quot;UNDER_OVER_DECL&quot; = 'A' THEN '$6.5 Million or under'
+    WHEN &quot;UNDER_OVER_DECL&quot; = 'B' THEN 'Over $6.5 Million'
+    ELSE 'Undefined'
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="J_FACT_PTGRPSTAT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PT_STATUS" source="PT_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PtLiabilityTaxDate" source="CC_PtLiabilityTaxDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxRegistrationFromDate" source="CC_TaxRegistrationFromDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TrPeriodCycle" source="CC_TrPeriodCycle"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTERS_W_APPLY" source="INTERS_W_APPLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_QLDLiabilityDate" source="CC_QLDLiabilityDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ONLINE_FILL_COMM" source="ONLINE_FILL_COMM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PT_GROUP_STATUS" source="PT_GROUP_STATUS"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
+    </input>
+    <input node="R_UNDER_OVER_6_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNDER_OVER_DECL" source="VALUE_GENERIC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_UNDER_OVER_6_5">
+    <viewAttributes>
+      <viewAttribute id="VALUE_GENERIC"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="VALID_TO" aggregationType="min"/>
+      <viewAttribute id="FACT_TYPE"/>
+      <viewAttribute id="FACT_CATEGORY"/>
+      <viewAttribute id="FACT_CAT_SEQ"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_UNDER_OVER_6_5"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="VALID_TO" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_UNDER_OVER_6_5" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="VALUE_GENERIC"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="VALID_TO"/>
+      <viewAttribute id="FACT_TYPE"/>
+      <viewAttribute id="FACT_CATEGORY"/>
+      <viewAttribute id="FACT_CAT_SEQ"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_BpFacts"/>
+    <filter>&quot;FACT_TYPE&quot;='ZPR2' AND &quot;FACT_CATEGORY&quot;='Z067'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_TaxReturns" filterExpressionLanguage="SQL">
     <viewAttributes>
@@ -1242,7 +1419,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     )
 )</formula>
       </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_TaxBracket" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="CC_TaxBracket" datatype="VARCHAR" length="25" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;CC_AnnualEstimate&quot;&lt;1235000,'Below 5% Under Threshold',
     if(&quot;CC_AnnualEstimate&quot;&gt;=1235000 AND &quot;CC_AnnualEstimate&quot;&lt;1300000,'On 5% Under Threshold',
         if(&quot;CC_AnnualEstimate&quot;&gt;=1300000 AND &quot;CC_AnnualEstimate&quot;&lt;1365000,'On 5% Over Threshold',
@@ -1313,6 +1490,13 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     
       <viewAttribute id="CC_ValidFrom"/>
       <viewAttribute id="CC_Validto"/>
+    
+      <viewAttribute id="UNDER_OVER_DECL"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_BPINFO_FACTS">
@@ -1350,6 +1534,13 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Validto" source="CC_Validto"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNDER_OVER_DECL" source="UNDER_OVER_DECL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
     </input>
     <input node="R_ONE_TR_PER_BP">
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_AnnualEstimate" source="CC_AnnualEstimate"/>
@@ -1417,6 +1608,13 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     
       <viewAttribute id="CC_ValidFrom"/>
       <viewAttribute id="CC_Validto"/>
+    
+      <viewAttribute id="UNDER_OVER_DECL"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_IsTop300" datatype="VARCHAR" length="30" expressionLanguage="COLUMN_ENGINE">
@@ -1459,6 +1657,13 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Validto" source="CC_Validto"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNDER_OVER_DECL" source="UNDER_OVER_DECL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
     </input>
     <input node="R_TOP300">
       <mapping xsi:type="Calculation:AttributeMapping" target="RC_Top300WQ" source="RC_Top300WQ"/>
@@ -1563,12 +1768,18 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     
       <viewAttribute id="CC_ValidFrom"/>
       <viewAttribute id="CC_Validto"/>
+    
+      <viewAttribute id="UNDER_OVER_DECL"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_ISPRTGROUP" datatype="NVARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;CC_GroupName&quot; = 'PRT Group' or &quot;CC_GroupName&quot; = 'PRT GROUP','X','')</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+      </calculatedViewAttribute></calculatedViewAttributes>
     <input node="J_BPINFO_TOP300">
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZACN" source="CC_ZACN"/>
@@ -1607,6 +1818,13 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_Validto" source="CC_Validto"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNDER_OVER_DECL" source="UNDER_OVER_DECL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
     </input>
     <input node="P_ABR">
       <mapping xsi:type="Calculation:AttributeMapping" target="ENT_TYP_CD" source="ENT_TYP_CD"/>
@@ -1637,282 +1855,663 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     </input>
     <joinAttribute name="CC_ABN"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PRT_TAX_BRACKETING" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FISCAL_YEAR"/>
+      <viewAttribute id="CC_EST_TAX_BRACKET"/>
+      <viewAttribute id="TAXPAYER"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.PayrollTax::CVC_PrtTaxReturnBracketing"/>
+    <filter>&quot;CC_EST_TAX_BRACKET&quot; IS NOT NULL</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_TB2019" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CC_ZACN"/>
+      <viewAttribute id="CC_ABN"/>
+      <viewAttribute id="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <viewAttribute id="RES_STD_ADDR_LOCALITY"/>
+      <viewAttribute id="RES_STD_ADDR_REGION"/>
+      <viewAttribute id="RES_STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="RES_TEL_NUMBER"/>
+      <viewAttribute id="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <viewAttribute id="SER_STD_ADDR_LOCALITY"/>
+      <viewAttribute id="SER_STD_ADDR_REGION"/>
+      <viewAttribute id="SER_STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="SER_TEL_NUMBER"/>
+      <viewAttribute id="RES_SMTP_ADDR"/>
+      <viewAttribute id="SER_SMTP_ADDR"/>
+      <viewAttribute id="CC_FullName"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="RELTYP"/>
+      <viewAttribute id="RELTYP_TEXT"/>
+      <viewAttribute id="PT_STATUS"/>
+      <viewAttribute id="CC_PtLiabilityTaxDate"/>
+      <viewAttribute id="CC_TaxRegistrationFromDate"/>
+      <viewAttribute id="CC_TrPeriodCycle"/>
+      <viewAttribute id="INTERS_W_APPLY"/>
+      <viewAttribute id="CC_QLDLiabilityDate"/>
+      <viewAttribute id="ONLINE_FILL_COMM"/>
+      <viewAttribute id="PT_GROUP_STATUS"/>
+      <viewAttribute id="CC_ClientStatusTR"/>
+      <viewAttribute id="CC_AnnualEstimate" aggregationType="sum"/>
+      <viewAttribute id="CC_TaxBracket"/>
+      <viewAttribute id="PARTNER1"/>
+      <viewAttribute id="CC_GroupName"/>
+      <viewAttribute id="RC_Top300WQ" aggregationType="sum"/>
+      <viewAttribute id="CC_IsTop300"/>
+      <viewAttribute id="ENT_TYP_CD"/>
+      <viewAttribute id="ORG_NM"/>
+      <viewAttribute id="MN_INDY_CLSN"/>
+      <viewAttribute id="MN_INDY_CLSN_DESCN"/>
+      <viewAttribute id="ACN"/>
+      <viewAttribute id="PARENT_ENTITY_CODE"/>
+      <viewAttribute id="ENTITY_TYPE_DESCRIPTION"/>
+      <viewAttribute id="PARENT_ENTITY_DESCRIPTION"/>
+      <viewAttribute id="CLASS"/>
+      <viewAttribute id="DIVISION"/>
+      <viewAttribute id="DIV_TEXT"/>
+      <viewAttribute id="SUBDIVISION"/>
+      <viewAttribute id="SUBDIV_TEXT"/>
+      <viewAttribute id="GROUP"/>
+      <viewAttribute id="GROUP_TEXT"/>
+      <viewAttribute id="CLASS_TEXT"/>
+      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
+      <viewAttribute id="STD_ADDR_COUNTRY_2CHAR"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="STD_ADDR_PRIM_ADDRESS"/>
+      <viewAttribute id="MATCH_ADDR_REGION"/>
+      <viewAttribute id="MATCH_ADDR_LOCALITY"/>
+      <viewAttribute id="ADDR_LATITUDE" aggregationType="sum"/>
+      <viewAttribute id="ADDR_LONGITUDE" aggregationType="sum"/>
+      <viewAttribute id="CC_ValidFrom"/>
+      <viewAttribute id="CC_Validto"/>
+      <viewAttribute id="CC_ISPRTGROUP"/>
+      <viewAttribute id="CC_EST_TAX_BRACKET_2019"/>
+    
+      <viewAttribute id="UNDER_OVER_DECL"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_BPINFO_ABR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZACN" source="CC_ZACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_ADDRESS_DELIVERY" source="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_LOCALITY" source="RES_STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_REGION" source="RES_STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_POSTCODE1" source="RES_STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_TEL_NUMBER" source="RES_TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_ADDRESS_DELIVERY" source="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_LOCALITY" source="SER_STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_REGION" source="SER_STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_POSTCODE1" source="SER_STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_TEL_NUMBER" source="SER_TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_SMTP_ADDR" source="RES_SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_SMTP_ADDR" source="SER_SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP" source="RELTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP_TEXT" source="RELTYP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PT_STATUS" source="PT_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PtLiabilityTaxDate" source="CC_PtLiabilityTaxDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxRegistrationFromDate" source="CC_TaxRegistrationFromDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TrPeriodCycle" source="CC_TrPeriodCycle"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTERS_W_APPLY" source="INTERS_W_APPLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_QLDLiabilityDate" source="CC_QLDLiabilityDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ONLINE_FILL_COMM" source="ONLINE_FILL_COMM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PT_GROUP_STATUS" source="PT_GROUP_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ClientStatusTR" source="CC_ClientStatusTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AnnualEstimate" source="CC_AnnualEstimate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxBracket" source="CC_TaxBracket"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_GroupName" source="CC_GroupName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_Top300WQ" source="RC_Top300WQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_IsTop300" source="CC_IsTop300"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ENT_TYP_CD" source="ENT_TYP_CD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORG_NM" source="ORG_NM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MN_INDY_CLSN" source="MN_INDY_CLSN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MN_INDY_CLSN_DESCN" source="MN_INDY_CLSN_DESCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_ENTITY_CODE" source="PARENT_ENTITY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ENTITY_TYPE_DESCRIPTION" source="ENTITY_TYPE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_ENTITY_DESCRIPTION" source="PARENT_ENTITY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIVISION" source="DIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIV_TEXT" source="DIV_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIVISION" source="SUBDIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIV_TEXT" source="SUBDIV_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP" source="GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_TEXT" source="GROUP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_TEXT" source="CLASS_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Validto" source="CC_Validto"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ISPRTGROUP" source="CC_ISPRTGROUP"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNDER_OVER_DECL" source="UNDER_OVER_DECL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
+    </input>
+    <input node="P_2019TB">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EST_TAX_BRACKET_2019" source="CC_EST_TAX_BRACKET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="TAXPAYER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_2019TB" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CC_EST_TAX_BRACKET"/>
+      <viewAttribute id="TAXPAYER"/>
+    
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FISCAL_YEAR"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_PRT_TAX_BRACKETING"/>
+    <filter>&quot;FISCAL_YEAR&quot; = '2019'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPINFO_2020" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CC_ZACN"/>
+      <viewAttribute id="CC_ABN"/>
+      <viewAttribute id="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <viewAttribute id="RES_STD_ADDR_LOCALITY"/>
+      <viewAttribute id="RES_STD_ADDR_REGION"/>
+      <viewAttribute id="RES_STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="RES_TEL_NUMBER"/>
+      <viewAttribute id="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <viewAttribute id="SER_STD_ADDR_LOCALITY"/>
+      <viewAttribute id="SER_STD_ADDR_REGION"/>
+      <viewAttribute id="SER_STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="SER_TEL_NUMBER"/>
+      <viewAttribute id="RES_SMTP_ADDR"/>
+      <viewAttribute id="SER_SMTP_ADDR"/>
+      <viewAttribute id="CC_FullName"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="RELTYP"/>
+      <viewAttribute id="RELTYP_TEXT"/>
+      <viewAttribute id="PT_STATUS"/>
+      <viewAttribute id="CC_PtLiabilityTaxDate"/>
+      <viewAttribute id="CC_TaxRegistrationFromDate"/>
+      <viewAttribute id="CC_TrPeriodCycle"/>
+      <viewAttribute id="INTERS_W_APPLY"/>
+      <viewAttribute id="CC_QLDLiabilityDate"/>
+      <viewAttribute id="ONLINE_FILL_COMM"/>
+      <viewAttribute id="PT_GROUP_STATUS"/>
+      <viewAttribute id="CC_ClientStatusTR"/>
+      <viewAttribute id="CC_AnnualEstimate" aggregationType="sum"/>
+      <viewAttribute id="CC_TaxBracket"/>
+      <viewAttribute id="PARTNER1"/>
+      <viewAttribute id="CC_GroupName"/>
+      <viewAttribute id="RC_Top300WQ" aggregationType="sum"/>
+      <viewAttribute id="CC_IsTop300"/>
+      <viewAttribute id="ENT_TYP_CD"/>
+      <viewAttribute id="ORG_NM"/>
+      <viewAttribute id="MN_INDY_CLSN"/>
+      <viewAttribute id="MN_INDY_CLSN_DESCN"/>
+      <viewAttribute id="ACN"/>
+      <viewAttribute id="PARENT_ENTITY_CODE"/>
+      <viewAttribute id="ENTITY_TYPE_DESCRIPTION"/>
+      <viewAttribute id="PARENT_ENTITY_DESCRIPTION"/>
+      <viewAttribute id="CLASS"/>
+      <viewAttribute id="DIVISION"/>
+      <viewAttribute id="DIV_TEXT"/>
+      <viewAttribute id="SUBDIVISION"/>
+      <viewAttribute id="SUBDIV_TEXT"/>
+      <viewAttribute id="GROUP"/>
+      <viewAttribute id="GROUP_TEXT"/>
+      <viewAttribute id="CLASS_TEXT"/>
+      <viewAttribute id="STD_ADDR_COUNTRY_NAME"/>
+      <viewAttribute id="STD_ADDR_COUNTRY_2CHAR"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="STD_ADDR_PRIM_ADDRESS"/>
+      <viewAttribute id="MATCH_ADDR_REGION"/>
+      <viewAttribute id="MATCH_ADDR_LOCALITY"/>
+      <viewAttribute id="ADDR_LATITUDE" aggregationType="sum"/>
+      <viewAttribute id="ADDR_LONGITUDE" aggregationType="sum"/>
+      <viewAttribute id="CC_ValidFrom"/>
+      <viewAttribute id="CC_Validto"/>
+      <viewAttribute id="CC_ISPRTGROUP"/>
+      <viewAttribute id="CC_EST_TAX_BRACKET_2019"/>
+      <viewAttribute id="CC_EST_TAX_BRACKET_2020"/>
+    
+      <viewAttribute id="UNDER_OVER_DECL"/>
+    
+      <viewAttribute id="ZPRE_VALID_TO" aggregationType="min"/>
+    
+      <viewAttribute id="PSOBKEY"/>
+      <viewAttribute id="PARTNERACC"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_BPINFO_TB2019">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZACN" source="CC_ZACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ABN" source="CC_ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_ADDRESS_DELIVERY" source="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_LOCALITY" source="RES_STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_REGION" source="RES_STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_STD_ADDR_POSTCODE1" source="RES_STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_TEL_NUMBER" source="RES_TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_ADDRESS_DELIVERY" source="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_LOCALITY" source="SER_STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_REGION" source="SER_STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_STD_ADDR_POSTCODE1" source="SER_STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_TEL_NUMBER" source="SER_TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RES_SMTP_ADDR" source="RES_SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SER_SMTP_ADDR" source="SER_SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FullName" source="CC_FullName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP" source="RELTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELTYP_TEXT" source="RELTYP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PT_STATUS" source="PT_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_PtLiabilityTaxDate" source="CC_PtLiabilityTaxDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxRegistrationFromDate" source="CC_TaxRegistrationFromDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TrPeriodCycle" source="CC_TrPeriodCycle"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INTERS_W_APPLY" source="INTERS_W_APPLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_QLDLiabilityDate" source="CC_QLDLiabilityDate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ONLINE_FILL_COMM" source="ONLINE_FILL_COMM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PT_GROUP_STATUS" source="PT_GROUP_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ClientStatusTR" source="CC_ClientStatusTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_AnnualEstimate" source="CC_AnnualEstimate"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TaxBracket" source="CC_TaxBracket"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER1" source="PARTNER1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_GroupName" source="CC_GroupName"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RC_Top300WQ" source="RC_Top300WQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_IsTop300" source="CC_IsTop300"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ENT_TYP_CD" source="ENT_TYP_CD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORG_NM" source="ORG_NM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MN_INDY_CLSN" source="MN_INDY_CLSN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MN_INDY_CLSN_DESCN" source="MN_INDY_CLSN_DESCN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_ENTITY_CODE" source="PARENT_ENTITY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ENTITY_TYPE_DESCRIPTION" source="ENTITY_TYPE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_ENTITY_DESCRIPTION" source="PARENT_ENTITY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIVISION" source="DIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIV_TEXT" source="DIV_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIVISION" source="SUBDIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIV_TEXT" source="SUBDIV_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP" source="GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_TEXT" source="GROUP_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_TEXT" source="CLASS_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ValidFrom" source="CC_ValidFrom"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_Validto" source="CC_Validto"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_ISPRTGROUP" source="CC_ISPRTGROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EST_TAX_BRACKET_2019" source="CC_EST_TAX_BRACKET_2019"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNDER_OVER_DECL" source="UNDER_OVER_DECL"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZPRE_VALID_TO" source="ZPRE_VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSOBKEY" source="PSOBKEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
+    </input>
+    <input node="P_2020TB">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_EST_TAX_BRACKET_2020" source="CC_EST_TAX_BRACKET"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="TAXPAYER"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="PARTNER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_2020TB" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CC_EST_TAX_BRACKET"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="TAXPAYER"/>
+    
+      <viewAttribute id="FISCAL_YEAR"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_PRT_TAX_BRACKETING"/>
+    <filter>&quot;FISCAL_YEAR&quot; = '2020'</filter>
+  </calculationView>
 </calculationViews>
-<logicalModel id="J_BPINFO_ABR">
+<logicalModel id="J_BPINFO_2020">
   <attributes>
     <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false" descriptionColumnName="CC_FullName">
       <descriptions defaultDescription="Business Partner"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="PARTNER"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PARTNER"/>
     </attribute>
     <attribute id="CC_ZACN" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ACN"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_ZACN"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_ZACN"/>
     </attribute>
     <attribute id="CC_ABN" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABN"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_ABN"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_ABN"/>
     </attribute>
     <attribute id="RES_STD_ADDR_ADDRESS_DELIVERY" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Address"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="RES_STD_ADDR_ADDRESS_DELIVERY"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RES_STD_ADDR_ADDRESS_DELIVERY"/>
     </attribute>
     <attribute id="RES_STD_ADDR_LOCALITY" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Suburb"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="RES_STD_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RES_STD_ADDR_LOCALITY"/>
     </attribute>
     <attribute id="RES_STD_ADDR_REGION" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business State"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="RES_STD_ADDR_REGION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RES_STD_ADDR_REGION"/>
     </attribute>
     <attribute id="RES_STD_ADDR_POSTCODE1" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Post Code"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="RES_STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RES_STD_ADDR_POSTCODE1"/>
     </attribute>
     <attribute id="RES_TEL_NUMBER" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Tel Number"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="RES_TEL_NUMBER"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RES_TEL_NUMBER"/>
     </attribute>
     <attribute id="SER_STD_ADDR_ADDRESS_DELIVERY" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Standard Address"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="SER_STD_ADDR_ADDRESS_DELIVERY"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SER_STD_ADDR_ADDRESS_DELIVERY"/>
     </attribute>
     <attribute id="SER_STD_ADDR_LOCALITY" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Standard Suburb"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="SER_STD_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SER_STD_ADDR_LOCALITY"/>
     </attribute>
     <attribute id="SER_STD_ADDR_REGION" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Standard State"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="SER_STD_ADDR_REGION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SER_STD_ADDR_REGION"/>
     </attribute>
     <attribute id="SER_STD_ADDR_POSTCODE1" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Standard Post Code"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="SER_STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SER_STD_ADDR_POSTCODE1"/>
     </attribute>
     <attribute id="SER_TEL_NUMBER" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Standard Tel Number"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="SER_TEL_NUMBER"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SER_TEL_NUMBER"/>
     </attribute>
     <attribute id="RES_SMTP_ADDR" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Email"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="RES_SMTP_ADDR"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RES_SMTP_ADDR"/>
     </attribute>
     <attribute id="SER_SMTP_ADDR" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Standard Email"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="SER_SMTP_ADDR"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SER_SMTP_ADDR"/>
     </attribute>
   
     <attribute id="CC_FullName" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Business Partner Name"/>
   
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_FullName"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_FullName"/>
   
     </attribute>
   
     <attribute id="CLIENT" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAP Client"/>
   
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CLIENT"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CLIENT"/>
   
     </attribute>
     <attribute id="RELTYP" order="19" semanticType="empty" descriptionColumnName="RELTYP_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Grouping Type (Rel.)"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="RELTYP"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RELTYP"/>
     </attribute>
     <attribute id="RELTYP_TEXT" order="20" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Grouping Type (Text)"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="RELTYP_TEXT"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RELTYP_TEXT"/>
     </attribute>
     <attribute id="PT_STATUS" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Status (Facts)"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="PT_STATUS"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PT_STATUS"/>
     </attribute>
     <attribute id="CC_PtLiabilityTaxDate" order="22" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PT Liability Date"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_PtLiabilityTaxDate"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_PtLiabilityTaxDate"/>
     </attribute>
     <attribute id="CC_TaxRegistrationFromDate" order="23" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Registration From Date"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_TaxRegistrationFromDate"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_TaxRegistrationFromDate"/>
     </attribute>
     <attribute id="CC_TrPeriodCycle" order="24" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Return Periodicity"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_TrPeriodCycle"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_TrPeriodCycle"/>
     </attribute>
     <attribute id="INTERS_W_APPLY" order="25" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Inters. Wages apply"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="INTERS_W_APPLY"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="INTERS_W_APPLY"/>
     </attribute>
     <attribute id="CC_QLDLiabilityDate" order="26" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="QLD Liability Date"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_QLDLiabilityDate"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_QLDLiabilityDate"/>
     </attribute>
     <attribute id="ONLINE_FILL_COMM" order="27" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Online Filling Commit."/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="ONLINE_FILL_COMM"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ONLINE_FILL_COMM"/>
     </attribute>
     <attribute id="PT_GROUP_STATUS" order="28" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PT Group Status"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="PT_GROUP_STATUS"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PT_GROUP_STATUS"/>
     </attribute>
   
     <attribute id="CC_ClientStatusTR" order="29" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Status (Client)"/>
   
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_ClientStatusTR"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_ClientStatusTR"/>
   
     </attribute>
   
     <attribute id="CC_TaxBracket" order="31" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PT Client Bracket"/>
   
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_TaxBracket"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_TaxBracket"/>
   
     </attribute>
   
     <attribute id="PARTNER1" order="32" descriptionColumnName="CC_GroupName" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PRT/Floating Group"/>
   
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="PARTNER1"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PARTNER1"/>
   
     </attribute>
     <attribute id="CC_GroupName" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Group Name"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_GroupName"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_GroupName"/>
     </attribute>
     <attribute id="RC_Top300WQ" order="34" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Top 300 Client Rank"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="RC_Top300WQ"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="RC_Top300WQ"/>
     </attribute>
   
     <attribute id="CC_IsTop300" order="35" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Top 300 Client Flag"/>
   
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_IsTop300"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_IsTop300"/>
   
     </attribute>
   
     <attribute id="ENT_TYP_CD" order="36" semanticType="empty" descriptionColumnName="ENTITY_TYPE_DESCRIPTION" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Entity Type"/>
   
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="ENT_TYP_CD"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ENT_TYP_CD"/>
   
     </attribute>
     <attribute id="ORG_NM" order="37" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Organisation Name"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="ORG_NM"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ORG_NM"/>
     </attribute>
     <attribute id="MN_INDY_CLSN" order="38" semanticType="empty" descriptionColumnName="MN_INDY_CLSN_DESCN" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Classification"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="MN_INDY_CLSN"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="MN_INDY_CLSN"/>
     </attribute>
     <attribute id="MN_INDY_CLSN_DESCN" order="39" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Classification Description"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="MN_INDY_CLSN_DESCN"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="MN_INDY_CLSN_DESCN"/>
     </attribute>
     <attribute id="ACN" order="40" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - ACN"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="ACN"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ACN"/>
     </attribute>
     <attribute id="PARENT_ENTITY_CODE" order="41" semanticType="empty" descriptionColumnName="PARENT_ENTITY_DESCRIPTION" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Parent Entity"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="PARENT_ENTITY_CODE"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PARENT_ENTITY_CODE"/>
     </attribute>
     <attribute id="ENTITY_TYPE_DESCRIPTION" order="42" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Entity Type Description"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="ENTITY_TYPE_DESCRIPTION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ENTITY_TYPE_DESCRIPTION"/>
     </attribute>
     <attribute id="PARENT_ENTITY_DESCRIPTION" order="43" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Parent Entity Description"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="PARENT_ENTITY_DESCRIPTION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PARENT_ENTITY_DESCRIPTION"/>
     </attribute>
     <attribute id="CLASS" order="44" semanticType="empty" descriptionColumnName="CLASS_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Class"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CLASS"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CLASS"/>
     </attribute>
     <attribute id="DIVISION" order="45" semanticType="empty" descriptionColumnName="DIV_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Division"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="DIVISION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="DIVISION"/>
     </attribute>
     <attribute id="DIV_TEXT" order="46" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Division Text"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="DIV_TEXT"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="DIV_TEXT"/>
     </attribute>
     <attribute id="SUBDIVISION" order="47" semanticType="empty" descriptionColumnName="SUBDIV_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Subdivision"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="SUBDIVISION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SUBDIVISION"/>
     </attribute>
     <attribute id="SUBDIV_TEXT" order="48" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Subdivision Text"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="SUBDIV_TEXT"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="SUBDIV_TEXT"/>
     </attribute>
     <attribute id="GROUP" order="49" semanticType="empty" descriptionColumnName="GROUP_TEXT" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Group"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="GROUP"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="GROUP"/>
     </attribute>
     <attribute id="GROUP_TEXT" order="50" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Group Text"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="GROUP_TEXT"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="GROUP_TEXT"/>
     </attribute>
     <attribute id="CLASS_TEXT" order="51" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ANZSIC Class Text"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CLASS_TEXT"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CLASS_TEXT"/>
     </attribute>
     <attribute id="STD_ADDR_COUNTRY_NAME" order="52" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Country Name"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="STD_ADDR_COUNTRY_NAME"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="STD_ADDR_COUNTRY_NAME"/>
     </attribute>
     <attribute id="STD_ADDR_COUNTRY_2CHAR" order="53" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Country"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="STD_ADDR_COUNTRY_2CHAR"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="STD_ADDR_COUNTRY_2CHAR"/>
     </attribute>
     <attribute id="STD_ADDR_POSTCODE1" order="54" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - PostCode"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="STD_ADDR_POSTCODE1"/>
     </attribute>
     <attribute id="STD_ADDR_PRIM_ADDRESS" order="55" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Address"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="STD_ADDR_PRIM_ADDRESS"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="STD_ADDR_PRIM_ADDRESS"/>
     </attribute>
     <attribute id="MATCH_ADDR_REGION" order="56" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Region"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="MATCH_ADDR_REGION"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="MATCH_ADDR_REGION"/>
     </attribute>
     <attribute id="MATCH_ADDR_LOCALITY" order="57" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Locality"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="MATCH_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="MATCH_ADDR_LOCALITY"/>
     </attribute>
     <attribute id="ADDR_LATITUDE" order="58" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Latitude"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="ADDR_LATITUDE"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ADDR_LATITUDE"/>
     </attribute>
     <attribute id="ADDR_LONGITUDE" order="59" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ABR - Add - Longitude"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="ADDR_LONGITUDE"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ADDR_LONGITUDE"/>
     </attribute>
   
     <attribute id="CC_ISPRTGROUP" order="60" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Is PRT Group Flag"/>
   
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_ISPRTGROUP"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_ISPRTGROUP"/>
   
     </attribute>
   
     <attribute id="CC_ValidFrom" order="61" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Valid From (Relationship)"/>
   
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_ValidFrom"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_ValidFrom"/>
   
     </attribute>
     <attribute id="CC_Validto" order="62" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Valid To (Relationship)"/>
-      <keyMapping columnObjectName="J_BPINFO_ABR" columnName="CC_Validto"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_Validto"/>
+    </attribute>
+    <attribute id="CC_EST_TAX_BRACKET_2019" order="64" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Under/Over $6.5 Million (2019)"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_EST_TAX_BRACKET_2019"/>
+    </attribute>
+    <attribute id="CC_EST_TAX_BRACKET_2020" order="65" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Under/Over $6.5 Million (2020)"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="CC_EST_TAX_BRACKET_2020"/>
+    </attribute>
+  
+    <attribute id="UNDER_OVER_DECL" order="66" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Under/Over $6.5 Million (Client Declared)"/>
+  
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="UNDER_OVER_DECL"/>
+  
+    </attribute>
+  
+    <attribute id="ZPRE_VALID_TO" order="67" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ZPRE Facts Valid To"/>
+  
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="ZPRE_VALID_TO"/>
+  
+    </attribute>
+  
+    <attribute id="PSOBKEY" order="68" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Contract Object ID"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PSOBKEY"/>
+    </attribute>
+    <attribute id="PARTNERACC" order="69" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Contract Account Number"/>
+      <keyMapping columnObjectName="J_BPINFO_2020" columnName="PARTNERACC"/>
     </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_EST_TAX_BRACKET_JOINED" order="63" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Under/Over $6.5 Million"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="25">
+        <formula>CASE
+    WHEN &quot;CC_EST_TAX_BRACKET_2019&quot; IS NULL AND &quot;CC_EST_TAX_BRACKET_2020&quot; IS NULL THEN 'Unavailable'
+    WHEN &quot;CC_EST_TAX_BRACKET_2020&quot; IS NOT NULL AND &quot;CC_EST_TAX_BRACKET_2020&quot; != 'No wages lodged' THEN &quot;CC_EST_TAX_BRACKET_2020&quot;
+    WHEN &quot;CC_EST_TAX_BRACKET_2019&quot; IS NOT NULL THEN &quot;CC_EST_TAX_BRACKET_2019&quot;
+    ELSE 'Unavailable'
+END 
+</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures>
     <measure id="CC_AnnualEstimate" order="30" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Annual Estimate (B/Last TR)"/>
-      <measureMapping columnObjectName="J_BPINFO_ABR" columnName="CC_AnnualEstimate"/>
+      <measureMapping columnObjectName="J_BPINFO_2020" columnName="CC_AnnualEstimate"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures>
@@ -1922,6 +2521,10 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
         <attribute attributeName="PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
+      
+      
+      
       
       
       
@@ -1985,25 +2588,25 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="1454" y="112"/>
+      <upperLeftCorner x="1844" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1556" y="1716"/>
+      <upperLeftCorner x="2136" y="2236"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPROLE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1883" y="2076"/>
+      <upperLeftCorner x="1811" y="2556"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_ADR2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2396" y="1716"/>
+      <upperLeftCorner x="2346" y="2236"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1689" y="1376"/>
+      <upperLeftCorner x="1820" y="1876"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="J_BPINFO_ACN" modelObjectType="JoinNodeInput">
@@ -2015,7 +2618,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1784" y="1536"/>
+      <upperLeftCorner x="1793" y="2036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BPINFO" modelObjectNameSpace="J_BPINFO_ABN" modelObjectType="JoinNodeInput">
@@ -2028,25 +2631,25 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     </shape>
   
     <shape expanded="true" modelObjectName="R_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1766" y="1734"/>
+      <upperLeftCorner x="1926" y="2254"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1976" y="1734"/>
+      <upperLeftCorner x="1716" y="2254"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BP_ACN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1700" y="1884"/>
+      <upperLeftCorner x="1994" y="2404"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_BP_ABN" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1910" y="1884"/>
+      <upperLeftCorner x="1784" y="2404"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1738" y="1216"/>
+      <upperLeftCorner x="1847" y="1716"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_ACN" modelObjectNameSpace="J_BPINFO_RESADDRS" modelObjectType="JoinNodeInput">
@@ -2058,11 +2661,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BUSS_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1905" y="1384"/>
+      <upperLeftCorner x="2030" y="1884"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRS_PHONE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2088" y="1536"/>
+      <upperLeftCorner x="2213" y="2036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="J_ADDRS_PHONE" modelObjectType="JoinNodeInput">
@@ -2074,7 +2677,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_ADDRES_EMAIL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2186" y="1716"/>
+      <upperLeftCorner x="2556" y="2236"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="J_ADDRES_EMAIL" modelObjectType="JoinNodeInput">
@@ -2087,25 +2690,25 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     </shape>
   
     <shape expanded="true" modelObjectName="R_DEDUP_ADDR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2330" y="1894"/>
+      <upperLeftCorner x="2400" y="2414"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_ADR6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2120" y="1876"/>
+      <upperLeftCorner x="2619" y="2396"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CV_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2321" y="2076"/>
+      <upperLeftCorner x="2400" y="2556"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_SERVICE_ADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2115" y="1384"/>
+      <upperLeftCorner x="2240" y="1884"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1764" y="1056"/>
+      <upperLeftCorner x="2053" y="1556"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_RESADDRS" modelObjectNameSpace="J_BPINFO_SERADDRS" modelObjectType="JoinNodeInput">
@@ -2117,11 +2720,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="293"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BUT050" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1346" y="1716"/>
+      <upperLeftCorner x="2766" y="2236"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_GROUPTYP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1528" y="876"/>
+      <upperLeftCorner x="2133" y="1376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_SERADDRS" modelObjectNameSpace="J_BPINFO_GROUPTYP" modelObjectType="JoinNodeInput">
@@ -2133,11 +2736,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_ONLY_ONE_REL" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1460" y="1394"/>
+      <upperLeftCorner x="2450" y="1894"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_REL_BPINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1460" y="1536"/>
+      <upperLeftCorner x="2471" y="2036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BUT050" modelObjectNameSpace="J_REL_BPINFO" modelObjectType="JoinNodeInput">
@@ -2149,43 +2752,43 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BpFacts" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="730" y="2426"/>
+      <upperLeftCorner x="936" y="3046"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_QLD_Liability" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1352" y="2221"/>
+      <upperLeftCorner x="1146" y="2841"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_Payroll_Liability" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="722" y="2221"/>
+      <upperLeftCorner x="306" y="2841"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_Interstate_wapply" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="2221"/>
+      <upperLeftCorner x="936" y="2841"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TaxGroupStat" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="2221"/>
+      <upperLeftCorner x="1566" y="2841"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_OnlineFillingComm" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1582" y="2221"/>
+      <upperLeftCorner x="1356" y="2841"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TaxObligationFromDate" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="932" y="2221"/>
+      <upperLeftCorner x="91" y="2841"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_RegistrationStatus" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="512" y="2221"/>
+      <upperLeftCorner x="516" y="2841"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TrCycle" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1142" y="2221"/>
+      <upperLeftCorner x="726" y="2841"/>
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FACTS_TAXDATEF" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="831" y="1716"/>
+      <upperLeftCorner x="444" y="2396"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_STATUS_LIABILITY" modelObjectNameSpace="J_FACTS_TAXDATEF" modelObjectType="JoinNodeInput">
@@ -2197,7 +2800,7 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_STATUS_LIABILITY" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="737" y="1876"/>
+      <upperLeftCorner x="471" y="2556"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="R_Registrationstatus" modelObjectNameSpace="J_STATUS_LIABILITY" modelObjectType="JoinNodeInput">
@@ -2209,20 +2812,20 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_TaxObligationFrom" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="952" y="2086"/>
+      <upperLeftCorner x="91" y="2716"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_Registrationstatus" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="532" y="2086"/>
+      <upperLeftCorner x="511" y="2716"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="R_Payroll_Liability" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="742" y="2086"/>
+      <upperLeftCorner x="301" y="2716"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_FACTS_TRPERIOD" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="874" y="1536"/>
+      <upperLeftCorner x="695" y="2236"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FACTS_TAXDATEF" modelObjectNameSpace="J_FACTS_TRPERIOD" modelObjectType="JoinNodeInput">
@@ -2234,11 +2837,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_TrCycle" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1162" y="2086"/>
+      <upperLeftCorner x="721" y="2716"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FACTS_INTWAPP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="847" y="1376"/>
+      <upperLeftCorner x="905" y="2036"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FACTS_TRPERIOD" modelObjectNameSpace="J_FACTS_INTWAPP" modelObjectType="JoinNodeInput">
@@ -2250,11 +2853,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_Interstate_wapply" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="322" y="2086"/>
+      <upperLeftCorner x="931" y="2716"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FACTS_QLDLIABDT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1064" y="1216"/>
+      <upperLeftCorner x="1091" y="1876"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FACTS_INTWAPP" modelObjectNameSpace="J_FACTS_QLDLIABDT" modelObjectType="JoinNodeInput">
@@ -2266,11 +2869,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_QLD_Liability" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1372" y="2086"/>
+      <upperLeftCorner x="1141" y="2716"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FACT_ONLINEFILLCOMM" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1205" y="1056"/>
+      <upperLeftCorner x="1290" y="1716"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FACTS_QLDLIABDT" modelObjectNameSpace="J_FACT_ONLINEFILLCOMM" modelObjectType="JoinNodeInput">
@@ -2283,11 +2886,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     </shape>
   
     <shape expanded="true" modelObjectName="R_OnlineFillinComm" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1582" y="2086"/>
+      <upperLeftCorner x="1351" y="2716"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FACT_PTGRPSTAT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1277" y="876"/>
+      <upperLeftCorner x="1485" y="1556"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_FACT_ONLINEFILLCOMM" modelObjectNameSpace="J_FACT_PTGRPSTAT" modelObjectType="JoinNodeInput">
@@ -2299,33 +2902,56 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_TaxGroupStat" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="2086"/>
+      <upperLeftCorner x="1561" y="2716"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_BPINFO_FACTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1501" y="716"/>
+      <upperLeftCorner x="2062" y="1216"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_GROUPTYP" modelObjectNameSpace="J_BPINFO_FACTS" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="182" y="42"/>
       <rectangleSize width="293"/>
     </shape>
-    <shape modelObjectName="J_FACT_PTGRPSTAT" modelObjectNameSpace="J_BPINFO_FACTS" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_UNDER_OVER_6_5" modelObjectNameSpace="J_BPINFO_FACTS" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="648" y="79"/>
       <rectangleSize width="250"/>
     </shape>
+  
+    <shape expanded="true" modelObjectName="J_UNDER_OVER_6_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1880" y="1376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_FACT_PTGRPSTAT" modelObjectNameSpace="J_UNDER_OVER_6_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="R_UNDER_OVER_6_5" modelObjectNameSpace="J_UNDER_OVER_6_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="189"/>
+    </shape>
+    <shape expanded="true" modelObjectName="R_UNDER_OVER_6_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-141" y="2386"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_UNDER_OVER_6_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1776" y="2841"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="P_TaxReturns" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1060" y="876"/>
+      <upperLeftCorner x="1660" y="1376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="R_ONE_TR_PER_BP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1060" y="728"/>
+      <upperLeftCorner x="1660" y="1228"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_TAXBRACKET" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1552" y="536"/>
+      <upperLeftCorner x="2112" y="1016"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_FACTS" modelObjectNameSpace="J_BPINFO_TAXBRACKET" modelObjectType="JoinNodeInput">
@@ -2337,11 +2963,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="R_TOP300" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1034" y="554"/>
+      <upperLeftCorner x="1902" y="1034"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_TOP300" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1525" y="376"/>
+      <upperLeftCorner x="2171" y="836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_TAXBRACKET" modelObjectNameSpace="J_BPINFO_TOP300" modelObjectType="JoinNodeInput">
@@ -2354,11 +2980,11 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     </shape>
   
     <shape expanded="true" modelObjectName="P_ABR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1315" y="376"/>
+      <upperLeftCorner x="1961" y="836"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPINFO_ABR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1454" y="217"/>
+      <upperLeftCorner x="2098" y="676"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_BPINFO_TOP300" modelObjectNameSpace="J_BPINFO_ABR" modelObjectType="JoinNodeInput">
@@ -2368,6 +2994,42 @@ AND (&quot;FACT_CATEGORY&quot; = '0015' OR &quot;FACT_CATEGORY&quot; = '0013' OR
     <shape modelObjectName="P_ABR" modelObjectNameSpace="J_BPINFO_ABR" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="256"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_PRT_TAX_BRACKETING" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1705" y="836"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPINFO_TB2019" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1983" y="516"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_ABR" modelObjectNameSpace="J_BPINFO_TB2019" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_2019TB" modelObjectNameSpace="J_BPINFO_TB2019" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="394" y="42"/>
+      <rectangleSize width="214"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_2019TB" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1888" y="684"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_BPINFO_2020" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1956" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPINFO_TB2019" modelObjectNameSpace="J_BPINFO_2020" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_2020TB" modelObjectNameSpace="J_BPINFO_2020" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="506" y="127"/>
+      <rectangleSize width="214"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_2020TB" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1678" y="684"/>
+      <rectangleSize height="30" width="160"/>
     </shape></shapes>
 </layout>
 </Calculation:scenario>

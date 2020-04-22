@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_RefundsAnalysis" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CVC_LT_COVID_RefundsAnalysis"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.synonyms::VICDCFPAY">
+    <resourceUri>osr.business.semantic.db.synonyms::VICDCFPAY</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::LTAXBPPX">
+    <resourceUri>osr.business.semantic.db.synonyms::LTAXBPPX</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CV_LtFinancials">
+    <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CV_LtFinancials</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_ConsolidatedAnalysis">
+    <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_ConsolidatedAnalysis</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="J_BPPX_CASHFLOW" cardinality="C1_1" joinType="rightOuter" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="BKOND"/>
+      <viewAttribute id="DBERVON"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="POSTINGDATE"/>
+      <viewAttribute id="FLOWTYPE"/>
+      <viewAttribute id="CFSTATUS"/>
+      <viewAttribute hidden="true" id="JOIN$REFGUID$CC_DOCGUID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::VICDCFPAY">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BKOND" source="BKOND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POSTINGDATE" source="POSTINGDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FLOWTYPE" source="FLOWTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CFSTATUS" source="CFSTATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$REFGUID$CC_DOCGUID" source="REFGUID"/>
+    </input>
+    <input node="AGG_LTAXBPPX">
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$REFGUID$CC_DOCGUID" source="CC_DOCGUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="CLIENT"/>
+    </input>
+    <filter>&quot;FLOWTYPE&quot; = 'P102' AND &quot;CFSTATUS&quot; = 'I'</filter>
+    <joinAttribute name="JOIN$REFGUID$CC_DOCGUID"/>
+    <joinAttribute name="MANDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_LTAXBPPX">
+    <viewAttributes>
+      <viewAttribute id="CC_DOCGUID"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="VALIDFROM"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="PROP_TAX_AMOUNT" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="R_FIRST_COVID_PER_PARCEL"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_FIRST_COVID_PER_PARCEL">
+    <viewAttributes>
+      <viewAttribute id="CC_DOCGUID"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="VALIDFROM"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="PROP_TAX_AMOUNT" aggregationType="sum"/>
+      <viewAttribute id="DOCGUID"/>
+      <viewAttribute id="EXM_DED_CODE"/>
+      <viewAttribute id="PLNO"/>
+      <viewAttribute id="UPDATE_TS" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_LTAXBPPX"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>CLIENT</partitionViewAttributeName>
+      <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <partitionViewAttributeName>VALIDFROM</partitionViewAttributeName>
+      <partitionViewAttributeName>PLNO</partitionViewAttributeName>
+      <order byViewAttributeName="UPDATE_TS" direction="ASC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_LTAXBPPX" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="VALIDFROM"/>
+      <viewAttribute id="PARTNER"/>
+    
+      <viewAttribute id="PROP_TAX_AMOUNT"/>
+      <viewAttribute id="DOCGUID"/>
+      <viewAttribute id="EXM_DED_CODE"/>
+      <viewAttribute id="PLNO"/>
+      <viewAttribute id="UPDATE_TS"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_DOCGUID" datatype="NVARCHAR" length="200" expressionLanguage="SQL">
+        <formula>TO_NVARCHAR(&quot;DOCGUID&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="osr.business.semantic.db.synonyms::LTAXBPPX"/>
+    <filter>&quot;EXM_DED_CODE&quot; = 'C'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="P_FINANCIALS" filterExpressionLanguage="SQL">
+    <viewAttributes>
+    
+      <viewAttribute id="BETRH"/>
+      <viewAttribute id="AUGBT"/>
+    
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="DFKK_H_GPART"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="DFKK_H_BUDAT"/>
+      <viewAttribute id="BLART_1"/>
+    
+      <viewAttribute id="BLART"/>
+      <viewAttribute id="AUGDT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.LandTax::CV_LtFinancials"/>
+    <filter>&quot;BLART_1&quot; = 'RE' AND &quot;BLART&quot; != 'TA'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NEJ_REFUNDS_AFTER_COVID_POSTING" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="DBERVON"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="POSTINGDATE"/>
+      <viewAttribute id="AUGBT" aggregationType="sum"/>
+    
+      <viewAttribute id="AUGDT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="AGG_CASHFLOW_PER_YEAR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POSTINGDATE" source="POSTINGDATE"/></input>
+    <input node="P_FINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+    </input>
+    <joinAttribute leftColumn="DBERVON" rightColumn="TAXYRSTARTDT" operator="EQ"/>
+    <joinAttribute leftColumn="PARTNER" rightColumn="DFKK_H_GPART" operator="EQ"/>
+    <joinAttribute leftColumn="MANDT" rightColumn="MANDT" operator="EQ"/>
+    <joinAttribute leftColumn="POSTINGDATE" rightColumn="AUGDT" operator="LE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_CASHFLOW_PER_YEAR">
+    <viewAttributes>
+      <viewAttribute id="BKOND" aggregationType="sum"/>
+      <viewAttribute id="DBERVON"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="POSTINGDATE" aggregationType="min"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="J_BPPX_CASHFLOW"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="P_COVID_ANALYSIS">
+    <viewAttributes>
+      <viewAttribute id="CC_BPNUMBER"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="BPCONCESSVAL" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVID_ConsolidatedAnalysis"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_COVID_RELIEF_AMT" cardinality="C1_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="DBERVON"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="POSTINGDATE"/>
+      <viewAttribute id="AUGBT" aggregationType="sum"/>
+      <viewAttribute id="AUGDT"/>
+    
+      <viewAttribute id="BPCONCESSVAL" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="NEJ_REFUNDS_AFTER_COVID_POSTING">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="DBERVON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POSTINGDATE" source="POSTINGDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+    </input>
+    <input node="P_COVID_ANALYSIS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPCONCESSVAL" source="BPCONCESSVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="CC_BPNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DBERVON" source="TAXYRSTARTDT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="DBERVON"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_COVID_RELIEF_AMT">
+  <attributes>
+    <attribute id="DBERVON" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DBERVON"/>
+      <keyMapping columnObjectName="J_COVID_RELIEF_AMT" columnName="DBERVON"/>
+    </attribute>
+    <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PARTNER"/>
+      <keyMapping columnObjectName="J_COVID_RELIEF_AMT" columnName="PARTNER"/>
+    </attribute>
+    <attribute id="MANDT" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MANDT"/>
+      <keyMapping columnObjectName="J_COVID_RELIEF_AMT" columnName="MANDT"/>
+    </attribute></attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="AUGBT" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AUGBT"/>
+      <measureMapping columnObjectName="J_COVID_RELIEF_AMT" columnName="AUGBT"/>
+    </measure>
+  
+    <measure id="BPCONCESSVAL" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax deduction"/>
+      <measureMapping columnObjectName="J_COVID_RELIEF_AMT" columnName="BPCONCESSVAL"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures>
+    <measure id="CC_RELIEF_REFUNDED" order="5" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="15" scale="2" expressionLanguage="SQL">
+      <formula>CASE
+    WHEN &quot;AUGBT&quot; &lt; &quot;BPCONCESSVAL&quot; THEN &quot;AUGBT&quot;
+    ELSE &quot;BPCONCESSVAL&quot;
+END</formula>
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_BPPX_CASHFLOW" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="103" y="645"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.synonyms::VICDCFPAY" modelObjectNameSpace="J_BPPX_CASHFLOW" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="348"/>
+    </shape>
+    <shape modelObjectName="AGG_LTAXBPPX" modelObjectNameSpace="J_BPPX_CASHFLOW" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="177"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="AGG_LTAXBPPX" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="103" y="772"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="R_FIRST_COVID_PER_PARCEL" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="103" y="885"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+  
+    <shape expanded="true" modelObjectName="P_LTAXBPPX" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="103" y="987"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_FINANCIALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-157" y="535"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="NEJ_REFUNDS_AFTER_COVID_POSTING" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="370"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="AGG_CASHFLOW_PER_YEAR" modelObjectNameSpace="NEJ_REFUNDS_AFTER_COVID_POSTING" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="164"/>
+    </shape>
+    <shape modelObjectName="P_FINANCIALS" modelObjectNameSpace="NEJ_REFUNDS_AFTER_COVID_POSTING" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="AGG_CASHFLOW_PER_YEAR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="535"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_COVID_ANALYSIS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="376" y="374"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_COVID_RELIEF_AMT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="206"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="NEJ_REFUNDS_AFTER_COVID_POSTING" modelObjectNameSpace="J_COVID_RELIEF_AMT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_COVID_ANALYSIS" modelObjectNameSpace="J_COVID_RELIEF_AMT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="394" y="30"/>
+      <rectangleSize width="194"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

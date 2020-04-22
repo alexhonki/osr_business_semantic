@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVC_CO_EdwDataLoadTimes2" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="EDW Data Load Times 2"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Tables::EdwDataLoadTimes">
+    <resourceUri>osr.business.semantic.db.Tables::EdwDataLoadTimes</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_T_EdwDataLoadTimes" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="END_TIME"/>
+      <viewAttribute id="AS_AT"/>
+    
+      <viewAttribute id="DATE_AS"/>
+    
+      <viewAttribute id="FILTER"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_CurrentTime" datatype="TIME" expressionLanguage="SQL">
+        <formula>CURRENT_TIME</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_DateAsAt" datatype="DATE" expressionLanguage="SQL">
+        <formula>CASE
+WHEN &quot;END_TIME&quot;='00:00:01' AND &quot;AS_AT&quot; = '07:00 PM' THEN ADD_DAYS(CURRENT_DATE,-1)
+ELSE CURRENT_DATE
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="osr.business.semantic.db.Tables::EdwDataLoadTimes"/>
+    <filter>&quot;CC_CurrentTime&quot;&gt;&quot;END_TIME&quot; AND &quot;FILTER&quot;='COVID2'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_END_TIME">
+    <viewAttributes>
+      <viewAttribute id="END_TIME" aggregationType="min"/>
+      <viewAttribute id="AS_AT"/>
+      <viewAttribute id="CC_CurrentTime" aggregationType="min"/>
+    
+      <viewAttribute id="DATE_AS"/>
+    
+      <viewAttribute id="CC_DateAsAt"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_T_EdwDataLoadTimes"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <order byViewAttributeName="END_TIME" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+      <rankViewAttributeName>Rank_Column</rankViewAttributeName>
+    </windowFunction>
+  </calculationView>
+</calculationViews>
+<logicalModel id="R_END_TIME">
+  <attributes>
+    <attribute id="END_TIME" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="End Time of EDW Load"/>
+      <keyMapping columnObjectName="R_END_TIME" columnName="END_TIME"/>
+    </attribute>
+    <attribute id="AS_AT" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Time as at"/>
+      <keyMapping columnObjectName="R_END_TIME" columnName="AS_AT"/>
+    </attribute>
+  
+    <attribute id="DATE_AS" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Date as at"/>
+  
+      <keyMapping columnObjectName="R_END_TIME" columnName="DATE_AS"/>
+  
+    </attribute>
+  
+    <attribute id="CC_DateAsAt" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_DateAsAt"/>
+  
+      <keyMapping columnObjectName="R_END_TIME" columnName="CC_DateAsAt"/>
+  
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures>
+    <measure id="Counter" order="3" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="Counter"/>
+      <exceptionAggregation>
+        <attribute attributeName="AS_AT"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="92" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_T_EdwDataLoadTimes" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="322"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="R_END_TIME" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
