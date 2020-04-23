@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnGeneralLedgerRec" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.business.semantic.db.Business_Models.Finance::CV_FnGeneralLedgerRec" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_GeneralLedgerRec"/>
 <localVariables/>
 <variableMappings/>
@@ -29,7 +29,34 @@
       <viewAttribute id="GL_Groups_3"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
+    <restrictedViewAttributes>
+      <restrictedViewAttribute id="RC_GLACTUALS" baseViewAttribute="GLActuals">
+        <descriptions defaultDescription=""/>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="AWTYP">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="FKKSU"/>
+          </filter>
+          <attributeName>AWTYP</attributeName>
+        </restriction>
+      </restrictedViewAttribute>
+      <restrictedViewAttribute id="RC_GLPLANNINGV0" baseViewAttribute="GLPlanningV0">
+        <descriptions defaultDescription=""/>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="AWTYP">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value=""/>
+          </filter>
+          <attributeName>AWTYP</attributeName>
+        </restriction>
+      </restrictedViewAttribute>
+      <restrictedViewAttribute id="RC_GLPLANNINGV1" baseViewAttribute="GLPlanningV1" restrictionExpressionLanguage="SQL">
+        <descriptions defaultDescription=""/>
+        <restrictionExpression>(&quot;AWTYP&quot;='')</restrictionExpression>
+      </restrictedViewAttribute>
+      <restrictedViewAttribute id="RC_GLPLANNINGV2" baseViewAttribute="GLPlanningV2" restrictionExpressionLanguage="SQL">
+        <descriptions defaultDescription=""/>
+        <restrictionExpression>(&quot;AWTYP&quot;='')</restrictionExpression>
+      </restrictedViewAttribute>
+    </restrictedViewAttributes>
     <input node="osr.business.semantic.db.Business_Models.Finance::CV_FnGeneralLedgerTotals"/></calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_GLBASE">
     <viewAttributes>
@@ -62,8 +89,6 @@
     
       <viewAttribute id="EndOfMonth"/>
     
-      <viewAttribute id="AWTYP"/>
-    
       <viewAttribute id="GL_Groups_2"/>
       <viewAttribute id="GL_Groups_3"/>
     </viewAttributes>
@@ -79,8 +104,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GLGroups" source="GLGroups"/>
     
-      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="GL_Groups_2" source="GL_Groups_2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GL_Groups_3" source="GL_Groups_3"/>
     </input>
@@ -90,12 +113,10 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="FISCAL_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="HKONT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYPKey"/>
     </input>
     <joinAttribute name="RYEAR"/>
     <joinAttribute name="RACCT"/>
     <joinAttribute name="Period"/>
-    <joinAttribute name="AWTYP"/>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_GLBASE">
     <viewAttributes>
@@ -190,8 +211,6 @@
       <viewAttribute id="YTD_BETRH" aggregationType="sum"/>
       <viewAttribute id="YTD_GLPlanningV1" aggregationType="sum"/>
     
-      <viewAttribute id="AWTYP"/>
-    
       <viewAttribute id="GL_Groups_2"/>
       <viewAttribute id="GL_Groups_3"/>
     </viewAttributes>
@@ -207,8 +226,6 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GLGroups" source="GLGroups"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EndOfMonth" source="EndOfMonth"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="GL_Groups_2" source="GL_Groups_2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GL_Groups_3" source="GL_Groups_3"/>
@@ -250,18 +267,13 @@
       <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="GLGroups"/>
     </attribute>
   
-    <attribute id="AWTYP" order="18" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Reference procedure"/>
-  
-      <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="AWTYP"/>
-  
-    </attribute>
-  
-    <attribute id="GL_Groups_2" order="19" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="GL_Groups_2" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="General Ledger Account Type"/>
+  
       <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="GL_Groups_2"/>
+  
     </attribute>
-    <attribute id="GL_Groups_3" order="20" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="GL_Groups_3" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Revenue Category"/>
       <keyMapping columnObjectName="J_GLREC_YTDAMTS" columnName="GL_Groups_3"/>
     </attribute>
@@ -331,10 +343,12 @@
       
       
       
+      
       </measure>
     <measure id="Variance" order="12" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="23" scale="2" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Subledger to General Ledger Variance"/>
       <formula>&quot;GLActuals&quot; - &quot;BETRH&quot;</formula>
+      
       
       
       
@@ -386,7 +400,7 @@ not(
     </shape>
   
     <shape expanded="true" modelObjectName="NEJ_YTDAMTS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="514" y="495"/>
+      <upperLeftCorner x="514" y="478"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_GLREC" modelObjectNameSpace="NEJ_YTDAMTS" modelObjectType="JoinNodeInput">
