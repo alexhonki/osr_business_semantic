@@ -13,6 +13,12 @@
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpFacts">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_BpFacts</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVC_CO_BpAddresses">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVC_CO_BpAddresses</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::ADR6">
+    <resourceUri>osr.business.semantic.db.synonyms::ADR6</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:JoinView" id="J_CONTACC_BALANCE" joinType="leftOuter">
@@ -34,9 +40,15 @@
       <viewAttribute id="PARTNERACCTYP"/>
       <viewAttribute id="PARTNERACC"/>
       <viewAttribute id="PARTNERACCTYPE_TEXT"/>
+    
+      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY"/>
+      <viewAttribute id="STD_ADDR_LOCALITY"/>
+      <viewAttribute id="STD_ADDR_REGION"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="SMTP_ADDR"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="J_BPID_DT">
+    <input node="J_Facts_Address_Email">
       <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
@@ -48,6 +60,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACCTYP" source="PARTNERACCTYP"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACCTYPE_TEXT" source="PARTNERACCTYPE_TEXT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SMTP_ADDR" source="SMTP_ADDR"/>
     </input>
     <input node="AGG_CONTACC_BALANCE">
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
@@ -201,6 +219,139 @@
 &quot;XOBSL&quot; &lt;&gt; 'X'
 </filter>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Address" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="ADR_KIND"/>
+      <viewAttribute id="ADDRNUMBER"/>
+      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY"/>
+      <viewAttribute id="STD_ADDR_LOCALITY"/>
+      <viewAttribute id="STD_ADDR_REGION"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="BUT021FS_VALID_TO"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVC_CO_BpAddresses">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT021FS_VALID_TO" source="VALID_TO"/>
+    </input>
+    <filter>&quot;ADR_KIND&quot;= 'XXDEFAULT' and TO_NVARCHAR(&quot;BUT021FS_VALID_TO&quot;) = '99991231235959'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Email" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="ADDRNUMBER"/>
+      <viewAttribute id="FLGDEFAULT"/>
+      <viewAttribute id="SMTP_ADDR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::ADR6"/>
+    <filter>&quot;FLGDEFAULT&quot; = 'X'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_Address_Email" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="ADR_KIND"/>
+      <viewAttribute id="ADDRNUMBER"/>
+      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY"/>
+      <viewAttribute id="STD_ADDR_LOCALITY"/>
+      <viewAttribute id="STD_ADDR_REGION"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="BUT021FS_VALID_TO" aggregationType="sum"/>
+      <viewAttribute id="SMTP_ADDR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="R_Address">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDRNUMBER" source="ADDRNUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT021FS_VALID_TO" source="BUT021FS_VALID_TO"/>
+    </input>
+    <input node="P_Email">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SMTP_ADDR" source="SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDRNUMBER" source="ADDRNUMBER"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="ADDRNUMBER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_Address">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="ADR_KIND"/>
+      <viewAttribute id="ADDRNUMBER"/>
+      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY"/>
+      <viewAttribute id="STD_ADDR_LOCALITY"/>
+      <viewAttribute id="STD_ADDR_REGION"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="BUT021FS_VALID_TO" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_Address"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>PARTNER</partitionViewAttributeName>
+      <order byViewAttributeName="ADDRNUMBER" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_Facts_Address_Email" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="BP_TYPE_DESC"/>
+      <viewAttribute id="ABN"/>
+      <viewAttribute id="ACN"/>
+      <viewAttribute id="CC_FULL_NAME"/>
+      <viewAttribute id="CC_HAS_BANK_DETAILS"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="PARTNERACCTYP"/>
+      <viewAttribute id="PARTNERACC"/>
+      <viewAttribute id="PARTNERACCTYPE_TEXT"/>
+      <viewAttribute id="BUT000_VALID_TO" aggregationType="sum"/>
+      <viewAttribute id="AUGRP"/>
+      <viewAttribute id="BP_TYPE"/>
+      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY"/>
+      <viewAttribute id="STD_ADDR_LOCALITY"/>
+      <viewAttribute id="STD_ADDR_REGION"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="SMTP_ADDR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_BPID_DT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE_DESC" source="BP_TYPE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABN" source="ABN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACN" source="ACN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_FULL_NAME" source="CC_FULL_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_HAS_BANK_DETAILS" source="CC_HAS_BANK_DETAILS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACCTYP" source="PARTNERACCTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACC" source="PARTNERACC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNERACCTYPE_TEXT" source="PARTNERACCTYPE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUT000_VALID_TO" source="BUT000_VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRP" source="AUGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_TYPE" source="BP_TYPE"/>
+    </input>
+    <input node="J_Address_Email">
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SMTP_ADDR" source="SMTP_ADDR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="PARTNER"/>
+  </calculationView>
 </calculationViews>
 <logicalModel id="J_CONTACC_BALANCE">
   <attributes>
@@ -245,7 +396,28 @@
   
       <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="PARTNERACC"/>
   
-    </attribute></attributes>
+    </attribute>
+    <attribute id="STD_ADDR_ADDRESS_DELIVERY" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Standard Address"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="STD_ADDR_ADDRESS_DELIVERY"/>
+    </attribute>
+    <attribute id="STD_ADDR_LOCALITY" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Locality"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="STD_ADDR_LOCALITY"/>
+    </attribute>
+    <attribute id="STD_ADDR_REGION" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Region"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="STD_ADDR_REGION"/>
+    </attribute>
+    <attribute id="STD_ADDR_POSTCODE1" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Postcode"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="STD_ADDR_POSTCODE1"/>
+    </attribute>
+    <attribute id="SMTP_ADDR" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Email"/>
+      <keyMapping columnObjectName="J_CONTACC_BALANCE" columnName="SMTP_ADDR"/>
+    </attribute>
+  </attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="RC_NET_OPEN_AMT" order="10" aggregationType="sum" measureType="simple">
@@ -268,15 +440,15 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="329" y="112"/>
+      <upperLeftCorner x="513.9076941064619" y="112"/>
     
       <rectangleSize width="159"/>
     </shape>
     <shape expanded="true" modelObjectName="J_CONTACC_BALANCE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="328" y="217"/>
+      <upperLeftCorner x="513.4076941064619" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="J_BPID_DT" modelObjectNameSpace="J_CONTACC_BALANCE" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="J_Facts_Address_Email" modelObjectNameSpace="J_CONTACC_BALANCE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="620" y="30"/>
       <rectangleSize width="217"/>
     </shape>
@@ -285,7 +457,7 @@
       <rectangleSize width="217"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPID_DT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="376"/>
+      <upperLeftCorner x="538.6666666666669" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_BPInfoRolesBank" modelObjectNameSpace="J_BPID_DT" modelObjectType="JoinNodeInput">
@@ -298,18 +470,55 @@
     </shape>
   
     <shape expanded="true" modelObjectName="AGG_CONTACC_BALANCE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="395" y="376"/>
+      <upperLeftCorner x="590.6729801832304" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_BPInfoRolesBank" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="536"/>
+      <upperLeftCorner x="722.0000000000002" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
   
     <shape expanded="true" modelObjectName="P_BPFacts" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="536"/>
+      <upperLeftCorner x="512.0000000000002" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
-    </shape></shapes>
+    </shape>
+    <shape expanded="true" modelObjectName="P_Address" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92.00000000000006" y="821.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_Email" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302.0000000000003" y="696.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_Address_Email" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="275.3333333333336" y="536.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="R_Address" modelObjectNameSpace="J_Address_Email" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="264.9111328125"/>
+    </shape>
+    <shape modelObjectName="P_Email" modelObjectNameSpace="J_Address_Email" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="164.8369140625"/>
+    </shape>
+    <shape expanded="true" modelObjectName="R_Address" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="706.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_Facts_Address_Email" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302.0000000000002" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_BPID_DT" modelObjectNameSpace="J_Facts_Address_Email" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="J_Address_Email" modelObjectNameSpace="J_Facts_Address_Email" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
