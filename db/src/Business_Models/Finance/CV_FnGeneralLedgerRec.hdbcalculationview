@@ -31,7 +31,6 @@
     <calculatedViewAttributes/>
     <restrictedViewAttributes>
       <restrictedViewAttribute id="RC_GLACTUALS" baseViewAttribute="GLActuals">
-        <descriptions defaultDescription=""/>
         <restriction logicalOperator="AND">
           <filter xsi:type="Privilege:AttributeFilter" attributeName="AWTYP">
             <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="FKKSU"/>
@@ -40,7 +39,6 @@
         </restriction>
       </restrictedViewAttribute>
       <restrictedViewAttribute id="RC_GLPLANNINGV0" baseViewAttribute="GLPlanningV0">
-        <descriptions defaultDescription=""/>
         <restriction logicalOperator="AND">
           <filter xsi:type="Privilege:AttributeFilter" attributeName="AWTYP">
             <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value=""/>
@@ -95,10 +93,10 @@
     <calculatedViewAttributes/>
     <input node="AGG_GLTOTALS">
       <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV0" source="GLPlanningV0"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GLActuals" source="GLActuals"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV1" source="GLPlanningV1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV2" source="GLPlanningV2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV0" source="RC_GLPLANNINGV0"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLActuals" source="RC_GLACTUALS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV1" source="RC_GLPLANNINGV1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GLPlanningV2" source="RC_GLPLANNINGV2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="Period" source="Period"/>
@@ -291,7 +289,7 @@
   </calculatedAttributes>
   <baseMeasures>
     <measure id="GLPlanningV0" order="2" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="General Ledger Planning Version 0"/>
+      <descriptions defaultDescription="Monthly Budget Version 0"/>
       <measureMapping columnObjectName="J_GLREC_YTDAMTS" columnName="GLPlanningV0"/>
     </measure>
     <measure id="GLActuals" order="3" aggregationType="sum" measureType="simple">
@@ -344,6 +342,7 @@
       
       
       
+      
       </measure>
     <measure id="Variance" order="12" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="23" scale="2" expressionLanguage="COLUMN_ENGINE">
       <descriptions defaultDescription="Subledger to General Ledger Variance"/>
@@ -353,6 +352,40 @@
       
       
       
+      
+      </measure>
+  
+    <measure id="CC_GLACTUALS" order="20" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="23" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Monthly General Ledger Actuals (Converted)"/>
+      <formula>&quot;GLActuals&quot; * -1</formula>
+      </measure>
+    <measure id="CC_GLPLANNINGV0" order="21" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="23" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Monthly Budget Version 0 (Converted)"/>
+      <formula>&quot;GLPlanningV0&quot; * -1</formula>
+      </measure>
+    <measure id="CC_GLPLANNINGV1" order="22" aggregationType="sum" engineAggregation="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="23" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Monthly Budget Version 1 (Converted)"/>
+      <formula>&quot;GLPlanningV1&quot; * -1</formula>
+      </measure>
+    <measure id="CC_GLPLANNINGV2" order="23" aggregationType="sum" engineAggregation="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="23" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="Monthly Budget Version 2 (Converted)"/>
+      <formula>&quot;GLPlanningV2&quot; * -1</formula>
+      </measure>
+    <measure id="CC_YTDGLACTUALS" order="24" aggregationType="sum" engineAggregation="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="23" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="YTD General Ledger Actuals (Converted)"/>
+      <formula>&quot;YTD_GLActuals&quot; * -1</formula>
+      </measure>
+    <measure id="CC_YTDGLPLANNINGV0" order="25" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="23" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="YTD Budget Version 0 (Converted)"/>
+      <formula>&quot;YTD_GLPlanningV0&quot; * -1</formula>
+      </measure>
+    <measure id="CC_YTDGLPLANNINGV1" order="26" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="23" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="YTD Budget Version 1 (Converted)"/>
+      <formula>&quot;YTD_GLPlanningV1&quot; * -1</formula>
+      </measure>
+    <measure id="CC_YTDGLPLANNINGV2" order="27" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="23" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="YTD Budget Version 2 (Converted)"/>
+      <formula>&quot;YTD_GLPlanningV2&quot; * -1</formula>
       </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
