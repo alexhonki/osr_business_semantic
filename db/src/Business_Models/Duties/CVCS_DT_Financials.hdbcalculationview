@@ -335,7 +335,36 @@
       <descriptions defaultDescription="Overdue Days Category "/>
       <keyMapping columnObjectName="J_Financials_Last_Clearing_Date" columnName="AgeDaysStatus"/>
     </attribute></attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_ASSESSMENTCLEARED_FLAG" hidden="true" order="59" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Assessment Cleared Flag"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="1">
+        <formula>CASE
+when (&quot;RC_ASSESSMENTAMOUNT&quot;-&quot;RC_ASSESSMENT_CLEARED&quot;)&lt;=0 or isnull(&quot;RC_ASSESSMENTAMOUNT&quot;) then 'X'
+Else ' '
+END</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+    <calculatedAttribute id="CC_LPIUNDER100_FLAG" hidden="true" order="60" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LPI Under $100 Flag"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="1">
+        <formula>CASE  
+	 WHEN (&quot;RC_LPIAMOUNT&quot;-&quot;RC_LPI_CLEARED&quot;)&lt;100 or isnull(&quot;RC_LPIAMOUNT&quot;) then 'X'
+	 ELSE ' '
+ END
+ </formula>
+      </keyCalculation>
+    </calculatedAttribute>
+    <calculatedAttribute id="CC_ASSESSMENTANDLPI_FLAG" order="61" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Assessment Clear/LPI under $100 Flag"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="1">
+        <formula>CASE 
+    WHEN &quot;CC_ASSESSMENTCLEARED_FLAG&quot;='X' and &quot;CC_LPIUNDER100_FLAG&quot; ='X' THEN 'X'
+    Else ''
+    END</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures>
     <measure id="BETRH" order="35" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount"/>
