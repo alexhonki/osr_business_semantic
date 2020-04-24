@@ -336,33 +336,21 @@
       <keyMapping columnObjectName="J_Financials_Last_Clearing_Date" columnName="AgeDaysStatus"/>
     </attribute></attributes>
   <calculatedAttributes>
-    <calculatedAttribute id="CC_ASSESSMENTCLEARED_FLAG" hidden="true" order="59" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Assessment Cleared Flag"/>
+  
+    <calculatedAttribute id="CC_ASSESSMENTLPI_FLAG" order="59" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+  
+      <descriptions defaultDescription="Assessment Clear /LPI Under $100"/>
+  
       <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="1">
-        <formula>CASE
-when (&quot;RC_ASSESSMENTAMOUNT&quot;-&quot;RC_ASSESSMENT_CLEARED&quot;)&lt;=0 or isnull(&quot;RC_ASSESSMENTAMOUNT&quot;) then 'X'
-Else ' '
-END</formula>
-      </keyCalculation>
-    </calculatedAttribute>
-    <calculatedAttribute id="CC_LPIUNDER100_FLAG" hidden="true" order="60" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="LPI Under $100 Flag"/>
-      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="1">
-        <formula>CASE  
-	 WHEN (&quot;RC_LPIAMOUNT&quot;-&quot;RC_LPI_CLEARED&quot;)&lt;100 or isnull(&quot;RC_LPIAMOUNT&quot;) then 'X'
-	 ELSE ' '
- END
- </formula>
-      </keyCalculation>
-    </calculatedAttribute>
-    <calculatedAttribute id="CC_ASSESSMENTANDLPI_FLAG" order="61" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Assessment Clear/LPI under $100 Flag"/>
-      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="1">
+  
         <formula>CASE 
-    WHEN &quot;CC_ASSESSMENTCLEARED_FLAG&quot;='X' and &quot;CC_LPIUNDER100_FLAG&quot; ='X' THEN 'X'
-    Else ''
-    END</formula>
+    WHEN &quot;CC_OPENITEM_BALANCE&quot; &lt;=0 THEN 'X'
+    WHEN &quot;CC_OPENITEM_BALANCE&quot;&lt;100 and not isnull(&quot;RC_LPIAMOUNT&quot;) AND &quot;CC_OPENITEM_BALANCE&quot;=(&quot;RC_LPIAMOUNT&quot;-&quot;RC_LPI_CLEARED&quot;) THEN 'X'
+ELSE ''
+END</formula>
+  
       </keyCalculation>
+  
     </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
@@ -571,7 +559,7 @@ END</formula>
       <rectangleSize width="497"/>
     </shape>
     <shape expanded="true" modelObjectName="R_Last_Clearing_date" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="265" y="374"/>
+      <upperLeftCorner x="406" y="350"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_Financials_Last_Clearing_Date" modelObjectNameSpace="CalculationView">
