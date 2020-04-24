@@ -1299,17 +1299,7 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <viewAttribute id="CC_REFUND_UNPAID_ASSMT"/>
       <viewAttribute id="CC_HOLIDAY_REFUND_IND"/>
     </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_LOOBJ_02" datatype="NVARCHAR" length="32" expressionLanguage="SQL">
-        <formula>&quot;OPBEL&quot;||&quot;DFKKOP_OPUPW&quot;||&quot;DFKKOP_OPUPK&quot;||&quot;OPUPZ&quot;</formula>
-      </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_LOOBJ_06" datatype="NVARCHAR" length="32" expressionLanguage="SQL">
-        <formula>&quot;DFKKOP_VKONT&quot;||&quot;DFKK_H_GPART&quot;</formula>
-      </calculatedViewAttribute>
-      <calculatedViewAttribute id="CC_LOOBJ_51" datatype="NVARCHAR" length="32" expressionLanguage="SQL">
-        <formula>&quot;VTREF&quot;||&quot;DFKK_H_GPART&quot;||&quot;VKTYP_PS&quot;</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+    <calculatedViewAttributes/>
     <input node="J_FIN_ASSTAMTS">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
@@ -2134,18 +2124,6 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <descriptions defaultDescription="Holiday/Refund Status (COVID)"/>
       <keyMapping columnObjectName="J_FIN_COVID" columnName="CC_HOLIDAY_REFUND_IND"/>
     </attribute>
-    <attribute id="CC_LOOBJ_02" order="175" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Business Lock Type (Line Item)"/>
-      <keyMapping columnObjectName="J_FIN_COVID" columnName="CC_LOOBJ_02"/>
-    </attribute>
-    <attribute id="CC_LOOBJ_06" order="176" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Business Lock Type (Partner Specific Account Data)"/>
-      <keyMapping columnObjectName="J_FIN_COVID" columnName="CC_LOOBJ_06"/>
-    </attribute>
-    <attribute id="CC_LOOBJ_51" order="177" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Business Lock Type (Contract Object Type)"/>
-      <keyMapping columnObjectName="J_FIN_COVID" columnName="CC_LOOBJ_51"/>
-    </attribute>
     <attribute id="DFKK_H_BUDAT$local">
       <descriptions defaultDescription="DFKK_H_BUDAT"/>
       <keyMapping columnObjectName="J_FIN_COVID" columnName="DFKK_H_BUDAT"/>
@@ -2178,24 +2156,6 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
       <descriptions defaultDescription="ABWBL"/>
       <keyMapping columnObjectName="J_FIN_COVID" columnName="ABWBL"/>
     </attribute>
-    <attribute id="CC_LOOBJ_02$local">
-      <descriptions>
-        <comment text="Lock Object Type - Line Item"/>
-      </descriptions>
-      <keyMapping columnObjectName="J_FIN_COVID" columnName="CC_LOOBJ_02"/>
-    </attribute>
-    <attribute id="CC_LOOBJ_06$local">
-      <descriptions>
-        <comment text="Business Lock Type - Partner Specific Account Data"/>
-      </descriptions>
-      <keyMapping columnObjectName="J_FIN_COVID" columnName="CC_LOOBJ_06"/>
-    </attribute>
-    <attribute id="CC_LOOBJ_51$local">
-      <descriptions>
-        <comment text="Business Lock Type - Contract Object Type (Partner/Acct Rel.)"/>
-      </descriptions>
-      <keyMapping columnObjectName="J_FIN_COVID" columnName="CC_LOOBJ_51"/>
-    </attribute>
   </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="CC_TAXPAYER_PAID_FLAG" order="170" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
@@ -2206,7 +2166,7 @@ if(abs(&quot;AssessmentAmount&quot;) &gt; 20000000,'&gt; $20M',
     ELSE ''
 END</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="KURSF" order="22" aggregationType="sum" measureType="simple">
@@ -2452,17 +2412,18 @@ END</formula>
         </filter>
         <attributeName>BLART</attributeName>
       </restriction>
-      </measure>
+    </measure>
   
     <measure id="OpenItemBalance" order="159" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Open Item Balance"/>
   
       <restrictionExpression>(&quot;OpenItemFlag&quot; = 'X') AND (&quot;BLART&quot; != 'B1')</restrictionExpression>
-      </measure>
+  
+    </measure>
     <measure id="AssessmentAmount" order="160" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="BETRH" restrictionExpressionLanguage="SQL">
       <descriptions defaultDescription="Assessment Amount"/>
       <restrictionExpression>(&quot;BLART&quot; = 'AA' OR &quot;BLART&quot; = 'AB' OR &quot;BLART&quot; = 'AC' OR &quot;BLART&quot; = 'AD' OR &quot;BLART&quot; = 'AF' OR &quot;BLART&quot; = 'AG' OR &quot;BLART&quot; = 'AL' OR &quot;BLART&quot; = 'AR' OR &quot;BLART&quot; = 'AY' OR &quot;BLART&quot; = 'AZ') AND (&quot;AUGRD&quot; != '05') AND (&quot;FBNUM&quot; != '')</restrictionExpression>
-      </measure>
+    </measure>
   </restrictedMeasures>
   <localDimensions/>
 
@@ -2604,96 +2565,6 @@ END</formula>
 
     </logicalJoin>
 
-    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_02_LOTYP">
-
-      <attributes>
-
-        <attributeRef>MANDT$local</attributeRef>
-
-        <attributeRef>CC_LOOBJ_02$local</attributeRef>
-
-      </attributes>
-
-      <associatedAttributeNames>
-
-        <attributeName>CLIENT</attributeName>
-
-        <attributeName>LOOBJ1_02</attributeName>
-
-      </associatedAttributeNames>
-
-      <properties cardinality="C1_1" joinType="leftOuter" joinOperator="Equal"/>
-
-      <associatedAttributeFeatures>
-
-        <attributeReference alias="CLIENT_1" attributeName="CLIENT" hidden="true"/>
-
-        <attributeReference attributeName="LOOBJ1_02" hidden="true"/>
-
-      </associatedAttributeFeatures>
-
-    </logicalJoin>
-
-    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_06_LOTYP">
-
-      <attributes>
-
-        <attributeRef>MANDT$local</attributeRef>
-
-        <attributeRef>CC_LOOBJ_06$local</attributeRef>
-
-      </attributes>
-
-      <associatedAttributeNames>
-
-        <attributeName>CLIENT</attributeName>
-
-        <attributeName>LOOBJ1_06</attributeName>
-
-      </associatedAttributeNames>
-
-      <properties cardinality="C1_1" joinType="leftOuter" joinOperator="Equal"/>
-
-      <associatedAttributeFeatures>
-
-        <attributeReference alias="CLIENT_2" attributeName="CLIENT" hidden="true"/>
-
-        <attributeReference attributeName="LOOBJ1_06" hidden="true"/>
-
-      </associatedAttributeFeatures>
-
-    </logicalJoin>
-
-    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_51_LOTYP">
-
-      <attributes>
-
-        <attributeRef>MANDT$local</attributeRef>
-
-        <attributeRef>CC_LOOBJ_51$local</attributeRef>
-
-      </attributes>
-
-      <associatedAttributeNames>
-
-        <attributeName>CLIENT</attributeName>
-
-        <attributeName>LOOBJ1_51</attributeName>
-
-      </associatedAttributeNames>
-
-      <properties cardinality="C1_1" joinType="leftOuter" joinOperator="Equal"/>
-
-      <associatedAttributeFeatures>
-
-        <attributeReference alias="CLIENT_3" attributeName="CLIENT" hidden="true"/>
-
-        <attributeReference attributeName="LOOBJ1_51" hidden="true"/>
-
-      </associatedAttributeFeatures>
-
-    </logicalJoin>
-
   </sharedDimensions>
 </logicalModel>
 <layout>
@@ -2823,20 +2694,6 @@ END</formula>
     <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_PaymentPlans_Text" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
       <upperLeftCorner x="2720" y="30"/>
       <rectangleSize width="599"/>
-    </shape>
-  
-    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_02_LOTYP" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-      <upperLeftCorner x="3020" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_06_LOTYP" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-      <upperLeftCorner x="3320" y="30"/>
-      <rectangleSize width="629.470703125"/>
-    </shape>
-    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_51_LOTYP" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-      <upperLeftCorner x="3620" y="30"/>
-      <rectangleSize width="629.470703125"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
