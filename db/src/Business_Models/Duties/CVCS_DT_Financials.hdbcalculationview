@@ -335,7 +335,24 @@
       <descriptions defaultDescription="Overdue Days Category "/>
       <keyMapping columnObjectName="J_Financials_Last_Clearing_Date" columnName="AgeDaysStatus"/>
     </attribute></attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+  
+    <calculatedAttribute id="CC_ASSESSMENTLPI_FLAG" order="59" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+  
+      <descriptions defaultDescription="Assessment Clear /LPI Under $100"/>
+  
+      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="1">
+  
+        <formula>CASE 
+    WHEN &quot;CC_OPENITEM_BALANCE&quot; &lt;=0 THEN 'X'
+    WHEN &quot;CC_OPENITEM_BALANCE&quot;&lt;100 and not isnull(&quot;RC_LPIAMOUNT&quot;) AND &quot;CC_OPENITEM_BALANCE&quot;=(&quot;RC_LPIAMOUNT&quot;-&quot;RC_LPI_CLEARED&quot;) THEN 'X'
+ELSE ''
+END</formula>
+  
+      </keyCalculation>
+  
+    </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures>
     <measure id="BETRH" order="35" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Amount"/>
@@ -542,7 +559,7 @@
       <rectangleSize width="497"/>
     </shape>
     <shape expanded="true" modelObjectName="R_Last_Clearing_date" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="265" y="374"/>
+      <upperLeftCorner x="406" y="350"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_Financials_Last_Clearing_Date" modelObjectNameSpace="CalculationView">
