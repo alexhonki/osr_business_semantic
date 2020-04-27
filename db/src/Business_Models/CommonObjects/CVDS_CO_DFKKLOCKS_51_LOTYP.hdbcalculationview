@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_51_LOTYP" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_51_LOTYP" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
 <descriptions defaultDescription="Business Lock Type - Contract Object Type (Partner/Acct Rel.)"/>
 <localVariables/>
 <variableMappings/>
@@ -8,61 +8,277 @@
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS</resourceUri>
   </DataSource>
 </dataSources>
-<calculationViews/>
-<logicalModel id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS" filterExpressionLanguage="SQL">
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_LOTYP_51" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="LOOBJ1"/>
+      <viewAttribute id="LOTYP"/>
+      <viewAttribute id="LOTYP_TXT"/>
+      <viewAttribute id="PROID"/>
+      <viewAttribute id="PROID_TXT"/>
+      <viewAttribute id="LOCKR"/>
+      <viewAttribute id="LOCKR_TXT"/>
+      <viewAttribute id="FDATE"/>
+      <viewAttribute id="TDATE"/>
+      <viewAttribute id="CC_ADATETIME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS"/>
+    <filter>&quot;CLIENT&quot;='400' and 
+&quot;LOTYP&quot; ='51' and 
+(&quot;PROID&quot; = '01' or &quot;PROID&quot; = '04') and
+(TO_DATE(&quot;FDATE&quot;)  &lt;= CURRENT_DATE and TO_DATE(&quot;TDATE&quot;) &gt;= CURRENT_DATE )</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="R_LOTYP_51">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="LOOBJ1"/>
+      <viewAttribute id="LOTYP"/>
+      <viewAttribute id="LOTYP_TXT"/>
+      <viewAttribute id="PROID"/>
+      <viewAttribute id="PROID_TXT"/>
+      <viewAttribute id="LOCKR"/>
+      <viewAttribute id="LOCKR_TXT"/>
+      <viewAttribute id="FDATE"/>
+      <viewAttribute id="TDATE"/>
+      <viewAttribute id="CC_ADATETIME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_LOTYP_51"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>CLIENT</partitionViewAttributeName>
+      <partitionViewAttributeName>LOOBJ1</partitionViewAttributeName>
+      <partitionViewAttributeName>LOTYP</partitionViewAttributeName>
+      <partitionViewAttributeName>PROID</partitionViewAttributeName>
+      <order byViewAttributeName="TDATE" direction="DESC"/>
+      <order byViewAttributeName="CC_ADATETIME" direction="DESC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </windowFunction>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PROID_01">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="LOOBJ1"/>
+      <viewAttribute id="LOTYP"/>
+      <viewAttribute id="LOTYP_TXT"/>
+      <viewAttribute id="PROID"/>
+      <viewAttribute id="PROID_TXT"/>
+      <viewAttribute id="LOCKR"/>
+      <viewAttribute id="LOCKR_TXT"/>
+      <viewAttribute id="FDATE"/>
+      <viewAttribute id="TDATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="R_LOTYP_51"/>
+    <filter>&quot;PROID&quot;='01'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PROID_04">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="LOOBJ1"/>
+      <viewAttribute id="LOTYP"/>
+      <viewAttribute id="LOTYP_TXT"/>
+      <viewAttribute id="PROID"/>
+      <viewAttribute id="PROID_TXT"/>
+      <viewAttribute id="LOCKR"/>
+      <viewAttribute id="LOCKR_TXT"/>
+      <viewAttribute id="FDATE"/>
+      <viewAttribute id="TDATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input emptyUnionBehavior="undefined" node="R_LOTYP_51"/>
+    <filter>&quot;PROID&quot;='04'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PROID_01_04" cardinality="C1_1" joinType="fullOuter">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="LOOBJ1"/>
+      <viewAttribute id="LOTYP"/>
+      <viewAttribute id="LOTYP_TXT"/>
+      <viewAttribute id="PROID"/>
+      <viewAttribute id="PROID_TXT"/>
+      <viewAttribute id="LOCKR"/>
+      <viewAttribute id="LOCKR_TXT"/>
+      <viewAttribute id="FDATE"/>
+      <viewAttribute id="TDATE"/>
+      <viewAttribute id="CLIENT_1"/>
+      <viewAttribute id="LOOBJ1_1"/>
+      <viewAttribute id="LOTYP_1"/>
+      <viewAttribute id="LOTYP_TXT_1"/>
+      <viewAttribute id="PROID_1"/>
+      <viewAttribute id="PROID_TXT_1"/>
+      <viewAttribute id="LOCKR_1"/>
+      <viewAttribute id="LOCKR_TXT_1"/>
+      <viewAttribute id="FDATE_1"/>
+      <viewAttribute id="TDATE_1"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_CLIENT_51" datatype="NVARCHAR" length="3" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN &quot;CLIENT&quot; is not null then &quot;CLIENT&quot; 
+	 ELSE &quot;CLIENT_1&quot; 
+ END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_LOOBJ1_51" datatype="NVARCHAR" length="32" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN &quot;LOOBJ1&quot; is not null then &quot;LOOBJ1&quot; 
+	 ELSE &quot;LOOBJ1_1&quot; 
+ END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_LOTYP_51" datatype="NVARCHAR" length="2" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN &quot;LOTYP&quot; is not null then &quot;LOTYP&quot; 
+	 ELSE &quot;LOTYP_1&quot; 
+ END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_LOTYP_TXT_51" datatype="NVARCHAR" length="40" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN &quot;LOTYP_TXT&quot; is not null then &quot;LOTYP_TXT&quot; 
+	 ELSE &quot;LOTYP_TXT_1&quot; 
+ END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="P_PROID_01">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOOBJ1" source="LOOBJ1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOTYP" source="LOTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOTYP_TXT" source="LOTYP_TXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROID" source="PROID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROID_TXT" source="PROID_TXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCKR" source="LOCKR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCKR_TXT" source="LOCKR_TXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FDATE" source="FDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TDATE" source="TDATE"/>
+    </input>
+    <input node="P_PROID_04">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROID_1" source="PROID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROID_TXT_1" source="PROID_TXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCKR_1" source="LOCKR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCKR_TXT_1" source="LOCKR_TXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FDATE_1" source="FDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TDATE_1" source="TDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT_1" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOOBJ1_1" source="LOOBJ1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOTYP_1" source="LOTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOTYP_TXT_1" source="LOTYP_TXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOOBJ1" source="LOOBJ1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOTYP" source="LOTYP"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="LOOBJ1"/>
+    <joinAttribute name="LOTYP"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_PROID_01_04">
   <attributes>
-    <attribute id="CLIENT" order="1" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="CLIENT">
-      <descriptions defaultDescription="Client (Contract Object Type)"/>
-      <keyMapping columnObjectName="CVDS_CO_DFKKLOCKS" columnName="CLIENT"/>
+    <attribute id="CC_CLIENT_51" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client  - Contract Object Type"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="CC_CLIENT_51"/>
     </attribute>
-    <attribute id="LOOBJ1_51" order="2" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="LOOBJ1_51">
-      <descriptions defaultDescription="Lock object ID (Contract Object Type)"/>
-      <keyMapping columnObjectName="CVDS_CO_DFKKLOCKS" columnName="LOOBJ1"/>
+    <attribute id="CC_LOOBJ1_51" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock object  - Contract Object Type"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="CC_LOOBJ1_51"/>
     </attribute>
-    <attribute id="LOTYP_51" order="3" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="LOTYP_51">
-      <descriptions defaultDescription="Lock Object Category ID (Contract Object Type)"/>
-      <keyMapping columnObjectName="CVDS_CO_DFKKLOCKS" columnName="LOTYP"/>
+    <attribute id="CC_LOTYP_51" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock object Category - Contract Object Type"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="CC_LOTYP_51"/>
     </attribute>
-    <attribute id="LOTYP_TXT_51" order="4" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="LOTYP_TXT_51">
-      <descriptions defaultDescription="Lock Object Category Description (Contract Object Type)"/>
-      <keyMapping columnObjectName="CVDS_CO_DFKKLOCKS" columnName="LOTYP_TXT"/>
+    <attribute id="CC_LOTYP_TXT_51" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock Object Category Description - Contract Object Type"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="CC_LOTYP_TXT_51"/>
     </attribute>
-    <attribute id="PROID_51" order="5" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="PROID_51">
-      <descriptions defaultDescription="Process Code ID (Contract Object Type)"/>
-      <keyMapping columnObjectName="CVDS_CO_DFKKLOCKS" columnName="PROID"/>
+    <attribute id="PROID_51_01" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Process Code - Contract Object Type (Dunning)"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="PROID"/>
     </attribute>
-    <attribute id="PROID_TXT_51" order="6" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="PROID_TXT_51">
-      <descriptions defaultDescription="Process Code Description(Contract Object Type)"/>
-      <keyMapping columnObjectName="CVDS_CO_DFKKLOCKS" columnName="PROID_TXT"/>
+    <attribute id="PROID_TXT_51_01" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Process Code Description - Contract Object Type (Dunning)"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="PROID_TXT"/>
     </attribute>
-    <attribute id="LOCKR_51" order="7" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="LOCKR_51">
-      <descriptions defaultDescription="Lock Reason ID (Contract Object Type)"/>
-      <keyMapping columnObjectName="CVDS_CO_DFKKLOCKS" columnName="LOCKR"/>
+    <attribute id="LOCKR_51_01" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock Reason - Contract Object Type (Dunning)"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="LOCKR"/>
     </attribute>
-    <attribute id="LOCKR_TXT_51" order="8" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="LOCKR_TXT_51">
-      <descriptions defaultDescription="Lock Reason Description (Contract Object Type)"/>
-      <keyMapping columnObjectName="CVDS_CO_DFKKLOCKS" columnName="LOCKR_TXT"/>
+    <attribute id="LOCKR_TXT_51_01" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock Reason Description- Partner Specific (Dunning)"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="LOCKR_TXT"/>
     </attribute>
-    <attribute id="FDATE_51" order="9" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="FDATE_51">
-      <descriptions defaultDescription="Lock valid from (Contract Object Type)"/>
-      <keyMapping columnObjectName="CVDS_CO_DFKKLOCKS" columnName="FDATE"/>
+    <attribute id="FDATE_51_01" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock valid from - Contract Object Type (Dunning)"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="FDATE"/>
     </attribute>
-    <attribute id="TDATE_51" order="10" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty" descriptionColumnName="TDATE_51">
-      <descriptions defaultDescription="Lock valid to (Contract Object Type)"/>
-      <keyMapping columnObjectName="CVDS_CO_DFKKLOCKS" columnName="TDATE"/>
+    <attribute id="TDATE_51_01" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock valid to - Contract Object Type (Dunning)"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="TDATE"/>
+    </attribute>
+    <attribute id="PROID_51_04" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Process Code - Contract Object Type (Calculate Interest)"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="PROID_1"/>
+    </attribute>
+    <attribute id="PROID_TXT_51_04" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Process Code Description - Contract Object Type (Calculate Interest)"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="PROID_TXT_1"/>
+    </attribute>
+    <attribute id="LOCKR_51_04" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock Reason - Contract Object Type (Calculate Interest)"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="LOCKR_1"/>
+    </attribute>
+    <attribute id="LOCKR_TXT_51_04" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock Reason Description - Contract Object Type (Calculate Interest)"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="LOCKR_TXT_1"/>
+    </attribute>
+    <attribute id="FDATE_51_04" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock valid from - Contract Object Type (Calculate Interest)"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="FDATE_1"/>
+    </attribute>
+    <attribute id="TDATE_51_04" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock valid to - Contract Object Type (Calculate Interest)"/>
+      <keyMapping columnObjectName="J_PROID_01_04" columnName="TDATE_1"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures/>
   <calculatedMeasures/>
-  <restrictedMeasures/>
-
-  <filter>&quot;LOTYP_51&quot;='51'</filter>
-</logicalModel>
+  <restrictedMeasures/></logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="40" y="85"/>
+      <upperLeftCorner x="213" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_LOTYP_51" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="198" y="626"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="R_LOTYP_51" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="198" y="521"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_PROID_01" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_PROID_04" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="376"/>
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_PROID_01_04" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="213" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_PROID_01" modelObjectNameSpace="J_PROID_01_04" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="187"/>
+    </shape>
+    <shape modelObjectName="P_PROID_04" modelObjectNameSpace="J_PROID_01_04" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="187"/>
     </shape>
   </shapes>
 </layout>

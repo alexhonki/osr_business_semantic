@@ -779,15 +779,28 @@
       <keyMapping columnObjectName="P_FnFinancials" columnName="CC_TAXPAYER_PAID_FLAG"/>
     </attribute>
     <attribute id="CC_LOOBJ_02" order="183" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Business Lock Type (Line Item)"/>
+      <descriptions defaultDescription="Business Lock Object - Line Item"/>
       <keyMapping columnObjectName="P_FnFinancials" columnName="CC_LOOBJ_02"/>
     </attribute>
     <attribute id="CC_LOOBJ_06" order="184" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Business Lock Type (Partner Specific Account Data)"/>
+      <descriptions defaultDescription="Business Lock Object- Partner Specific Account Data"/>
       <keyMapping columnObjectName="P_FnFinancials" columnName="CC_LOOBJ_06"/>
     </attribute>
     <attribute id="CC_LOOBJ_51" order="185" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Business Lock Type (Partner Specific Account Data)"/>
+      <descriptions defaultDescription="Business Lock Object - Contract Object Type (Partner/Acct Rel.)"/>
+      <keyMapping columnObjectName="P_FnFinancials" columnName="CC_LOOBJ_51"/>
+    </attribute>
+  
+    <attribute id="MANDT$local">
+      <keyMapping columnObjectName="P_FnFinancials" columnName="MANDT"/>
+    </attribute>
+    <attribute id="CC_LOOBJ_02$local">
+      <keyMapping columnObjectName="P_FnFinancials" columnName="CC_LOOBJ_02"/>
+    </attribute>
+    <attribute id="CC_LOOBJ_06$local">
+      <keyMapping columnObjectName="P_FnFinancials" columnName="CC_LOOBJ_06"/>
+    </attribute>
+    <attribute id="CC_LOOBJ_51$local">
       <keyMapping columnObjectName="P_FnFinancials" columnName="CC_LOOBJ_51"/>
     </attribute>
   </attributes>
@@ -957,7 +970,53 @@
   <calculatedMeasures/>
   <restrictedMeasures/>
   <localDimensions/>
-  <sharedDimensions/>
+  <sharedDimensions>
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_02_LOTYP">
+      <attributes>
+        <attributeRef>MANDT$local</attributeRef>
+        <attributeRef>CC_LOOBJ_02$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>CC_CLIENT_02</attributeName>
+        <attributeName>CC_LOOBJ1_02</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="C1_1" joinType="leftOuter" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference attributeName="CC_CLIENT_02" hidden="true"/>
+        <attributeReference attributeName="CC_LOOBJ1_02" hidden="true"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_06_LOTYP">
+      <attributes>
+        <attributeRef>MANDT$local</attributeRef>
+        <attributeRef>CC_LOOBJ_06$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>CC_CLIENT_06</attributeName>
+        <attributeName>CC_LOOBJ1_06</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_1" joinType="leftOuter" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference attributeName="CC_CLIENT_06" hidden="true"/>
+        <attributeReference attributeName="CC_LOOBJ1_06" hidden="true"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_51_LOTYP">
+      <attributes>
+        <attributeRef>MANDT$local</attributeRef>
+        <attributeRef>CC_LOOBJ_51$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>CC_CLIENT_51</attributeName>
+        <attributeName>CC_LOOBJ1_51</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_1" joinType="leftOuter" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference attributeName="CC_CLIENT_51" hidden="true"/>
+        <attributeReference attributeName="CC_LOOBJ1_51" hidden="true"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+  </sharedDimensions>
 </logicalModel>
 <layout>
   <shapes>
@@ -972,6 +1031,19 @@
     <shape modelObjectName="P_FnFinancials" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="180"/>
+    </shape>
+  
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_02_LOTYP" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="629.470703125"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_06_LOTYP" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="629.470703125"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS_51_LOTYP" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="920" y="30"/>
+      <rectangleSize width="629.470703125"/>
     </shape>
   </shapes>
 </layout>
