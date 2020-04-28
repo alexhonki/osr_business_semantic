@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVC_CO_DFKKLOCKS_Checklist" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="Business Locks Info - Multiple Lock Reason"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKLOCKS" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="LOOBJ1"/>
+      <viewAttribute id="LOTYP"/>
+      <viewAttribute id="PROID"/>
+      <viewAttribute id="LOCKR"/>
+      <viewAttribute id="FDATE"/>
+      <viewAttribute id="TDATE"/>
+      <viewAttribute id="GPART"/>
+      <viewAttribute id="VKONT"/>
+      <viewAttribute id="LOTYP_TXT"/>
+      <viewAttribute id="PROID_TXT"/>
+      <viewAttribute id="LOCKR_TXT"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_COUNTER" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_DFKKLOCKS"/>
+    <filter>(TO_DATE(&quot;FDATE&quot;)  &lt;= CURRENT_DATE and TO_DATE(&quot;TDATE&quot;) &gt;= CURRENT_DATE )</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="A_Multi_LOCKR" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="LOOBJ1"/>
+      <viewAttribute id="LOTYP"/>
+      <viewAttribute id="PROID"/>
+      <viewAttribute id="FDATE"/>
+      <viewAttribute id="TDATE"/>
+      <viewAttribute id="GPART"/>
+      <viewAttribute id="VKONT"/>
+      <viewAttribute id="CC_COUNTER" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_DFKKLOCKS"/>
+    <filter>&quot;CC_COUNTER&quot;&gt;'1'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_Multi_LOCKR" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="LOOBJ1"/>
+      <viewAttribute id="LOTYP"/>
+      <viewAttribute id="PROID"/>
+      <viewAttribute id="LOCKR"/>
+      <viewAttribute id="FDATE"/>
+      <viewAttribute id="TDATE"/>
+      <viewAttribute id="GPART"/>
+      <viewAttribute id="VKONT"/>
+      <viewAttribute id="LOTYP_TXT"/>
+      <viewAttribute id="PROID_TXT"/>
+      <viewAttribute id="LOCKR_TXT"/>
+      <viewAttribute id="CC_COUNTER" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$LOTYP$LOTYP"/>
+      <viewAttribute hidden="true" id="JOIN$PROID$PROID"/>
+      <viewAttribute hidden="true" id="JOIN$FDATE$FDATE"/>
+      <viewAttribute hidden="true" id="JOIN$TDATE$TDATE"/>
+      <viewAttribute hidden="true" id="JOIN$GPART$GPART"/>
+      <viewAttribute hidden="true" id="JOIN$VKONT$VKONT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="A_Multi_LOCKR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOOBJ1" source="LOOBJ1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOTYP$LOTYP" source="LOTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PROID$PROID" source="PROID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FDATE$FDATE" source="FDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TDATE$TDATE" source="TDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$GPART$GPART" source="GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VKONT$VKONT" source="VKONT"/>
+    </input>
+    <input node="P_DFKKLOCKS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOTYP" source="LOTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROID" source="PROID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCKR" source="LOCKR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FDATE" source="FDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TDATE" source="TDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GPART" source="GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VKONT" source="VKONT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOTYP_TXT" source="LOTYP_TXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROID_TXT" source="PROID_TXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCKR_TXT" source="LOCKR_TXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNTER" source="CC_COUNTER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOOBJ1" source="LOOBJ1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOTYP$LOTYP" source="LOTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PROID$PROID" source="PROID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FDATE$FDATE" source="FDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TDATE$TDATE" source="TDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$GPART$GPART" source="GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VKONT$VKONT" source="VKONT"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="LOOBJ1"/>
+    <joinAttribute name="JOIN$LOTYP$LOTYP"/>
+    <joinAttribute name="JOIN$PROID$PROID"/>
+    <joinAttribute name="JOIN$FDATE$FDATE"/>
+    <joinAttribute name="JOIN$TDATE$TDATE"/>
+    <joinAttribute name="JOIN$GPART$GPART"/>
+    <joinAttribute name="JOIN$VKONT$VKONT"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_Multi_LOCKR">
+  <attributes>
+    <attribute id="CLIENT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="J_Multi_LOCKR" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="LOOBJ1" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock object"/>
+      <keyMapping columnObjectName="J_Multi_LOCKR" columnName="LOOBJ1"/>
+    </attribute>
+    <attribute id="LOTYP" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock Object Category"/>
+      <keyMapping columnObjectName="J_Multi_LOCKR" columnName="LOTYP"/>
+    </attribute>
+    <attribute id="PROID" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Process Code (Example: Dunning, Payment)"/>
+      <keyMapping columnObjectName="J_Multi_LOCKR" columnName="PROID"/>
+    </attribute>
+    <attribute id="LOCKR" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock Reason"/>
+      <keyMapping columnObjectName="J_Multi_LOCKR" columnName="LOCKR"/>
+    </attribute>
+    <attribute id="FDATE" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock valid from"/>
+      <keyMapping columnObjectName="J_Multi_LOCKR" columnName="FDATE"/>
+    </attribute>
+    <attribute id="TDATE" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock valid to"/>
+      <keyMapping columnObjectName="J_Multi_LOCKR" columnName="TDATE"/>
+    </attribute>
+    <attribute id="GPART" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner Number"/>
+      <keyMapping columnObjectName="J_Multi_LOCKR" columnName="GPART"/>
+    </attribute>
+    <attribute id="VKONT" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Contract Account Number"/>
+      <keyMapping columnObjectName="J_Multi_LOCKR" columnName="VKONT"/>
+    </attribute>
+    <attribute id="LOTYP_TXT" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Lock Object Category Description"/>
+      <keyMapping columnObjectName="J_Multi_LOCKR" columnName="LOTYP_TXT"/>
+    </attribute>
+    <attribute id="PROID_TXT" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Language-dependent text in Customizing"/>
+      <keyMapping columnObjectName="J_Multi_LOCKR" columnName="PROID_TXT"/>
+    </attribute>
+    <attribute id="LOCKR_TXT" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Name of Dunning Lock Reason"/>
+      <keyMapping columnObjectName="J_Multi_LOCKR" columnName="LOCKR_TXT"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="CC_COUNTER" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Lock Object Counter"/>
+      <measureMapping columnObjectName="J_Multi_LOCKR" columnName="CC_COUNTER"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="146" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_DFKKLOCKS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="150" y="501"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="A_Multi_LOCKR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_Multi_LOCKR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="146" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="A_Multi_LOCKR" modelObjectNameSpace="J_Multi_LOCKR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="162"/>
+    </shape>
+    <shape modelObjectName="P_DFKKLOCKS" modelObjectNameSpace="J_Multi_LOCKR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="162"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
