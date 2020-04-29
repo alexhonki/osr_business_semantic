@@ -225,6 +225,12 @@
       <descriptions defaultDescription="MANDT"/>
       <keyMapping columnObjectName="P_CRMD_CMG_CASE_AT" columnName="MANDT"/>
     </attribute>
+    <attribute id="ZZCAMPTYPE$local">
+      <keyMapping columnObjectName="P_CRMD_CMG_CASE_AT" columnName="ZZCAMPTYPE"/>
+    </attribute>
+    <attribute id="ZZCAMPAIGN$local">
+      <keyMapping columnObjectName="P_CRMD_CMG_CASE_AT" columnName="ZZCAMPAIGN"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
@@ -286,15 +292,7 @@
     </measure>
   </baseMeasures>
   <calculatedMeasures>
-    <measure id="CC_DAYS_BT_CREATION" order="52" aggregationType="sum" measureType="simple" aggregatable="true" datatype="INTEGER" expressionLanguage="SQL">
-      <formula>CASE
-    WHEN &quot;CLOSING_TIME&quot; &gt; &quot;CREATE_TIME&quot; THEN days_between(&quot;CREATE_TIME&quot;, &quot;CLOSING_TIME&quot;)
-    ELSE days_between(&quot;CREATE_TIME&quot;, CURRENT_DATE)
-END</formula>
-      
-      
-      </measure>
-    <measure id="CC_CASE_COUNT" order="53" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+    <measure id="CC_CASE_COUNT" order="52" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Case Count"/>
       <exceptionAggregation>
         <attribute attributeName="CASE_GUID"/>
@@ -343,17 +341,17 @@ END</formula>
 
       <attributes>
 
-        <attributeRef>CASE_GUID$local</attributeRef>
-
         <attributeRef>MANDT$local</attributeRef>
+
+        <attributeRef>CASE_GUID$local</attributeRef>
 
       </attributes>
 
       <associatedAttributeNames>
 
-        <attributeName>CASE_GUID</attributeName>
+        <attributeName>SCMG_MANDT</attributeName>
 
-        <attributeName>MANDT</attributeName>
+        <attributeName>CASE_GUID</attributeName>
 
       </associatedAttributeNames>
 
@@ -363,7 +361,165 @@ END</formula>
 
         <attributeReference alias="CASE_GUID_2" attributeName="CASE_GUID" hidden="true"/>
 
+        <attributeReference attributeName="SCMG_MANDT" hidden="true"/>
+
+      </associatedAttributeFeatures>
+
+    </logicalJoin>
+
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.synonyms::CRMC_MKTPL_CTYPT" languageAttributeName="LANGU">
+
+      <attributes>
+
+        <attributeRef>MANDT$local</attributeRef>
+
+        <attributeRef>ZZCAMPTYPE$local</attributeRef>
+
+      </attributes>
+
+      <associatedAttributeNames>
+
+        <attributeName>MANDT</attributeName>
+
+        <attributeName>CAMP_TYPE</attributeName>
+
+      </associatedAttributeNames>
+
+      <properties cardinality="C1_1" joinType="textTable" joinOperator="Equal"/>
+
+      <associatedAttributeFeatures>
+
         <attributeReference alias="MANDT_1" attributeName="MANDT" hidden="true"/>
+
+        <attributeReference attributeName="LANGU" hidden="true"/>
+
+        <attributeReference attributeName="Z_CHANGE_TIME" hidden="true"/>
+
+        <attributeReference attributeName="Z_SOURCE_SYS" hidden="true"/>
+
+      </associatedAttributeFeatures>
+
+    </logicalJoin>
+
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CampaignNames">
+
+      <attributes>
+
+        <attributeRef>MANDT$local</attributeRef>
+
+        <attributeRef>ZZCAMPAIGN$local</attributeRef>
+
+      </attributes>
+
+      <associatedAttributeNames>
+
+        <attributeName>CLIENT</attributeName>
+
+        <attributeName>EXTERNAL_ID</attributeName>
+
+      </associatedAttributeNames>
+
+      <properties cardinality="CN_1" joinType="leftOuter" joinOperator="Equal"/>
+
+      <associatedAttributeFeatures>
+
+        <attributeReference alias="CLIENT_1" attributeName="CLIENT" hidden="true"/>
+
+        <attributeReference alias="Z_RUN_SEQ_ID_1" attributeName="Z_RUN_SEQ_ID" hidden="true"/>
+
+        <attributeReference alias="PRIORITY_1" attributeName="PRIORITY" hidden="true"/>
+
+        <attributeReference attributeName="FORECAST_FINISH" hidden="true"/>
+
+        <attributeReference attributeName="FORECAST_START" hidden="true"/>
+
+        <attributeReference attributeName="APPLICATION" hidden="true"/>
+
+        <attributeReference attributeName="CONSTR_TIME_FIN" hidden="true"/>
+
+        <attributeReference attributeName="CONSTR_TYPE_FIN" hidden="true"/>
+
+        <attributeReference attributeName="CALENDAR_ID" hidden="true"/>
+
+        <attributeReference attributeName="DURATION_UNIT" hidden="true"/>
+
+        <attributeReference attributeName="DURATION" hidden="true"/>
+
+        <attributeReference attributeName="TOTAL_FLOAT" hidden="true"/>
+
+        <attributeReference attributeName="LATEST_FINISH" hidden="true"/>
+
+        <attributeReference attributeName="LATEST_START" hidden="true"/>
+
+        <attributeReference attributeName="PLANGROUP" hidden="true"/>
+
+        <attributeReference attributeName="BWIDENTIFIER" hidden="true"/>
+
+        <attributeReference attributeName="UPDATED_IN_BW" hidden="true"/>
+
+        <attributeReference attributeName="CHANGED_ON" hidden="true"/>
+
+        <attributeReference attributeName="CHANGED_BY" hidden="true"/>
+
+        <attributeReference attributeName="CREATED_IN_BW" hidden="true"/>
+
+        <attributeReference attributeName="CREATED_ON" hidden="true"/>
+
+        <attributeReference attributeName="CREATED_BY" hidden="true"/>
+
+        <attributeReference attributeName="CONSTRAINT_TIME" hidden="true"/>
+
+        <attributeReference attributeName="CONSTRAINT_TYPE" hidden="true"/>
+
+        <attributeReference attributeName="MILESTONE" hidden="true"/>
+
+        <attributeReference attributeName="COMPLETION" hidden="true"/>
+
+        <attributeReference attributeName="PLANFINISH" hidden="true"/>
+
+        <attributeReference attributeName="PLANSTART" hidden="true"/>
+
+        <attributeReference attributeName="ACTUALFINISH" hidden="true"/>
+
+        <attributeReference attributeName="ACTUALSTART" hidden="true"/>
+
+        <attributeReference attributeName="OBJECT_TYPE" hidden="true"/>
+
+        <attributeReference attributeName="PROJECT_GUID" hidden="true"/>
+
+        <attributeReference attributeName="GUID" hidden="true"/>
+
+        <attributeReference attributeName="EXTERNAL_ID" hidden="true"/>
+
+      </associatedAttributeFeatures>
+
+    </logicalJoin>
+
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CaseOutcomes">
+
+      <attributes>
+
+        <attributeRef>MANDT$local</attributeRef>
+
+        <attributeRef>CASE_GUID$local</attributeRef>
+
+      </attributes>
+
+      <associatedAttributeNames>
+
+        <attributeName>MANDT</attributeName>
+
+        <attributeName>CASE_GUID</attributeName>
+
+      </associatedAttributeNames>
+
+      <properties cardinality="C1_1" joinType="leftOuter" joinOperator="Equal"/>
+
+      <associatedAttributeFeatures>
+
+        <attributeReference alias="MANDT_2" attributeName="MANDT" hidden="true"/>
+
+        <attributeReference alias="CASE_GUID_3" attributeName="CASE_GUID" hidden="true"/>
 
       </associatedAttributeFeatures>
 
@@ -391,9 +547,22 @@ END</formula>
       <upperLeftCorner x="1220" y="30"/>
       <rectangleSize width="587"/>
     </shape>
-  
     <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CaseUsers" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
       <upperLeftCorner x="1520" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
+    <shape modelObjectName="osr.business.semantic.db.synonyms::CRMC_MKTPL_CTYPT" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="1820" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CampaignNames" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="2120" y="30"/>
+      <rectangleSize width="584"/>
+    </shape>
+  
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CaseOutcomes" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="2420" y="30"/>
       <rectangleSize width="250"/>
     </shape>
   </shapes>

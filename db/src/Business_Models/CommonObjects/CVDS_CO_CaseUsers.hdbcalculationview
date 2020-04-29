@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CaseUsers" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CaseUsers" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" outputViewType="Projection">
 <descriptions defaultDescription="CVDS_CO_CaseUsers"/>
 <localVariables/>
 <variableMappings/>
@@ -9,6 +9,27 @@
   </DataSource>
   <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo">
     <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::SCMGAUT_SECLEVLT">
+    <resourceUri>osr.business.semantic.db.synonyms::SCMGAUT_SECLEVLT</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::SCMGATTR_PRIOT">
+    <resourceUri>osr.business.semantic.db.synonyms::SCMGATTR_PRIOT</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::SCMGATTR_SESCALT">
+    <resourceUri>osr.business.semantic.db.synonyms::SCMGATTR_SESCALT</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::SCMGATTR_REASONT">
+    <resourceUri>osr.business.semantic.db.synonyms::SCMGATTR_REASONT</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::SCMGSTATPROFST">
+    <resourceUri>osr.business.semantic.db.synonyms::SCMGSTATPROFST</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::SCMGATTR_CATEGOT">
+    <resourceUri>osr.business.semantic.db.synonyms::SCMGATTR_CATEGOT</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::SCMGCASETYPET">
+    <resourceUri>osr.business.semantic.db.synonyms::SCMGCASETYPET</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -25,7 +46,7 @@
       <viewAttribute id="RESPONSIBLE"/>
       <viewAttribute id="PROCESSOR_TIME"/>
       <viewAttribute id="RESPONSIBLE_TIME"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
     
       <viewAttribute id="CASE_TYPE"/>
       <viewAttribute id="EXT_KEY"/>
@@ -49,6 +70,8 @@
     <input node="osr.business.semantic.db.synonyms::SCMG_T_CASE_ATTR">
       <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE_TIME" source="CHANGE_TIME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="MANDT"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_PROCESSOR_UNPIVOT">
@@ -56,7 +79,7 @@
       <viewAttribute id="CASE_GUID"/>
       <viewAttribute id="PROCESSOR"/>
       <viewAttribute id="PROCESSOR_TIME"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_SCMG_T_CASE_ATTR"/>
@@ -66,7 +89,7 @@
       <viewAttribute id="CASE_GUID"/>
       <viewAttribute id="CLOSED_BY"/>
       <viewAttribute id="CLOSING_TIME"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_SCMG_T_CASE_ATTR"/>
@@ -76,7 +99,7 @@
       <viewAttribute id="CASE_GUID"/>
       <viewAttribute id="CHANGED_BY"/>
       <viewAttribute id="CHANGE_TIME"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_SCMG_T_CASE_ATTR"/>
@@ -86,7 +109,7 @@
       <viewAttribute id="CASE_GUID"/>
       <viewAttribute id="CREATED_BY"/>
       <viewAttribute id="CREATE_TIME"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_SCMG_T_CASE_ATTR"/>
@@ -96,7 +119,7 @@
       <viewAttribute id="CASE_GUID"/>
       <viewAttribute id="RESPONSIBLE"/>
       <viewAttribute id="RESPONSIBLE_TIME"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_SCMG_T_CASE_ATTR"/>
@@ -106,7 +129,7 @@
       <viewAttribute id="CASE_GUID"/>
       <viewAttribute id="USERNAME"/>
       <viewAttribute id="TIME"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
       <viewAttribute datatype="NVARCHAR" length="12" id="TYPE"/>
     </viewAttributes>
     <calculatedViewAttributes>
@@ -118,35 +141,35 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="CREATED_BY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TIME" source="CREATE_TIME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TYPE" null="false" value="CREATED"/>
     </input>
     <input node="P_CHANGEDBY_UNPIVOT" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="CHANGED_BY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TIME" source="CHANGE_TIME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TYPE" null="false" value="CHANGED"/>
     </input>
     <input node="P_CLOSEDBY_UNPIVOT" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="CLOSED_BY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TIME" source="CLOSING_TIME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TYPE" null="false" value="CLOSED"/>
     </input>
     <input node="P_PROCESSOR_UNPIVOT" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="PROCESSOR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TIME" source="PROCESSOR_TIME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TYPE" null="false" value="PROCESSOR"/>
     </input>
     <input node="P_RESPONSIBLE_UNPIVOT" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="RESPONSIBLE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TIME" source="RESPONSIBLE_TIME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TYPE" null="false" value="RESPONSIBLE"/>
     </input>
   </calculationView>
@@ -154,7 +177,7 @@
     <viewAttributes>
       <viewAttribute id="CASE_GUID"/>
       <viewAttribute id="USERNAME"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
       <viewAttribute id="NAME_TEXT"/>
       <viewAttribute id="ORGEH"/>
       <viewAttribute id="SHORT"/>
@@ -164,7 +187,7 @@
     <input node="U_USERDATA">
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
     </input>
     <input node="P_CRMSYSUSERSINFO">
@@ -173,20 +196,20 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="SHORT" source="SHORT"/>
     </input>
     <joinAttribute leftColumn="USERNAME" rightColumn="BNAME" operator="EQ"/>
-    <joinAttribute leftColumn="MANDT" rightColumn="MANDT" operator="EQ"/>
+    <joinAttribute leftColumn="SCMG_MANDT" rightColumn="MANDT" operator="EQ"/>
     <joinAttribute leftColumn="CC_DATE" rightColumn="BEGDA" operator="GE"/>
     <joinAttribute leftColumn="CC_DATE" rightColumn="ENDDA" operator="LE"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMSYSUSERSINFO" filterExpressionLanguage="SQL">
     <viewAttributes>
-      <viewAttribute id="BNAME"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="BEGDA"/>
-      <viewAttribute id="ENDDA"/>
     
       <viewAttribute id="NAME_TEXT"/>
       <viewAttribute id="ORGEH"/>
-      <viewAttribute id="SHORT"/></viewAttributes>
+      <viewAttribute id="SHORT"/>
+      <viewAttribute id="BNAME"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="BEGDA"/>
+      <viewAttribute id="ENDDA"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.Business_Models.CommonObjects::CV_CrmSysUsersInfo"/>
     <filter>&quot;BEGDA&quot; IS NOT NULL AND &quot;ENDDA&quot; IS NOT NULL</filter>
@@ -194,7 +217,7 @@
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CASE_GUIDS">
     <viewAttributes>
       <viewAttribute id="CASE_GUID"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
       <viewAttribute id="CASE_TYPE"/>
       <viewAttribute id="EXT_KEY"/>
       <viewAttribute id="EXT_REF"/>
@@ -229,6 +252,8 @@
       <viewAttribute id="CLOSEDBY_ORGEH"/>
       <viewAttribute id="CLOSEDBY_SHORT"/>
       <viewAttribute id="TYPE"/>
+    
+      <viewAttribute id="SCMG_MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="NEJ_USERINFO">
@@ -236,6 +261,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_NAME_TEXT" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_ORGEH" source="ORGEH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_SHORT" source="SHORT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="SCMG_MANDT"/>
     </input>
     <filter>&quot;TYPE&quot;='CLOSED'</filter>
   </calculationView>
@@ -248,6 +275,8 @@
       <viewAttribute id="CREATEDBY_ORGEH"/>
       <viewAttribute id="CREATEDBY_SHORT"/>
       <viewAttribute id="TYPE"/>
+    
+      <viewAttribute id="SCMG_MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="NEJ_USERINFO">
@@ -255,6 +284,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_NAME_TEXT" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_ORGEH" source="ORGEH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_SHORT" source="SHORT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="SCMG_MANDT"/>
     </input>
     <filter>&quot;TYPE&quot;='CREATED'</filter>
   </calculationView>
@@ -267,6 +298,8 @@
       <viewAttribute id="PROCESSOR_ORGEH"/>
       <viewAttribute id="PROCESSOR_SHORT"/>
       <viewAttribute id="TYPE"/>
+    
+      <viewAttribute id="SCMG_MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="NEJ_USERINFO">
@@ -274,6 +307,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_NAME_TEXT" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_ORGEH" source="ORGEH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_SHORT" source="SHORT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="SCMG_MANDT"/>
     </input>
     <filter>&quot;TYPE&quot;='PROCESSOR'</filter>
   </calculationView>
@@ -286,6 +321,8 @@
       <viewAttribute id="CHANGEDBY_ORGEH"/>
       <viewAttribute id="CHANGEDBY_SHORT"/>
       <viewAttribute id="TYPE"/>
+    
+      <viewAttribute id="SCMG_MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="NEJ_USERINFO">
@@ -293,6 +330,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_NAME_TEXT" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_ORGEH" source="ORGEH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_SHORT" source="SHORT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="SCMG_MANDT"/>
     </input>
     <filter>&quot;TYPE&quot;='CHANGED'</filter>
   </calculationView>
@@ -305,6 +344,8 @@
       <viewAttribute id="RESPONSIBLE_ORGEH"/>
       <viewAttribute id="RESPONSIBLE_SHORT"/>
       <viewAttribute id="TYPE"/>
+    
+      <viewAttribute id="SCMG_MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="NEJ_USERINFO">
@@ -312,17 +353,15 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE_NAME_TEXT" source="NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE_ORGEH" source="ORGEH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE_SHORT" source="SHORT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="SCMG_MANDT"/>
     </input>
     <filter>&quot;TYPE&quot;='RESPONSIBLE'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_1" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_1" cardinality="C1_1" joinType="textTable" languageColumn="LANGU" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
     <viewAttributes>
-      <viewAttribute id="CHANGEDBY_USERNAME"/>
-      <viewAttribute id="CHANGEDBY_NAME_TEXT"/>
-      <viewAttribute id="CHANGEDBY_ORGEH"/>
-      <viewAttribute id="CHANGEDBY_SHORT"/>
       <viewAttribute id="CASE_GUID"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
       <viewAttribute id="CASE_TYPE"/>
       <viewAttribute id="EXT_KEY"/>
       <viewAttribute id="EXT_REF"/>
@@ -347,7 +386,7 @@
     <calculatedViewAttributes/>
     <input node="P_CASE_GUIDS">
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
@@ -369,29 +408,17 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
     </input>
-    <input node="P_CHANGEDBY_PIVOT">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_USERNAME" source="CHANGEDBY_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_NAME_TEXT" source="CHANGEDBY_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_ORGEH" source="CHANGEDBY_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_SHORT" source="CHANGEDBY_SHORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    <input node="osr.business.semantic.db.synonyms::SCMGAUT_SECLEVLT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL" source="SECURE_LEVEL"/>
     </input>
-    <joinAttribute name="CASE_GUID"/>
-    <joinAttribute name="MANDT"/>
+    <joinAttribute name="SCMG_MANDT"/>
+    <joinAttribute name="SECURE_LEVEL"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_2" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_2" cardinality="C1_1" joinType="textTable" languageColumn="LANGU" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
     <viewAttributes>
-      <viewAttribute id="CREATEDBY_USERNAME"/>
-      <viewAttribute id="CREATEDBY_NAME_TEXT"/>
-      <viewAttribute id="CREATEDBY_ORGEH"/>
-      <viewAttribute id="CREATEDBY_SHORT"/>
-      <viewAttribute id="CHANGEDBY_USERNAME"/>
-      <viewAttribute id="CHANGEDBY_NAME_TEXT"/>
-      <viewAttribute id="CHANGEDBY_ORGEH"/>
-      <viewAttribute id="CHANGEDBY_SHORT"/>
       <viewAttribute id="CASE_GUID"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
       <viewAttribute id="CASE_TYPE"/>
       <viewAttribute id="EXT_KEY"/>
       <viewAttribute id="EXT_REF"/>
@@ -415,12 +442,8 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_1">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_USERNAME" source="CHANGEDBY_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_NAME_TEXT" source="CHANGEDBY_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_ORGEH" source="CHANGEDBY_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_SHORT" source="CHANGEDBY_SHORT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
@@ -442,33 +465,17 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
     </input>
-    <input node="P_CREATEDBY_PIVOT">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_USERNAME" source="CREATEDBY_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_NAME_TEXT" source="CREATEDBY_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_ORGEH" source="CREATEDBY_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_SHORT" source="CREATEDBY_SHORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    <input node="osr.business.semantic.db.synonyms::SCMGATTR_PRIOT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY" source="PRIORITY"/>
     </input>
-    <joinAttribute name="CASE_GUID"/>
-    <joinAttribute name="MANDT"/>
+    <joinAttribute name="SCMG_MANDT"/>
+    <joinAttribute name="PRIORITY"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_3" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_3" cardinality="C1_1" joinType="textTable" languageColumn="LANGU" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
     <viewAttributes>
-      <viewAttribute id="PROCESSOR_USERNAME"/>
-      <viewAttribute id="PROCESSOR_NAME_TEXT"/>
-      <viewAttribute id="PROCESSOR_ORGEH"/>
-      <viewAttribute id="PROCESSOR_SHORT"/>
-      <viewAttribute id="CREATEDBY_USERNAME"/>
-      <viewAttribute id="CREATEDBY_NAME_TEXT"/>
-      <viewAttribute id="CREATEDBY_ORGEH"/>
-      <viewAttribute id="CREATEDBY_SHORT"/>
-      <viewAttribute id="CHANGEDBY_USERNAME"/>
-      <viewAttribute id="CHANGEDBY_NAME_TEXT"/>
-      <viewAttribute id="CHANGEDBY_ORGEH"/>
-      <viewAttribute id="CHANGEDBY_SHORT"/>
       <viewAttribute id="CASE_GUID"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
       <viewAttribute id="CASE_TYPE"/>
       <viewAttribute id="EXT_KEY"/>
       <viewAttribute id="EXT_REF"/>
@@ -492,16 +499,8 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_2">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_USERNAME" source="CREATEDBY_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_NAME_TEXT" source="CREATEDBY_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_ORGEH" source="CREATEDBY_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_SHORT" source="CREATEDBY_SHORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_USERNAME" source="CHANGEDBY_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_NAME_TEXT" source="CHANGEDBY_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_ORGEH" source="CHANGEDBY_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_SHORT" source="CHANGEDBY_SHORT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
@@ -523,37 +522,17 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
     </input>
-    <input node="P_PROCESSOR_PIVOT">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_USERNAME" source="PROCESSOR_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_NAME_TEXT" source="PROCESSOR_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_ORGEH" source="PROCESSOR_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_SHORT" source="PROCESSOR_SHORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    <input node="osr.business.semantic.db.synonyms::SCMGATTR_SESCALT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON" source="ESCAL_REASON"/>
     </input>
-    <joinAttribute name="CASE_GUID"/>
-    <joinAttribute name="MANDT"/>
+    <joinAttribute name="SCMG_MANDT"/>
+    <joinAttribute name="ESCAL_REASON"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_4" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_4" cardinality="C1_1" joinType="textTable" languageColumn="LANGU" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
     <viewAttributes>
-      <viewAttribute id="PROCESSOR_USERNAME"/>
-      <viewAttribute id="PROCESSOR_NAME_TEXT"/>
-      <viewAttribute id="PROCESSOR_ORGEH"/>
-      <viewAttribute id="PROCESSOR_SHORT"/>
-      <viewAttribute id="CLOSEDBY_USERNAME"/>
-      <viewAttribute id="CLOSEDBY_NAME_TEXT"/>
-      <viewAttribute id="CLOSEDBY_ORGEH"/>
-      <viewAttribute id="CLOSEDBY_SHORT"/>
-      <viewAttribute id="CREATEDBY_USERNAME"/>
-      <viewAttribute id="CREATEDBY_NAME_TEXT"/>
-      <viewAttribute id="CREATEDBY_ORGEH"/>
-      <viewAttribute id="CREATEDBY_SHORT"/>
-      <viewAttribute id="CHANGEDBY_USERNAME"/>
-      <viewAttribute id="CHANGEDBY_NAME_TEXT"/>
-      <viewAttribute id="CHANGEDBY_ORGEH"/>
-      <viewAttribute id="CHANGEDBY_SHORT"/>
       <viewAttribute id="CASE_GUID"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
       <viewAttribute id="CASE_TYPE"/>
       <viewAttribute id="EXT_KEY"/>
       <viewAttribute id="EXT_REF"/>
@@ -577,20 +556,8 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_3">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_USERNAME" source="PROCESSOR_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_NAME_TEXT" source="PROCESSOR_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_ORGEH" source="PROCESSOR_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_SHORT" source="PROCESSOR_SHORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_USERNAME" source="CREATEDBY_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_NAME_TEXT" source="CREATEDBY_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_ORGEH" source="CREATEDBY_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_SHORT" source="CREATEDBY_SHORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_USERNAME" source="CHANGEDBY_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_NAME_TEXT" source="CHANGEDBY_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_ORGEH" source="CHANGEDBY_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_SHORT" source="CHANGEDBY_SHORT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
@@ -612,41 +579,19 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
     </input>
-    <input node="P_CLOSEDBY_PIVOT">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_USERNAME" source="CLOSEDBY_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_NAME_TEXT" source="CLOSEDBY_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_ORGEH" source="CLOSEDBY_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_SHORT" source="CLOSEDBY_SHORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    <input node="osr.business.semantic.db.synonyms::SCMGATTR_REASONT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE" source="REASON_CODE"/>
     </input>
-    <joinAttribute name="CASE_GUID"/>
-    <joinAttribute name="MANDT"/>
+    <joinAttribute name="SCMG_MANDT"/>
+    <joinAttribute name="CASE_TYPE"/>
+    <joinAttribute name="REASON_CODE"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_5" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_5" cardinality="C1_1" joinType="textTable" languageColumn="LANGU" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
     <viewAttributes>
-      <viewAttribute id="RESPONSIBLE_USERNAME"/>
-      <viewAttribute id="RESPONSIBLE_NAME_TEXT"/>
-      <viewAttribute id="RESPONSIBLE_ORGEH"/>
-      <viewAttribute id="RESPONSIBLE_SHORT"/>
-      <viewAttribute id="PROCESSOR_USERNAME"/>
-      <viewAttribute id="PROCESSOR_NAME_TEXT"/>
-      <viewAttribute id="PROCESSOR_ORGEH"/>
-      <viewAttribute id="PROCESSOR_SHORT"/>
-      <viewAttribute id="CLOSEDBY_USERNAME"/>
-      <viewAttribute id="CLOSEDBY_NAME_TEXT"/>
-      <viewAttribute id="CLOSEDBY_ORGEH"/>
-      <viewAttribute id="CLOSEDBY_SHORT"/>
-      <viewAttribute id="CREATEDBY_USERNAME"/>
-      <viewAttribute id="CREATEDBY_NAME_TEXT"/>
-      <viewAttribute id="CREATEDBY_ORGEH"/>
-      <viewAttribute id="CREATEDBY_SHORT"/>
-      <viewAttribute id="CHANGEDBY_USERNAME"/>
-      <viewAttribute id="CHANGEDBY_NAME_TEXT"/>
-      <viewAttribute id="CHANGEDBY_ORGEH"/>
-      <viewAttribute id="CHANGEDBY_SHORT"/>
       <viewAttribute id="CASE_GUID"/>
-      <viewAttribute id="MANDT"/>
+      <viewAttribute id="SCMG_MANDT"/>
       <viewAttribute id="CASE_TYPE"/>
       <viewAttribute id="EXT_KEY"/>
       <viewAttribute id="EXT_REF"/>
@@ -670,24 +615,8 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_4">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_USERNAME" source="PROCESSOR_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_NAME_TEXT" source="PROCESSOR_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_ORGEH" source="PROCESSOR_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_SHORT" source="PROCESSOR_SHORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_USERNAME" source="CLOSEDBY_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_NAME_TEXT" source="CLOSEDBY_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_ORGEH" source="CLOSEDBY_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_SHORT" source="CLOSEDBY_SHORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_USERNAME" source="CREATEDBY_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_NAME_TEXT" source="CREATEDBY_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_ORGEH" source="CREATEDBY_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_SHORT" source="CREATEDBY_SHORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_USERNAME" source="CHANGEDBY_USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_NAME_TEXT" source="CHANGEDBY_NAME_TEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_ORGEH" source="CHANGEDBY_ORGEH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_SHORT" source="CHANGEDBY_SHORT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
@@ -709,236 +638,767 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
     </input>
+    <input node="osr.business.semantic.db.synonyms::SCMGSTATPROFST">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROFILE_ID" source="PROFILE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDERNO" source="STAT_ORDERNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="PROFILE_ID"/>
+    <joinAttribute name="STAT_ORDERNO"/>
+    <joinAttribute name="SCMG_MANDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_6" cardinality="C1_1" joinType="textTable" languageColumn="LANGU" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="SCMG_MANDT"/>
+      <viewAttribute id="CASE_TYPE"/>
+      <viewAttribute id="EXT_KEY"/>
+      <viewAttribute id="EXT_REF"/>
+      <viewAttribute id="PLAN_END_DATE"/>
+      <viewAttribute id="CASE_TITLE"/>
+      <viewAttribute id="ESCAL_REASON"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="PRIORITY"/>
+      <viewAttribute id="SECURE_LEVEL"/>
+      <viewAttribute id="PROFILE_ID"/>
+      <viewAttribute id="STAT_ORDERNO"/>
+      <viewAttribute id="STAT_PARA"/>
+      <viewAttribute id="STAT_OBJNR"/>
+      <viewAttribute id="STAT_LINE"/>
+      <viewAttribute id="STAT_USER_LINE"/>
+      <viewAttribute id="REASON_CODE"/>
+      <viewAttribute id="Z_RUN_SEQ_ID"/>
+      <viewAttribute id="CREATE_TIME"/>
+      <viewAttribute id="CHANGE_TIME"/>
+      <viewAttribute id="CLOSING_TIME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_END_DATE" source="PLAN_END_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TITLE" source="CASE_TITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON" source="ESCAL_REASON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY" source="PRIORITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL" source="SECURE_LEVEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROFILE_ID" source="PROFILE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDERNO" source="STAT_ORDERNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_PARA" source="STAT_PARA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_OBJNR" source="STAT_OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_LINE" source="STAT_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_USER_LINE" source="STAT_USER_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE" source="REASON_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+    </input>
+    <input node="osr.business.semantic.db.synonyms::SCMGATTR_CATEGOT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
+    </input>
+    <joinAttribute name="SCMG_MANDT"/>
+    <joinAttribute name="CATEGORY"/>
+    <joinAttribute name="CASE_TYPE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_7" cardinality="C1_1" joinType="textTable" languageColumn="LANGU" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="SCMG_MANDT"/>
+      <viewAttribute id="CASE_TYPE"/>
+      <viewAttribute id="EXT_KEY"/>
+      <viewAttribute id="EXT_REF"/>
+      <viewAttribute id="PLAN_END_DATE"/>
+      <viewAttribute id="CASE_TITLE"/>
+      <viewAttribute id="ESCAL_REASON"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="PRIORITY"/>
+      <viewAttribute id="SECURE_LEVEL"/>
+      <viewAttribute id="PROFILE_ID"/>
+      <viewAttribute id="STAT_ORDERNO"/>
+      <viewAttribute id="STAT_PARA"/>
+      <viewAttribute id="STAT_OBJNR"/>
+      <viewAttribute id="STAT_LINE"/>
+      <viewAttribute id="STAT_USER_LINE"/>
+      <viewAttribute id="REASON_CODE"/>
+      <viewAttribute id="Z_RUN_SEQ_ID"/>
+      <viewAttribute id="CREATE_TIME"/>
+      <viewAttribute id="CHANGE_TIME"/>
+      <viewAttribute id="CLOSING_TIME"/>
+      <viewAttribute id="CASE_TYPE_DESCRIPTION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_6">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_END_DATE" source="PLAN_END_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TITLE" source="CASE_TITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON" source="ESCAL_REASON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY" source="PRIORITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL" source="SECURE_LEVEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROFILE_ID" source="PROFILE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDERNO" source="STAT_ORDERNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_PARA" source="STAT_PARA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_OBJNR" source="STAT_OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_LINE" source="STAT_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_USER_LINE" source="STAT_USER_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE" source="REASON_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+    </input>
+    <input node="osr.business.semantic.db.synonyms::SCMGCASETYPET">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE_DESCRIPTION" source="DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
+    </input>
+    <joinAttribute name="SCMG_MANDT"/>
+    <joinAttribute name="CASE_TYPE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_8" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CHANGEDBY_USERNAME"/>
+      <viewAttribute id="CHANGEDBY_NAME_TEXT"/>
+      <viewAttribute id="CHANGEDBY_ORGEH"/>
+      <viewAttribute id="CHANGEDBY_SHORT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="SCMG_MANDT"/>
+      <viewAttribute id="CASE_TYPE"/>
+      <viewAttribute id="EXT_KEY"/>
+      <viewAttribute id="EXT_REF"/>
+      <viewAttribute id="PLAN_END_DATE"/>
+      <viewAttribute id="CASE_TITLE"/>
+      <viewAttribute id="ESCAL_REASON"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="PRIORITY"/>
+      <viewAttribute id="SECURE_LEVEL"/>
+      <viewAttribute id="PROFILE_ID"/>
+      <viewAttribute id="STAT_ORDERNO"/>
+      <viewAttribute id="STAT_PARA"/>
+      <viewAttribute id="STAT_OBJNR"/>
+      <viewAttribute id="STAT_LINE"/>
+      <viewAttribute id="STAT_USER_LINE"/>
+      <viewAttribute id="REASON_CODE"/>
+      <viewAttribute id="Z_RUN_SEQ_ID"/>
+      <viewAttribute id="CREATE_TIME"/>
+      <viewAttribute id="CHANGE_TIME"/>
+      <viewAttribute id="CLOSING_TIME"/>
+      <viewAttribute id="CASE_TYPE_DESCRIPTION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_7">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_END_DATE" source="PLAN_END_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TITLE" source="CASE_TITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON" source="ESCAL_REASON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY" source="PRIORITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL" source="SECURE_LEVEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROFILE_ID" source="PROFILE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDERNO" source="STAT_ORDERNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_PARA" source="STAT_PARA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_OBJNR" source="STAT_OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_LINE" source="STAT_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_USER_LINE" source="STAT_USER_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE" source="REASON_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE_DESCRIPTION" source="CASE_TYPE_DESCRIPTION"/>
+    </input>
+    <input node="P_CHANGEDBY_PIVOT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_USERNAME" source="CHANGEDBY_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_NAME_TEXT" source="CHANGEDBY_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_ORGEH" source="CHANGEDBY_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_SHORT" source="CHANGEDBY_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
+    </input>
+    <joinAttribute name="CASE_GUID"/>
+    <joinAttribute name="SCMG_MANDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_9" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CREATEDBY_USERNAME"/>
+      <viewAttribute id="CREATEDBY_NAME_TEXT"/>
+      <viewAttribute id="CREATEDBY_ORGEH"/>
+      <viewAttribute id="CREATEDBY_SHORT"/>
+      <viewAttribute id="CHANGEDBY_USERNAME"/>
+      <viewAttribute id="CHANGEDBY_NAME_TEXT"/>
+      <viewAttribute id="CHANGEDBY_ORGEH"/>
+      <viewAttribute id="CHANGEDBY_SHORT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="SCMG_MANDT"/>
+      <viewAttribute id="CASE_TYPE"/>
+      <viewAttribute id="EXT_KEY"/>
+      <viewAttribute id="EXT_REF"/>
+      <viewAttribute id="PLAN_END_DATE"/>
+      <viewAttribute id="CASE_TITLE"/>
+      <viewAttribute id="ESCAL_REASON"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="PRIORITY"/>
+      <viewAttribute id="SECURE_LEVEL"/>
+      <viewAttribute id="PROFILE_ID"/>
+      <viewAttribute id="STAT_ORDERNO"/>
+      <viewAttribute id="STAT_PARA"/>
+      <viewAttribute id="STAT_OBJNR"/>
+      <viewAttribute id="STAT_LINE"/>
+      <viewAttribute id="STAT_USER_LINE"/>
+      <viewAttribute id="REASON_CODE"/>
+      <viewAttribute id="Z_RUN_SEQ_ID"/>
+      <viewAttribute id="CREATE_TIME"/>
+      <viewAttribute id="CHANGE_TIME"/>
+      <viewAttribute id="CLOSING_TIME"/>
+      <viewAttribute id="CASE_TYPE_DESCRIPTION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_8">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_USERNAME" source="CHANGEDBY_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_NAME_TEXT" source="CHANGEDBY_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_ORGEH" source="CHANGEDBY_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_SHORT" source="CHANGEDBY_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_END_DATE" source="PLAN_END_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TITLE" source="CASE_TITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON" source="ESCAL_REASON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY" source="PRIORITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL" source="SECURE_LEVEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROFILE_ID" source="PROFILE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDERNO" source="STAT_ORDERNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_PARA" source="STAT_PARA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_OBJNR" source="STAT_OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_LINE" source="STAT_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_USER_LINE" source="STAT_USER_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE" source="REASON_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE_DESCRIPTION" source="CASE_TYPE_DESCRIPTION"/>
+    </input>
+    <input node="P_CREATEDBY_PIVOT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_USERNAME" source="CREATEDBY_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_NAME_TEXT" source="CREATEDBY_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_ORGEH" source="CREATEDBY_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_SHORT" source="CREATEDBY_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
+    </input>
+    <joinAttribute name="CASE_GUID"/>
+    <joinAttribute name="SCMG_MANDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_10" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PROCESSOR_USERNAME"/>
+      <viewAttribute id="PROCESSOR_NAME_TEXT"/>
+      <viewAttribute id="PROCESSOR_ORGEH"/>
+      <viewAttribute id="PROCESSOR_SHORT"/>
+      <viewAttribute id="CREATEDBY_USERNAME"/>
+      <viewAttribute id="CREATEDBY_NAME_TEXT"/>
+      <viewAttribute id="CREATEDBY_ORGEH"/>
+      <viewAttribute id="CREATEDBY_SHORT"/>
+      <viewAttribute id="CHANGEDBY_USERNAME"/>
+      <viewAttribute id="CHANGEDBY_NAME_TEXT"/>
+      <viewAttribute id="CHANGEDBY_ORGEH"/>
+      <viewAttribute id="CHANGEDBY_SHORT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="SCMG_MANDT"/>
+      <viewAttribute id="CASE_TYPE"/>
+      <viewAttribute id="EXT_KEY"/>
+      <viewAttribute id="EXT_REF"/>
+      <viewAttribute id="PLAN_END_DATE"/>
+      <viewAttribute id="CASE_TITLE"/>
+      <viewAttribute id="ESCAL_REASON"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="PRIORITY"/>
+      <viewAttribute id="SECURE_LEVEL"/>
+      <viewAttribute id="PROFILE_ID"/>
+      <viewAttribute id="STAT_ORDERNO"/>
+      <viewAttribute id="STAT_PARA"/>
+      <viewAttribute id="STAT_OBJNR"/>
+      <viewAttribute id="STAT_LINE"/>
+      <viewAttribute id="STAT_USER_LINE"/>
+      <viewAttribute id="REASON_CODE"/>
+      <viewAttribute id="Z_RUN_SEQ_ID"/>
+      <viewAttribute id="CREATE_TIME"/>
+      <viewAttribute id="CHANGE_TIME"/>
+      <viewAttribute id="CLOSING_TIME"/>
+      <viewAttribute id="CASE_TYPE_DESCRIPTION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_9">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_USERNAME" source="CREATEDBY_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_NAME_TEXT" source="CREATEDBY_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_ORGEH" source="CREATEDBY_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_SHORT" source="CREATEDBY_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_USERNAME" source="CHANGEDBY_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_NAME_TEXT" source="CHANGEDBY_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_ORGEH" source="CHANGEDBY_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_SHORT" source="CHANGEDBY_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_END_DATE" source="PLAN_END_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TITLE" source="CASE_TITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON" source="ESCAL_REASON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY" source="PRIORITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL" source="SECURE_LEVEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROFILE_ID" source="PROFILE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDERNO" source="STAT_ORDERNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_PARA" source="STAT_PARA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_OBJNR" source="STAT_OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_LINE" source="STAT_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_USER_LINE" source="STAT_USER_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE" source="REASON_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE_DESCRIPTION" source="CASE_TYPE_DESCRIPTION"/>
+    </input>
+    <input node="P_PROCESSOR_PIVOT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_USERNAME" source="PROCESSOR_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_NAME_TEXT" source="PROCESSOR_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_ORGEH" source="PROCESSOR_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_SHORT" source="PROCESSOR_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
+    </input>
+    <joinAttribute name="CASE_GUID"/>
+    <joinAttribute name="SCMG_MANDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_11" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PROCESSOR_USERNAME"/>
+      <viewAttribute id="PROCESSOR_NAME_TEXT"/>
+      <viewAttribute id="PROCESSOR_ORGEH"/>
+      <viewAttribute id="PROCESSOR_SHORT"/>
+      <viewAttribute id="CLOSEDBY_USERNAME"/>
+      <viewAttribute id="CLOSEDBY_NAME_TEXT"/>
+      <viewAttribute id="CLOSEDBY_ORGEH"/>
+      <viewAttribute id="CLOSEDBY_SHORT"/>
+      <viewAttribute id="CREATEDBY_USERNAME"/>
+      <viewAttribute id="CREATEDBY_NAME_TEXT"/>
+      <viewAttribute id="CREATEDBY_ORGEH"/>
+      <viewAttribute id="CREATEDBY_SHORT"/>
+      <viewAttribute id="CHANGEDBY_USERNAME"/>
+      <viewAttribute id="CHANGEDBY_NAME_TEXT"/>
+      <viewAttribute id="CHANGEDBY_ORGEH"/>
+      <viewAttribute id="CHANGEDBY_SHORT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="SCMG_MANDT"/>
+      <viewAttribute id="CASE_TYPE"/>
+      <viewAttribute id="EXT_KEY"/>
+      <viewAttribute id="EXT_REF"/>
+      <viewAttribute id="PLAN_END_DATE"/>
+      <viewAttribute id="CASE_TITLE"/>
+      <viewAttribute id="ESCAL_REASON"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="PRIORITY"/>
+      <viewAttribute id="SECURE_LEVEL"/>
+      <viewAttribute id="PROFILE_ID"/>
+      <viewAttribute id="STAT_ORDERNO"/>
+      <viewAttribute id="STAT_PARA"/>
+      <viewAttribute id="STAT_OBJNR"/>
+      <viewAttribute id="STAT_LINE"/>
+      <viewAttribute id="STAT_USER_LINE"/>
+      <viewAttribute id="REASON_CODE"/>
+      <viewAttribute id="Z_RUN_SEQ_ID"/>
+      <viewAttribute id="CREATE_TIME"/>
+      <viewAttribute id="CHANGE_TIME"/>
+      <viewAttribute id="CLOSING_TIME"/>
+      <viewAttribute id="CASE_TYPE_DESCRIPTION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_10">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_USERNAME" source="PROCESSOR_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_NAME_TEXT" source="PROCESSOR_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_ORGEH" source="PROCESSOR_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_SHORT" source="PROCESSOR_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_USERNAME" source="CREATEDBY_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_NAME_TEXT" source="CREATEDBY_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_ORGEH" source="CREATEDBY_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_SHORT" source="CREATEDBY_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_USERNAME" source="CHANGEDBY_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_NAME_TEXT" source="CHANGEDBY_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_ORGEH" source="CHANGEDBY_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_SHORT" source="CHANGEDBY_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_END_DATE" source="PLAN_END_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TITLE" source="CASE_TITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON" source="ESCAL_REASON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY" source="PRIORITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL" source="SECURE_LEVEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROFILE_ID" source="PROFILE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDERNO" source="STAT_ORDERNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_PARA" source="STAT_PARA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_OBJNR" source="STAT_OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_LINE" source="STAT_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_USER_LINE" source="STAT_USER_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE" source="REASON_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE_DESCRIPTION" source="CASE_TYPE_DESCRIPTION"/>
+    </input>
+    <input node="P_CLOSEDBY_PIVOT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_USERNAME" source="CLOSEDBY_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_NAME_TEXT" source="CLOSEDBY_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_ORGEH" source="CLOSEDBY_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_SHORT" source="CLOSEDBY_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
+    </input>
+    <joinAttribute name="CASE_GUID"/>
+    <joinAttribute name="SCMG_MANDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_12" cardinality="C1_1" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="RESPONSIBLE_USERNAME"/>
+      <viewAttribute id="RESPONSIBLE_NAME_TEXT"/>
+      <viewAttribute id="RESPONSIBLE_ORGEH"/>
+      <viewAttribute id="RESPONSIBLE_SHORT"/>
+      <viewAttribute id="PROCESSOR_USERNAME"/>
+      <viewAttribute id="PROCESSOR_NAME_TEXT"/>
+      <viewAttribute id="PROCESSOR_ORGEH"/>
+      <viewAttribute id="PROCESSOR_SHORT"/>
+      <viewAttribute id="CLOSEDBY_USERNAME"/>
+      <viewAttribute id="CLOSEDBY_NAME_TEXT"/>
+      <viewAttribute id="CLOSEDBY_ORGEH"/>
+      <viewAttribute id="CLOSEDBY_SHORT"/>
+      <viewAttribute id="CREATEDBY_USERNAME"/>
+      <viewAttribute id="CREATEDBY_NAME_TEXT"/>
+      <viewAttribute id="CREATEDBY_ORGEH"/>
+      <viewAttribute id="CREATEDBY_SHORT"/>
+      <viewAttribute id="CHANGEDBY_USERNAME"/>
+      <viewAttribute id="CHANGEDBY_NAME_TEXT"/>
+      <viewAttribute id="CHANGEDBY_ORGEH"/>
+      <viewAttribute id="CHANGEDBY_SHORT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="SCMG_MANDT"/>
+      <viewAttribute id="CASE_TYPE"/>
+      <viewAttribute id="EXT_KEY"/>
+      <viewAttribute id="EXT_REF"/>
+      <viewAttribute id="PLAN_END_DATE"/>
+      <viewAttribute id="CASE_TITLE"/>
+      <viewAttribute id="ESCAL_REASON"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="PRIORITY"/>
+      <viewAttribute id="SECURE_LEVEL"/>
+      <viewAttribute id="PROFILE_ID"/>
+      <viewAttribute id="STAT_ORDERNO"/>
+      <viewAttribute id="STAT_PARA"/>
+      <viewAttribute id="STAT_OBJNR"/>
+      <viewAttribute id="STAT_LINE"/>
+      <viewAttribute id="STAT_USER_LINE"/>
+      <viewAttribute id="REASON_CODE"/>
+      <viewAttribute id="Z_RUN_SEQ_ID"/>
+      <viewAttribute id="CREATE_TIME"/>
+      <viewAttribute id="CHANGE_TIME"/>
+      <viewAttribute id="CLOSING_TIME"/>
+      <viewAttribute id="CASE_TYPE_DESCRIPTION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_11">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_USERNAME" source="PROCESSOR_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_NAME_TEXT" source="PROCESSOR_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_ORGEH" source="PROCESSOR_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_SHORT" source="PROCESSOR_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_USERNAME" source="CLOSEDBY_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_NAME_TEXT" source="CLOSEDBY_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_ORGEH" source="CLOSEDBY_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_SHORT" source="CLOSEDBY_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_USERNAME" source="CREATEDBY_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_NAME_TEXT" source="CREATEDBY_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_ORGEH" source="CREATEDBY_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_SHORT" source="CREATEDBY_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_USERNAME" source="CHANGEDBY_USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_NAME_TEXT" source="CHANGEDBY_NAME_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_ORGEH" source="CHANGEDBY_ORGEH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_SHORT" source="CHANGEDBY_SHORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_KEY" source="EXT_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REF" source="EXT_REF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_END_DATE" source="PLAN_END_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TITLE" source="CASE_TITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON" source="ESCAL_REASON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY" source="PRIORITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL" source="SECURE_LEVEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROFILE_ID" source="PROFILE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDERNO" source="STAT_ORDERNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_PARA" source="STAT_PARA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_OBJNR" source="STAT_OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_LINE" source="STAT_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_USER_LINE" source="STAT_USER_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE" source="REASON_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE_DESCRIPTION" source="CASE_TYPE_DESCRIPTION"/>
+    </input>
     <input node="P_RESPONSIBLE_PIVOT">
       <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE_USERNAME" source="RESPONSIBLE_USERNAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE_NAME_TEXT" source="RESPONSIBLE_NAME_TEXT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE_ORGEH" source="RESPONSIBLE_ORGEH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE_SHORT" source="RESPONSIBLE_SHORT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="SCMG_MANDT"/>
     </input>
     <joinAttribute name="CASE_GUID"/>
-    <joinAttribute name="MANDT"/>
+    <joinAttribute name="SCMG_MANDT"/>
   </calculationView>
 </calculationViews>
-<logicalModel id="J_PIVOT_5">
+<logicalModel id="J_PIVOT_12">
   <attributes>
     <attribute id="RESPONSIBLE_USERNAME" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="USERNAME"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="RESPONSIBLE_USERNAME"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="RESPONSIBLE_USERNAME"/>
     </attribute>
     <attribute id="RESPONSIBLE_NAME_TEXT" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Full Name of Person"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="RESPONSIBLE_NAME_TEXT"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="RESPONSIBLE_NAME_TEXT"/>
     </attribute>
     <attribute id="RESPONSIBLE_ORGEH" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team)"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="RESPONSIBLE_ORGEH"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="RESPONSIBLE_ORGEH"/>
     </attribute>
     <attribute id="RESPONSIBLE_SHORT" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team) Name"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="RESPONSIBLE_SHORT"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="RESPONSIBLE_SHORT"/>
     </attribute>
     <attribute id="PROCESSOR_USERNAME" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="USERNAME"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="PROCESSOR_USERNAME"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="PROCESSOR_USERNAME"/>
     </attribute>
     <attribute id="PROCESSOR_NAME_TEXT" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Full Name of Person"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="PROCESSOR_NAME_TEXT"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="PROCESSOR_NAME_TEXT"/>
     </attribute>
     <attribute id="PROCESSOR_ORGEH" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team)"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="PROCESSOR_ORGEH"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="PROCESSOR_ORGEH"/>
     </attribute>
     <attribute id="PROCESSOR_SHORT" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team) Name"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="PROCESSOR_SHORT"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="PROCESSOR_SHORT"/>
     </attribute>
     <attribute id="CLOSEDBY_USERNAME" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="USERNAME"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CLOSEDBY_USERNAME"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CLOSEDBY_USERNAME"/>
     </attribute>
     <attribute id="CLOSEDBY_NAME_TEXT" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Full Name of Person"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CLOSEDBY_NAME_TEXT"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CLOSEDBY_NAME_TEXT"/>
     </attribute>
     <attribute id="CLOSEDBY_ORGEH" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team)"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CLOSEDBY_ORGEH"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CLOSEDBY_ORGEH"/>
     </attribute>
     <attribute id="CLOSEDBY_SHORT" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team) Name"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CLOSEDBY_SHORT"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CLOSEDBY_SHORT"/>
     </attribute>
     <attribute id="CREATEDBY_USERNAME" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="USERNAME"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CREATEDBY_USERNAME"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CREATEDBY_USERNAME"/>
     </attribute>
     <attribute id="CREATEDBY_NAME_TEXT" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Full Name of Person"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CREATEDBY_NAME_TEXT"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CREATEDBY_NAME_TEXT"/>
     </attribute>
     <attribute id="CREATEDBY_ORGEH" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team)"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CREATEDBY_ORGEH"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CREATEDBY_ORGEH"/>
     </attribute>
     <attribute id="CREATEDBY_SHORT" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team) Name"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CREATEDBY_SHORT"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CREATEDBY_SHORT"/>
     </attribute>
     <attribute id="CHANGEDBY_USERNAME" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="USERNAME"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CHANGEDBY_USERNAME"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CHANGEDBY_USERNAME"/>
     </attribute>
     <attribute id="CHANGEDBY_NAME_TEXT" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Full Name of Person"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CHANGEDBY_NAME_TEXT"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CHANGEDBY_NAME_TEXT"/>
     </attribute>
     <attribute id="CHANGEDBY_ORGEH" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team)"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CHANGEDBY_ORGEH"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CHANGEDBY_ORGEH"/>
     </attribute>
     <attribute id="CHANGEDBY_SHORT" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Org. Unit (Team) Name"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CHANGEDBY_SHORT"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CHANGEDBY_SHORT"/>
     </attribute>
   
     <attribute id="CASE_GUID" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CASE_GUID"/>
   
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CASE_GUID"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CASE_GUID"/>
   
     </attribute>
-    <attribute id="MANDT" order="22" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SCMG_MANDT" order="22" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MANDT"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="MANDT"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="SCMG_MANDT"/>
     </attribute>
     <attribute id="CASE_TYPE" order="23" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CASE_TYPE"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CASE_TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CASE_TYPE"/>
     </attribute>
     <attribute id="EXT_KEY" order="24" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="EXT_KEY"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="EXT_KEY"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="EXT_KEY"/>
     </attribute>
     <attribute id="EXT_REF" order="25" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="EXT_REF"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="EXT_REF"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="EXT_REF"/>
     </attribute>
     <attribute id="PLAN_END_DATE" order="26" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PLAN_END_DATE"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="PLAN_END_DATE"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="PLAN_END_DATE"/>
     </attribute>
     <attribute id="CASE_TITLE" order="27" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CASE_TITLE"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CASE_TITLE"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CASE_TITLE"/>
     </attribute>
     <attribute id="ESCAL_REASON" order="28" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ESCAL_REASON"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="ESCAL_REASON"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="ESCAL_REASON"/>
     </attribute>
     <attribute id="CATEGORY" order="29" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CATEGORY"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CATEGORY"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CATEGORY"/>
     </attribute>
     <attribute id="PRIORITY" order="30" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PRIORITY"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="PRIORITY"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="PRIORITY"/>
     </attribute>
     <attribute id="SECURE_LEVEL" order="31" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SECURE_LEVEL"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="SECURE_LEVEL"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="SECURE_LEVEL"/>
     </attribute>
     <attribute id="PROFILE_ID" order="32" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PROFILE_ID"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="PROFILE_ID"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="PROFILE_ID"/>
     </attribute>
     <attribute id="STAT_ORDERNO" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STAT_ORDERNO"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="STAT_ORDERNO"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="STAT_ORDERNO"/>
     </attribute>
     <attribute id="STAT_PARA" order="34" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STAT_PARA"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="STAT_PARA"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="STAT_PARA"/>
     </attribute>
     <attribute id="STAT_OBJNR" order="35" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STAT_OBJNR"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="STAT_OBJNR"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="STAT_OBJNR"/>
     </attribute>
     <attribute id="STAT_LINE" order="36" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STAT_LINE"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="STAT_LINE"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="STAT_LINE"/>
     </attribute>
     <attribute id="STAT_USER_LINE" order="37" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STAT_USER_LINE"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="STAT_USER_LINE"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="STAT_USER_LINE"/>
     </attribute>
     <attribute id="REASON_CODE" order="38" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REASON_CODE"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="REASON_CODE"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="REASON_CODE"/>
     </attribute>
     <attribute id="Z_RUN_SEQ_ID" order="39" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Z_RUN_SEQ_ID"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="Z_RUN_SEQ_ID"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="Z_RUN_SEQ_ID"/>
     </attribute>
   
     <attribute id="CREATE_TIME" order="40" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CREATE_TIME"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CREATE_TIME"/>
+  
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CREATE_TIME"/>
+  
     </attribute>
     <attribute id="CHANGE_TIME" order="41" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CHANGE_TIME"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CHANGE_TIME"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CHANGE_TIME"/>
     </attribute>
     <attribute id="CLOSING_TIME" order="42" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CLOSING_TIME"/>
-      <keyMapping columnObjectName="J_PIVOT_5" columnName="CLOSING_TIME"/>
-    </attribute>
-  </attributes>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CLOSING_TIME"/>
+    </attribute></attributes>
   <calculatedAttributes/>
   <baseMeasures/>
   <calculatedMeasures/>
-  <restrictedMeasures/>
-</logicalModel>
+  <restrictedMeasures/></logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="100" y="105"/>
+      <upperLeftCorner x="643" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_SCMG_T_CASE_ATTR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="629" y="1131"/>
+      <upperLeftCorner x="583" y="1261"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PROCESSOR_UNPIVOT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="839" y="986"/>
+      <upperLeftCorner x="362" y="1096"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CLOSEDBY_UNPIVOT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="419" y="986"/>
+      <upperLeftCorner x="992" y="1096"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CHANGEDBY_UNPIVOT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="629" y="986"/>
+      <upperLeftCorner x="152" y="1096"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CREATEDBY_UNPIVOT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1049" y="986"/>
+      <upperLeftCorner x="572" y="1096"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_RESPONSIBLE_UNPIVOT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="209" y="986"/>
+      <upperLeftCorner x="782" y="1096"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="U_USERDATA" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="607" y="781"/>
+      <upperLeftCorner x="726" y="871"/>
       <rectangleSize height="30" width="204"/>
     </shape>
     <shape expanded="true" modelObjectName="NEJ_USERINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="629" y="641"/>
+      <upperLeftCorner x="511" y="711"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="U_USERDATA" modelObjectNameSpace="NEJ_USERINFO" modelObjectType="JoinNodeInput">
@@ -950,37 +1410,37 @@
       <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CRMSYSUSERSINFO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="932" y="781"/>
+      <upperLeftCorner x="485" y="871"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_CASE_GUIDS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1142" y="466"/>
+      <upperLeftCorner x="1202" y="1096"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CLOSEDBY_PIVOT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="932" y="456"/>
+      <upperLeftCorner x="92" y="546"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CREATEDBY_PIVOT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="722" y="456"/>
+      <upperLeftCorner x="511" y="546"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_PROCESSOR_PIVOT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="511" y="456"/>
+      <upperLeftCorner x="931" y="546"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_CHANGEDBY_PIVOT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="456"/>
+      <upperLeftCorner x="721" y="546"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="P_RESPONSIBLE_PIVOT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91" y="456"/>
+      <upperLeftCorner x="301" y="546"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_PIVOT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="682" y="217"/>
+      <upperLeftCorner x="643" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="P_RESPONSIBLE_PIVOT" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
@@ -999,13 +1459,42 @@
       <upperLeftCorner x="1217" y="70"/>
       <rectangleSize width="224"/>
     </shape>
+    <shape modelObjectName="P_CHANGEDBY_PIVOT" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="1520" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.synonyms::SCMGCASETYPET" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="1820" y="30"/>
+      <rectangleSize width="389"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.synonyms::SCMGATTR_CATEGOT" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="2120" y="30"/>
+      <rectangleSize width="412"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.synonyms::SCMGSTATPROFST" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="2420" y="30"/>
+      <rectangleSize width="395"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.synonyms::SCMGATTR_REASONT" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="2720" y="30"/>
+      <rectangleSize width="413"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.synonyms::SCMGATTR_SESCALT" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="3020" y="30"/>
+      <rectangleSize width="410"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.synonyms::SCMGATTR_PRIOT" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="3320" y="30"/>
+      <rectangleSize width="391"/>
+    </shape>
     <shape modelObjectName="P_CASE_GUIDS" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="P_CHANGEDBY_PIVOT" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
-      <upperLeftCorner x="1520" y="30"/>
-      <rectangleSize width="136"/>
-    </shape></shapes>
+    <shape modelObjectName="osr.business.semantic.db.synonyms::SCMGAUT_SECLEVLT" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="3620" y="30"/>
+      <rectangleSize width="410"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
