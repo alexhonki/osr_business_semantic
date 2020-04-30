@@ -66,7 +66,14 @@
       <viewAttribute id="REASON_CODE"/>
       <viewAttribute id="Z_RUN_SEQ_ID"/>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_PROCESSOR_RESPONSIBLE_TIME" datatype="NVARCHAR" length="15" expressionLanguage="SQL">
+        <formula>CASE
+    WHEN &quot;CLOSING_TIME&quot; = '19000101000000' THEN &quot;CHANGE_TIME&quot;
+    ELSE &quot;CLOSING_TIME&quot;
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <input node="osr.business.semantic.db.synonyms::SCMG_T_CASE_ATTR">
       <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE_TIME" source="CHANGE_TIME"/>
@@ -82,7 +89,9 @@
       <viewAttribute id="SCMG_MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="P_SCMG_T_CASE_ATTR"/>
+    <input node="P_SCMG_T_CASE_ATTR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_TIME" source="CC_PROCESSOR_RESPONSIBLE_TIME"/>
+    </input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_CLOSEDBY_UNPIVOT">
     <viewAttributes>
@@ -122,7 +131,9 @@
       <viewAttribute id="SCMG_MANDT"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="P_SCMG_T_CASE_ATTR"/>
+    <input node="P_SCMG_T_CASE_ATTR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE_TIME" source="CC_PROCESSOR_RESPONSIBLE_TIME"/>
+    </input>
   </calculationView>
   <calculationView xsi:type="Calculation:UnionView" id="U_USERDATA">
     <viewAttributes>
@@ -382,6 +393,7 @@
       <viewAttribute id="CREATE_TIME"/>
       <viewAttribute id="CHANGE_TIME"/>
       <viewAttribute id="CLOSING_TIME"/>
+      <viewAttribute id="SECURE_LEVEL_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_CASE_GUIDS">
@@ -409,6 +421,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
     </input>
     <input node="osr.business.semantic.db.synonyms::SCMGAUT_SECLEVLT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL_DESCRIPTION" source="DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL" source="SECURE_LEVEL"/>
     </input>
@@ -439,6 +452,8 @@
       <viewAttribute id="CREATE_TIME"/>
       <viewAttribute id="CHANGE_TIME"/>
       <viewAttribute id="CLOSING_TIME"/>
+      <viewAttribute id="PRIORITY_DESCRIPTION"/>
+      <viewAttribute id="SECURE_LEVEL_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_1">
@@ -464,8 +479,10 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL_DESCRIPTION" source="SECURE_LEVEL_DESCRIPTION"/>
     </input>
     <input node="osr.business.semantic.db.synonyms::SCMGATTR_PRIOT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESCRIPTION" source="DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY" source="PRIORITY"/>
     </input>
@@ -496,6 +513,9 @@
       <viewAttribute id="CREATE_TIME"/>
       <viewAttribute id="CHANGE_TIME"/>
       <viewAttribute id="CLOSING_TIME"/>
+      <viewAttribute id="ESCAL_REASON_DESCRIPTION"/>
+      <viewAttribute id="PRIORITY_DESCRIPTION"/>
+      <viewAttribute id="SECURE_LEVEL_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_2">
@@ -521,8 +541,11 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESCRIPTION" source="PRIORITY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL_DESCRIPTION" source="SECURE_LEVEL_DESCRIPTION"/>
     </input>
     <input node="osr.business.semantic.db.synonyms::SCMGATTR_SESCALT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON_DESCRIPTION" source="DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON" source="ESCAL_REASON"/>
     </input>
@@ -553,6 +576,10 @@
       <viewAttribute id="CREATE_TIME"/>
       <viewAttribute id="CHANGE_TIME"/>
       <viewAttribute id="CLOSING_TIME"/>
+      <viewAttribute id="REASON_CODE_DESCRIPTION"/>
+      <viewAttribute id="ESCAL_REASON_DESCRIPTION"/>
+      <viewAttribute id="PRIORITY_DESCRIPTION"/>
+      <viewAttribute id="SECURE_LEVEL_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_3">
@@ -578,8 +605,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON_DESCRIPTION" source="ESCAL_REASON_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESCRIPTION" source="PRIORITY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL_DESCRIPTION" source="SECURE_LEVEL_DESCRIPTION"/>
     </input>
     <input node="osr.business.semantic.db.synonyms::SCMGATTR_REASONT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE_DESCRIPTION" source="DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE" source="REASON_CODE"/>
@@ -612,6 +643,11 @@
       <viewAttribute id="CREATE_TIME"/>
       <viewAttribute id="CHANGE_TIME"/>
       <viewAttribute id="CLOSING_TIME"/>
+      <viewAttribute id="STAT_ORDNO_DESCR"/>
+      <viewAttribute id="REASON_CODE_DESCRIPTION"/>
+      <viewAttribute id="ESCAL_REASON_DESCRIPTION"/>
+      <viewAttribute id="PRIORITY_DESCRIPTION"/>
+      <viewAttribute id="SECURE_LEVEL_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_4">
@@ -637,8 +673,13 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE_DESCRIPTION" source="REASON_CODE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON_DESCRIPTION" source="ESCAL_REASON_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESCRIPTION" source="PRIORITY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL_DESCRIPTION" source="SECURE_LEVEL_DESCRIPTION"/>
     </input>
     <input node="osr.business.semantic.db.synonyms::SCMGSTATPROFST">
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDNO_DESCR" source="STAT_ORDNO_DESCR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PROFILE_ID" source="PROFILE_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDERNO" source="STAT_ORDERNO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="CLIENT"/>
@@ -671,6 +712,12 @@
       <viewAttribute id="CREATE_TIME"/>
       <viewAttribute id="CHANGE_TIME"/>
       <viewAttribute id="CLOSING_TIME"/>
+      <viewAttribute id="CATEGORY_DESCRIPTION"/>
+      <viewAttribute id="STAT_ORDNO_DESCR"/>
+      <viewAttribute id="REASON_CODE_DESCRIPTION"/>
+      <viewAttribute id="ESCAL_REASON_DESCRIPTION"/>
+      <viewAttribute id="PRIORITY_DESCRIPTION"/>
+      <viewAttribute id="SECURE_LEVEL_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_5">
@@ -696,8 +743,14 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDNO_DESCR" source="STAT_ORDNO_DESCR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE_DESCRIPTION" source="REASON_CODE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON_DESCRIPTION" source="ESCAL_REASON_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESCRIPTION" source="PRIORITY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL_DESCRIPTION" source="SECURE_LEVEL_DESCRIPTION"/>
     </input>
     <input node="osr.business.semantic.db.synonyms::SCMGATTR_CATEGOT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY_DESCRIPTION" source="DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SCMG_MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE" source="CASE_TYPE"/>
@@ -731,6 +784,12 @@
       <viewAttribute id="CHANGE_TIME"/>
       <viewAttribute id="CLOSING_TIME"/>
       <viewAttribute id="CASE_TYPE_DESCRIPTION"/>
+      <viewAttribute id="CATEGORY_DESCRIPTION"/>
+      <viewAttribute id="STAT_ORDNO_DESCR"/>
+      <viewAttribute id="REASON_CODE_DESCRIPTION"/>
+      <viewAttribute id="ESCAL_REASON_DESCRIPTION"/>
+      <viewAttribute id="PRIORITY_DESCRIPTION"/>
+      <viewAttribute id="SECURE_LEVEL_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_6">
@@ -756,6 +815,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_TIME" source="CREATE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY_DESCRIPTION" source="CATEGORY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDNO_DESCR" source="STAT_ORDNO_DESCR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE_DESCRIPTION" source="REASON_CODE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON_DESCRIPTION" source="ESCAL_REASON_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESCRIPTION" source="PRIORITY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL_DESCRIPTION" source="SECURE_LEVEL_DESCRIPTION"/>
     </input>
     <input node="osr.business.semantic.db.synonyms::SCMGCASETYPET">
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE_DESCRIPTION" source="DESCRIPTION"/>
@@ -794,6 +859,12 @@
       <viewAttribute id="CHANGE_TIME"/>
       <viewAttribute id="CLOSING_TIME"/>
       <viewAttribute id="CASE_TYPE_DESCRIPTION"/>
+      <viewAttribute id="CATEGORY_DESCRIPTION"/>
+      <viewAttribute id="STAT_ORDNO_DESCR"/>
+      <viewAttribute id="REASON_CODE_DESCRIPTION"/>
+      <viewAttribute id="ESCAL_REASON_DESCRIPTION"/>
+      <viewAttribute id="PRIORITY_DESCRIPTION"/>
+      <viewAttribute id="SECURE_LEVEL_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_7">
@@ -820,6 +891,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE_DESCRIPTION" source="CASE_TYPE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY_DESCRIPTION" source="CATEGORY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDNO_DESCR" source="STAT_ORDNO_DESCR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE_DESCRIPTION" source="REASON_CODE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON_DESCRIPTION" source="ESCAL_REASON_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESCRIPTION" source="PRIORITY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL_DESCRIPTION" source="SECURE_LEVEL_DESCRIPTION"/>
     </input>
     <input node="P_CHANGEDBY_PIVOT">
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGEDBY_USERNAME" source="CHANGEDBY_USERNAME"/>
@@ -865,6 +942,12 @@
       <viewAttribute id="CHANGE_TIME"/>
       <viewAttribute id="CLOSING_TIME"/>
       <viewAttribute id="CASE_TYPE_DESCRIPTION"/>
+      <viewAttribute id="CATEGORY_DESCRIPTION"/>
+      <viewAttribute id="STAT_ORDNO_DESCR"/>
+      <viewAttribute id="REASON_CODE_DESCRIPTION"/>
+      <viewAttribute id="ESCAL_REASON_DESCRIPTION"/>
+      <viewAttribute id="PRIORITY_DESCRIPTION"/>
+      <viewAttribute id="SECURE_LEVEL_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_8">
@@ -895,6 +978,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE_DESCRIPTION" source="CASE_TYPE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY_DESCRIPTION" source="CATEGORY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDNO_DESCR" source="STAT_ORDNO_DESCR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE_DESCRIPTION" source="REASON_CODE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON_DESCRIPTION" source="ESCAL_REASON_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESCRIPTION" source="PRIORITY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL_DESCRIPTION" source="SECURE_LEVEL_DESCRIPTION"/>
     </input>
     <input node="P_CREATEDBY_PIVOT">
       <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDBY_USERNAME" source="CREATEDBY_USERNAME"/>
@@ -944,6 +1033,12 @@
       <viewAttribute id="CHANGE_TIME"/>
       <viewAttribute id="CLOSING_TIME"/>
       <viewAttribute id="CASE_TYPE_DESCRIPTION"/>
+      <viewAttribute id="CATEGORY_DESCRIPTION"/>
+      <viewAttribute id="STAT_ORDNO_DESCR"/>
+      <viewAttribute id="REASON_CODE_DESCRIPTION"/>
+      <viewAttribute id="ESCAL_REASON_DESCRIPTION"/>
+      <viewAttribute id="PRIORITY_DESCRIPTION"/>
+      <viewAttribute id="SECURE_LEVEL_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_9">
@@ -978,6 +1073,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE_DESCRIPTION" source="CASE_TYPE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY_DESCRIPTION" source="CATEGORY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDNO_DESCR" source="STAT_ORDNO_DESCR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE_DESCRIPTION" source="REASON_CODE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON_DESCRIPTION" source="ESCAL_REASON_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESCRIPTION" source="PRIORITY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL_DESCRIPTION" source="SECURE_LEVEL_DESCRIPTION"/>
     </input>
     <input node="P_PROCESSOR_PIVOT">
       <mapping xsi:type="Calculation:AttributeMapping" target="PROCESSOR_USERNAME" source="PROCESSOR_USERNAME"/>
@@ -1031,6 +1132,12 @@
       <viewAttribute id="CHANGE_TIME"/>
       <viewAttribute id="CLOSING_TIME"/>
       <viewAttribute id="CASE_TYPE_DESCRIPTION"/>
+      <viewAttribute id="CATEGORY_DESCRIPTION"/>
+      <viewAttribute id="STAT_ORDNO_DESCR"/>
+      <viewAttribute id="REASON_CODE_DESCRIPTION"/>
+      <viewAttribute id="ESCAL_REASON_DESCRIPTION"/>
+      <viewAttribute id="PRIORITY_DESCRIPTION"/>
+      <viewAttribute id="SECURE_LEVEL_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_10">
@@ -1069,6 +1176,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE_DESCRIPTION" source="CASE_TYPE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY_DESCRIPTION" source="CATEGORY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDNO_DESCR" source="STAT_ORDNO_DESCR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE_DESCRIPTION" source="REASON_CODE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON_DESCRIPTION" source="ESCAL_REASON_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESCRIPTION" source="PRIORITY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL_DESCRIPTION" source="SECURE_LEVEL_DESCRIPTION"/>
     </input>
     <input node="P_CLOSEDBY_PIVOT">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSEDBY_USERNAME" source="CLOSEDBY_USERNAME"/>
@@ -1126,6 +1239,12 @@
       <viewAttribute id="CHANGE_TIME"/>
       <viewAttribute id="CLOSING_TIME"/>
       <viewAttribute id="CASE_TYPE_DESCRIPTION"/>
+      <viewAttribute id="CATEGORY_DESCRIPTION"/>
+      <viewAttribute id="STAT_ORDNO_DESCR"/>
+      <viewAttribute id="REASON_CODE_DESCRIPTION"/>
+      <viewAttribute id="ESCAL_REASON_DESCRIPTION"/>
+      <viewAttribute id="PRIORITY_DESCRIPTION"/>
+      <viewAttribute id="SECURE_LEVEL_DESCRIPTION"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="J_PIVOT_11">
@@ -1168,6 +1287,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIME" source="CHANGE_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLOSING_TIME" source="CLOSING_TIME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CASE_TYPE_DESCRIPTION" source="CASE_TYPE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY_DESCRIPTION" source="CATEGORY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_ORDNO_DESCR" source="STAT_ORDNO_DESCR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REASON_CODE_DESCRIPTION" source="REASON_CODE_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ESCAL_REASON_DESCRIPTION" source="ESCAL_REASON_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIORITY_DESCRIPTION" source="PRIORITY_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SECURE_LEVEL_DESCRIPTION" source="SECURE_LEVEL_DESCRIPTION"/>
     </input>
     <input node="P_RESPONSIBLE_PIVOT">
       <mapping xsi:type="Calculation:AttributeMapping" target="RESPONSIBLE_USERNAME" source="RESPONSIBLE_USERNAME"/>
@@ -1356,7 +1481,36 @@
     <attribute id="CLOSING_TIME" order="42" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CLOSING_TIME"/>
       <keyMapping columnObjectName="J_PIVOT_12" columnName="CLOSING_TIME"/>
-    </attribute></attributes>
+    </attribute>
+    <attribute id="CASE_TYPE_DESCRIPTION" order="43" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CASE_TYPE_DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CASE_TYPE_DESCRIPTION"/>
+    </attribute>
+    <attribute id="CATEGORY_DESCRIPTION" order="44" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="CATEGORY_DESCRIPTION"/>
+    </attribute>
+    <attribute id="STAT_ORDNO_DESCR" order="45" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STAT_ORDNO_DESCR"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="STAT_ORDNO_DESCR"/>
+    </attribute>
+    <attribute id="REASON_CODE_DESCRIPTION" order="46" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="REASON_CODE_DESCRIPTION"/>
+    </attribute>
+    <attribute id="ESCAL_REASON_DESCRIPTION" order="47" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="ESCAL_REASON_DESCRIPTION"/>
+    </attribute>
+    <attribute id="PRIORITY_DESCRIPTION" order="48" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="PRIORITY_DESCRIPTION"/>
+    </attribute>
+    <attribute id="SECURE_LEVEL_DESCRIPTION" order="49" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_12" columnName="SECURE_LEVEL_DESCRIPTION"/>
+    </attribute>
+  </attributes>
   <calculatedAttributes/>
   <baseMeasures/>
   <calculatedMeasures/>
