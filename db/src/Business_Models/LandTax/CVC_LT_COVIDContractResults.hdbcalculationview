@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVIDContractResults" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.LandTax::CVC_LT_COVIDContractResults" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
 <descriptions defaultDescription="Land Tax COVID Contract Results"/>
 <localVariables/>
 <variableMappings/>
@@ -7,339 +7,441 @@
   <DataSource id="osr.business.semantic.db.synonyms::LTCNRESV">
     <resourceUri>osr.business.semantic.db.synonyms::LTCNRESV</resourceUri>
   </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CV_Parcel">
+    <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CV_Parcel</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.LandTax::CV_ContractValues">
+    <resourceUri>osr.business.semantic.db.Business_Models.LandTax::CV_ContractValues</resourceUri>
+  </DataSource>
 </dataSources>
-<calculationViews/>
-<logicalModel id="osr.business.semantic.db.synonyms::LTCNRESV" filterExpressionLanguage="SQL">
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CNRESV">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="PLNO"/>
+      <viewAttribute id="CONCESSCODE"/>
+      <viewAttribute id="CONCESSPCT"/>
+      <viewAttribute id="LANDUSECODE"/>
+      <viewAttribute id="BPCONCESSVAL"/>
+      <viewAttribute id="OWNERTYPE"/>
+      <viewAttribute id="INDIVORG"/>
+      <viewAttribute id="TAXRATECODE"/>
+      <viewAttribute id="TOTBPCONCESSVAL"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="OWNERPERCENT"/>
+      <viewAttribute id="UNIMPRVAL"/>
+      <viewAttribute id="RELVNTVAL"/>
+      <viewAttribute id="BPRELVNTVAL"/>
+      <viewAttribute id="BPTAXABLEVAL"/>
+      <viewAttribute id="PROPTAXAMT"/>
+      <viewAttribute id="ABSURCHARGE"/>
+      <viewAttribute id="ACTIVE"/>
+      <viewAttribute id="TOTBPRELVNTVAL"/>
+      <viewAttribute id="TOTBPTAXABLEVAL"/>
+      <viewAttribute id="TAXAMOUNT"/>
+      <viewAttribute id="TAXESTIMATE"/>
+      <viewAttribute id="ZZ_NOIA_DATE"/>
+      <viewAttribute id="ZZ_INV_DATE"/>
+      <viewAttribute id="TAXYRENDDT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::LTCNRESV"/></calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Parcel">
+    <viewAttributes>
+      <viewAttribute id="Counter"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="INTRENO"/>
+      <viewAttribute id="PLSUBDIVNO"/>
+      <viewAttribute id="PLNO"/>
+      <viewAttribute id="OBJNR"/>
+      <viewAttribute id="CREATIONTYPE"/>
+      <viewAttribute id="RERF"/>
+      <viewAttribute id="DERF"/>
+      <viewAttribute id="TERF"/>
+      <viewAttribute id="REHER"/>
+      <viewAttribute id="RBEAR"/>
+      <viewAttribute id="DBEAR"/>
+      <viewAttribute id="TBEAR"/>
+      <viewAttribute id="RBHER"/>
+      <viewAttribute id="RESPONSIBLE"/>
+      <viewAttribute id="USEREXCLUSIVE"/>
+      <viewAttribute id="AUTHGRP"/>
+      <viewAttribute id="XPL"/>
+      <viewAttribute id="VALIDFROM"/>
+      <viewAttribute id="VALIDTO"/>
+      <viewAttribute id="GSBER"/>
+      <viewAttribute id="PLSURVEYIND"/>
+      <viewAttribute id="PLISTEMPORARY"/>
+      <viewAttribute id="USGFUNCTION"/>
+      <viewAttribute id="USESIMPLEPLNO"/>
+      <viewAttribute id="ZZ_VILMPL_TIM"/>
+      <viewAttribute id="ZVRFLAG"/>
+      <viewAttribute id="ZVRDATE"/>
+      <viewAttribute id="ZVRCRDATE"/>
+      <viewAttribute id="ZZ_ENTITLEMENT"/>
+      <viewAttribute id="ZZ_DUP_NOA"/>
+      <viewAttribute id="CADASTERREF"/>
+      <viewAttribute id="ADDRNO"/>
+      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY"/>
+      <viewAttribute id="CC_Username"/>
+      <viewAttribute id="MATCH_ADDR_POSTCODE1"/>
+      <viewAttribute id="ADDR_LATITUDE"/>
+      <viewAttribute id="ADDR_LONGITUDE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.LandTax::CV_Parcel"/></calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_ParcelInfo" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="PLNO"/>
+      <viewAttribute id="CONCESSCODE"/>
+      <viewAttribute id="CONCESSPCT" aggregationType="sum"/>
+      <viewAttribute id="LANDUSECODE"/>
+      <viewAttribute id="BPCONCESSVAL" aggregationType="sum"/>
+      <viewAttribute id="OWNERTYPE"/>
+      <viewAttribute id="INDIVORG"/>
+      <viewAttribute id="TAXRATECODE"/>
+      <viewAttribute id="TOTBPCONCESSVAL" aggregationType="sum"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="OWNERPERCENT" aggregationType="sum"/>
+      <viewAttribute id="UNIMPRVAL" aggregationType="sum"/>
+      <viewAttribute id="RELVNTVAL" aggregationType="sum"/>
+      <viewAttribute id="BPRELVNTVAL" aggregationType="sum"/>
+      <viewAttribute id="BPTAXABLEVAL" aggregationType="sum"/>
+      <viewAttribute id="PROPTAXAMT" aggregationType="sum"/>
+      <viewAttribute id="ABSURCHARGE" aggregationType="sum"/>
+      <viewAttribute id="ACTIVE"/>
+      <viewAttribute id="TOTBPRELVNTVAL" aggregationType="sum"/>
+      <viewAttribute id="TOTBPTAXABLEVAL" aggregationType="sum"/>
+      <viewAttribute id="TAXAMOUNT" aggregationType="sum"/>
+      <viewAttribute id="TAXESTIMATE" aggregationType="sum"/>
+      <viewAttribute id="ZZ_NOIA_DATE"/>
+      <viewAttribute id="ZZ_INV_DATE"/>
+      <viewAttribute id="TAXYRENDDT"/>
+      <viewAttribute id="MATCH_ADDR_POSTCODE1"/>
+      <viewAttribute id="ADDR_LATITUDE" aggregationType="sum"/>
+      <viewAttribute id="ADDR_LONGITUDE" aggregationType="sum"/>
+    
+      <viewAttribute id="MANDT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CNRESV">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLNO" source="PLNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSCODE" source="CONCESSCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSPCT" source="CONCESSPCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LANDUSECODE" source="LANDUSECODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPCONCESSVAL" source="BPCONCESSVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDIVORG" source="INDIVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPCONCESSVAL" source="TOTBPCONCESSVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERPERCENT" source="OWNERPERCENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIMPRVAL" source="UNIMPRVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELVNTVAL" source="RELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPRELVNTVAL" source="BPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPTAXABLEVAL" source="BPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROPTAXAMT" source="PROPTAXAMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE" source="ABSURCHARGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE" source="ACTIVE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPRELVNTVAL" source="TOTBPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_INV_DATE" source="ZZ_INV_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    </input>
+    <input node="P_Parcel">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLNO" source="PLNO"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="PLNO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CVContractValues">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="TaxBracket"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.LandTax::CV_ContractValues"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_TaxBracket" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="TAXYRSTARTDT"/>
+      <viewAttribute id="PLNO"/>
+      <viewAttribute id="CONCESSCODE"/>
+      <viewAttribute id="CONCESSPCT" aggregationType="sum"/>
+      <viewAttribute id="LANDUSECODE"/>
+      <viewAttribute id="BPCONCESSVAL" aggregationType="sum"/>
+      <viewAttribute id="OWNERTYPE"/>
+      <viewAttribute id="INDIVORG"/>
+      <viewAttribute id="TAXRATECODE"/>
+      <viewAttribute id="TOTBPCONCESSVAL" aggregationType="sum"/>
+      <viewAttribute id="ZZ_PARTNER"/>
+      <viewAttribute id="OWNERPERCENT" aggregationType="sum"/>
+      <viewAttribute id="UNIMPRVAL" aggregationType="sum"/>
+      <viewAttribute id="RELVNTVAL" aggregationType="sum"/>
+      <viewAttribute id="BPRELVNTVAL" aggregationType="sum"/>
+      <viewAttribute id="BPTAXABLEVAL" aggregationType="sum"/>
+      <viewAttribute id="PROPTAXAMT" aggregationType="sum"/>
+      <viewAttribute id="ABSURCHARGE" aggregationType="sum"/>
+      <viewAttribute id="ACTIVE"/>
+      <viewAttribute id="TOTBPRELVNTVAL" aggregationType="sum"/>
+      <viewAttribute id="TOTBPTAXABLEVAL" aggregationType="sum"/>
+      <viewAttribute id="TAXAMOUNT" aggregationType="sum"/>
+      <viewAttribute id="TAXESTIMATE" aggregationType="sum"/>
+      <viewAttribute id="ZZ_NOIA_DATE"/>
+      <viewAttribute id="ZZ_INV_DATE"/>
+      <viewAttribute id="TAXYRENDDT"/>
+      <viewAttribute id="MATCH_ADDR_POSTCODE1"/>
+      <viewAttribute id="ADDR_LATITUDE" aggregationType="sum"/>
+      <viewAttribute id="ADDR_LONGITUDE" aggregationType="sum"/>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="TaxBracket"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_ParcelInfo">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLNO" source="PLNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSCODE" source="CONCESSCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONCESSPCT" source="CONCESSPCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LANDUSECODE" source="LANDUSECODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPCONCESSVAL" source="BPCONCESSVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERTYPE" source="OWNERTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INDIVORG" source="INDIVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXRATECODE" source="TAXRATECODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPCONCESSVAL" source="TOTBPCONCESSVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OWNERPERCENT" source="OWNERPERCENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIMPRVAL" source="UNIMPRVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELVNTVAL" source="RELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPRELVNTVAL" source="BPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPTAXABLEVAL" source="BPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROPTAXAMT" source="PROPTAXAMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ABSURCHARGE" source="ABSURCHARGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE" source="ACTIVE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPRELVNTVAL" source="TOTBPRELVNTVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTBPTAXABLEVAL" source="TOTBPTAXABLEVAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXAMOUNT" source="TAXAMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXESTIMATE" source="TAXESTIMATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_INV_DATE" source="ZZ_INV_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+    </input>
+    <input node="P_CVContractValues">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TaxBracket" source="TaxBracket"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PARTNER" source="ZZ_PARTNER"/>
+    </input>
+    <joinAttribute name="TAXYRSTARTDT"/>
+    <joinAttribute name="ZZ_PARTNER"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_TaxBracket">
   <attributes>
-    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Client"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="MANDT"/>
-    </attribute>
-    <attribute id="INTRENOCN" order="2" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Contract Key"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="INTRENOCN"/>
-    </attribute>
-    <attribute id="TAXYRSTARTDT" order="3" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="TAXYRSTARTDT" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Tax Year Start Date"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="TAXYRSTARTDT"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="TAXYRSTARTDT"/>
     </attribute>
-    <attribute id="PLNO" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Plan Number"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="PLNO"/>
+    <attribute id="TAXYRENDDT" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Year End Date"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="TAXYRENDDT"/>
     </attribute>
-    <attribute id="INTRENOPL" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Parcel Intreno"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="INTRENOPL"/>
+    <attribute id="PLNO" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Parcel Number"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="PLNO"/>
     </attribute>
-    <attribute id="CONCESSCODE" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Tax: Concession/Deduction  Code"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="CONCESSCODE"/>
-    </attribute>
-    <attribute id="CONCESSPCT" order="7" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Tax: Concession/Deduction Percentage"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="CONCESSPCT"/>
-    </attribute>
-    <attribute id="LANDUSECODE" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Use Code"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="LANDUSECODE"/>
-    </attribute>
-    <attribute id="BPCONCESSVAL" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BP Concession Value"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="BPCONCESSVAL"/>
-    </attribute>
-    <attribute id="OWNERTYPE" order="10" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Owner Type"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="OWNERTYPE"/>
+    <attribute id="CONCESSCODE" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Concession Code"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="CONCESSCODE"/>
     </attribute>
     <attribute id="INDIVORG" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Ind/Org Flag"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="INDIVORG"/>
+      <descriptions defaultDescription="Ind / Org Flag"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="INDIVORG"/>
     </attribute>
-    <attribute id="TAXRATECODE" order="12" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Tax Rate"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="TAXRATECODE"/>
+    <attribute id="ZZ_PARTNER" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="ZZ_PARTNER"/>
     </attribute>
-    <attribute id="TOTBPCONCESSVAL" order="13" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Total BP Concession Value"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="TOTBPCONCESSVAL"/>
+    <attribute id="ACTIVE" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Active Taxpayer Flag"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="ACTIVE"/>
     </attribute>
-    <attribute id="ZZ_PARTNER" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Business Partner Number"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="ZZ_PARTNER"/>
+    <attribute id="ZZ_NOIA_DATE" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NOIA Date"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="ZZ_NOIA_DATE"/>
     </attribute>
-    <attribute id="OBJNRPL" order="17" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Object Plan"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="OBJNRPL"/>
+    <attribute id="ZZ_INV_DATE" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Invoice Date"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="ZZ_INV_DATE"/>
     </attribute>
-    <attribute id="NANO" order="18" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Number of Notice of Assessment"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="NANO"/>
+    <attribute id="TAXRATECODE" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Rate Code"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="TAXRATECODE"/>
     </attribute>
-    <attribute id="TENURE" order="19" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Tenure"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="TENURE"/>
+    <attribute id="MATCH_ADDR_POSTCODE1" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Parcel Postcode"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="MATCH_ADDR_POSTCODE1"/>
     </attribute>
-    <attribute id="ENTITLEMENT" order="20" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Entitlement Indicator"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="ENTITLEMENT"/>
+    <attribute id="ADDR_LATITUDE" order="30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Parcel Latitude"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="ADDR_LATITUDE"/>
     </attribute>
-    <attribute id="LHFLAG" order="21" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Lease Hold Indicator"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="LHFLAG"/>
+    <attribute id="ADDR_LONGITUDE" order="31" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Parcel Longitude"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="ADDR_LONGITUDE"/>
     </attribute>
-    <attribute id="NVFLAG" order="22" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Non-valued Land Indicator"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="NVFLAG"/>
+    <attribute id="MANDT" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Client"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="MANDT"/>
     </attribute>
-    <attribute id="VALTYPECN" order="23" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Parcel Relevant Value Type"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="VALTYPECN"/>
+    <attribute id="LANDUSECODE" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Land Use Code"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="LANDUSECODE"/>
     </attribute>
-    <attribute id="OWNERFRACTION" order="24" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Ownership Fraction"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="OWNERFRACTION"/>
+    <attribute id="OWNERTYPE" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Owner Type"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="OWNERTYPE"/>
     </attribute>
-    <attribute id="OWNERFACTOR" order="25" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Ownership Factor"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="OWNERFACTOR"/>
+    <attribute id="TaxBracket" order="36" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Bracket"/>
+      <keyMapping columnObjectName="J_TaxBracket" columnName="TaxBracket"/>
     </attribute>
-    <attribute id="OWNERPERCENT" order="26" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Ownership Percentage"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="OWNERPERCENT"/>
+    <attribute id="LANDUSECODE$local">
+      <keyMapping columnObjectName="J_TaxBracket" columnName="LANDUSECODE"/>
     </attribute>
-    <attribute id="UNIMPRVAL" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Unimproved Land Value"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="UNIMPRVAL"/>
+    <attribute id="OWNERTYPE$local">
+      <keyMapping columnObjectName="J_TaxBracket" columnName="OWNERTYPE"/>
     </attribute>
-    <attribute id="RELVNTVAL" order="28" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Relevant Land Value"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="RELVNTVAL"/>
-    </attribute>
-    <attribute id="BPRELVNTVAL" order="29" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BP Relevant Land Value"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="BPRELVNTVAL"/>
-    </attribute>
-    <attribute id="BPTAXABLEVAL" order="30" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BP Taxable Value"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="BPTAXABLEVAL"/>
-    </attribute>
-    <attribute id="ZEROVALPL" order="31" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Zero Value Parcel Indicator"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="ZEROVALPL"/>
-    </attribute>
-    <attribute id="PROPTAXAMT" order="32" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Proportion Tax Amount"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="PROPTAXAMT"/>
-    </attribute>
-    <attribute id="ABSURCHARGE" order="33" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Absentee Surcharge"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="ABSURCHARGE"/>
-    </attribute>
-    <attribute id="CHUSERP" order="34" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="User Name"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="CHUSERP"/>
-    </attribute>
-    <attribute id="CHDATEP" order="35" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Changed On"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="CHDATEP"/>
-    </attribute>
-    <attribute id="CHTIMEP" order="36" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Changed Time"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="CHTIMEP"/>
-    </attribute>
-    <attribute id="ACTIVE" order="37" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Active Land Tax Payer Flag"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="ACTIVE"/>
-    </attribute>
-    <attribute id="TOTBPRELVNTVAL" order="38" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Total BP Relevant Value"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="TOTBPRELVNTVAL"/>
-    </attribute>
-    <attribute id="TOTBPTAXABLEVAL" order="39" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Total BP Taxable Value"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="TOTBPTAXABLEVAL"/>
-    </attribute>
-    <attribute id="ADJUSTMENT" order="40" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Tax Adjustment Amount"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="ADJUSTMENT"/>
-    </attribute>
-    <attribute id="TAXAMOUNT" order="41" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Tax Amount"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="TAXAMOUNT"/>
-    </attribute>
-    <attribute id="TAXESTIMATE" order="42" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Tax Estimate"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="TAXESTIMATE"/>
-    </attribute>
-    <attribute id="ZEROVALCN" order="43" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Zero Value Exists on Contract"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="ZEROVALCN"/>
-    </attribute>
-    <attribute id="CNRESSTAT" order="44" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CNRES Results Status - Hex Flag"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="CNRESSTAT"/>
-    </attribute>
-    <attribute id="PROPERTYCNT" order="45" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Property Count"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="PROPERTYCNT"/>
-    </attribute>
-    <attribute id="PARCELCNT" order="46" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Parcel Count"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="PARCELCNT"/>
-    </attribute>
-    <attribute id="CHUSER" order="47" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="User Name"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="CHUSER"/>
-    </attribute>
-    <attribute id="CHDATE" order="48" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Changed On"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="CHDATE"/>
-    </attribute>
-    <attribute id="CHTIME" order="49" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Last Changed On"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="CHTIME"/>
-    </attribute>
-    <attribute id="BUKRS" order="50" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Company Code"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="BUKRS"/>
-    </attribute>
-    <attribute id="RECNNR" order="51" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Contract Number"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="RECNNR"/>
-    </attribute>
-    <attribute id="RECNTYPE" order="52" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Contract Type"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="RECNTYPE"/>
-    </attribute>
-    <attribute id="OBJNR" order="53" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Object Number"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="OBJNR"/>
-    </attribute>
-    <attribute id="RERF" order="54" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Entered By "/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="RERF"/>
-    </attribute>
-    <attribute id="DERF" order="55" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="First Entered on"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="DERF"/>
-    </attribute>
-    <attribute id="TERF" order="56" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Time of Initial Entry"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="TERF"/>
-    </attribute>
-    <attribute id="REHER" order="57" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Source of Initial Entry"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="REHER"/>
-    </attribute>
-    <attribute id="RBEAR" order="58" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Employee ID"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="RBEAR"/>
-    </attribute>
-    <attribute id="DBEAR" order="59" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Last Edited On"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="DBEAR"/>
-    </attribute>
-    <attribute id="TBEAR" order="60" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Last Edited At"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="TBEAR"/>
-    </attribute>
-    <attribute id="RECNDACTIV" order="61" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Contract Activation"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="RECNDACTIV"/>
-    </attribute>
-    <attribute id="ZZ_NOIA_DATE" order="62" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Date of NOIA"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="ZZ_NOIA_DATE"/>
-    </attribute>
-    <attribute id="ZZ_INV_DATE" order="63" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Last Invoiced Date"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="ZZ_INV_DATE"/>
-    </attribute>
-    <attribute id="ZZ_STAT_COMMENT" order="64" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Status Change Comment"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="ZZ_STAT_COMMENT"/>
-    </attribute>
-    <attribute id="REAS" order="65" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Tax Status: REAS"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="REAS"/>
-    </attribute>
-    <attribute id="DNIS" order="66" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Tax Do Not Issue"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="DNIS"/>
-    </attribute>
-    <attribute id="XMIG" order="67" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Tax Status: XMIG"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="XMIG"/>
-    </attribute>
-    <attribute id="LT12" order="68" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Tax Status: LT12"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="LT12"/>
-    </attribute>
-    <attribute id="CNRESCALC" order="69" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Tax Calculation based on Contract Results"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="CNRESCALC"/>
-    </attribute>
-    <attribute id="SIGNATURE" order="70" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Land Tax Result Signature"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="SIGNATURE"/>
-    </attribute>
-    <attribute id="CNRESPSTAT" order="71" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CNRESP Results Status - Hex Flag"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="CNRESPSTAT"/>
-    </attribute>
-    <attribute id="STATUSICON" order="72" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Outputs Icon"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="STATUSICON"/>
-    </attribute>
-    <attribute id="BALANCELOTFLAG" order="73" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Balance Lot Fla"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="BALANCELOTFLAG"/>
-    </attribute>
-    <attribute id="SDDPLCNT" order="74" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Sub Divider Discount Parcel Count"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="SDDPLCNT"/>
-    </attribute>
-    <attribute id="CONCPLCNT" order="75" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Concession Parcel Count (Excluding SDD)"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="CONCPLCNT"/>
-    </attribute>
-    <attribute id="TAXYRENDDT" order="76" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Tax Year End Date"/>
-      <keyMapping columnObjectName="LTCNRESV" columnName="TAXYRENDDT"/>
+    <attribute id="MANDT$local">
+      <keyMapping columnObjectName="J_TaxBracket" columnName="MANDT"/>
     </attribute>
   </attributes>
-  <calculatedAttributes/>
-  <baseMeasures/>
+  <calculatedAttributes>
+    <calculatedAttribute id="CC_TAXYEAR" order="32" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Tax Year"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="4">
+        <formula>Left(&quot;TAXYRENDDT&quot;,4)</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+  </calculatedAttributes>
+  <baseMeasures>
+    <measure id="CONCESSPCT" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Concession Percentage"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="CONCESSPCT"/>
+    </measure>
+    <measure id="BPCONCESSVAL" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BP Concession Value"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="BPCONCESSVAL"/>
+    </measure>
+    <measure id="TOTBPCONCESSVAL" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total BP Concession Value"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="TOTBPCONCESSVAL"/>
+    </measure>
+    <measure id="OWNERPERCENT" order="14" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Ownership Percentage"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="OWNERPERCENT"/>
+    </measure>
+    <measure id="UNIMPRVAL" order="15" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Unimproved Land Value"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="UNIMPRVAL"/>
+    </measure>
+    <measure id="RELVNTVAL" order="16" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Relevant Value"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="RELVNTVAL"/>
+    </measure>
+    <measure id="BPRELVNTVAL" order="17" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BP Relevant Value"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="BPRELVNTVAL"/>
+    </measure>
+    <measure id="BPTAXABLEVAL" order="18" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BP Taxable Value"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="BPTAXABLEVAL"/>
+    </measure>
+    <measure id="PROPTAXAMT" order="19" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Proportion Tax Amount"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="PROPTAXAMT"/>
+    </measure>
+    <measure id="ABSURCHARGE" order="20" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Absentee Surcharge"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="ABSURCHARGE"/>
+    </measure>
+    <measure id="TOTBPRELVNTVAL" order="22" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total BP Relevant Value"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="TOTBPRELVNTVAL"/>
+    </measure>
+    <measure id="TOTBPTAXABLEVAL" order="23" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Total BP Taxable Value"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="TOTBPTAXABLEVAL"/>
+    </measure>
+    <measure id="TAXAMOUNT" order="24" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Amount"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="TAXAMOUNT"/>
+    </measure>
+    <measure id="TAXESTIMATE" order="25" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Estimate Tax"/>
+      <measureMapping columnObjectName="J_TaxBracket" columnName="TAXESTIMATE"/>
+    </measure></baseMeasures>
   <calculatedMeasures>
-    <measure id="CC_BPCOUNTER" order="15" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+    <measure id="CC_BPCOUNTER" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="BP Counter"/>
       <exceptionAggregation>
         <attribute attributeName="ZZ_PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
       
+      
+      
+      
+      
+      
       </measure>
-    <measure id="CC_PARCELCOUNTER" order="16" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+    <measure id="CC_PARCELCOUNTER" order="2" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Parcel Count"/>
       <exceptionAggregation>
-        <attribute attributeName="INTRENOPL"/>
+        <attribute attributeName="PLNO"/>
       </exceptionAggregation>
       <formula>1</formula>
       
+      
+      
+      
+      
+      
       </measure>
   
-    <measure id="CC_TAXFOREGONE(COVID)" order="77" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+    <measure id="CC_TAXFOREGONE(COVID)" order="3" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
       <descriptions defaultDescription="Tax Foregone (COVID)"/>
       <formula>CASE
 WHEN &quot;PROPTAXAMT&quot; = 0 OR &quot;CONCESSPCT&quot; = 0 THEN 0
-WHEN &quot;CONCESSCODE&quot;='C' THEN (&quot;PROPTAXAMT&quot;-(&quot;PROPTAXAMT&quot;/((100-&quot;CONCESSPCT&quot;)/100)))*-1
+WHEN &quot;CONCESSCODE&quot;='C' THEN ((&quot;PROPTAXAMT&quot;-&quot;ABSURCHARGE&quot;)-((&quot;PROPTAXAMT&quot;-&quot;ABSURCHARGE&quot;)/((100-&quot;CONCESSPCT&quot;)/100)))*-1
 ELSE 0
 END
 
 
 </formula>
-    </measure>
-    <measure id="CC_SURCHARGEFOREGONE(COVID)" order="78" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+    
+      
+      
+      
+      
+      </measure>
+    <measure id="CC_SURCHARGEFOREGONE(COVID)" order="4" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
       <descriptions defaultDescription="Surcharge Foregone (COVID)"/>
       <formula>CASE
 WHEN &quot;ABSURCHARGE&quot; = 0 OR &quot;CONCESSPCT&quot; = 0 THEN 0
@@ -349,14 +451,104 @@ END
 
 
 </formula>
-    </measure>
+    
+      
+      
+      
+      
+      </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
-  <localDimensions/></logicalModel>
+  <localDimensions/>
+  <sharedDimensions>
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_LANDUSECODES">
+      <attributes>
+        <attributeRef>LANDUSECODE$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>LAND_USE_CD</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_1" joinType="leftOuter" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference attributeName="LAND_USE_CD" hidden="true"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+    <logicalJoin associatedObjectUri="osr.business.semantic.db.Business_Models.LandTax::CV_OwnerTyperDescription">
+      <attributes>
+        <attributeRef>OWNERTYPE$local</attributeRef>
+        <attributeRef>MANDT$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>CODE_ID</attributeName>
+        <attributeName>MANDT</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_1" joinType="leftOuter" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference alias="MANDT_1" attributeName="MANDT" hidden="true"/>
+        <attributeReference alias="CC_CONSOLOWNERTYPE" attributeName="CC_OwnerTypeDescription">
+          <descriptions defaultDescription="Consolidated Owner Type"/>
+        </attributeReference>
+        <attributeReference attributeName="CODE_ID" hidden="true"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+  </sharedDimensions>
+</logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="40" y="85"/>
+      <upperLeftCorner x="328" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_CNRESV" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="566"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_Parcel" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="566"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_ParcelInfo" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118" y="406"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_CNRESV" modelObjectNameSpace="J_ParcelInfo" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_Parcel" modelObjectNameSpace="J_ParcelInfo" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CVContractValues" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="395" y="406"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_TaxBracket" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="328" y="247"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="J_ParcelInfo" modelObjectNameSpace="J_TaxBracket" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CVContractValues" modelObjectNameSpace="J_TaxBracket" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="171"/>
+    </shape>
+  
+    <shape modelObjectName="J_TaxBracket" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_LANDUSECODES" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="osr.business.semantic.db.Business_Models.LandTax::CV_OwnerTyperDescription" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="533"/>
     </shape>
   </shapes>
 </layout>

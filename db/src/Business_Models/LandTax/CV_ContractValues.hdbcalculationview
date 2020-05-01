@@ -618,30 +618,34 @@
       <viewAttribute id="UnissuedAssessmentFlag"/>
     </viewAttributes>
     <calculatedViewAttributes>
-      <calculatedViewAttribute id="EXTG" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
+      <calculatedViewAttribute id="All_FTTPs" datatype="NVARCHAR" length="4" expressionLanguage="COLUMN_ENGINE">
         <formula>if(
     &quot;ZZ_NOIA_DATE&quot;= '00000000' and isnull(&quot;FBNUM&quot;) and (&quot;UnissuedAssessmentFlag&quot; = '' or isnull(&quot;UnissuedAssessmentFlag&quot;)),
     '',
-    if(
-        &quot;ZZ_NOIA_DATE&quot;= '00000000' and &quot;UnissuedAssessmentFlag&quot; = 'X',
+     if(
+        &quot;ZZ_NOIA_DATE&quot;='00000000' and &quot;FBNUM&quot; != 'null',
         'FTTP',
-        If(
-            &quot;ZZ_NOIA_DATE&quot;&gt;=&quot;TAXYRSTARTDT&quot; and &quot;ZZ_NOIA_DATE&quot;&lt;=&quot;TAXYRENDDT&quot;,
+        if(
+            &quot;ZZ_NOIA_DATE&quot;= '00000000' and &quot;UnissuedAssessmentFlag&quot; = 'X',
             'FTTP',
             If(
-                &quot;ZZ_NOIA_DATE&quot;&lt;&quot;TAXYRSTARTDT&quot;,'EXTP',
-                ''
+                &quot;ZZ_NOIA_DATE&quot;&gt;=&quot;TAXYRSTARTDT&quot; and &quot;ZZ_NOIA_DATE&quot;&lt;=&quot;TAXYRENDDT&quot;,
+                'FTTP',
+                If(
+                    &quot;ZZ_NOIA_DATE&quot;&lt;&quot;TAXYRSTARTDT&quot;,'EXTP',
+                    ''
+                    )
                 )
             )
         )
     )
-</formula>
+ </formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="P_OUTPUT_ZERONOIA"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_FTTPSTATUS_OUTPUT" cardinality="CN_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="J_FTTPSTATUS_OUTPUT">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="INTRENO"/>
@@ -714,7 +718,6 @@
       <viewAttribute id="Difference_Flag"/>
       <viewAttribute id="CC_TAX_ESTIMATE_LIABLE_COUNT" aggregationType="sum"/>
       <viewAttribute id="UnissuedReassessment" aggregationType="sum"/>
-    
       <viewAttribute id="All_FTTPs"/>
       <viewAttribute id="FBNUMCount" aggregationType="sum"/>
     </viewAttributes>
@@ -820,19 +823,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="UnissuedAssessmentFlag" source="UnissuedAssessmentFlag"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="Difference_Flag" source="Difference_Flag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_ESTIMATE_LIABLE_COUNT" source="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_ESTIMATE_LIABLE_COUNT" source="CC_TAX_ESTIMATE_LIABLE_COUNT"/></input>
+    <input node="AGG_FTTP_V_EXTP_EXTP">
       <mapping xsi:type="Calculation:AttributeMapping" target="UnissuedReassessment" source="UnissuedReassessment"/>
-    </input>
-    <input node="J_FTTP_v_EXTG">
       <mapping xsi:type="Calculation:AttributeMapping" target="All_FTTPs" source="All_FTTPs"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="FBNUMCount" source="FBNUMCount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
     </input>
-    <joinAttribute name="MANDT"/>
-    <joinAttribute name="INTRENO"/>
-    <joinAttribute name="TAXYRSTARTDT"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_CONTRACTFBNUM_REISSUES" cardinality="C1_1" joinType="leftOuter">
     <viewAttributes>
@@ -989,91 +985,6 @@
     <joinAttribute name="MANDT"/>
     <joinAttribute name="FBNUM"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_FTTP_v_EXTG" cardinality="C1_N" joinType="rightOuter">
-    <viewAttributes>
-      <viewAttribute id="FBNUMCount" aggregationType="sum"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="TAXYRSTARTDT" aggregationType="min"/>
-      <viewAttribute id="ZZ_STAT_COMMENT"/>
-      <viewAttribute id="Difference_Flag"/>
-      <viewAttribute id="CC_TAX_ESTIMATE_LIABLE_COUNT" aggregationType="sum"/>
-      <viewAttribute id="DNIS"/>
-      <viewAttribute id="UnissuedReassessment" aggregationType="sum"/>
-      <viewAttribute id="ZZ_NOIA_DATE"/>
-      <viewAttribute id="FBNUM"/>
-      <viewAttribute id="TAXYRENDDT"/>
-      <viewAttribute id="EXTG"/>
-      <viewAttribute id="TAXYRSTARTDT_1" aggregationType="min"/>
-      <viewAttribute id="FTTP"/>
-      <viewAttribute hidden="true" id="JOIN$MANDT$MANDT"/>
-      <viewAttribute hidden="true" id="JOIN$INTRENO$INTRENO"/>
-      <viewAttribute hidden="true" id="JOIN$FBNUMCount$FBNUMCount"/>
-      <viewAttribute hidden="true" id="JOIN$ZZ_STAT_COMMENT$ZZ_STAT_COMMENT"/>
-      <viewAttribute hidden="true" id="JOIN$Difference_Flag$Difference_Flag"/>
-      <viewAttribute hidden="true" id="JOIN$CC_TAX_ESTIMATE_LIABLE_COUNT$CC_TAX_ESTIMATE_LIABLE_COUNT"/>
-      <viewAttribute hidden="true" id="JOIN$DNIS$DNIS"/>
-      <viewAttribute hidden="true" id="JOIN$ZZ_NOIA_DATE$ZZ_NOIA_DATE"/>
-      <viewAttribute hidden="true" id="JOIN$FBNUM$FBNUM"/>
-      <viewAttribute hidden="true" id="JOIN$TAXYRENDDT$TAXYRENDDT"/>
-    </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="All_FTTPs" datatype="VARCHAR" length="13" expressionLanguage="COLUMN_ENGINE">
-        <formula>IF(&quot;FTTP&quot;='FTTP' and NOT ISNULL(&quot;FTTP&quot;),'FTTP',&quot;EXTG&quot;)</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
-    <input node="R_FTTP_V_EXTG_FTTP">
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT_1" source="TAXYRSTARTDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FTTP" source="FTTP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENO$INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FBNUMCount$FBNUMCount" source="FBNUMCount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZZ_STAT_COMMENT$ZZ_STAT_COMMENT" source="ZZ_STAT_COMMENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Difference_Flag$Difference_Flag" source="Difference_Flag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_TAX_ESTIMATE_LIABLE_COUNT$CC_TAX_ESTIMATE_LIABLE_COUNT" source="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DNIS$DNIS" source="DNIS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZZ_NOIA_DATE$ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FBNUM$FBNUM" source="FBNUM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TAXYRENDDT$TAXYRENDDT" source="TAXYRENDDT"/>
-    </input>
-    <input node="AGG_FTTP_V_EXTP_EXTP">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUMCount" source="FBNUMCount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT" source="TAXYRSTARTDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_STAT_COMMENT" source="ZZ_STAT_COMMENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Difference_Flag" source="Difference_Flag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_ESTIMATE_LIABLE_COUNT" source="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DNIS" source="DNIS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="UnissuedReassessment" source="UnissuedReassessment"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FBNUM" source="FBNUM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRENDDT" source="TAXYRENDDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="EXTG" source="EXTG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANDT$MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$INTRENO$INTRENO" source="INTRENO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FBNUMCount$FBNUMCount" source="FBNUMCount"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZZ_STAT_COMMENT$ZZ_STAT_COMMENT" source="ZZ_STAT_COMMENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Difference_Flag$Difference_Flag" source="Difference_Flag"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_TAX_ESTIMATE_LIABLE_COUNT$CC_TAX_ESTIMATE_LIABLE_COUNT" source="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DNIS$DNIS" source="DNIS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZZ_NOIA_DATE$ZZ_NOIA_DATE" source="ZZ_NOIA_DATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FBNUM$FBNUM" source="FBNUM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$TAXYRENDDT$TAXYRENDDT" source="TAXYRENDDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TAXYRSTARTDT_1" source="TAXYRSTARTDT"/>
-    </input>
-    <joinAttribute name="JOIN$MANDT$MANDT"/>
-    <joinAttribute name="JOIN$INTRENO$INTRENO"/>
-    <joinAttribute name="JOIN$FBNUMCount$FBNUMCount"/>
-    <joinAttribute name="JOIN$ZZ_STAT_COMMENT$ZZ_STAT_COMMENT"/>
-    <joinAttribute name="JOIN$Difference_Flag$Difference_Flag"/>
-    <joinAttribute name="JOIN$CC_TAX_ESTIMATE_LIABLE_COUNT$CC_TAX_ESTIMATE_LIABLE_COUNT"/>
-    <joinAttribute name="JOIN$DNIS$DNIS"/>
-    <joinAttribute name="JOIN$ZZ_NOIA_DATE$ZZ_NOIA_DATE"/>
-    <joinAttribute name="JOIN$FBNUM$FBNUM"/>
-    <joinAttribute name="JOIN$TAXYRENDDT$TAXYRENDDT"/>
-    <joinAttribute name="TAXYRSTARTDT_1"/>
-  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_ASFB">
     <viewAttributes>
       <viewAttribute id="REISSUE_DATE"/>
@@ -1082,74 +993,6 @@
       <viewAttribute id="ASSESS_FBNUM"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::LTAXASFB"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="R_FTTP_V_EXTG_FTTP">
-    <viewAttributes>
-      <viewAttribute id="TAXYRSTARTDT" aggregationType="min"/>
-      <viewAttribute id="FTTP"/>
-    
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="FBNUMCount" aggregationType="sum"/>
-      <viewAttribute id="ZZ_STAT_COMMENT"/>
-      <viewAttribute id="Difference_Flag"/>
-      <viewAttribute id="CC_TAX_ESTIMATE_LIABLE_COUNT" aggregationType="sum"/>
-      <viewAttribute id="DNIS"/>
-      <viewAttribute id="ZZ_NOIA_DATE"/>
-      <viewAttribute id="FBNUM"/>
-      <viewAttribute id="TAXYRENDDT"/>
-      <viewAttribute id="UnissuedReassessment" aggregationType="sum"/></viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="AGG_FTTP_V_EXTP_FTTP"/>
-    <windowFunction dynamicPartitionAttributes="false">
-      <partitionViewAttributeName>INTRENO</partitionViewAttributeName>
-      <order byViewAttributeName="TAXYRSTARTDT" direction="ASC"/>
-      <rankThreshold>
-        <value>1</value>
-      </rankThreshold>
-    </windowFunction>
-  </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="AGG_FTTP_V_EXTP_FTTP" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="TAXYRSTARTDT" aggregationType="min"/>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="INTRENO"/>
-      <viewAttribute id="FBNUMCount" aggregationType="sum"/>
-      <viewAttribute id="ZZ_STAT_COMMENT"/>
-      <viewAttribute id="Difference_Flag"/>
-      <viewAttribute id="CC_TAX_ESTIMATE_LIABLE_COUNT" aggregationType="sum"/>
-      <viewAttribute id="DNIS"/>
-      <viewAttribute id="ZZ_NOIA_DATE"/>
-      <viewAttribute id="FBNUM"/>
-      <viewAttribute id="TAXYRENDDT"/>
-    
-      <viewAttribute id="UnissuedReassessment" aggregationType="sum"/>
-      <viewAttribute id="UnissuedAssessmentFlag"/>
-    </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="FTTP" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
-        <formula>if(
-    &quot;ZZ_NOIA_DATE&quot;= '00000000' and isnull(&quot;FBNUM&quot;) and (&quot;UnissuedAssessmentFlag&quot; = '' or isnull(&quot;UnissuedAssessmentFlag&quot;)),
-    '',
-    if(
-        &quot;ZZ_NOIA_DATE&quot;= '00000000' and &quot;UnissuedAssessmentFlag&quot; = 'X',
-        'FTTP',
-        If(
-            &quot;ZZ_NOIA_DATE&quot;&gt;=&quot;TAXYRSTARTDT&quot; and &quot;ZZ_NOIA_DATE&quot;&lt;=&quot;TAXYRENDDT&quot;,
-            'FTTP',
-            If(
-                &quot;ZZ_NOIA_DATE&quot;&lt;&quot;TAXYRSTARTDT&quot;,'EXTP',
-                ''
-                )
-            )
-        )
-    )
-</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
-    <restrictedViewAttributes/>
-    <input emptyUnionBehavior="undefined" node="P_OUTPUT_ZERONOIA"/>
-    <filter>&quot;FTTP&quot; = 'FTTP'</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="J_FTTPSTATUS_OUTPUT">
@@ -1343,12 +1186,9 @@
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="TAXYRENDDT"/>
   
     </attribute>
-  
-    <attribute id="All_FTTPs" order="66" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="FTTP Status"/>
-  
+    <attribute id="All_FTTPs" order="65" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="All_FTTPs"/>
       <keyMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="All_FTTPs"/>
-  
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -1452,7 +1292,7 @@
       <descriptions defaultDescription="Tax Estimate &gt;0"/>
       <measureMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="CC_TAX_ESTIMATE_LIABLE_COUNT"/>
     </measure>
-    <measure id="FBNUMCount" order="65" aggregationType="sum" measureType="simple">
+    <measure id="FBNUMCount" order="66" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="FBNUMCount"/>
       <measureMapping columnObjectName="J_FTTPSTATUS_OUTPUT" columnName="FBNUMCount"/>
     </measure>
@@ -1500,6 +1340,7 @@
       
       
       
+      
       </measure>
     <measure id="BPCount" order="64" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="INTEGER" length="">
       <descriptions defaultDescription="BP Count"/>
@@ -1507,6 +1348,7 @@
         <attribute attributeName="ZZ_PARTNER"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -1615,20 +1457,20 @@
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="AGG_FTTP_V_EXTP_EXTP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="379" y="616"/>
+      <upperLeftCorner x="512" y="483"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="J_FTTPSTATUS_OUTPUT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="356" y="217"/>
+      <upperLeftCorner x="366" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="J_CONTRACTFBNUM_REISSUES" modelObjectNameSpace="J_FTTPSTATUS_OUTPUT" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="255"/>
     </shape>
-    <shape modelObjectName="J_FTTP_v_EXTG" modelObjectNameSpace="J_FTTPSTATUS_OUTPUT" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="362" y="30"/>
-      <rectangleSize width="277"/>
+    <shape modelObjectName="AGG_FTTP_V_EXTP_EXTP" modelObjectNameSpace="J_FTTPSTATUS_OUTPUT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
     </shape>
   
     <shape expanded="true" modelObjectName="J_CONTRACTFBNUM_REISSUES" modelObjectNameSpace="CalculationView">
@@ -1643,30 +1485,10 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="J_FTTP_v_EXTG" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="502" y="351"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="R_FTTP_V_EXTG_FTTP" modelObjectNameSpace="J_FTTP_v_EXTG" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="AGG_FTTP_V_EXTP_EXTP" modelObjectNameSpace="J_FTTP_v_EXTG" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="350" y="30"/>
-      <rectangleSize width="277"/>
-    </shape>
   
     <shape expanded="true" modelObjectName="P_ASFB" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="151" y="906"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="R_FTTP_V_EXTG_FTTP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="644" y="496"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="AGG_FTTP_V_EXTP_FTTP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="644" y="616"/>
-      <rectangleSize width="160"/>
     </shape></shapes>
 </layout>
 </Calculation:scenario>
