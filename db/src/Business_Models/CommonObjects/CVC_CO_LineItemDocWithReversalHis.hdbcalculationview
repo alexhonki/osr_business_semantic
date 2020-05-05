@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVC_CO_LineItemDocWithReversalHis" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="Items in contract account document with clearing/reversal history"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.synonyms::DFKKRAPT">
+    <resourceUri>osr.business.semantic.db.synonyms::DFKKRAPT</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::DFKKOP">
+    <resourceUri>osr.business.semantic.db.synonyms::DFKKOP</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKRAPT" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPW"/>
+      <viewAttribute id="OPUPK"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="AUGBL"/>
+      <viewAttribute id="AUGDT"/>
+      <viewAttribute id="AUGRD"/>
+      <viewAttribute id="BETRH"/>
+      <viewAttribute id="AUGBT"/>
+      <viewAttribute id="STBLG"/>
+      <viewAttribute id="STDAT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::DFKKRAPT"/>
+    <filter>&quot;MANDT&quot;='400'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="U_LineDocWitHis">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPW"/>
+      <viewAttribute id="OPUPK"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="GPART"/>
+      <viewAttribute id="AUGBL"/>
+      <viewAttribute id="AUGDT"/>
+      <viewAttribute id="AUGRD"/>
+      <viewAttribute id="STBLG"/>
+      <viewAttribute id="STDAT"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+      <viewAttribute id="AUGBT" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_DFKKRAPT" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STBLG" source="STBLG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STDAT" source="STDAT"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="GPART" null="true" value=""/>
+    </input>
+    <input node="A_DFKKOP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STBLG" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STDAT" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GPART" source="GPART"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKOP" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPW"/>
+      <viewAttribute id="OPUPK"/>
+      <viewAttribute id="OPUPZ"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="GPART"/>
+      <viewAttribute id="AUGBL"/>
+      <viewAttribute id="AUGDT"/>
+      <viewAttribute id="AUGRD"/>
+      <viewAttribute id="BETRH"/>
+      <viewAttribute id="AUGBT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::DFKKOP"/>
+    <filter>&quot;MANDT&quot;='400'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="A_DFKKOP">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPW"/>
+      <viewAttribute id="OPUPK"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="GPART"/>
+      <viewAttribute id="AUGBL"/>
+      <viewAttribute id="AUGDT"/>
+      <viewAttribute id="AUGRD"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+      <viewAttribute id="AUGBT" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_DFKKOP"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="U_LineDocWitHis">
+  <attributes>
+    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MANDT"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="MANDT"/>
+    </attribute>
+    <attribute id="OPBEL" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OPBEL"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="OPBEL"/>
+    </attribute>
+    <attribute id="OPUPW" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OPUPW"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="OPUPW"/>
+    </attribute>
+    <attribute id="OPUPK" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OPUPK"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="OPUPK"/>
+    </attribute>
+    <attribute id="BUKRS" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BUKRS"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="BUKRS"/>
+    </attribute>
+    <attribute id="GPART" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GPART"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="GPART"/>
+    </attribute>
+    <attribute id="AUGBL" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AUGBL"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="AUGBL"/>
+    </attribute>
+    <attribute id="AUGDT" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AUGDT"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="AUGDT"/>
+    </attribute>
+    <attribute id="AUGRD" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AUGRD"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="AUGRD"/>
+    </attribute>
+    <attribute id="STBLG" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STBLG"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="STBLG"/>
+    </attribute>
+    <attribute id="STDAT" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STDAT"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="STDAT"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="BETRH" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BETRH"/>
+      <measureMapping columnObjectName="U_LineDocWitHis" columnName="BETRH"/>
+    </measure>
+    <measure id="AUGBT" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AUGBT"/>
+      <measureMapping columnObjectName="U_LineDocWitHis" columnName="AUGBT"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="213.23951013324876" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_DFKKRAPT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="301.99999999999994" y="356.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="U_LineDocWitHis" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="213.23951013324876" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_DFKKOP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91.99999999999997" y="481.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="A_DFKKOP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91.99999999999997" y="366.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
