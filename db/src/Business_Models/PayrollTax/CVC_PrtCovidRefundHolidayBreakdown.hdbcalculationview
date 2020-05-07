@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.business.semantic.db.Business_Models.PayrollTax::CVC_PrtCovidRefundHolidayBreakdown" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CVC_PrtCovidRefundHolidayBreakdown"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtClientOverview">
+    <resourceUri>osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtClientOverview</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PRTCOVID" cardinality="C1_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="DIVISION"/>
+      <viewAttribute id="DIV_TEXT"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="UNDER_OVER_DECL"/>
+      <viewAttribute id="PERSL"/>
+      <viewAttribute id="CC_TAXPAYER_PAID_FLAG"/>
+      <viewAttribute id="CC_TAX_FG_AMT" aggregationType="sum"/>
+      <viewAttribute id="CC_COVID_PENDING_AMT" aggregationType="sum"/>
+      <viewAttribute id="CC_COVID_PAID_AMT" aggregationType="sum"/>
+      <viewAttribute id="HVORG"/>
+      <viewAttribute id="TVORG"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_REFUND_BP" datatype="NVARCHAR" length="8" expressionLanguage="SQL">
+        <formula>CASE 
+	WHEN &quot;PERSL&quot; IN ('2X05','2X06','20Q2','20H1') AND &quot;HVORG&quot; = '4000' AND &quot;TVORG&quot; = '0250' AND &quot;UNDER_OVER_DECL&quot; = '$6.5 Million or under' THEN &quot;PARTNER&quot;
+	WHEN &quot;PERSL&quot; IN ('2X07','2X08', '20Q3') AND &quot;HVORG&quot; = '4000' AND &quot;TVORG&quot; = '0250' AND &quot;UNDER_OVER_DECL&quot; = 'Over $6.5 Million' THEN &quot;PARTNER&quot;
+	ELSE NULL 
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_HOLIDAY_BP" datatype="NVARCHAR" length="8" expressionLanguage="SQL">
+        <formula>CASE
+	WHEN &quot;PERSL&quot; IN ('2X07','2X08','2X09', '20Q3') AND &quot;HVORG&quot; = '4000' AND &quot;TVORG&quot; = '0250' AND &quot;UNDER_OVER_DECL&quot; = '$6.5 Million or under' THEN &quot;PARTNER&quot;
+	ELSE NULL
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="P_PRTCLIENTOVERVIEW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIVISION" source="DIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIV_TEXT" source="DIV_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNDER_OVER_DECL" source="UNDER_OVER_DECL"/>
+    </input>
+    <input node="P_FNFINANCIALS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERSL" source="PERSL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAXPAYER_PAID_FLAG" source="CC_TAXPAYER_PAID_FLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_TAX_FG_AMT" source="CC_TAX_FG_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_COVID_PENDING_AMT" source="CC_COVID_PENDING_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_COVID_PAID_AMT" source="CC_COVID_PAID_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HVORG" source="HVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TVORG" source="TVORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="DFKK_H_GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+    </input>
+    <joinAttribute name="PARTNER"/>
+    <joinAttribute name="CLIENT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FNFINANCIALS" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="HVORG"/>
+      <viewAttribute id="TVORG"/>
+      <viewAttribute id="PERSL"/>
+      <viewAttribute id="DFKK_H_GPART"/>
+      <viewAttribute id="CC_TAXPAYER_PAID_FLAG"/>
+      <viewAttribute id="CC_TAX_FG_AMT"/>
+      <viewAttribute id="CC_COVID_PENDING_AMT"/>
+      <viewAttribute id="CC_COVID_PAID_AMT"/>
+      <viewAttribute id="AUGRD"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVCS_CO_FnFinancials"/>
+    <filter>&quot;HVORG&quot; = '4000' AND &quot;TVORG&quot; = '0250' AND &quot;AUGRD&quot; &lt;&gt; '05'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_PRTCLIENTOVERVIEW" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="DIVISION"/>
+      <viewAttribute id="DIV_TEXT"/>
+      <viewAttribute id="STD_ADDR_POSTCODE1"/>
+      <viewAttribute id="UNDER_OVER_DECL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtClientOverview"/>
+    <filter>&quot;UNDER_OVER_DECL&quot; IN ('$6.5 Million or under', 'Over $6.5 Million')</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_PRTCOVID">
+  <attributes>
+    <attribute id="PARTNER" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Business Partner"/>
+      <keyMapping columnObjectName="J_PRTCOVID" columnName="PARTNER"/>
+    </attribute>
+    <attribute id="CLIENT" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SAP Client"/>
+      <keyMapping columnObjectName="J_PRTCOVID" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="DIVISION" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANZSIC Division"/>
+      <keyMapping columnObjectName="J_PRTCOVID" columnName="DIVISION"/>
+    </attribute>
+    <attribute id="DIV_TEXT" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ANZSIC Division Text"/>
+      <keyMapping columnObjectName="J_PRTCOVID" columnName="DIV_TEXT"/>
+    </attribute>
+    <attribute id="STD_ADDR_POSTCODE1" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ABR - Add - PostCode"/>
+      <keyMapping columnObjectName="J_PRTCOVID" columnName="STD_ADDR_POSTCODE1"/>
+    </attribute>
+    <attribute id="UNDER_OVER_DECL" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Under/Over $6.5 Million (Client Declared)"/>
+      <keyMapping columnObjectName="J_PRTCOVID" columnName="UNDER_OVER_DECL"/>
+    </attribute>
+    <attribute id="PERSL" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Assessment Period Key"/>
+      <keyMapping columnObjectName="J_PRTCOVID" columnName="PERSL"/>
+    </attribute>
+    <attribute id="CC_TAXPAYER_PAID_FLAG" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Taxpayer Paid Flag (COVID)"/>
+      <keyMapping columnObjectName="J_PRTCOVID" columnName="CC_TAXPAYER_PAID_FLAG"/>
+    </attribute>
+    <attribute id="CC_REFUND_BP" hidden="true" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_REFUND_BP"/>
+      <keyMapping columnObjectName="J_PRTCOVID" columnName="CC_REFUND_BP"/>
+    </attribute>
+    <attribute id="CC_HOLIDAY_BP" hidden="true" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_HOLIDAY_BP"/>
+      <keyMapping columnObjectName="J_PRTCOVID" columnName="CC_HOLIDAY_BP"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="CC_TAX_FG_AMT" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tax Forgone Amount (COVID)"/>
+      <measureMapping columnObjectName="J_PRTCOVID" columnName="CC_TAX_FG_AMT"/>
+    </measure>
+    <measure id="CC_COVID_PENDING_AMT" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Pending Amount (COVID)"/>
+      <measureMapping columnObjectName="J_PRTCOVID" columnName="CC_COVID_PENDING_AMT"/>
+    </measure>
+    <measure id="CC_COVID_PAID_AMT" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Paid Amount (COVID)"/>
+      <measureMapping columnObjectName="J_PRTCOVID" columnName="CC_COVID_PAID_AMT"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures>
+    <measure id="CC_BP_COUNT" order="12" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="CC_BP_COUNT"/>
+      <exceptionAggregation>
+        <attribute attributeName="PARTNER"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+    <measure id="CC_REFUND_BP_COUNT" order="13" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="CC_REFUND_BP_COUNT"/>
+      <exceptionAggregation>
+        <attribute attributeName="CC_REFUND_BP"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+    <measure id="CC_HOLIDAY_BP_COUNT" order="16" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="CC_HOLIDAY_BP_COUNT"/>
+      <exceptionAggregation>
+        <attribute attributeName="CC_HOLIDAY_BP"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures>
+    <measure id="RC_TAX_FOREGONE_REFUND" order="17" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="CC_TAX_FG_AMT">
+      <descriptions defaultDescription="Tax Foregone Refund Cohort"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="CC_REFUND_BP">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false" value=""/>
+        </filter>
+        <attributeName>CC_REFUND_BP</attributeName>
+      </restriction>
+      </measure>
+    <measure id="RC_TAX_FOREGONE_HOLIDAY" order="18" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="CC_TAX_FG_AMT">
+      <descriptions defaultDescription="Tax Foregone Holiday Cohort"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="CC_HOLIDAY_BP">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false" value=""/>
+        </filter>
+        <attributeName>CC_HOLIDAY_BP</attributeName>
+      </restriction>
+      </measure>
+    <measure id="RC_PENDING_AMOUNT_REFUND" order="19" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="CC_COVID_PENDING_AMT">
+      <descriptions defaultDescription="COVID Pending Amount Refund Cohort"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="CC_REFUND_BP">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false" value=""/>
+        </filter>
+        <attributeName>CC_REFUND_BP</attributeName>
+      </restriction>
+      </measure>
+    <measure id="RC_PENDING_AMOUNT_HOLIDAY" order="20" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="CC_COVID_PENDING_AMT">
+      <descriptions defaultDescription="COVID Pending Amount Holiday Cohort"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="CC_REFUND_BP">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false" value=""/>
+        </filter>
+        <attributeName>CC_REFUND_BP</attributeName>
+      </restriction>
+      </measure>
+    <measure id="RC_PAID_AMOUNT_REFUND" order="21" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="CC_COVID_PAID_AMT">
+      <descriptions defaultDescription="COVID Paid Amount Refund Cohort"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="CC_REFUND_BP">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false" value=""/>
+        </filter>
+        <attributeName>CC_REFUND_BP</attributeName>
+      </restriction>
+      </measure>
+    <measure id="RC_PAID_AMOUNT_HOLIDAY" order="22" aggregationType="sum" datatype="DECIMAL" length="13" scale="2" baseMeasure="CC_COVID_PAID_AMT">
+      <descriptions defaultDescription="COVID Paid Amount Holiday Cohort"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="CC_HOLIDAY_BP">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false" value=""/>
+        </filter>
+        <attributeName>CC_HOLIDAY_BP</attributeName>
+      </restriction>
+      </measure>
+  </restrictedMeasures>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_PRTCOVID" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="266"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_PRTCLIENTOVERVIEW" modelObjectNameSpace="J_PRTCOVID" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136.0234375"/>
+    </shape>
+    <shape modelObjectName="P_FNFINANCIALS" modelObjectNameSpace="J_PRTCOVID" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="136.0234375"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_FNFINANCIALS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="268" y="416"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_PRTCLIENTOVERVIEW" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-20" y="416"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
