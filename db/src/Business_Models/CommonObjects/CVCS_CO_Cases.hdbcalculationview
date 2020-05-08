@@ -316,17 +316,37 @@ END</formula>
       
       </measure>
   
-    <measure id="CC_1" order="54" aggregationType="sum" measureType="simple" aggregatable="true" datatype="INTEGER" expressionLanguage="SQL">
-      <formula>if(
-&quot;STATUS_DESC&quot;='Closed' 
-or &quot;STATUS_DESC&quot;='Complete' 
-or &quot;STATUS_DESC&quot;='Completed' 
-or &quot;STATUS_DESC&quot;='Discontinued' 
-or &quot;STATUS_DESC&quot;='Finalised' 
-or (&quot;PROFILE_ID&quot; = 'ZIPTSP' AND &quot;STAT_ORDERNO&quot; = '50'),
-daysbetween(&quot;CC_DateCreated&quot;, &quot;CC_DateClosed&quot;), 
-daysbetween(&quot;CC_DateCreated&quot;, now())
-)</formula>
+    <measure id="CC_DAYS_BT_CREATE" order="54" aggregationType="sum" measureType="simple" aggregatable="true" datatype="INTEGER" expressionLanguage="SQL">
+      <formula>CASE
+    WHEN (&quot;PROFILE_ID&quot; = 'ZINV' AND &quot;STAT_ORDERNO&quot; = '02')
+        OR (&quot;PROFILE_ID&quot; = 'ZQPF' AND &quot;STAT_ORDERNO&quot; = '02')
+        OR (&quot;PROFILE_ID&quot; = 'ZEXG' AND &quot;STAT_ORDERNO&quot; = '03')
+        OR (&quot;PROFILE_ID&quot; = 'ZEXL' AND &quot;STAT_ORDERNO&quot; = '03')
+        OR (&quot;PROFILE_ID&quot; = 'ZEXM' AND &quot;STAT_ORDERNO&quot; = '03')
+        OR (&quot;PROFILE_ID&quot; = 'ZOBJ' AND &quot;STAT_ORDERNO&quot; = '03')
+        OR (&quot;PROFILE_ID&quot; = 'ZOBR' AND &quot;STAT_ORDERNO&quot; = '03')
+        OR (&quot;PROFILE_ID&quot; = 'ZAPP' AND &quot;STAT_ORDERNO&quot; = '04')
+        OR (&quot;PROFILE_ID&quot; = 'ZINS' AND &quot;STAT_ORDERNO&quot; = '04')
+        OR (&quot;PROFILE_ID&quot; = 'ZMTG' AND &quot;STAT_ORDERNO&quot; = '04')
+        OR (&quot;PROFILE_ID&quot; = 'ZPRI' AND &quot;STAT_ORDERNO&quot; = '04')
+        OR (&quot;PROFILE_ID&quot; = 'ZTER' AND &quot;STAT_ORDERNO&quot; = '04')
+        OR (&quot;PROFILE_ID&quot; = 'ZTRF' AND &quot;STAT_ORDERNO&quot; = '04')
+        OR (&quot;PROFILE_ID&quot; = 'ZINV' AND &quot;STAT_ORDERNO&quot; = '05')
+        OR (&quot;PROFILE_ID&quot; = 'ZNOV' AND &quot;STAT_ORDERNO&quot; = '05')
+        OR (&quot;PROFILE_ID&quot; = 'L_CO' AND &quot;STAT_ORDERNO&quot; = '07')
+        OR (&quot;PROFILE_ID&quot; = 'L_CO' AND &quot;STAT_ORDERNO&quot; = '08')
+        OR (&quot;PROFILE_ID&quot; = 'PS_PRO' AND &quot;STAT_ORDERNO&quot; = '40')
+        OR (&quot;PROFILE_ID&quot; = 'ZIPTSP' AND &quot;STAT_ORDERNO&quot; = '40')
+        OR (&quot;PROFILE_ID&quot; = 'CRM_0001' AND &quot;STAT_ORDERNO&quot; = '50')
+        OR (&quot;PROFILE_ID&quot; = 'CRM_FS1' AND &quot;STAT_ORDERNO&quot; = '50')
+        OR (&quot;PROFILE_ID&quot; = 'DEMO' AND &quot;STAT_ORDERNO&quot; = '50')
+        OR (&quot;PROFILE_ID&quot; = 'PS_DOMEA' AND &quot;STAT_ORDERNO&quot; = '50')
+        OR (&quot;PROFILE_ID&quot; = 'ZILTSP' AND &quot;STAT_ORDERNO&quot; = '50')
+        OR (&quot;PROFILE_ID&quot; = 'CRM_0004' AND &quot;STAT_ORDERNO&quot; = '50')
+        OR (&quot;PROFILE_ID&quot; = 'ZIPTSP' AND &quot;STAT_ORDERNO&quot; = '50')
+    THEN days_between(TO_DATE(&quot;CREATE_TIME&quot;), TO_DATE(&quot;CLOSING_TIME&quot;))
+    ELSE days_between(TO_DATE(&quot;CREATE_TIME&quot;), CURRENT_DATE)
+END</formula>
     </measure>
   </calculatedMeasures>
   <restrictedMeasures/>
