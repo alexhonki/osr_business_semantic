@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVC_CO_LineItemDocWithReversalHis" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
 <descriptions defaultDescription="Items in contract account document with clearing/reversal history"/>
-<localVariables/>
+<localVariables>
+  <variable id="IP_KeyDate" parameter="true">
+    <descriptions defaultDescription="Key Date"/>
+    <variableProperties datatype="NVARCHAR" length="8" mandatory="false">
+      <valueDomain type="Date"/>
+      <selection multiLine="false" type="SingleValue"/>
+      <defaultRange lowValue="date(leftstr(string(now()),10))" lowExpression="true"/>
+    </variableProperties>
+  </variable>
+</localVariables>
 <variableMappings/>
 <dataSources>
   <DataSource id="osr.business.semantic.db.synonyms::DFKKRAPT">
@@ -26,10 +35,17 @@
       <viewAttribute id="AUGBT"/>
       <viewAttribute id="STBLG"/>
       <viewAttribute id="STDAT"/>
+    
+      <viewAttribute id="AUGWA"/>
+      <viewAttribute id="BETRW"/>
+      <viewAttribute id="WAERS"/>
+      <viewAttribute id="PSWBT"/>
+      <viewAttribute id="PSWSL"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="osr.business.semantic.db.synonyms::DFKKRAPT"/>
-    <filter>&quot;MANDT&quot;='400'</filter>
+    <filter>&quot;MANDT&quot;='400' and
+to_date(&quot;AUGDT&quot;) &lt;= to_date('$$IP_KeyDate$$') AND to_date(&quot;STDAT&quot;) &gt;= to_date('$$IP_KeyDate$$')</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:UnionView" id="U_LineDocWitHis">
     <viewAttributes>
@@ -38,17 +54,22 @@
       <viewAttribute id="OPUPW"/>
       <viewAttribute id="OPUPK"/>
       <viewAttribute id="BUKRS"/>
-      <viewAttribute id="GPART"/>
       <viewAttribute id="AUGBL"/>
       <viewAttribute id="AUGDT"/>
       <viewAttribute id="AUGRD"/>
-      <viewAttribute id="STBLG"/>
-      <viewAttribute id="STDAT"/>
       <viewAttribute id="BETRH" aggregationType="sum"/>
       <viewAttribute id="AUGBT" aggregationType="sum"/>
+      <viewAttribute id="STBLG"/>
+      <viewAttribute id="STDAT"/>
+      <viewAttribute id="GPART"/>
+      <viewAttribute id="AUGWA"/>
+      <viewAttribute id="BETRW" aggregationType="sum"/>
+      <viewAttribute id="WAERS"/>
+      <viewAttribute id="PSWBT" aggregationType="sum"/>
+      <viewAttribute id="PSWSL"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="P_DFKKRAPT" emptyUnionBehavior="NO_ROW">
+    <input node="J_DFKKRAPT_withBP">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
@@ -61,7 +82,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STBLG" source="STBLG"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STDAT" source="STDAT"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="GPART" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GPART" source="GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGWA" source="AUGWA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWBT" source="PSWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWSL" source="PSWSL"/>
     </input>
     <input node="A_DFKKOP">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -75,28 +101,14 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STBLG" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STDAT" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STDAT" source="CC_STDAT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GPART" source="GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGWA" source="AUGWA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWBT" source="PSWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWSL" source="PSWSL"/>
     </input>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKOP" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="OPBEL"/>
-      <viewAttribute id="OPUPW"/>
-      <viewAttribute id="OPUPK"/>
-      <viewAttribute id="OPUPZ"/>
-      <viewAttribute id="BUKRS"/>
-      <viewAttribute id="GPART"/>
-      <viewAttribute id="AUGBL"/>
-      <viewAttribute id="AUGDT"/>
-      <viewAttribute id="AUGRD"/>
-      <viewAttribute id="BETRH"/>
-      <viewAttribute id="AUGBT"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="osr.business.semantic.db.synonyms::DFKKOP"/>
-    <filter>&quot;MANDT&quot;='400'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="A_DFKKOP">
     <viewAttributes>
@@ -105,103 +117,323 @@
       <viewAttribute id="OPUPW"/>
       <viewAttribute id="OPUPK"/>
       <viewAttribute id="BUKRS"/>
-      <viewAttribute id="GPART"/>
       <viewAttribute id="AUGBL"/>
       <viewAttribute id="AUGDT"/>
       <viewAttribute id="AUGRD"/>
       <viewAttribute id="BETRH" aggregationType="sum"/>
       <viewAttribute id="AUGBT" aggregationType="sum"/>
+    
+      <viewAttribute id="GPART"/>
+      <viewAttribute id="AUGWA"/>
+      <viewAttribute id="BETRW" aggregationType="sum"/>
+      <viewAttribute id="WAERS"/>
+      <viewAttribute id="PSWBT" aggregationType="sum"/>
+      <viewAttribute id="PSWSL"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_STDAT" datatype="NVARCHAR" length="10" expressionLanguage="COLUMN_ENGINE">
+        <formula>replace(leftstr(string(now()),10), '-', '')</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="J_DFKKRAPT_in_DFKKOP"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_DFKKRAPT_in_DFKKOP" cardinality="CN_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPW"/>
+      <viewAttribute id="OPUPK"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="AUGBL"/>
+      <viewAttribute id="AUGDT"/>
+      <viewAttribute id="AUGRD"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+      <viewAttribute id="AUGBT" aggregationType="sum"/>
+      <viewAttribute id="GPART"/>
+      <viewAttribute id="OPUPZ"/>
+    
+      <viewAttribute id="AUGWA"/>
+      <viewAttribute id="BETRW" aggregationType="sum"/>
+      <viewAttribute id="WAERS"/>
+      <viewAttribute id="PSWBT" aggregationType="sum"/>
+      <viewAttribute id="PSWSL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_DFKKOP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GPART" source="GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPZ" source="OPUPZ"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGWA" source="AUGWA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWBT" source="PSWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWSL" source="PSWSL"/>
+    </input>
+    <input node="A_DFKKRAPT_Distinct">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="OPBEL"/>
+    <joinAttribute name="OPUPW"/>
+    <joinAttribute name="OPUPK"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_DFKKOP" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPW"/>
+      <viewAttribute id="OPUPK"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="AUGBL"/>
+      <viewAttribute id="AUGDT"/>
+      <viewAttribute id="AUGRD"/>
+      <viewAttribute id="BETRH"/>
+      <viewAttribute id="AUGBT"/>
+    
+      <viewAttribute id="GPART"/>
+      <viewAttribute id="OPUPZ"/>
+      <viewAttribute id="AUGWA"/>
+      <viewAttribute id="BETRW"/>
+      <viewAttribute id="WAERS"/>
+      <viewAttribute id="PSWBT"/>
+      <viewAttribute id="PSWSL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::DFKKOP"/>
+    <filter>&quot;MANDT&quot;='400'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_DFKKRAPT_withBP" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPW"/>
+      <viewAttribute id="OPUPK"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="AUGBL"/>
+      <viewAttribute id="AUGDT"/>
+      <viewAttribute id="AUGRD"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+      <viewAttribute id="AUGBT" aggregationType="sum"/>
+      <viewAttribute id="STBLG"/>
+      <viewAttribute id="STDAT"/>
+      <viewAttribute id="GPART"/>
+      <viewAttribute id="AUGWA"/>
+      <viewAttribute id="BETRW" aggregationType="sum"/>
+      <viewAttribute id="WAERS"/>
+      <viewAttribute id="PSWBT" aggregationType="sum"/>
+      <viewAttribute id="PSWSL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_DFKKRAPT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STBLG" source="STBLG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STDAT" source="STDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGWA" source="AUGWA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWBT" source="PSWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWSL" source="PSWSL"/>
+    </input>
+    <input node="A_DFKKOP_withDistinctBP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="GPART" source="GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="OPBEL"/>
+    <joinAttribute name="OPUPW"/>
+    <joinAttribute name="OPUPK"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="A_DFKKOP_withDistinctBP">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPW"/>
+      <viewAttribute id="OPUPK"/>
+      <viewAttribute id="GPART"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="P_DFKKOP"/>
+    <input node="A_DFKKOP"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="A_DFKKRAPT_Distinct">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPW"/>
+      <viewAttribute id="OPUPK"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_DFKKRAPT"/>
   </calculationView>
 </calculationViews>
-<logicalModel id="U_LineDocWitHis">
+<logicalModel id="U_LineDocWitHis" filterExpressionLanguage="SQL">
   <attributes>
     <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MANDT"/>
+      <descriptions defaultDescription="Client"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="MANDT"/>
     </attribute>
     <attribute id="OPBEL" order="2" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="OPBEL"/>
+      <descriptions defaultDescription="Document Number in Contract Accounts Receivable and Payable"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="OPBEL"/>
     </attribute>
     <attribute id="OPUPW" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="OPUPW"/>
+      <descriptions defaultDescription="Repetition Item in Contract Account Document"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="OPUPW"/>
     </attribute>
     <attribute id="OPUPK" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="OPUPK"/>
+      <descriptions defaultDescription="Item number in contract account document"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="OPUPK"/>
     </attribute>
     <attribute id="BUKRS" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BUKRS"/>
+      <descriptions defaultDescription="Company Code"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="BUKRS"/>
     </attribute>
     <attribute id="GPART" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="GPART"/>
+      <descriptions defaultDescription="Business Partner Number"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="GPART"/>
     </attribute>
     <attribute id="AUGBL" order="7" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="AUGBL"/>
+      <descriptions defaultDescription="Clearing Document or Printed Document"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="AUGBL"/>
     </attribute>
     <attribute id="AUGDT" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="AUGDT"/>
+      <descriptions defaultDescription="Clearing date"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="AUGDT"/>
     </attribute>
     <attribute id="AUGRD" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="AUGRD"/>
+      <descriptions defaultDescription="Clearing Reason"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="AUGRD"/>
     </attribute>
     <attribute id="STBLG" order="10" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="STBLG"/>
+      <descriptions defaultDescription="Number of Reverse Document/Reset Document"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="STBLG"/>
     </attribute>
     <attribute id="STDAT" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="STDAT"/>
+      <descriptions defaultDescription="Reversal Document Posting Date"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="STDAT"/>
+    </attribute>
+    <attribute id="AUGWA" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AUGWA"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="AUGWA"/>
+    </attribute>
+    <attribute id="WAERS" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WAERS"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="WAERS"/>
+    </attribute>
+    <attribute id="PSWSL" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PSWSL"/>
+      <keyMapping columnObjectName="U_LineDocWitHis" columnName="PSWSL"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="BETRH" order="12" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="BETRH"/>
+    <measure id="BETRH" order="15" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Amount In Local Currency With +/- Signs"/>
       <measureMapping columnObjectName="U_LineDocWitHis" columnName="BETRH"/>
     </measure>
-    <measure id="AUGBT" order="13" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="AUGBT"/>
+    <measure id="PSWBT" order="16" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PSWBT"/>
+      <measureMapping columnObjectName="U_LineDocWitHis" columnName="PSWBT"/>
+    </measure>
+    <measure id="BETRW" order="17" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BETRW"/>
+      <measureMapping columnObjectName="U_LineDocWitHis" columnName="BETRW"/>
+    </measure>
+    <measure id="AUGBT" order="18" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Clearing amount in clearing currency"/>
       <measureMapping columnObjectName="U_LineDocWitHis" columnName="AUGBT"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures/>
   <restrictedMeasures/>
   <localDimensions/>
+
+  <filter>to_date(&quot;AUGDT&quot;) &lt;= to_date('$$IP_KeyDate$$') AND to_date(&quot;STDAT&quot;) &gt;= to_date('$$IP_KeyDate$$')</filter>
 </logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="213.23951013324876" y="112"/>
+      <upperLeftCorner x="302" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_DFKKRAPT" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="301.99999999999994" y="356.9999988079071"/>
+      <upperLeftCorner x="204" y="958"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="U_LineDocWitHis" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="213.23951013324876" y="217"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="P_DFKKOP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91.99999999999997" y="481.9999988079071"/>
+      <upperLeftCorner x="302" y="256"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="A_DFKKOP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91.99999999999997" y="366.9999988079071"/>
+      <upperLeftCorner x="620" y="559"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_DFKKRAPT_in_DFKKOP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="627" y="647"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_DFKKOP" modelObjectNameSpace="J_DFKKRAPT_in_DFKKOP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="129"/>
+    </shape>
+    <shape modelObjectName="A_DFKKRAPT_Distinct" modelObjectNameSpace="J_DFKKRAPT_in_DFKKOP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="196"/>
+    </shape>
+  
+  
+    <shape expanded="true" modelObjectName="P_DFKKOP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="697" y="958"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="J_DFKKRAPT_withBP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="175" y="382"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_DFKKRAPT" modelObjectNameSpace="J_DFKKRAPT_withBP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="A_DFKKOP_withDistinctBP" modelObjectNameSpace="J_DFKKRAPT_withBP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="A_DFKKOP_withDistinctBP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="354" y="559"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="A_DFKKRAPT_Distinct" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="415" y="775"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
