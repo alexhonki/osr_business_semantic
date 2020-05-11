@@ -69,7 +69,7 @@ to_date(&quot;AUGDT&quot;) &lt;= to_date('$$IP_KeyDate$$') AND to_date(&quot;STD
       <viewAttribute id="PSWSL"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="J_DFKKRAPT_withBP">
+    <input node="J_DFKKRAPT_withBP" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
@@ -89,7 +89,7 @@ to_date(&quot;AUGDT&quot;) &lt;= to_date('$$IP_KeyDate$$') AND to_date(&quot;STD
       <mapping xsi:type="Calculation:AttributeMapping" target="PSWBT" source="PSWBT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PSWSL" source="PSWSL"/>
     </input>
-    <input node="A_DFKKOP">
+    <input node="A_DFKKOP" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
@@ -109,6 +109,59 @@ to_date(&quot;AUGDT&quot;) &lt;= to_date('$$IP_KeyDate$$') AND to_date(&quot;STD
       <mapping xsi:type="Calculation:AttributeMapping" target="PSWBT" source="PSWBT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PSWSL" source="PSWSL"/>
     </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_DFKKRAPT_withBP" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPW"/>
+      <viewAttribute id="OPUPK"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="AUGBL"/>
+      <viewAttribute id="AUGDT"/>
+      <viewAttribute id="AUGRD"/>
+      <viewAttribute id="BETRH" aggregationType="sum"/>
+      <viewAttribute id="AUGBT" aggregationType="sum"/>
+      <viewAttribute id="STBLG"/>
+      <viewAttribute id="STDAT"/>
+      <viewAttribute id="GPART"/>
+      <viewAttribute id="AUGWA"/>
+      <viewAttribute id="BETRW" aggregationType="sum"/>
+      <viewAttribute id="WAERS"/>
+      <viewAttribute id="PSWBT" aggregationType="sum"/>
+      <viewAttribute id="PSWSL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_DFKKRAPT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STBLG" source="STBLG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STDAT" source="STDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGWA" source="AUGWA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWBT" source="PSWBT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSWSL" source="PSWSL"/>
+    </input>
+    <input node="A_DFKKOP_withDistinctBP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="GPART" source="GPART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="OPBEL"/>
+    <joinAttribute name="OPUPW"/>
+    <joinAttribute name="OPUPK"/>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="A_DFKKOP">
     <viewAttributes>
@@ -151,14 +204,14 @@ to_date(&quot;AUGDT&quot;) &lt;= to_date('$$IP_KeyDate$$') AND to_date(&quot;STD
       <viewAttribute id="BETRH" aggregationType="sum"/>
       <viewAttribute id="AUGBT" aggregationType="sum"/>
       <viewAttribute id="GPART"/>
-      <viewAttribute id="OPUPZ"/>
     
       <viewAttribute id="AUGWA"/>
       <viewAttribute id="BETRW" aggregationType="sum"/>
       <viewAttribute id="WAERS"/>
       <viewAttribute id="PSWBT" aggregationType="sum"/>
       <viewAttribute id="PSWSL"/>
-    </viewAttributes>
+    
+      <viewAttribute id="OPUPZ"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_DFKKOP">
       <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
@@ -216,71 +269,6 @@ to_date(&quot;AUGDT&quot;) &lt;= to_date('$$IP_KeyDate$$') AND to_date(&quot;STD
     <input node="osr.business.semantic.db.synonyms::DFKKOP"/>
     <filter>&quot;MANDT&quot;='400'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_DFKKRAPT_withBP" cardinality="CN_1" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="OPBEL"/>
-      <viewAttribute id="OPUPW"/>
-      <viewAttribute id="OPUPK"/>
-      <viewAttribute id="BUKRS"/>
-      <viewAttribute id="AUGBL"/>
-      <viewAttribute id="AUGDT"/>
-      <viewAttribute id="AUGRD"/>
-      <viewAttribute id="BETRH" aggregationType="sum"/>
-      <viewAttribute id="AUGBT" aggregationType="sum"/>
-      <viewAttribute id="STBLG"/>
-      <viewAttribute id="STDAT"/>
-      <viewAttribute id="GPART"/>
-      <viewAttribute id="AUGWA"/>
-      <viewAttribute id="BETRW" aggregationType="sum"/>
-      <viewAttribute id="WAERS"/>
-      <viewAttribute id="PSWBT" aggregationType="sum"/>
-      <viewAttribute id="PSWSL"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="P_DFKKRAPT">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGRD" source="AUGRD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BETRH" source="BETRH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGBT" source="AUGBT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STBLG" source="STBLG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STDAT" source="STDAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUGWA" source="AUGWA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BETRW" source="BETRW"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PSWBT" source="PSWBT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PSWSL" source="PSWSL"/>
-    </input>
-    <input node="A_DFKKOP_withDistinctBP">
-      <mapping xsi:type="Calculation:AttributeMapping" target="GPART" source="GPART"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPBEL" source="OPBEL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPW" source="OPUPW"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OPUPK" source="OPUPK"/>
-    </input>
-    <joinAttribute name="MANDT"/>
-    <joinAttribute name="OPBEL"/>
-    <joinAttribute name="OPUPW"/>
-    <joinAttribute name="OPUPK"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="A_DFKKOP_withDistinctBP">
-    <viewAttributes>
-      <viewAttribute id="MANDT"/>
-      <viewAttribute id="OPBEL"/>
-      <viewAttribute id="OPUPW"/>
-      <viewAttribute id="OPUPK"/>
-      <viewAttribute id="GPART"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="A_DFKKOP"/>
-  </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="A_DFKKRAPT_Distinct">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
@@ -291,6 +279,18 @@ to_date(&quot;AUGDT&quot;) &lt;= to_date('$$IP_KeyDate$$') AND to_date(&quot;STD
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="P_DFKKRAPT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="A_DFKKOP_withDistinctBP">
+    <viewAttributes>
+      <viewAttribute id="GPART"/>
+    
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OPBEL"/>
+      <viewAttribute id="OPUPW"/>
+      <viewAttribute id="OPUPK"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="A_DFKKOP"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="U_LineDocWitHis" filterExpressionLanguage="SQL">
@@ -340,15 +340,15 @@ to_date(&quot;AUGDT&quot;) &lt;= to_date('$$IP_KeyDate$$') AND to_date(&quot;STD
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="STDAT"/>
     </attribute>
     <attribute id="AUGWA" order="12" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="AUGWA"/>
+      <descriptions defaultDescription="Clearing currency"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="AUGWA"/>
     </attribute>
     <attribute id="WAERS" order="13" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="WAERS"/>
+      <descriptions defaultDescription="Transaction Currency"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="WAERS"/>
     </attribute>
     <attribute id="PSWSL" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="PSWSL"/>
+      <descriptions defaultDescription="Update Currency for General Ledger Transaction Figures"/>
       <keyMapping columnObjectName="U_LineDocWitHis" columnName="PSWSL"/>
     </attribute>
   </attributes>
@@ -359,11 +359,11 @@ to_date(&quot;AUGDT&quot;) &lt;= to_date('$$IP_KeyDate$$') AND to_date(&quot;STD
       <measureMapping columnObjectName="U_LineDocWitHis" columnName="BETRH"/>
     </measure>
     <measure id="PSWBT" order="16" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="PSWBT"/>
+      <descriptions defaultDescription="Update Currency for General Ledger Transaction Figures"/>
       <measureMapping columnObjectName="U_LineDocWitHis" columnName="PSWBT"/>
     </measure>
     <measure id="BETRW" order="17" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="BETRW"/>
+      <descriptions defaultDescription="Amount in Transaction Currency with +/- Sign"/>
       <measureMapping columnObjectName="U_LineDocWitHis" columnName="BETRW"/>
     </measure>
     <measure id="AUGBT" order="18" aggregationType="sum" measureType="simple">
@@ -393,6 +393,18 @@ to_date(&quot;AUGDT&quot;) &lt;= to_date('$$IP_KeyDate$$') AND to_date(&quot;STD
       <upperLeftCorner x="302" y="256"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+    <shape expanded="true" modelObjectName="J_DFKKRAPT_withBP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="175" y="382"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_DFKKRAPT" modelObjectNameSpace="J_DFKKRAPT_withBP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="A_DFKKOP_withDistinctBP" modelObjectNameSpace="J_DFKKRAPT_withBP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
     <shape expanded="true" modelObjectName="A_DFKKOP" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="620" y="559"/>
       <rectangleSize height="30" width="160"/>
@@ -416,26 +428,14 @@ to_date(&quot;AUGDT&quot;) &lt;= to_date('$$IP_KeyDate$$') AND to_date(&quot;STD
       <upperLeftCorner x="697" y="958"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="J_DFKKRAPT_withBP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="175" y="382"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="P_DFKKRAPT" modelObjectNameSpace="J_DFKKRAPT_withBP" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="A_DFKKOP_withDistinctBP" modelObjectNameSpace="J_DFKKRAPT_withBP" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape expanded="true" modelObjectName="A_DFKKOP_withDistinctBP" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="354" y="559"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
     <shape expanded="true" modelObjectName="A_DFKKRAPT_Distinct" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="415" y="775"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-  </shapes>
+  
+    <shape expanded="true" modelObjectName="A_DFKKOP_withDistinctBP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="354" y="559"/>
+      <rectangleSize height="30" width="160"/>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
