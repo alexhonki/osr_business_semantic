@@ -338,7 +338,25 @@
       <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="4">
         <formula>Left(&quot;TAXYRENDDT&quot;,4)</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
+  
+    <calculatedAttribute id="CC_LANDUSE_CATEGORY" order="37" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Land Use Category"/>
+      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="22">
+        <formula>CASE
+WHEN &quot;LANDUSECODE&quot; in('010','011','012','013','014','015','016','017','018','019','020','021','022','023','024','025','026','027','041','042','043','044','045','046','047','048','049','050') THEN 'Commercial'
+WHEN &quot;LANDUSECODE&quot; in('028','029','030','031','032','033','034','035','036','037','038','039','040') THEN 'Industrial'
+WHEN &quot;LANDUSECODE&quot; in('003','007','008','009') THEN 'Multi Unit Residential'
+WHEN &quot;LANDUSECODE&quot; in('051','052','053','054','055','056','057','058','059','090','091','092','093','094','095','096','097','098','099') THEN 'Other'
+WHEN &quot;LANDUSECODE&quot; in('060','061','062','063','064','065','066','067','068','069','070','071','073','074','075','076','077','078','079','080','081','082','083','084','085','086','087','088','089') THEN 'Primary Production'
+WHEN &quot;LANDUSECODE&quot; in('004','005','006') THEN 'Rural Residential'
+WHEN &quot;LANDUSECODE&quot; in('002') THEN 'Single Unit Residential'
+WHEN &quot;LANDUSECODE&quot; in('001','072','#') THEN 'Vacant'
+ELSE 'Other'
+
+END</formula>
+      </keyCalculation>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures>
     <measure id="CONCESSPCT" order="9" aggregationType="sum" measureType="simple">
@@ -410,6 +428,7 @@
       
       
       
+      
       </measure>
     <measure id="CC_PARCELCOUNTER" order="2" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
       <descriptions defaultDescription="Parcel Count"/>
@@ -417,6 +436,7 @@
         <attribute attributeName="PLNO"/>
       </exceptionAggregation>
       <formula>1</formula>
+      
       
       
       
@@ -440,6 +460,7 @@ END
       
       
       
+      
       </measure>
     <measure id="CC_SURCHARGEFOREGONE(COVID)" order="4" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
       <descriptions defaultDescription="Surcharge Foregone (COVID)"/>
@@ -452,6 +473,7 @@ END
 
 </formula>
     
+      
       
       
       
@@ -543,8 +565,8 @@ END
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_LANDUSECODES" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
+      <upperLeftCorner x="234" y="24"/>
+      <rectangleSize width="588.12109375"/>
     </shape>
     <shape modelObjectName="osr.business.semantic.db.Business_Models.LandTax::CV_OwnerTyperDescription" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
       <upperLeftCorner x="620" y="30"/>
