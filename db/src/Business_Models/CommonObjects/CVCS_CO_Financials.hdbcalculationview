@@ -194,10 +194,10 @@ End</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute datatype="INTEGER" expressionLanguage="SQL" id="CC_AgeMonths">
         <formula>CASE
-	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &lt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot; is null or &quot;STUDT&quot;='') and (to_date(&quot;FAEDN&quot;) &lt;= to_date('$$IP_KeyDate$$')) THEN months_between(to_date(&quot;FAEDN&quot;), to_date('$$IP_KeyDate$$'))
-	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &lt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;!='00000000' AND &quot;STUDT&quot; is not null AND &quot;STUDT&quot;!='') and (to_date(&quot;STUDT&quot;) &lt;= to_date('$$IP_KeyDate$$')) then  months_between(to_date(&quot;STUDT&quot;), to_date('$$IP_KeyDate$$'))
-	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &gt;= to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot; is null or &quot;STUDT&quot;='') and (to_date(&quot;FAEDN&quot;) &lt;= to_date(&quot;AUGDT&quot;)) then  months_between(to_date(&quot;FAEDN&quot;), to_date(&quot;AUGDT&quot;))
-	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &gt;= to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;!='00000000' AND &quot;STUDT&quot; is not null AND &quot;STUDT&quot;!='') and (to_date(&quot;STUDT&quot;) &lt;= to_date(&quot;AUGDT&quot;)) then  months_between(to_date(&quot;STUDT&quot;), to_date(&quot;AUGDT&quot;))
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &lt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot; is null or &quot;STUDT&quot;='') and (to_date(&quot;FAEDN&quot;) &lt; to_date('$$IP_KeyDate$$')) THEN months_between(to_date(&quot;FAEDN&quot;), to_date('$$IP_KeyDate$$'))
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &lt; to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;!='00000000' AND &quot;STUDT&quot; is not null AND &quot;STUDT&quot;!='') and (to_date(&quot;STUDT&quot;) &lt; to_date('$$IP_KeyDate$$')) then  months_between(to_date(&quot;STUDT&quot;), to_date('$$IP_KeyDate$$'))
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &gt;= to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot; is null or &quot;STUDT&quot;='') and (to_date(&quot;FAEDN&quot;) &lt; to_date(&quot;AUGDT&quot;)) then  months_between(to_date(&quot;FAEDN&quot;), to_date(&quot;AUGDT&quot;))
+	WHEN (&quot;AUGST&quot;='' OR (&quot;AUGST&quot;='9' AND to_date('$$IP_KeyDate$$') &gt;= to_date(&quot;AUGDT&quot;))) and (&quot;STUDT&quot;!='00000000' AND &quot;STUDT&quot; is not null AND &quot;STUDT&quot;!='') and (to_date(&quot;STUDT&quot;) &lt; to_date(&quot;AUGDT&quot;)) then  months_between(to_date(&quot;STUDT&quot;), to_date(&quot;AUGDT&quot;))
 	ELSE null
 END</formula>
       </calculatedViewAttribute>
@@ -208,15 +208,16 @@ WHEN &quot;CC_AgeMonths&quot; &gt;= 3 AND &quot;CC_AgeMonths&quot; &lt;= 6 THEN 
 WHEN &quot;CC_AgeMonths&quot; &gt;= 7 AND &quot;CC_AgeMonths&quot; &lt;= 12 THEN '7 to 12 Months'
 WHEN &quot;CC_AgeMonths&quot; &gt;= 13 AND &quot;CC_AgeMonths&quot; &lt;= 24 THEN '13 to 24 Months'
 WHEN &quot;CC_AgeMonths&quot; &gt; 24 THEN '&gt; 24 Months'
+WHEN &quot;CC_AgeMonths&quot; is null THEN 'N/A'
 ELSE 'Err/Neg Months'
 END</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute datatype="INTEGER" expressionLanguage="SQL" id="CC_AgeDays">
         <formula>CASE 
-WHEN &quot;FAEDN&quot; != '00010101' AND &quot;AUGDT&quot;='00000000' AND (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot;='' or &quot;STUDT&quot; is null) AND (to_date(&quot;FAEDN&quot;) &lt;= to_date('$$IP_KeyDate$$')) THEN DAYS_BETWEEN(to_date(&quot;FAEDN&quot;), to_date('$$IP_KeyDate$$'))
-WHEN &quot;FAEDN&quot; != '00010101'AND &quot;AUGDT&quot;='00000000'AND (&quot;STUDT&quot;!='00000000'and &quot;STUDT&quot;!='' and &quot;STUDT&quot; is not null) AND to_date(&quot;STUDT&quot;) &lt;= to_date('$$IP_KeyDate$$') THEN DAYS_BETWEEN(to_date(&quot;STUDT&quot;), to_date('$$IP_KeyDate$$'))
-WHEN &quot;FAEDN&quot; != '00010101'AND &quot;AUGDT&quot;!='00000000'AND (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot;='' or &quot;STUDT&quot; is null) AND to_date(&quot;FAEDN&quot;) &lt;= to_date(&quot;AUGDT&quot;) THEN DAYS_BETWEEN(to_date(&quot;FAEDN&quot;), to_date(&quot;AUGDT&quot;))
-WHEN &quot;FAEDN&quot; != '00010101'AND &quot;AUGDT&quot;!='00000000'AND (&quot;STUDT&quot;!='00000000' and &quot;STUDT&quot;!='' and &quot;STUDT&quot; is not null) AND to_date(&quot;STUDT&quot;) &lt;= to_date(&quot;AUGDT&quot;) THEN DAYS_BETWEEN(to_date(&quot;STUDT&quot;), to_date(&quot;AUGDT&quot;))
+WHEN &quot;FAEDN&quot; != '00010101' AND &quot;AUGDT&quot;='00000000' AND (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot;='' or &quot;STUDT&quot; is null) AND (to_date(&quot;FAEDN&quot;) &lt; to_date('$$IP_KeyDate$$')) THEN DAYS_BETWEEN(to_date(&quot;FAEDN&quot;), to_date('$$IP_KeyDate$$'))
+WHEN &quot;FAEDN&quot; != '00010101'AND &quot;AUGDT&quot;='00000000'AND (&quot;STUDT&quot;!='00000000'and &quot;STUDT&quot;!='' and &quot;STUDT&quot; is not null) AND to_date(&quot;STUDT&quot;) &lt; to_date('$$IP_KeyDate$$') THEN DAYS_BETWEEN(to_date(&quot;STUDT&quot;), to_date('$$IP_KeyDate$$'))
+WHEN &quot;FAEDN&quot; != '00010101'AND &quot;AUGDT&quot;!='00000000'AND (&quot;STUDT&quot;='00000000' or &quot;STUDT&quot;='' or &quot;STUDT&quot; is null) AND to_date(&quot;FAEDN&quot;) &lt; to_date(&quot;AUGDT&quot;) THEN DAYS_BETWEEN(to_date(&quot;FAEDN&quot;), to_date(&quot;AUGDT&quot;))
+WHEN &quot;FAEDN&quot; != '00010101'AND &quot;AUGDT&quot;!='00000000'AND (&quot;STUDT&quot;!='00000000' and &quot;STUDT&quot;!='' and &quot;STUDT&quot; is not null) AND to_date(&quot;STUDT&quot;) &lt; to_date(&quot;AUGDT&quot;) THEN DAYS_BETWEEN(to_date(&quot;STUDT&quot;), to_date(&quot;AUGDT&quot;))
 ELSE null
 END
  </formula>
