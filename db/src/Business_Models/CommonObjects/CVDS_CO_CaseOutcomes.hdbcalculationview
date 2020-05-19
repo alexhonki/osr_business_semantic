@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CaseOutcomes" applyPrivilegeType="NONE" dataCategory="DIMENSION" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CVDS_CO_CaseOutcomes"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CrmDomainTable">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CrmDomainTable</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::CRMD_CMGCASE_AT">
+    <resourceUri>osr.business.semantic.db.synonyms::CRMD_CMGCASE_AT</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::CMG_OUTC">
+    <resourceUri>osr.business.semantic.db.synonyms::CMG_OUTC</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::CMG_RSNT">
+    <resourceUri>osr.business.semantic.db.synonyms::CMG_RSNT</resourceUri>
+  </DataSource>
+  <DataSource id="osr.business.semantic.db.synonyms::CMG_DISC">
+    <resourceUri>osr.business.semantic.db.synonyms::CMG_DISC</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMDOMAIN" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DOMNAME"/>
+      <viewAttribute id="DDTEXT"/>
+      <viewAttribute id="DOMVALUE_L"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CrmDomainTable"/>
+    <filter>&quot;DOMNAME&quot; IN ('/OSRQLD/CMG_SUCC_EST','/OSRQLD/CASE_OUTCOME','/OSRQLD/CMG_DISCLOSURE_TYPE')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CRMD_CMGCASE_AT">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="ZZDISCTYPE"/>
+      <viewAttribute id="ZZFLD00003I"/>
+      <viewAttribute id="ZZSUCCESS_EST"/>
+    
+      <viewAttribute id="OSRQLD_F0005"/>
+      <viewAttribute id="OSRQLD_F0007"/>
+      <viewAttribute id="OSRQLD_F009L"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::CRMD_CMGCASE_AT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_SUCCESSEST_DESC" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DOMNAME"/>
+      <viewAttribute id="DDTEXT"/>
+      <viewAttribute id="DOMVALUE_L"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CRMDOMAIN"/>
+    <filter>&quot;DOMNAME&quot; = '/OSRQLD/CMG_SUCC_EST'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_DISCTYPE_DESC" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DOMNAME"/>
+      <viewAttribute id="DDTEXT"/>
+      <viewAttribute id="DOMVALUE_L"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CRMDOMAIN"/>
+    <filter>&quot;DOMNAME&quot;='/OSRQLD/CMG_DISCLOSURE_TYPE'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FLD00003I_DESC" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DOMNAME"/>
+      <viewAttribute id="DDTEXT"/>
+      <viewAttribute id="DOMVALUE_L"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CRMDOMAIN"/>
+    <filter>&quot;DOMNAME&quot;='/OSRQLD/CASE_OUTCOME'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CMG_OUTC">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CLOSE_REASON_KEY"/>
+      <viewAttribute id="CLOSE_REASON_TEXT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::CMG_OUTC"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CMG_RSNT">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="OUTCOME_REASN_KEY"/>
+      <viewAttribute id="LANGU"/>
+      <viewAttribute id="OUTCOME_REASN_TEXT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::CMG_RSNT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CMG_DISC">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="DISCLOSURE_KEY"/>
+      <viewAttribute id="DISCLOSURE_TEXT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.synonyms::CMG_DISC"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CASEGUIDS_1" cardinality="CN_1" joinType="leftOuter" multiJoinNode="J_CASEGUIDS" multiJoinCentralTable="P_SUCCESSEST_DESC" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="DISCLOSURE_TEXT"/>
+      <viewAttribute id="OSRQLD_F009L"/>
+      <viewAttribute id="OSRQLD_F0005"/>
+      <viewAttribute id="ZZFLD00003I"/>
+      <viewAttribute id="ZZDISCTYPE"/>
+      <viewAttribute id="ZZSUCCESS_EST"/>
+      <viewAttribute hidden="true" id="JOIN$OSRQLD_F0007$DISCLOSURE_KEY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CRMD_CMGCASE_AT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_F009L" source="OSRQLD_F009L"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_F0005" source="OSRQLD_F0005"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZFLD00003I" source="ZZFLD00003I"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZDISCTYPE" source="ZZDISCTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSUCCESS_EST" source="ZZSUCCESS_EST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OSRQLD_F0007$DISCLOSURE_KEY" source="OSRQLD_F0007"/>
+    </input>
+    <input node="P_CMG_DISC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISCLOSURE_TEXT" source="DISCLOSURE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OSRQLD_F0007$DISCLOSURE_KEY" source="DISCLOSURE_KEY"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="JOIN$OSRQLD_F0007$DISCLOSURE_KEY"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CASEGUIDS_2" cardinality="C1_1" joinType="textTable" languageColumn="LANGU" multiJoinNode="J_CASEGUIDS" multiJoinCentralTable="P_SUCCESSEST_DESC" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="OUTCOME_REASN_TEXT"/>
+      <viewAttribute id="DISCLOSURE_TEXT"/>
+      <viewAttribute id="OSRQLD_F0005"/>
+      <viewAttribute id="ZZFLD00003I"/>
+      <viewAttribute id="ZZDISCTYPE"/>
+      <viewAttribute id="ZZSUCCESS_EST"/>
+      <viewAttribute hidden="true" id="JOIN$OSRQLD_F009L$OUTCOME_REASN_KEY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_CASEGUIDS_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISCLOSURE_TEXT" source="DISCLOSURE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRQLD_F0005" source="OSRQLD_F0005"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZFLD00003I" source="ZZFLD00003I"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZDISCTYPE" source="ZZDISCTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSUCCESS_EST" source="ZZSUCCESS_EST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OSRQLD_F009L$OUTCOME_REASN_KEY" source="OSRQLD_F009L"/>
+    </input>
+    <input node="P_CMG_RSNT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="OUTCOME_REASN_TEXT" source="OUTCOME_REASN_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OSRQLD_F009L$OUTCOME_REASN_KEY" source="OUTCOME_REASN_KEY"/>
+    </input>
+    <joinAttribute name="MANDT"/>
+    <joinAttribute name="JOIN$OSRQLD_F009L$OUTCOME_REASN_KEY"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CASEGUIDS_3" cardinality="CN_1" joinType="leftOuter" multiJoinNode="J_CASEGUIDS" multiJoinCentralTable="P_SUCCESSEST_DESC" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="CLOSE_REASON_TEXT"/>
+      <viewAttribute id="OUTCOME_REASN_TEXT"/>
+      <viewAttribute id="DISCLOSURE_TEXT"/>
+      <viewAttribute id="ZZFLD00003I"/>
+      <viewAttribute id="ZZDISCTYPE"/>
+      <viewAttribute id="ZZSUCCESS_EST"/>
+      <viewAttribute hidden="true" id="JOIN$OSRQLD_F0005$CLOSE_REASON_KEY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_CASEGUIDS_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OUTCOME_REASN_TEXT" source="OUTCOME_REASN_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISCLOSURE_TEXT" source="DISCLOSURE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZFLD00003I" source="ZZFLD00003I"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZDISCTYPE" source="ZZDISCTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSUCCESS_EST" source="ZZSUCCESS_EST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OSRQLD_F0005$CLOSE_REASON_KEY" source="OSRQLD_F0005"/>
+    </input>
+    <input node="P_CMG_OUTC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSE_REASON_TEXT" source="CLOSE_REASON_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OSRQLD_F0005$CLOSE_REASON_KEY" source="CLOSE_REASON_KEY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="CLIENT"/>
+    </input>
+    <joinAttribute name="JOIN$OSRQLD_F0005$CLOSE_REASON_KEY"/>
+    <joinAttribute name="MANDT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CASEGUIDS_4" cardinality="CN_1" joinType="leftOuter" multiJoinNode="J_CASEGUIDS" multiJoinCentralTable="P_SUCCESSEST_DESC" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="ZZFLD00003I_DDTEXT"/>
+      <viewAttribute id="CLOSE_REASON_TEXT"/>
+      <viewAttribute id="OUTCOME_REASN_TEXT"/>
+      <viewAttribute id="DISCLOSURE_TEXT"/>
+      <viewAttribute id="ZZDISCTYPE"/>
+      <viewAttribute id="ZZSUCCESS_EST"/>
+      <viewAttribute hidden="true" id="JOIN$ZZFLD00003I$DOMVALUE_L"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_CASEGUIDS_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSE_REASON_TEXT" source="CLOSE_REASON_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OUTCOME_REASN_TEXT" source="OUTCOME_REASN_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISCLOSURE_TEXT" source="DISCLOSURE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZDISCTYPE" source="ZZDISCTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSUCCESS_EST" source="ZZSUCCESS_EST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZZFLD00003I$DOMVALUE_L" source="ZZFLD00003I"/>
+    </input>
+    <input node="P_FLD00003I_DESC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZFLD00003I_DDTEXT" source="DDTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZZFLD00003I$DOMVALUE_L" source="DOMVALUE_L"/>
+    </input>
+    <joinAttribute name="JOIN$ZZFLD00003I$DOMVALUE_L"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CASEGUIDS_5" cardinality="CN_1" joinType="leftOuter" multiJoinNode="J_CASEGUIDS" multiJoinCentralTable="P_SUCCESSEST_DESC" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="ZZDISCTYPE_DDTEXT"/>
+      <viewAttribute id="ZZFLD00003I_DDTEXT"/>
+      <viewAttribute id="CLOSE_REASON_TEXT"/>
+      <viewAttribute id="OUTCOME_REASN_TEXT"/>
+      <viewAttribute id="DISCLOSURE_TEXT"/>
+      <viewAttribute id="ZZSUCCESS_EST"/>
+      <viewAttribute hidden="true" id="JOIN$ZZDISCTYPE$DOMVALUE_L"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_CASEGUIDS_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZFLD00003I_DDTEXT" source="ZZFLD00003I_DDTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSE_REASON_TEXT" source="CLOSE_REASON_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OUTCOME_REASN_TEXT" source="OUTCOME_REASN_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISCLOSURE_TEXT" source="DISCLOSURE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSUCCESS_EST" source="ZZSUCCESS_EST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZZDISCTYPE$DOMVALUE_L" source="ZZDISCTYPE"/>
+    </input>
+    <input node="P_DISCTYPE_DESC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZDISCTYPE_DDTEXT" source="DDTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZZDISCTYPE$DOMVALUE_L" source="DOMVALUE_L"/>
+    </input>
+    <joinAttribute name="JOIN$ZZDISCTYPE$DOMVALUE_L"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_CASEGUIDS_6" cardinality="CN_1" joinType="leftOuter" multiJoinNode="J_CASEGUIDS" multiJoinCentralTable="P_SUCCESSEST_DESC" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="ZZSUCCESS_EST_DDTEXT"/>
+      <viewAttribute id="ZZDISCTYPE_DDTEXT"/>
+      <viewAttribute id="ZZFLD00003I_DDTEXT"/>
+      <viewAttribute id="CLOSE_REASON_TEXT"/>
+      <viewAttribute id="OUTCOME_REASN_TEXT"/>
+      <viewAttribute id="DISCLOSURE_TEXT"/>
+      <viewAttribute hidden="true" id="JOIN$ZZSUCCESS_EST$DOMVALUE_L"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_CASEGUIDS_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZDISCTYPE_DDTEXT" source="ZZDISCTYPE_DDTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZFLD00003I_DDTEXT" source="ZZFLD00003I_DDTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLOSE_REASON_TEXT" source="CLOSE_REASON_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OUTCOME_REASN_TEXT" source="OUTCOME_REASN_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISCLOSURE_TEXT" source="DISCLOSURE_TEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZZSUCCESS_EST$DOMVALUE_L" source="ZZSUCCESS_EST"/>
+    </input>
+    <input node="P_SUCCESSEST_DESC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZSUCCESS_EST_DDTEXT" source="DDTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZZSUCCESS_EST$DOMVALUE_L" source="DOMVALUE_L"/>
+    </input>
+    <joinAttribute name="JOIN$ZZSUCCESS_EST$DOMVALUE_L"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_CASEGUIDS_6">
+  <attributes>
+    <attribute id="MANDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MANDT"/>
+      <keyMapping columnObjectName="J_CASEGUIDS_6" columnName="MANDT"/>
+    </attribute>
+    <attribute id="CASE_GUID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CASE_GUID"/>
+      <keyMapping columnObjectName="J_CASEGUIDS_6" columnName="CASE_GUID"/>
+    </attribute>
+    <attribute id="ZZSUCCESS_EST_DDTEXT" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DDTEXT"/>
+      <keyMapping columnObjectName="J_CASEGUIDS_6" columnName="ZZSUCCESS_EST_DDTEXT"/>
+    </attribute>
+    <attribute id="ZZDISCTYPE_DDTEXT" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DDTEXT"/>
+      <keyMapping columnObjectName="J_CASEGUIDS_6" columnName="ZZDISCTYPE_DDTEXT"/>
+    </attribute>
+    <attribute id="ZZFLD00003I_DDTEXT" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DDTEXT"/>
+      <keyMapping columnObjectName="J_CASEGUIDS_6" columnName="ZZFLD00003I_DDTEXT"/>
+    </attribute>
+  
+    <attribute id="CLOSE_REASON_TEXT" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CLOSE_REASON_TEXT"/>
+      <keyMapping columnObjectName="J_CASEGUIDS_6" columnName="CLOSE_REASON_TEXT"/>
+    </attribute>
+    <attribute id="OUTCOME_REASN_TEXT" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OUTCOME_REASN_TEXT"/>
+      <keyMapping columnObjectName="J_CASEGUIDS_6" columnName="OUTCOME_REASN_TEXT"/>
+    </attribute>
+    <attribute id="DISCLOSURE_TEXT" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DISCLOSURE_TEXT"/>
+      <keyMapping columnObjectName="J_CASEGUIDS_6" columnName="DISCLOSURE_TEXT"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/></logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="459" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_CRMDOMAIN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="551"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CRMD_CMGCASE_AT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="512" y="406"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_SUCCESSEST_DESC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="406"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_DISCTYPE_DESC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="722" y="406"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_FLD00003I_DESC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="406"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="J_CASEGUIDS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="459" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_SUCCESSEST_DESC" modelObjectNameSpace="J_CASEGUIDS" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_CASEGUIDS">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_DISCTYPE_DESC" modelObjectNameSpace="J_CASEGUIDS" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_CASEGUIDS">
+      <upperLeftCorner x="920" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CRMD_CMGCASE_AT" modelObjectNameSpace="J_CASEGUIDS" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_CASEGUIDS">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="204"/>
+    </shape>
+    <shape modelObjectName="P_FLD00003I_DESC" modelObjectNameSpace="J_CASEGUIDS" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_CASEGUIDS">
+      <upperLeftCorner x="1220" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CMG_OUTC" modelObjectNameSpace="J_CASEGUIDS" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_CASEGUIDS">
+      <upperLeftCorner x="1520" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_CMG_RSNT" modelObjectNameSpace="J_CASEGUIDS" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_CASEGUIDS">
+      <upperLeftCorner x="1820" y="30"/>
+      <rectangleSize width="136.0234375"/>
+    </shape>
+    <shape modelObjectName="P_CMG_DISC" modelObjectNameSpace="J_CASEGUIDS" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_CASEGUIDS">
+      <upperLeftCorner x="2120" y="30"/>
+      <rectangleSize width="136.0234375"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CMG_OUTC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="983" y="406"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CMG_RSNT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1212" y="406"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CMG_DISC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1427" y="406"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

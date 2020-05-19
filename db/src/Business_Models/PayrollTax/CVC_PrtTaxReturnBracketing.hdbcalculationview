@@ -24,6 +24,8 @@
       <viewAttribute id="PARTNER1"/>
     
       <viewAttribute id="APPLY_TO"/>
+    
+      <viewAttribute id="FBSTA"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_WAGES" datatype="DECIMAL" length="23" scale="4" expressionLanguage="SQL">
@@ -40,7 +42,7 @@ END</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="osr.business.semantic.db.Business_Models.PayrollTax::CV_PrtTaxReturns"/>
-    <filter>&quot;FISCAL_YEAR&quot; IN ('2020', '2019', '2018')</filter>
+    <filter>&quot;FISCAL_YEAR&quot; IN ('2020', '2019', '2018') AND &quot;FT_BPGroupingType&quot; IS NOT NULL AND &quot;FBSTA&quot; &lt;&gt; 'IP020'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="AGG_WAGES_NON_NIL">
     <viewAttributes>
@@ -193,13 +195,15 @@ END</formula>
       <viewAttribute id="FT_BPGroupingType"/>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="FISCAL_YEAR"/>
-      <viewAttribute id="PARTNER1"/></viewAttributes>
+      <viewAttribute id="PARTNER1"/>
+      <viewAttribute id="APPLY_TO"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_GM"/>
     <windowFunction dynamicPartitionAttributes="false">
       <partitionViewAttributeName>TAXPAYER</partitionViewAttributeName>
       <partitionViewAttributeName>FISCAL_YEAR</partitionViewAttributeName>
-      <order byViewAttributeName="MANDT" direction="DESC"/>
+      <order byViewAttributeName="APPLY_TO" direction="DESC"/>
       <rankThreshold>
         <value>1</value>
       </rankThreshold>
@@ -212,7 +216,9 @@ END</formula>
       <viewAttribute id="FT_BPGroupingType"/>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="FISCAL_YEAR"/>
-      <viewAttribute id="PARTNER1"/></viewAttributes>
+      <viewAttribute id="PARTNER1"/>
+      <viewAttribute id="APPLY_TO"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <input node="P_TAXRETURNS"/>
     <filter>&quot;FT_BPGroupingType&quot; IN ('DGE','GM') AND &quot;PARTNER1&quot; IS NOT NULL</filter>
@@ -370,7 +376,7 @@ END</formula>
       <mapping xsi:type="Calculation:AttributeMapping" target="FT_BPGroupingType" source="FT_BPGroupingType"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="R_GRPSTAT_FY" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:RankView" id="R_GRPSTAT_FY">
     <viewAttributes>
       <viewAttribute id="MANDT"/>
       <viewAttribute id="TAXPAYER"/>
@@ -389,7 +395,6 @@ END</formula>
         <value>1</value>
       </rankThreshold>
     </windowFunction>
-    <filter>&quot;FT_BPGroupingType&quot; IS NOT NULL</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="J_TAXPSTAT_WAGES" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>

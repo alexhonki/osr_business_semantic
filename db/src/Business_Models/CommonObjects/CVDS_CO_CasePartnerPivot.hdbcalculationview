@@ -1,0 +1,1034 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CasePartnerPivot" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CVDS_CO_CasePartnerPivot"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CasePartner">
+    <resourceUri>osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CasePartner</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CASEPARTNER" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="PARTNER_NO"/>
+      <viewAttribute id="PARTNER_FCT"/>
+      <viewAttribute id="CRM_MAIN_PARTNER"/>
+      <viewAttribute id="Z_RUN_SEQ_ID"/>
+      <viewAttribute id="CC_FULLNAME"/>
+    
+      <viewAttribute id="DESCRIPTION"/>
+    
+      <viewAttribute id="CC_BP_TYPE"/>
+    
+      <viewAttribute id="TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="osr.business.semantic.db.Business_Models.CommonObjects::CVDS_CO_CasePartner"/>
+    <filter>&quot;CRM_MAIN_PARTNER&quot; = 'X'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_OSRDIVRESP" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="OSRDIVRESP_BP"/>
+    
+      <viewAttribute id="PARTNER_FCT"/>
+      <viewAttribute id="OSRDIVRESP_NAME"/>
+    
+      <viewAttribute id="OSRDIVRESP_DESCRIPTION"/>
+    
+      <viewAttribute id="OSRDIVRESP_BP_TYPE"/>
+    
+      <viewAttribute id="OSRDIVRESP_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CASEPARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRDIVRESP_BP" source="PARTNER_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRDIVRESP_NAME" source="CC_FULLNAME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRDIVRESP_DESCRIPTION" source="DESCRIPTION"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRDIVRESP_BP_TYPE" source="CC_BP_TYPE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRDIVRESP_TYPE" source="TYPE"/>
+    </input>
+    <filter>&quot;PARTNER_FCT&quot;='Z0000003'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CASEP" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="CASEP_BP"/>
+    
+      <viewAttribute id="PARTNER_FCT"/>
+      <viewAttribute id="CASEP_NAME"/>
+    
+      <viewAttribute id="CASEP_DESCRIPTION"/>
+    
+      <viewAttribute id="CASEP_BP_TYPE"/>
+    
+      <viewAttribute id="CASEP_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CASEPARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_BP" source="PARTNER_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_NAME" source="CC_FULLNAME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_DESCRIPTION" source="DESCRIPTION"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_BP_TYPE" source="CC_BP_TYPE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_TYPE" source="TYPE"/>
+    </input>
+    <filter>&quot;PARTNER_FCT&quot;='Z0000002' OR &quot;PARTNER_FCT&quot;= '00000009'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="P_CASE_GUIDS">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+    
+      <viewAttribute id="COUNT" aggregationType="count"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_CASEPARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="CLIENT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_FILELOC" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="FILELOC_BP"/>
+      <viewAttribute id="PARTNER_FCT"/>
+      <viewAttribute id="FILELOC_NAME"/>
+    
+      <viewAttribute id="FILELOC_DESCRIPTION"/>
+    
+      <viewAttribute id="FILELOC_BP_TYPE"/>
+    
+      <viewAttribute id="FILELOC_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CASEPARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_BP" source="PARTNER_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_NAME" source="CC_FULLNAME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_DESCRIPTION" source="DESCRIPTION"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_BP_TYPE" source="CC_BP_TYPE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_TYPE" source="TYPE"/>
+    </input>
+    <filter>&quot;PARTNER_FCT&quot;='Z0000006'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_SELFASSESS" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="SELFASSESS_BP"/>
+      <viewAttribute id="PARTNER_FCT"/>
+      <viewAttribute id="SELFASSESS_NAME"/>
+    
+      <viewAttribute id="SELFASSESS_DESCRIPTION"/>
+    
+      <viewAttribute id="SELFASSESS_BP_TYPE"/>
+    
+      <viewAttribute id="SELFASSESS_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CASEPARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_BP" source="PARTNER_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_NAME" source="CC_FULLNAME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_DESCRIPTION" source="DESCRIPTION"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_BP_TYPE" source="CC_BP_TYPE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_TYPE" source="TYPE"/>
+    </input>
+    <filter>&quot;PARTNER_FCT&quot;='Z0000005'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_EMPRESP" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="EMPRESP_BP"/>
+      <viewAttribute id="PARTNER_FCT"/>
+      <viewAttribute id="EMPRESP_NAME"/>
+    
+      <viewAttribute id="EMPRESP_DESCRIPTION"/>
+    
+      <viewAttribute id="EMPRESP_BP_TYPE"/>
+    
+      <viewAttribute id="EMPRESP_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CASEPARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_BP" source="PARTNER_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_NAME" source="CC_FULLNAME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_DESCRIPTION" source="DESCRIPTION"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_BP_TYPE" source="CC_BP_TYPE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_TYPE" source="TYPE"/>
+    </input>
+    <filter>&quot;PARTNER_FCT&quot;='00000014'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_INITBUS" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="INITBUS_BP"/>
+      <viewAttribute id="PARTNER_FCT"/>
+      <viewAttribute id="INITBUS_NAME"/>
+    
+      <viewAttribute id="INITBUS_DESCRIPTION"/>
+    
+      <viewAttribute id="INITBUS_BP_TYPE"/>
+    
+      <viewAttribute id="INITBUS_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CASEPARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP" source="PARTNER_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_NAME" source="CC_FULLNAME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_DESCRIPTION" source="DESCRIPTION"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP_TYPE" source="CC_BP_TYPE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_TYPE" source="TYPE"/>
+    </input>
+    <filter>&quot;PARTNER_FCT&quot;='Z0000004'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_RESPGROUP" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="RESPGROUP_BP"/>
+      <viewAttribute id="PARTNER_FCT"/>
+      <viewAttribute id="RESPGROUP_NAME"/>
+    
+      <viewAttribute id="RESPGROUP_DESCRIPTION"/>
+    
+      <viewAttribute id="RESPGROUP_BP_TYPE"/>
+    
+      <viewAttribute id="RESPGROUP_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CASEPARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP" source="PARTNER_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_NAME" source="CC_FULLNAME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_DESCRIPTION" source="DESCRIPTION"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP_TYPE" source="CC_BP_TYPE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_TYPE" source="TYPE"/>
+    </input>
+    <filter>&quot;PARTNER_FCT&quot; = '00000099'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_CORREC" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="CORREC_BP"/>
+      <viewAttribute id="PARTNER_FCT"/>
+      <viewAttribute id="CORREC_NAME"/>
+    
+      <viewAttribute id="CORREC_DESCRIPTION"/>
+    
+      <viewAttribute id="CORREC_BP_TYPE"/>
+    
+      <viewAttribute id="CORREC_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CASEPARTNER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP" source="PARTNER_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_NAME" source="CC_FULLNAME"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_DESCRIPTION" source="DESCRIPTION"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP_TYPE" source="CC_BP_TYPE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_TYPE" source="TYPE"/>
+    </input>
+    <filter>&quot;PARTNER_FCT&quot;='00000040'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_1" cardinality="C1_N" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="CORREC_BP"/>
+      <viewAttribute id="CORREC_NAME"/>
+      <viewAttribute id="CORREC_DESCRIPTION"/>
+      <viewAttribute id="CORREC_BP_TYPE"/>
+      <viewAttribute id="CORREC_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="P_CASE_GUIDS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+    </input>
+    <input node="P_CORREC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP" source="CORREC_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_NAME" source="CORREC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_DESCRIPTION" source="CORREC_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP_TYPE" source="CORREC_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_TYPE" source="CORREC_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="CASE_GUID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_2" cardinality="C1_N" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="RESPGROUP_BP"/>
+      <viewAttribute id="RESPGROUP_NAME"/>
+      <viewAttribute id="CORREC_BP"/>
+      <viewAttribute id="CORREC_NAME"/>
+      <viewAttribute id="RESPGROUP_DESCRIPTION"/>
+      <viewAttribute id="CORREC_DESCRIPTION"/>
+      <viewAttribute id="RESPGROUP_BP_TYPE"/>
+      <viewAttribute id="CORREC_BP_TYPE"/>
+      <viewAttribute id="RESPGROUP_TYPE"/>
+      <viewAttribute id="CORREC_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP" source="CORREC_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_NAME" source="CORREC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_DESCRIPTION" source="CORREC_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP_TYPE" source="CORREC_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_TYPE" source="CORREC_TYPE"/>
+    </input>
+    <input node="P_RESPGROUP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP" source="RESPGROUP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_NAME" source="RESPGROUP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_DESCRIPTION" source="RESPGROUP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP_TYPE" source="RESPGROUP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_TYPE" source="RESPGROUP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="CASE_GUID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_3" cardinality="C1_N" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="INITBUS_BP"/>
+      <viewAttribute id="INITBUS_NAME"/>
+      <viewAttribute id="RESPGROUP_BP"/>
+      <viewAttribute id="RESPGROUP_NAME"/>
+      <viewAttribute id="CORREC_BP"/>
+      <viewAttribute id="CORREC_NAME"/>
+      <viewAttribute id="INITBUS_DESCRIPTION"/>
+      <viewAttribute id="RESPGROUP_DESCRIPTION"/>
+      <viewAttribute id="CORREC_DESCRIPTION"/>
+      <viewAttribute id="INITBUS_BP_TYPE"/>
+      <viewAttribute id="RESPGROUP_BP_TYPE"/>
+      <viewAttribute id="CORREC_BP_TYPE"/>
+      <viewAttribute id="INITBUS_TYPE"/>
+      <viewAttribute id="RESPGROUP_TYPE"/>
+      <viewAttribute id="CORREC_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP" source="RESPGROUP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_NAME" source="RESPGROUP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP" source="CORREC_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_NAME" source="CORREC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_DESCRIPTION" source="RESPGROUP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_DESCRIPTION" source="CORREC_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP_TYPE" source="RESPGROUP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP_TYPE" source="CORREC_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_TYPE" source="RESPGROUP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_TYPE" source="CORREC_TYPE"/>
+    </input>
+    <input node="P_INITBUS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP" source="INITBUS_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_NAME" source="INITBUS_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_DESCRIPTION" source="INITBUS_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP_TYPE" source="INITBUS_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_TYPE" source="INITBUS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="CASE_GUID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_4" cardinality="C1_N" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="EMPRESP_BP"/>
+      <viewAttribute id="EMPRESP_NAME"/>
+      <viewAttribute id="INITBUS_BP"/>
+      <viewAttribute id="INITBUS_NAME"/>
+      <viewAttribute id="RESPGROUP_BP"/>
+      <viewAttribute id="RESPGROUP_NAME"/>
+      <viewAttribute id="CORREC_BP"/>
+      <viewAttribute id="CORREC_NAME"/>
+      <viewAttribute id="EMPRESP_DESCRIPTION"/>
+      <viewAttribute id="INITBUS_DESCRIPTION"/>
+      <viewAttribute id="RESPGROUP_DESCRIPTION"/>
+      <viewAttribute id="CORREC_DESCRIPTION"/>
+      <viewAttribute id="EMPRESP_BP_TYPE"/>
+      <viewAttribute id="INITBUS_BP_TYPE"/>
+      <viewAttribute id="RESPGROUP_BP_TYPE"/>
+      <viewAttribute id="CORREC_BP_TYPE"/>
+      <viewAttribute id="EMPRESP_TYPE"/>
+      <viewAttribute id="INITBUS_TYPE"/>
+      <viewAttribute id="RESPGROUP_TYPE"/>
+      <viewAttribute id="CORREC_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP" source="INITBUS_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_NAME" source="INITBUS_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP" source="RESPGROUP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_NAME" source="RESPGROUP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP" source="CORREC_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_NAME" source="CORREC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_DESCRIPTION" source="INITBUS_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_DESCRIPTION" source="RESPGROUP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_DESCRIPTION" source="CORREC_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP_TYPE" source="INITBUS_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP_TYPE" source="RESPGROUP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP_TYPE" source="CORREC_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_TYPE" source="INITBUS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_TYPE" source="RESPGROUP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_TYPE" source="CORREC_TYPE"/>
+    </input>
+    <input node="P_EMPRESP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_BP" source="EMPRESP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_NAME" source="EMPRESP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_DESCRIPTION" source="EMPRESP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_BP_TYPE" source="EMPRESP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_TYPE" source="EMPRESP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="CASE_GUID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_5" cardinality="C1_N" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="SELFASSESS_BP"/>
+      <viewAttribute id="SELFASSESS_NAME"/>
+      <viewAttribute id="EMPRESP_BP"/>
+      <viewAttribute id="EMPRESP_NAME"/>
+      <viewAttribute id="INITBUS_BP"/>
+      <viewAttribute id="INITBUS_NAME"/>
+      <viewAttribute id="RESPGROUP_BP"/>
+      <viewAttribute id="RESPGROUP_NAME"/>
+      <viewAttribute id="CORREC_BP"/>
+      <viewAttribute id="CORREC_NAME"/>
+      <viewAttribute id="SELFASSESS_DESCRIPTION"/>
+      <viewAttribute id="EMPRESP_DESCRIPTION"/>
+      <viewAttribute id="INITBUS_DESCRIPTION"/>
+      <viewAttribute id="RESPGROUP_DESCRIPTION"/>
+      <viewAttribute id="CORREC_DESCRIPTION"/>
+      <viewAttribute id="SELFASSESS_BP_TYPE"/>
+      <viewAttribute id="EMPRESP_BP_TYPE"/>
+      <viewAttribute id="INITBUS_BP_TYPE"/>
+      <viewAttribute id="RESPGROUP_BP_TYPE"/>
+      <viewAttribute id="CORREC_BP_TYPE"/>
+      <viewAttribute id="SELFASSESS_TYPE"/>
+      <viewAttribute id="EMPRESP_TYPE"/>
+      <viewAttribute id="INITBUS_TYPE"/>
+      <viewAttribute id="RESPGROUP_TYPE"/>
+      <viewAttribute id="CORREC_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_BP" source="EMPRESP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_NAME" source="EMPRESP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP" source="INITBUS_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_NAME" source="INITBUS_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP" source="RESPGROUP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_NAME" source="RESPGROUP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP" source="CORREC_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_NAME" source="CORREC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_DESCRIPTION" source="EMPRESP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_DESCRIPTION" source="INITBUS_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_DESCRIPTION" source="RESPGROUP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_DESCRIPTION" source="CORREC_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_BP_TYPE" source="EMPRESP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP_TYPE" source="INITBUS_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP_TYPE" source="RESPGROUP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP_TYPE" source="CORREC_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_TYPE" source="EMPRESP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_TYPE" source="INITBUS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_TYPE" source="RESPGROUP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_TYPE" source="CORREC_TYPE"/>
+    </input>
+    <input node="P_SELFASSESS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_BP" source="SELFASSESS_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_NAME" source="SELFASSESS_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_DESCRIPTION" source="SELFASSESS_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_BP_TYPE" source="SELFASSESS_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_TYPE" source="SELFASSESS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="CASE_GUID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_6" cardinality="C1_N" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="FILELOC_BP"/>
+      <viewAttribute id="FILELOC_NAME"/>
+      <viewAttribute id="SELFASSESS_BP"/>
+      <viewAttribute id="SELFASSESS_NAME"/>
+      <viewAttribute id="EMPRESP_BP"/>
+      <viewAttribute id="EMPRESP_NAME"/>
+      <viewAttribute id="INITBUS_BP"/>
+      <viewAttribute id="INITBUS_NAME"/>
+      <viewAttribute id="RESPGROUP_BP"/>
+      <viewAttribute id="RESPGROUP_NAME"/>
+      <viewAttribute id="CORREC_BP"/>
+      <viewAttribute id="CORREC_NAME"/>
+      <viewAttribute id="FILELOC_DESCRIPTION"/>
+      <viewAttribute id="SELFASSESS_DESCRIPTION"/>
+      <viewAttribute id="EMPRESP_DESCRIPTION"/>
+      <viewAttribute id="INITBUS_DESCRIPTION"/>
+      <viewAttribute id="RESPGROUP_DESCRIPTION"/>
+      <viewAttribute id="CORREC_DESCRIPTION"/>
+      <viewAttribute id="FILELOC_BP_TYPE"/>
+      <viewAttribute id="SELFASSESS_BP_TYPE"/>
+      <viewAttribute id="EMPRESP_BP_TYPE"/>
+      <viewAttribute id="INITBUS_BP_TYPE"/>
+      <viewAttribute id="RESPGROUP_BP_TYPE"/>
+      <viewAttribute id="CORREC_BP_TYPE"/>
+      <viewAttribute id="FILELOC_TYPE"/>
+      <viewAttribute id="SELFASSESS_TYPE"/>
+      <viewAttribute id="EMPRESP_TYPE"/>
+      <viewAttribute id="INITBUS_TYPE"/>
+      <viewAttribute id="RESPGROUP_TYPE"/>
+      <viewAttribute id="CORREC_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_BP" source="SELFASSESS_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_NAME" source="SELFASSESS_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_BP" source="EMPRESP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_NAME" source="EMPRESP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP" source="INITBUS_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_NAME" source="INITBUS_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP" source="RESPGROUP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_NAME" source="RESPGROUP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP" source="CORREC_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_NAME" source="CORREC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_DESCRIPTION" source="SELFASSESS_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_DESCRIPTION" source="EMPRESP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_DESCRIPTION" source="INITBUS_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_DESCRIPTION" source="RESPGROUP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_DESCRIPTION" source="CORREC_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_BP_TYPE" source="SELFASSESS_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_BP_TYPE" source="EMPRESP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP_TYPE" source="INITBUS_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP_TYPE" source="RESPGROUP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP_TYPE" source="CORREC_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_TYPE" source="SELFASSESS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_TYPE" source="EMPRESP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_TYPE" source="INITBUS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_TYPE" source="RESPGROUP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_TYPE" source="CORREC_TYPE"/>
+    </input>
+    <input node="P_FILELOC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_BP" source="FILELOC_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_NAME" source="FILELOC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_DESCRIPTION" source="FILELOC_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_BP_TYPE" source="FILELOC_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_TYPE" source="FILELOC_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="CASE_GUID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_7" cardinality="C1_N" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="CASEP_BP"/>
+      <viewAttribute id="CASEP_NAME"/>
+      <viewAttribute id="FILELOC_BP"/>
+      <viewAttribute id="FILELOC_NAME"/>
+      <viewAttribute id="SELFASSESS_BP"/>
+      <viewAttribute id="SELFASSESS_NAME"/>
+      <viewAttribute id="EMPRESP_BP"/>
+      <viewAttribute id="EMPRESP_NAME"/>
+      <viewAttribute id="INITBUS_BP"/>
+      <viewAttribute id="INITBUS_NAME"/>
+      <viewAttribute id="RESPGROUP_BP"/>
+      <viewAttribute id="RESPGROUP_NAME"/>
+      <viewAttribute id="CORREC_BP"/>
+      <viewAttribute id="CORREC_NAME"/>
+      <viewAttribute id="CASEP_DESCRIPTION"/>
+      <viewAttribute id="FILELOC_DESCRIPTION"/>
+      <viewAttribute id="SELFASSESS_DESCRIPTION"/>
+      <viewAttribute id="EMPRESP_DESCRIPTION"/>
+      <viewAttribute id="INITBUS_DESCRIPTION"/>
+      <viewAttribute id="RESPGROUP_DESCRIPTION"/>
+      <viewAttribute id="CORREC_DESCRIPTION"/>
+      <viewAttribute id="CASEP_BP_TYPE"/>
+      <viewAttribute id="FILELOC_BP_TYPE"/>
+      <viewAttribute id="SELFASSESS_BP_TYPE"/>
+      <viewAttribute id="EMPRESP_BP_TYPE"/>
+      <viewAttribute id="INITBUS_BP_TYPE"/>
+      <viewAttribute id="RESPGROUP_BP_TYPE"/>
+      <viewAttribute id="CORREC_BP_TYPE"/>
+      <viewAttribute id="CASEP_TYPE"/>
+      <viewAttribute id="FILELOC_TYPE"/>
+      <viewAttribute id="SELFASSESS_TYPE"/>
+      <viewAttribute id="EMPRESP_TYPE"/>
+      <viewAttribute id="INITBUS_TYPE"/>
+      <viewAttribute id="RESPGROUP_TYPE"/>
+      <viewAttribute id="CORREC_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_6">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_BP" source="FILELOC_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_NAME" source="FILELOC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_BP" source="SELFASSESS_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_NAME" source="SELFASSESS_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_BP" source="EMPRESP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_NAME" source="EMPRESP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP" source="INITBUS_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_NAME" source="INITBUS_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP" source="RESPGROUP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_NAME" source="RESPGROUP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP" source="CORREC_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_NAME" source="CORREC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_DESCRIPTION" source="FILELOC_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_DESCRIPTION" source="SELFASSESS_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_DESCRIPTION" source="EMPRESP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_DESCRIPTION" source="INITBUS_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_DESCRIPTION" source="RESPGROUP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_DESCRIPTION" source="CORREC_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_BP_TYPE" source="FILELOC_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_BP_TYPE" source="SELFASSESS_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_BP_TYPE" source="EMPRESP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP_TYPE" source="INITBUS_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP_TYPE" source="RESPGROUP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP_TYPE" source="CORREC_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_TYPE" source="FILELOC_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_TYPE" source="SELFASSESS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_TYPE" source="EMPRESP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_TYPE" source="INITBUS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_TYPE" source="RESPGROUP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_TYPE" source="CORREC_TYPE"/>
+    </input>
+    <input node="P_CASEP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_BP" source="CASEP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_NAME" source="CASEP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_DESCRIPTION" source="CASEP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_BP_TYPE" source="CASEP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_TYPE" source="CASEP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="CASE_GUID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="J_PIVOT_8" cardinality="C1_N" joinType="leftOuter" multiJoinNode="J_PIVOT" multiJoinCentralTable="P_CASE_GUIDS" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="CASE_GUID"/>
+      <viewAttribute id="OSRDIVRESP_BP"/>
+      <viewAttribute id="OSRDIVRESP_NAME"/>
+      <viewAttribute id="CASEP_BP"/>
+      <viewAttribute id="CASEP_NAME"/>
+      <viewAttribute id="FILELOC_BP"/>
+      <viewAttribute id="FILELOC_NAME"/>
+      <viewAttribute id="SELFASSESS_BP"/>
+      <viewAttribute id="SELFASSESS_NAME"/>
+      <viewAttribute id="EMPRESP_BP"/>
+      <viewAttribute id="EMPRESP_NAME"/>
+      <viewAttribute id="INITBUS_BP"/>
+      <viewAttribute id="INITBUS_NAME"/>
+      <viewAttribute id="RESPGROUP_BP"/>
+      <viewAttribute id="RESPGROUP_NAME"/>
+      <viewAttribute id="CORREC_BP"/>
+      <viewAttribute id="CORREC_NAME"/>
+      <viewAttribute id="OSRDIVRESP_DESCRIPTION"/>
+      <viewAttribute id="CASEP_DESCRIPTION"/>
+      <viewAttribute id="FILELOC_DESCRIPTION"/>
+      <viewAttribute id="SELFASSESS_DESCRIPTION"/>
+      <viewAttribute id="EMPRESP_DESCRIPTION"/>
+      <viewAttribute id="INITBUS_DESCRIPTION"/>
+      <viewAttribute id="RESPGROUP_DESCRIPTION"/>
+      <viewAttribute id="CORREC_DESCRIPTION"/>
+      <viewAttribute id="OSRDIVRESP_BP_TYPE"/>
+      <viewAttribute id="CASEP_BP_TYPE"/>
+      <viewAttribute id="FILELOC_BP_TYPE"/>
+      <viewAttribute id="SELFASSESS_BP_TYPE"/>
+      <viewAttribute id="EMPRESP_BP_TYPE"/>
+      <viewAttribute id="INITBUS_BP_TYPE"/>
+      <viewAttribute id="RESPGROUP_BP_TYPE"/>
+      <viewAttribute id="CORREC_BP_TYPE"/>
+      <viewAttribute id="OSRDIVRESP_TYPE"/>
+      <viewAttribute id="CASEP_TYPE"/>
+      <viewAttribute id="FILELOC_TYPE"/>
+      <viewAttribute id="SELFASSESS_TYPE"/>
+      <viewAttribute id="EMPRESP_TYPE"/>
+      <viewAttribute id="INITBUS_TYPE"/>
+      <viewAttribute id="RESPGROUP_TYPE"/>
+      <viewAttribute id="CORREC_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="J_PIVOT_7">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_BP" source="CASEP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_NAME" source="CASEP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_BP" source="FILELOC_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_NAME" source="FILELOC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_BP" source="SELFASSESS_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_NAME" source="SELFASSESS_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_BP" source="EMPRESP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_NAME" source="EMPRESP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP" source="INITBUS_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_NAME" source="INITBUS_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP" source="RESPGROUP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_NAME" source="RESPGROUP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP" source="CORREC_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_NAME" source="CORREC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_DESCRIPTION" source="CASEP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_DESCRIPTION" source="FILELOC_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_DESCRIPTION" source="SELFASSESS_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_DESCRIPTION" source="EMPRESP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_DESCRIPTION" source="INITBUS_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_DESCRIPTION" source="RESPGROUP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_DESCRIPTION" source="CORREC_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_BP_TYPE" source="CASEP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_BP_TYPE" source="FILELOC_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_BP_TYPE" source="SELFASSESS_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_BP_TYPE" source="EMPRESP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_BP_TYPE" source="INITBUS_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_BP_TYPE" source="RESPGROUP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_BP_TYPE" source="CORREC_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASEP_TYPE" source="CASEP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FILELOC_TYPE" source="FILELOC_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SELFASSESS_TYPE" source="SELFASSESS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPRESP_TYPE" source="EMPRESP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INITBUS_TYPE" source="INITBUS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RESPGROUP_TYPE" source="RESPGROUP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CORREC_TYPE" source="CORREC_TYPE"/>
+    </input>
+    <input node="P_OSRDIVRESP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRDIVRESP_BP" source="OSRDIVRESP_BP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRDIVRESP_NAME" source="OSRDIVRESP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRDIVRESP_DESCRIPTION" source="OSRDIVRESP_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRDIVRESP_BP_TYPE" source="OSRDIVRESP_BP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OSRDIVRESP_TYPE" source="OSRDIVRESP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CASE_GUID" source="CASE_GUID"/>
+    </input>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="CASE_GUID"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_PIVOT_8">
+  <attributes>
+    <attribute id="CLIENT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CLIENT"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="CLIENT"/>
+    </attribute>
+    <attribute id="CASE_GUID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CASE_GUID"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="CASE_GUID"/>
+    </attribute>
+    <attribute id="OSRDIVRESP_BP" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OSRDIVRESP_BP"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="OSRDIVRESP_BP"/>
+    </attribute>
+    <attribute id="OSRDIVRESP_NAME" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OSRDIVRESP_NAME"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="OSRDIVRESP_NAME"/>
+    </attribute>
+    <attribute id="CASEP_BP" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CASEP_BP"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="CASEP_BP"/>
+    </attribute>
+    <attribute id="CASEP_NAME" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CASEP_NAME"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="CASEP_NAME"/>
+    </attribute>
+    <attribute id="FILELOC_BP" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FILELOC_BP"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="FILELOC_BP"/>
+    </attribute>
+    <attribute id="FILELOC_NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FILELOC_NAME"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="FILELOC_NAME"/>
+    </attribute>
+    <attribute id="SELFASSESS_BP" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SELFASSESS_BP"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="SELFASSESS_BP"/>
+    </attribute>
+    <attribute id="SELFASSESS_NAME" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SELFASSESS_NAME"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="SELFASSESS_NAME"/>
+    </attribute>
+    <attribute id="EMPRESP_BP" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EMPRESP_BP"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="EMPRESP_BP"/>
+    </attribute>
+    <attribute id="EMPRESP_NAME" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EMPRESP_NAME"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="EMPRESP_NAME"/>
+    </attribute>
+    <attribute id="INITBUS_BP" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="INITBUS_BP"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="INITBUS_BP"/>
+    </attribute>
+    <attribute id="INITBUS_NAME" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="INITBUS_NAME"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="INITBUS_NAME"/>
+    </attribute>
+    <attribute id="RESPGROUP_BP" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RESPGROUP_BP"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="RESPGROUP_BP"/>
+    </attribute>
+    <attribute id="RESPGROUP_NAME" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RESPGROUP_NAME"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="RESPGROUP_NAME"/>
+    </attribute>
+    <attribute id="CORREC_BP" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CORREC_BP"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="CORREC_BP"/>
+    </attribute>
+    <attribute id="CORREC_NAME" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CORREC_NAME"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="CORREC_NAME"/>
+    </attribute>
+  
+    <attribute id="OSRDIVRESP_DESCRIPTION" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+  
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="OSRDIVRESP_DESCRIPTION"/>
+  
+    </attribute>
+    <attribute id="CASEP_DESCRIPTION" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="CASEP_DESCRIPTION"/>
+    </attribute>
+    <attribute id="FILELOC_DESCRIPTION" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="FILELOC_DESCRIPTION"/>
+    </attribute>
+    <attribute id="SELFASSESS_DESCRIPTION" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="SELFASSESS_DESCRIPTION"/>
+    </attribute>
+    <attribute id="EMPRESP_DESCRIPTION" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="EMPRESP_DESCRIPTION"/>
+    </attribute>
+    <attribute id="INITBUS_DESCRIPTION" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="INITBUS_DESCRIPTION"/>
+    </attribute>
+    <attribute id="RESPGROUP_DESCRIPTION" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="RESPGROUP_DESCRIPTION"/>
+    </attribute>
+    <attribute id="CORREC_DESCRIPTION" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="CORREC_DESCRIPTION"/>
+    </attribute>
+  
+    <attribute id="OSRDIVRESP_BP_TYPE" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_BP_TYPE"/>
+  
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="OSRDIVRESP_BP_TYPE"/>
+  
+    </attribute>
+    <attribute id="CASEP_BP_TYPE" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_BP_TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="CASEP_BP_TYPE"/>
+    </attribute>
+    <attribute id="FILELOC_BP_TYPE" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_BP_TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="FILELOC_BP_TYPE"/>
+    </attribute>
+    <attribute id="SELFASSESS_BP_TYPE" order="30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_BP_TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="SELFASSESS_BP_TYPE"/>
+    </attribute>
+    <attribute id="EMPRESP_BP_TYPE" order="31" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_BP_TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="EMPRESP_BP_TYPE"/>
+    </attribute>
+    <attribute id="INITBUS_BP_TYPE" order="32" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_BP_TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="INITBUS_BP_TYPE"/>
+    </attribute>
+    <attribute id="RESPGROUP_BP_TYPE" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_BP_TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="RESPGROUP_BP_TYPE"/>
+    </attribute>
+    <attribute id="CORREC_BP_TYPE" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_BP_TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="CORREC_BP_TYPE"/>
+    </attribute>
+  
+    <attribute id="OSRDIVRESP_TYPE" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="OSRDIVRESP_TYPE"/>
+    </attribute>
+    <attribute id="CASEP_TYPE" order="36" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="CASEP_TYPE"/>
+    </attribute>
+    <attribute id="FILELOC_TYPE" order="37" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="FILELOC_TYPE"/>
+    </attribute>
+    <attribute id="SELFASSESS_TYPE" order="38" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="SELFASSESS_TYPE"/>
+    </attribute>
+    <attribute id="EMPRESP_TYPE" order="39" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="EMPRESP_TYPE"/>
+    </attribute>
+    <attribute id="INITBUS_TYPE" order="40" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="INITBUS_TYPE"/>
+    </attribute>
+    <attribute id="RESPGROUP_TYPE" order="41" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="RESPGROUP_TYPE"/>
+    </attribute>
+    <attribute id="CORREC_TYPE" order="42" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TYPE"/>
+      <keyMapping columnObjectName="J_PIVOT_8" columnName="CORREC_TYPE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="1024" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_CASEPARTNER" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="932" y="746"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_OSRDIVRESP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1142" y="541"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CASEP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1561" y="541"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CASE_GUIDS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1352" y="551"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_FILELOC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="932" y="541"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_SELFASSESS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="722" y="541"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_EMPRESP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="541"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_INITBUS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="512" y="541"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_RESPGROUP" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1772" y="541"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_CORREC" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="541"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+  
+    <shape expanded="true" modelObjectName="J_PIVOT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="932" y="236"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="P_OSRDIVRESP" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="102" y="102"/>
+      <rectangleSize width="160"/>
+    </shape>
+    <shape modelObjectName="P_CASEP" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="102" y="-8"/>
+      <rectangleSize width="160"/>
+    </shape>
+    <shape modelObjectName="P_FILELOC" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="402" y="30"/>
+      <rectangleSize width="165"/>
+    </shape>
+    <shape modelObjectName="P_SELFASSESS" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="702" y="30"/>
+      <rectangleSize width="157"/>
+    </shape>
+    <shape modelObjectName="P_EMPRESP" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="1002" y="30"/>
+      <rectangleSize width="165"/>
+    </shape>
+    <shape modelObjectName="P_INITBUS" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="1302" y="30"/>
+      <rectangleSize width="165"/>
+    </shape>
+    <shape modelObjectName="P_RESPGROUP" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="1602" y="30"/>
+      <rectangleSize width="165"/>
+    </shape>
+    <shape modelObjectName="P_CASE_GUIDS" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape modelObjectName="P_CORREC" modelObjectNameSpace="J_PIVOT" modelObjectType="JoinNodeInput" multiJoinViewNodeName="J_PIVOT">
+      <upperLeftCorner x="1902" y="30"/>
+      <rectangleSize width="165"/>
+    </shape></shapes>
+</layout>
+</Calculation:scenario>
